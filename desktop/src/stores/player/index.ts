@@ -257,7 +257,10 @@ export const usePlayerStore = defineStore("player", {
       if (useUiStore().settings.censorBypass) void ensureCensorList();
       audio.volume = this.muted ? 0 : this.volume;
       audio.playbackRate = this.playbackRate;
-      if (useUiStore().settings.trimSilence) ensureAnalyser();
+      const startSettings = useUiStore().settings;
+      if (startSettings.trimSilence || startSettings.gaplessEnabled) {
+        ensureAnalyser();
+      }
       audio.ontimeupdate = () => {
         const previous = lastProgress;
         this.progress = audio.currentTime;
@@ -275,12 +278,22 @@ export const usePlayerStore = defineStore("player", {
         }
 
         const settings = useUiStore().settings;
-        if (settings.trimSilence && this.duration > 30 && !audio.paused) {
+        // Хвостовую тишину режем и вручную, и автоматически в gapless:
+        // иначе «встык» ломается о тихий хвост дорожки.
+        const gapless = settings.gaplessEnabled;
+        if (
+          (settings.trimSilence || gapless) &&
+          this.duration > 20 &&
+          !audio.paused
+        ) {
           const left = this.duration - this.progress;
-          if (left > 1.5 && left < 25) {
-            if (currentLevel() < 0.004) {
+          const minLeft = gapless ? 0.2 : 1.5;
+          const quietLevel = gapless ? 0.007 : 0.004;
+          const hold = gapless ? 380 : 1100;
+          if (left > minLeft && left < 25) {
+            if (currentLevel() < quietLevel) {
               if (quietSince === 0) quietSince = Date.now();
-              else if (Date.now() - quietSince > 1100) {
+              else if (Date.now() - quietSince > hold) {
                 quietSince = 0;
                 if (!useTogetherStore().isGuest) void this.next(true);
               }
@@ -447,7 +460,7 @@ export const usePlayerStore = defineStore("player", {
         Notify.create(
           error
             ? { type: "negative", message: error }
-            : { message: "Discord подклю��ён заново" },
+            : { message: "Discord подкл����ён заново" },
         );
         return error;
       } catch (error) {
