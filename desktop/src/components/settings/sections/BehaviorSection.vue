@@ -111,6 +111,12 @@
         @update:model-value="ui.set('trimSilence', $event)"
       />
       <SettingToggle
+        :model-value="ui.settings.gaplessEnabled"
+        label="Gapless - без пауз между треками"
+        description="Следующий трек подгружается заранее и включается встык, без тишины между дорожками - для концертников, миксов и концепт-альбомов. Пока включён, отключает кроссфейд."
+        @update:model-value="ui.set('gaplessEnabled', $event)"
+      />
+      <SettingToggle
         :model-value="ui.settings.systemMediaControls"
         label="Системные медиа-контролы"
         description="Управление плеером с медиа-клавиш и системных виджетов - панель громкости Windows, Пункт управления macOS, MPRIS в Linux. Показывает название трека и обложку. Это не то же самое, что глобальные горячие клавиши."

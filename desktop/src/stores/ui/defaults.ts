@@ -109,6 +109,7 @@ export interface InterfaceSettings {
   preferLocalFiles: boolean;
   crossfadeEnabled: boolean;
   crossfadeSeconds: number;
+  gaplessEnabled: boolean;
   trimSilence: boolean;
   autoWaveOnQueueEnd: boolean;
   autoWaveSource: AutoWaveSource;
@@ -205,6 +206,7 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   preferLocalFiles: true,
   crossfadeEnabled: true,
   crossfadeSeconds: 4,
+  gaplessEnabled: false,
   trimSilence: false,
   autoWaveOnQueueEnd: true,
   autoWaveSource: "playlist",

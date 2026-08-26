@@ -7,6 +7,7 @@ import { convertFileSrc } from "@tauri-apps/api/core";
 import {
   audio,
   cancelFade,
+  clearWarm,
   currentLevel,
   ensureAnalyser,
   fadeIn,
@@ -15,6 +16,7 @@ import {
   nextSourceToken,
   resumeAudioContext,
   safePlay,
+  warmNext,
   resumeOnGesture,
 } from "@/lib/audio";
 import {
@@ -679,7 +681,7 @@ export const usePlayerStore = defineStore("player", {
       const rapid = Date.now() - lastLoadAt < 900;
       lastLoadAt = Date.now();
       const fadeMs =
-        ui.crossfadeEnabled && !rapid
+        ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
           ? Math.round(Math.max(0, ui.crossfadeSeconds) * 1000)
           : 0;
       stallAt = startAt;
@@ -921,6 +923,16 @@ export const usePlayerStore = defineStore("player", {
           }
         }),
       );
+
+      // Gapless: греем медиа-элемент следующим треком, чтобы переход был встык.
+      if (ui.gaplessEnabled) {
+        const upcoming = this.queue[this.index + 1];
+        const entry = upcoming ? prefetched.get(upcoming.id) : undefined;
+        if (entry && !entry.local) warmNext(entry.url);
+        else clearWarm();
+      } else {
+        clearWarm();
+      }
     },
 
     async loadLyrics(force = false, mode?: LyricsSource) {
