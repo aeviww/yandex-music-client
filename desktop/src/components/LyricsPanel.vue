@@ -13,6 +13,7 @@
     />
     <div v-else-if="s.backdrop === 'gradient'" class="lyrics-gradient" />
     <div class="lyrics-shade" />
+    <canvas v-if="ambientOn" ref="vizCanvas" class="lyrics-visualizer" />
 
     <div class="lyrics-toolbar">
       <div class="lyrics-track">
@@ -247,12 +248,28 @@
                 :key="i"
                 :ref="(el) => setLineRef(el, i)"
                 class="lyric-line"
-                :class="[lineClass(i), { annotated: !!lineAnnotations[i] }]"
+                :class="[
+                  lineClass(i),
+                  {
+                    annotated: !!lineAnnotations[i],
+                    'kw-on': karaokeWordActive(i),
+                  },
+                ]"
                 :style="i === player.activeLine ? fillStyle : undefined"
                 @click="seekTo(line.time_ms)"
                 @contextmenu.stop.prevent="onLineMenu($event, i)"
               >
-                <span class="lyric-text">{{ line.text || "…" }}</span>
+                <span class="lyric-text"
+                  ><template v-if="karaokeWordActive(i)"
+                    ><span
+                      v-for="(w, wi) in activeWords"
+                      :key="wi"
+                      class="lyric-kw"
+                      :style="{ '--wp': wordFill(wi) + '%' }"
+                      >{{ w }}</span
+                    ></template
+                  ><template v-else>{{ line.text || "…" }}</template></span
+                >
                 <span
                   v-if="lineAnnotations[i]"
                   class="lyric-note"
@@ -384,6 +401,7 @@ import TrackMenu from "@/components/TrackMenu.vue";
 import { api } from "@/api/client";
 import type { GeniusQuote } from "@/api/types";
 import { audio } from "@/lib/audio";
+import { useVisualizer } from "@/composables/useVisualizer";
 import { artistNames } from "@/lib/format";
 import { ORIGIN_LABEL } from "@/lib/lyricsSource";
 import { useGeniusStore } from "@/stores/genius";
@@ -661,11 +679,61 @@ const visualStyle = computed(() => ({
   "--lyrics-line-blur": `${s.value.lineBlur}px`,
 }));
 
+const vizCanvas = ref<HTMLCanvasElement | null>(null);
+const ambientOn = computed(
+  () =>
+    player.showLyrics &&
+    player.lyricsFullscreen &&
+    ui.settings.lyricsVisualizer,
+);
+useVisualizer(vizCanvas, () => ambientOn.value, { bars: 64 });
+
 const fill = ref(0);
 const fillStyle = computed(() => ({ "--lp": `${fill.value}%` }));
 const karaoke = computed(
   () => s.value.highlight === "karaoke" && synced.value && player.showLyrics,
 );
+
+const wordKaraoke = computed(
+  () => karaoke.value && ui.settings.lyricsKaraokeWord,
+);
+
+// Слова активной строки вместе с хвостовыми пробелами.
+const activeWords = computed<string[]>(() => {
+  if (!wordKaraoke.value) return [];
+  const line = lines.value[player.activeLine];
+  return (line?.text || "").match(/\S+\s*/gu) ?? [];
+});
+
+// Границы заливки каждого слова (доля 0..1), вес — длина слова.
+const wordBounds = computed<Array<[number, number]>>(() => {
+  const words = activeWords.value;
+  const total = words.reduce((sum, w) => sum + w.length, 0) || 1;
+  let acc = 0;
+  return words.map((w) => {
+    const start = acc / total;
+    acc += w.length;
+    return [start, acc / total] as [number, number];
+  });
+});
+
+function wordFill(index: number): number {
+  const bounds = wordBounds.value[index];
+  if (!bounds) return 0;
+  const [start, end] = bounds;
+  const p = fill.value / 100;
+  if (p <= start) return 0;
+  if (p >= end) return 100;
+  return ((p - start) / (end - start || 1)) * 100;
+}
+
+function karaokeWordActive(i: number): boolean {
+  return (
+    wordKaraoke.value &&
+    i === player.activeLine &&
+    activeWords.value.length > 0
+  );
+}
 
 let raf = 0;
 

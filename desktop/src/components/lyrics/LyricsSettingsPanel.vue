@@ -144,6 +144,16 @@
       <div v-if="s.lyricsHighlight === 'karaoke'" class="lset-hint">
         Строка заливается по ходу песни — работает с синхронным текстом.
       </div>
+      <button
+        v-if="s.lyricsHighlight === 'karaoke'"
+        type="button"
+        class="lset-switch"
+        :class="{ on: s.lyricsKaraokeWord }"
+        @click="ui.set('lyricsKaraokeWord', !s.lyricsKaraokeWord)"
+      >
+        <span>Заливка по словам</span>
+        <span class="lset-track"><i /></span>
+      </button>
 
       <label class="lset-range" style="margin-top: 10px">
         <span class="lset-range-top">
@@ -244,6 +254,16 @@
         @click="ui.set('lyricsMotion', !s.lyricsMotion)"
       >
         <span>Плавные переходы</span>
+        <span class="lset-track"><i /></span>
+      </button>
+
+      <button
+        type="button"
+        class="lset-switch"
+        :class="{ on: s.lyricsVisualizer }"
+        @click="ui.set('lyricsVisualizer', !s.lyricsVisualizer)"
+      >
+        <span>Визуализатор на весь экран</span>
         <span class="lset-track"><i /></span>
       </button>
     </div>

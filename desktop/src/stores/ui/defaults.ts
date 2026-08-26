@@ -85,9 +85,11 @@ export interface InterfaceSettings {
   lyricsAlign: LyricsAlign;
   lyricsBackdrop: LyricsBackdrop;
   lyricsHighlight: LyricsHighlight;
+  lyricsKaraokeWord: boolean;
   lyricsGlow: boolean;
   lyricsShowArtwork: boolean;
   lyricsMotion: boolean;
+  lyricsVisualizer: boolean;
   lyricsShowCredits: boolean;
   lyricsShowOrigin: boolean;
   lyricsAnnotations: boolean;
@@ -179,9 +181,11 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   lyricsAlign: "left",
   lyricsBackdrop: "cover",
   lyricsHighlight: "white",
+  lyricsKaraokeWord: true,
   lyricsGlow: true,
   lyricsShowArtwork: true,
   lyricsMotion: true,
+  lyricsVisualizer: true,
   lyricsShowCredits: true,
   lyricsShowOrigin: true,
   lyricsAnnotations: true,

@@ -99,6 +99,14 @@
       </div>
     </div>
 
+    <SettingToggle
+      v-if="ui.settings.lyricsHighlight === 'karaoke'"
+      :model-value="ui.settings.lyricsKaraokeWord"
+      label="Караоке по словам"
+      description="Активная строка подсвечивается по словам, а не одной сплошной заливкой. Нужен синхронный текст."
+      @update:model-value="ui.set('lyricsKaraokeWord', $event)"
+    />
+
     <SettingSlider
       label="Размер строк"
       description="Размер текста песни."
@@ -213,6 +221,13 @@
       label="Анимация строк"
       description="Плавно прокручивать и увеличивать активную строку."
       @update:model-value="ui.set('lyricsMotion', $event)"
+    />
+
+    <SettingToggle
+      :model-value="ui.settings.lyricsVisualizer"
+      label="Визуализатор на весь экран"
+      description="Спектр звука фоном в полноэкранном режиме текста - ambient «обложка + текст + визуализатор»."
+      @update:model-value="ui.set('lyricsVisualizer', $event)"
     />
 
     <SettingToggle

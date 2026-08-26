@@ -759,3 +759,36 @@
   color: var(--fg);
   text-decoration: underline;
 }
+
+/* Полноэкранный ambient-визуализатор под текстом. */
+.lyrics-visualizer {
+  position: absolute;
+  z-index: 0;
+  inset: auto 0 0;
+  width: 100%;
+  height: 34vh;
+  pointer-events: none;
+  opacity: 0.4;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, transparent 100%);
+}
+
+/* Караоке по словам: отключаем сплошную заливку строки. */
+.lyrics-lines.hl-karaoke .lyric-line.on.kw-on {
+  background: none;
+  color: #fff;
+}
+
+.lyric-kw {
+  white-space: pre;
+  background-image: linear-gradient(
+    90deg,
+    #fff 0%,
+    #fff var(--wp, 0%),
+    rgba(255, 255, 255, calc(var(--lyrics-inactive, 0.32) + 0.18)) var(--wp, 0%),
+    rgba(255, 255, 255, calc(var(--lyrics-inactive, 0.32) + 0.18)) 100%
+  );
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
