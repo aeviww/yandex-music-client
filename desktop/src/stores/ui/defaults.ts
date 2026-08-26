@@ -24,6 +24,8 @@ export type LyricsBackdrop = "cover" | "gradient" | "solid";
 export type LyricsHighlight = "white" | "accent" | "karaoke";
 export type LyricsAnnotationMark = "off" | "underline" | "dot" | "tint";
 export type LyricsTranslateMode = "under" | "replace";
+// Что делать с треками, помеченными как AI-генерация.
+export type AiTrackAction = "none" | "skip" | "dislike";
 
 export const DEFAULT_DISCORD_CLIENT_ID = "1532382113821753354";
 
@@ -122,7 +124,7 @@ export interface InterfaceSettings {
   censorBypass: boolean;
   censorBadge: boolean;
   minimizeToTray: boolean;
-  autoDislikeAi: boolean;
+  aiTrackAction: AiTrackAction;
   resumeLastSession: boolean;
   resumeAutoplay: boolean;
 }
@@ -222,7 +224,7 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   censorBypass: true,
   censorBadge: true,
   minimizeToTray: true,
-  autoDislikeAi: false,
+  aiTrackAction: "none",
   resumeLastSession: true,
   resumeAutoplay: true,
 };

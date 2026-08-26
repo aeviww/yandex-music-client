@@ -289,10 +289,13 @@ watch(
   () => [player.current?.id ?? null, isAiCurrent.value] as const,
   ([id, ai]) => {
     if (!id || !ai) return;
-    if (!ui.settings.autoDislikeAi) return;
+    const action = ui.settings.aiTrackAction;
+    if (action === "none") return;
     if (handledDislike.has(id)) return;
     handledDislike.add(id);
-    void player.dislike();
+    // Дизлайк сам переключает трек дальше, поэтому второго скипа не нужно.
+    if (action === "dislike") void player.dislike();
+    else void player.next(true);
   },
 );
 

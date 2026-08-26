@@ -172,12 +172,27 @@
         description="Рядом с названием трека в плеере появляется метка «без цензуры», когда играет подменённая версия."
         @update:model-value="ui.set('censorBadge', $event)"
       />
-      <SettingToggle
-        :model-value="ui.settings.autoDislikeAi"
-        label="Автодизлайк AI-треков"
-        description="Трек, помеченный базой Slopless как сгенерированный нейросетью, автоматически получает дизлайк и пропускается."
-        @update:model-value="ui.set('autoDislikeAi', $event)"
-      />
+      <div class="setting-row setting-row-column">
+        <div class="setting-copy">
+          <b>Что делать с AI-треками</b
+          ><span>
+            Реакция на треки, помеченные базой Slopless как сгенерированные
+            нейросетью. «Скипать» - просто переключить дальше, «Дизлайкать и
+            скипать» - ещё и поставить дизлайк, чтобы Яндекс больше не
+            подкидывал его в волне и рекомендациях.
+          </span>
+        </div>
+        <div class="settings-choice">
+          <button
+            v-for="item in aiActions"
+            :key="item.value"
+            :class="{ on: ui.settings.aiTrackAction === item.value }"
+            @click="ui.set('aiTrackAction', item.value)"
+          >
+            {{ item.label }}
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -186,9 +201,16 @@
 import { computed } from "vue";
 import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import type { AiTrackAction } from "@/stores/ui/defaults";
 import { useUiStore } from "@/stores/ui/index";
 
 const ui = useUiStore();
+
+const aiActions: Array<{ value: AiTrackAction; label: string }> = [
+  { value: "none", label: "Ничего не делать" },
+  { value: "skip", label: "Скипать" },
+  { value: "dislike", label: "Дизлайкать и скипать" },
+];
 
 type QueueEnd = "stop" | "repeat" | "wave";
 
