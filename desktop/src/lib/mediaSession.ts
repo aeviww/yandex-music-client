@@ -66,6 +66,16 @@ function normalizeCover(url: string | null | undefined): string | null {
 function artworkFor(url: string | null): MediaImage[] {
   const base = normalizeCover(url);
   if (!base) return [];
+  // Яндекс отдаёт обложки с хвостом «%%» - вместо него подставляем размер,
+  // иначе системная плашка остаётся без картинки.
+  if (base.endsWith("%%")) {
+    const stem = base.slice(0, -2);
+    return ARTWORK_SIZES.map((size) => ({
+      src: stem + size,
+      sizes: size,
+      type: "image/jpeg",
+    }));
+  }
   const sizePattern = /\/\d+x\d+$/;
   if (sizePattern.test(base)) {
     return ARTWORK_SIZES.map((size) => ({

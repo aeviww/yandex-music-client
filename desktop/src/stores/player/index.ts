@@ -381,10 +381,9 @@ export const usePlayerStore = defineStore("player", {
 
     setupMediaSession() {
       if (!mediaSessionAvailable()) return;
+      // Системные медиа-контролы всегда включены: отдельной настройки больше нет.
       const sync = () => {
-        const on = useUiStore().settings.systemMediaControls;
-        setMediaSessionEnabled(on);
-        if (!on) return;
+        setMediaSessionEnabled(true);
         bindMediaSession({
           play: () => {
             if (this.pendingResume) {
@@ -408,7 +407,12 @@ export const usePlayerStore = defineStore("player", {
       sync();
       if (!mediaBound) {
         mediaBound = true;
-        watch(() => useUiStore().settings.systemMediaControls, sync);
+        // Метаданные и обложку переотправляем при каждой смене трека
+        // и паузе, иначе системная плашка зависает на старом треке.
+        watch(
+          () => [this.current?.id ?? null, this.isPlaying] as const,
+          () => sync(),
+        );
       }
     },
 
