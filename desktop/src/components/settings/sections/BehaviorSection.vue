@@ -110,6 +110,12 @@
         description="Если последние секунды трека почти беззвучные, приложение не ждёт их и сразу включает следующий трек."
         @update:model-value="ui.set('trimSilence', $event)"
       />
+      <SettingToggle
+        :model-value="ui.settings.systemMediaControls"
+        label="Системные медиа-контролы"
+        description="Управление плеером с медиа-клавиш и системных виджетов - панель громкости Windows, Пункт управления macOS, MPRIS в Linux. Показывает название трека и обложку. Это не то же самое, что глобальные горячие клавиши."
+        @update:model-value="ui.set('systemMediaControls', $event)"
+      />
       <div class="setting-row setting-row-column">
         <div class="setting-copy">
           <b>Когда очередь закончилась</b

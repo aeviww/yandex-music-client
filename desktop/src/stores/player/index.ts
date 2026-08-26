@@ -1,3 +1,4 @@
+import { watch } from "vue";
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
@@ -16,6 +17,14 @@ import {
   safePlay,
   resumeOnGesture,
 } from "@/lib/audio";
+import {
+  bindMediaSession,
+  mediaSessionAvailable,
+  setMediaSessionEnabled,
+  updateMediaMetadata,
+  updatePlaybackState,
+  updatePositionState,
+} from "@/lib/mediaSession";
 import { readCache, releaseMemoryCache, writeCache } from "@/lib/cache";
 import type { LyricsOrigin } from "@/lib/lyricsSource";
 import { hasText, loadTrackLyrics } from "@/lib/lyricsSource";
@@ -129,6 +138,8 @@ interface PlayerState {
 let presenceTimer: number | null = null;
 let lastSessionSave = 0;
 let lastProgress = 0;
+let lastMediaSync = 0;
+let mediaBound = false;
 let quietSince = 0;
 let skipGuard = 0;
 
@@ -241,6 +252,11 @@ export const usePlayerStore = defineStore("player", {
         this.duration = audio.duration || 0;
         lastProgress = this.progress;
 
+        if (Date.now() - lastMediaSync > 1000) {
+          lastMediaSync = Date.now();
+          updatePositionState(this.duration, this.progress, this.playbackRate);
+        }
+
         const delta = this.progress - previous;
         if (delta > 0 && delta < 6 && !audio.paused) {
           useStatsStore().tick(delta);
@@ -278,11 +294,14 @@ export const usePlayerStore = defineStore("player", {
       audio.onplay = () => {
         this.isPlaying = true;
         resumeAudioContext();
+        updatePlaybackState(true, Boolean(this.current));
+        updatePositionState(this.duration, this.progress, this.playbackRate);
         void this.syncPresence();
         void this.syncTray();
       };
       audio.onpause = () => {
         this.isPlaying = false;
+        updatePlaybackState(false, Boolean(this.current));
         void this.syncPresence();
         this.persistSession();
         void this.syncTray();
@@ -310,6 +329,41 @@ export const usePlayerStore = defineStore("player", {
         stallTimer = window.setInterval(() => {
           this.watchStall();
         }, 2000);
+      }
+
+      this.setupMediaSession();
+    },
+
+    setupMediaSession() {
+      if (!mediaSessionAvailable()) return;
+      const sync = () => {
+        const on = useUiStore().settings.systemMediaControls;
+        setMediaSessionEnabled(on);
+        if (!on) return;
+        bindMediaSession({
+          play: () => {
+            if (this.pendingResume) {
+              void this.loadCurrent({ startAt: this.progress, autoplay: true });
+            } else {
+              void safePlay();
+            }
+          },
+          pause: () => audio.pause(),
+          stop: () => audio.pause(),
+          next: () => void this.next(),
+          prev: () => void this.prev(),
+          seekTo: (time) => this.seek(time),
+          seekBy: (offset) =>
+            this.seek((audio.currentTime || this.progress) + offset),
+        });
+        updateMediaMetadata(this.current);
+        updatePlaybackState(this.isPlaying, Boolean(this.current));
+        updatePositionState(this.duration, this.progress, this.playbackRate);
+      };
+      sync();
+      if (!mediaBound) {
+        mediaBound = true;
+        watch(() => useUiStore().settings.systemMediaControls, sync);
       }
     },
 
@@ -425,6 +479,9 @@ export const usePlayerStore = defineStore("player", {
       this.duration = (track.duration_ms ?? 0) / 1000;
       this.progress = data.progress;
       this.pendingResume = true;
+      updateMediaMetadata(track);
+      updatePlaybackState(false, true);
+      updatePositionState(this.duration, this.progress, this.playbackRate);
       void this.syncTray();
       log.info("session restored", track.title, data.progress);
       if (autoplay) {
@@ -604,6 +661,12 @@ export const usePlayerStore = defineStore("player", {
       this.progress = startAt;
       lastProgress = startAt;
       quietSince = 0;
+      updateMediaMetadata(track);
+      updatePositionState(
+        (track.duration_ms ?? 0) / 1000,
+        startAt,
+        this.playbackRate,
+      );
       useStatsStore().begin(track);
       this.duration = (track.duration_ms ?? 0) / 1000;
       this.loading = true;
@@ -1031,6 +1094,7 @@ export const usePlayerStore = defineStore("player", {
       this.playbackRate = rate;
       audio.playbackRate = rate;
       this.persist();
+      updatePositionState(this.duration, this.progress, rate);
       void this.syncPresence(true);
     },
 
@@ -1353,6 +1417,8 @@ export const usePlayerStore = defineStore("player", {
       } catch {}
       stallAt = target;
       stallSince = 0;
+      updatePositionState(this.duration, target, this.playbackRate);
+      lastMediaSync = Date.now();
       void this.syncPresence(true);
     },
 

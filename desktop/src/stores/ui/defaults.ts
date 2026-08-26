@@ -117,6 +117,7 @@ export interface InterfaceSettings {
   autoDislikeAi: boolean;
   resumeLastSession: boolean;
   resumeAutoplay: boolean;
+  systemMediaControls: boolean;
 }
 
 export const defaultInterfaceSettings: InterfaceSettings = {
@@ -210,4 +211,5 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   autoDislikeAi: false,
   resumeLastSession: true,
   resumeAutoplay: true,
+  systemMediaControls: true,
 };
