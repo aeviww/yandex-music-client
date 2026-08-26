@@ -806,3 +806,52 @@
   opacity: 0.66;
   font-style: italic;
 }
+
+/* Три точки в инструментальных паузах и во вступлении трека.
+   Заполняются по очереди по ходу проигрыша, как в Apple Music. */
+.lyric-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.26em;
+  vertical-align: 0.08em;
+}
+
+.lyric-dots i {
+  width: 0.32em;
+  height: 0.32em;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.22;
+  transform: scale(0.82);
+  transition:
+    opacity 0.24s ease,
+    transform 0.24s ease;
+}
+
+.lyric-dots i.on {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Последняя зажжённая точка дышит, чтобы пауза не казалась зависшей. */
+.lyric-dots.live i.on:last-of-type {
+  animation: lyricDotBreath 1.7s ease-in-out infinite;
+}
+
+@keyframes lyricDotBreath {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.22);
+  }
+}
+
+.lyrics-intro-dots {
+  width: 100%;
+  padding: 7px 0;
+  color: #fff;
+  font-size: var(--lyrics-size);
+  line-height: var(--lyrics-line-height, 1.15);
+}

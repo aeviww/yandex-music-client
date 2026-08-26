@@ -251,6 +251,13 @@
             ]"
           >
             <template v-if="synced">
+              <div v-if="introDots" class="lyrics-intro-dots">
+                <span class="lyric-dots live"
+                  ><i :class="{ on: introStage >= 1 }" /><i
+                    :class="{ on: introStage >= 2 }"
+                  /><i :class="{ on: introStage >= 3 }"
+                /></span>
+              </div>
               <button
                 v-for="(line, i) in lines"
                 :key="i"
@@ -279,7 +286,17 @@
                       :style="{ '--wp': wordFill(wi) + '%' }"
                       >{{ w }}</span
                     ></template
-                  ><template v-else>{{ line.text || "…" }}</template></span
+                  ><template v-else-if="line.text">{{
+                    line.text
+                  }}</template
+                  ><span
+                    v-else
+                    class="lyric-dots"
+                    :class="{ live: i === player.activeLine }"
+                    ><i :class="{ on: dotStage(i) >= 1 }" /><i
+                      :class="{ on: dotStage(i) >= 2 }"
+                    /><i :class="{ on: dotStage(i) >= 3 }"
+                  /></span></span
                 >
                 <span
                   v-if="lineAnnotations[i]"
@@ -753,6 +770,31 @@ const wordKaraoke = computed(
   () => karaoke.value && ui.settings.lyricsKaraokeWord,
 );
 
+// Три точки в инструментальных паузах и во вступлении: заполняются
+// по очереди, как в Apple Music.
+const introFill = ref(0);
+
+const tickOn = computed(() => player.showLyrics && synced.value);
+
+const introDots = computed(
+  () =>
+    synced.value &&
+    player.activeLine < 0 &&
+    (lines.value[0]?.time_ms ?? 0) > 1500,
+);
+
+function stageFrom(percent: number): number {
+  if (percent <= 0) return 0;
+  return Math.min(3, Math.floor((percent / 100) * 3) + 1);
+}
+
+function dotStage(i: number): number {
+  if (i !== player.activeLine) return 0;
+  return stageFrom(fill.value);
+}
+
+const introStage = computed(() => stageFrom(introFill.value));
+
 // Слова активной строки вместе с хвостовыми пробелами.
 const activeWords = computed<string[]>(() => {
   if (!wordKaraoke.value) return [];
@@ -796,14 +838,19 @@ function tick() {
   const index = player.activeLine;
   const list = lines.value;
   const line = index >= 0 ? list[index] : null;
+  const now = audio.currentTime * 1000;
   if (line) {
     const start = line.time_ms;
     const end = list[index + 1]?.time_ms ?? start + 4200;
     const span = Math.max(320, end - start);
-    const now = audio.currentTime * 1000;
     fill.value = Math.min(100, Math.max(0, ((now - start) / span) * 100));
+    introFill.value = 0;
   } else {
     fill.value = 0;
+    // Вступление до первой строки.
+    const first = list[0]?.time_ms ?? 0;
+    introFill.value =
+      first > 0 ? Math.min(100, Math.max(0, (now / first) * 100)) : 0;
   }
   raf = requestAnimationFrame(tick);
 }
@@ -813,10 +860,11 @@ function stopTick() {
   cancelAnimationFrame(raf);
   raf = 0;
   fill.value = 0;
+  introFill.value = 0;
 }
 
 watch(
-  karaoke,
+  tickOn,
   (on) => {
     if (on && !raf) raf = requestAnimationFrame(tick);
     if (!on) stopTick();
