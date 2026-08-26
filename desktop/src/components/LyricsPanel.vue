@@ -15,7 +15,7 @@
     <div class="lyrics-shade" />
     <canvas v-if="ambientOn" ref="vizCanvas" class="lyrics-visualizer" />
 
-    <div class="lyrics-toolbar">
+    <div class="lyrics-toolbar" @mousedown="onHeadDrag">
       <div class="lyrics-track">
         <div class="cover lyrics-mini-cover">
           <img
@@ -27,10 +27,18 @@
           <Icon v-else name="note" :size="16" class="faint" />
         </div>
         <div style="min-width: 0">
-          <div class="t-13 w-600 ellipsis lyrics-link" @click="openAlbum">
+          <div
+            class="t-13 w-600 ellipsis lyrics-link"
+            data-no-drag
+            @click="openAlbum"
+          >
             {{ player.current?.title || "Текст песни" }}
           </div>
-          <div class="lyrics-subtitle ellipsis lyrics-link" @click="openArtist">
+          <div
+            class="lyrics-subtitle ellipsis lyrics-link"
+            data-no-drag
+            @click="openArtist"
+          >
             {{ artistLabel }}
           </div>
         </div>
@@ -421,6 +429,7 @@ import { audio } from "@/lib/audio";
 import { useVisualizer } from "@/composables/useVisualizer";
 import { artistNames } from "@/lib/format";
 import { ORIGIN_LABEL } from "@/lib/lyricsSource";
+import { startWindowDrag } from "@/lib/window";
 import { useGeniusStore } from "@/stores/genius";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
@@ -816,6 +825,13 @@ watch(
 );
 
 onBeforeUnmount(stopTick);
+
+// В полноэкранном режиме шапка работает как заголовок окна:
+// за неё можно тащить всё окно.
+function onHeadDrag(event: MouseEvent) {
+  if (!player.lyricsFullscreen) return;
+  void startWindowDrag(event);
+}
 
 function openAlbum() {
   const id = player.current?.album_id;
