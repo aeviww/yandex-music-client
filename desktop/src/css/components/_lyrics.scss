@@ -611,13 +611,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.05em;
-  height: 1.05em;
-  margin-left: 0.34em;
+  width: 0.72em;
+  height: 0.72em;
+  /* Отрицательный правый отступ гасит ширину значка,
+     чтобы он не сдвигал и не переламывал строку. */
+  margin-left: 0.18em;
+  margin-right: -0.9em;
   border-radius: 50%;
   opacity: 0;
   color: currentColor;
-  vertical-align: 0.06em;
+  vertical-align: 0.14em;
   cursor: pointer;
   transition:
     opacity 0.18s ease,

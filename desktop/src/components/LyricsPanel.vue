@@ -287,7 +287,7 @@
                   title="Разбор строки"
                   @click.stop="openAnnotation(lineAnnotations[i])"
                 >
-                  <Icon name="info" :size="13" />
+                  <Icon name="info" :size="10" />
                 </span>
                 <span
                   v-if="!translateReplace && lineTranslation(i)"
@@ -322,7 +322,7 @@
                   title="Разбор строки"
                   @click.stop="openAnnotation(lineAnnotations[i])"
                 >
-                  <Icon name="info" :size="12" />
+                  <Icon name="info" :size="10" />
                 </span>
                 <span
                   v-if="!isPart(line.text) && !translateReplace && lineTranslation(i)"
