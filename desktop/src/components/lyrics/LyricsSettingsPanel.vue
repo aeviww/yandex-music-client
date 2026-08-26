@@ -145,13 +145,12 @@
         Строка заливается по ходу песни — работает с синхронным текстом.
       </div>
       <button
-        v-if="s.lyricsHighlight === 'karaoke'"
         type="button"
         class="lset-switch"
-        :class="{ on: s.lyricsKaraokeWord }"
-        @click="ui.set('lyricsKaraokeWord', !s.lyricsKaraokeWord)"
+        :class="{ on: karaokeOn }"
+        @click="setKaraoke(!karaokeOn)"
       >
-        <span>Заливка по словам</span>
+        <span>Караоке-режим</span>
         <span class="lset-track"><i /></span>
       </button>
 
@@ -409,6 +408,19 @@ import { useUiStore } from "@/stores/ui/index";
 
 const ui = useUiStore();
 const s = computed(() => ui.settings);
+
+// Караоке-режим одним тумблером: сам выставляет нужную подсветку.
+const karaokeOn = computed(
+  () => s.value.lyricsHighlight === "karaoke" && s.value.lyricsKaraokeWord,
+);
+
+function setKaraoke(on: boolean) {
+  ui.set("lyricsKaraokeWord", on);
+  if (on) ui.set("lyricsHighlight", "karaoke");
+  else if (s.value.lyricsHighlight === "karaoke") {
+    ui.set("lyricsHighlight", "white");
+  }
+}
 
 type NumericKey =
   | "lyricsFontSize"

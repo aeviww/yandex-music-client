@@ -100,11 +100,13 @@
     </div>
 
     <SettingToggle
-      v-if="ui.settings.lyricsHighlight === 'karaoke'"
-      :model-value="ui.settings.lyricsKaraokeWord"
-      label="Караоке по словам"
-      description="Активная строка подсвечивается по словам, а не одной сплошной заливкой. Нужен синхронный текст."
-      @update:model-value="ui.set('lyricsKaraokeWord', $event)"
+      :model-value="
+        ui.settings.lyricsHighlight === 'karaoke' &&
+        ui.settings.lyricsKaraokeWord
+      "
+      label="Караоке-режим"
+      description="Активная строка заливается по словам по ходу песни. Сам включает подсветку «Караоке» выше - нужен синхронный текст."
+      @update:model-value="setKaraoke($event)"
     />
 
     <SettingSlider
@@ -390,6 +392,15 @@ const marks: Array<{ value: LyricsAnnotationMark; label: string }> = [
   { value: "dot", label: "Значок" },
   { value: "off", label: "Без метки" },
 ];
+
+// Караоке-режим одним тумблером: сам выставляет нужную подсветку.
+function setKaraoke(on: boolean) {
+  ui.set("lyricsKaraokeWord", on);
+  if (on) ui.set("lyricsHighlight", "karaoke");
+  else if (ui.settings.lyricsHighlight === "karaoke") {
+    ui.set("lyricsHighlight", "white");
+  }
+}
 
 const translateModes: Array<{ value: LyricsTranslateMode; label: string }> = [
   { value: "under", label: "Под строкой" },
