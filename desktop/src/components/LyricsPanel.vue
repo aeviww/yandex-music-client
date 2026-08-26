@@ -720,6 +720,20 @@ function lineTranslation(i: number): string {
   return trimmed;
 }
 
+// Перевод должен применяться сразу после переключения настройки,
+// а не только при запуске следующего трека.
+watch(
+  () => [
+    ui.settings.lyricsTranslate,
+    ui.settings.lyricsTranslateTarget,
+    player.lyrics?.track_id ?? null,
+  ],
+  () => {
+    if (ui.settings.lyricsTranslate) void player.loadTranslation(true);
+  },
+  { immediate: true },
+);
+
 const fill = ref(0);
 const fillStyle = computed(() => ({ "--lp": `${fill.value}%` }));
 const karaoke = computed(

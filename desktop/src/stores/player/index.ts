@@ -447,7 +447,7 @@ export const usePlayerStore = defineStore("player", {
         Notify.create(
           error
             ? { type: "negative", message: error }
-            : { message: "Discord подключён заново" },
+            : { message: "Discord подклю��ён заново" },
         );
         return error;
       } catch (error) {
@@ -969,7 +969,10 @@ export const usePlayerStore = defineStore("player", {
     async loadLyrics(force = false, mode?: LyricsSource) {
       const track = this.current;
       if (!track) return;
-      if (!force && this.lyrics?.track_id === track.id) return;
+      if (!force && this.lyrics?.track_id === track.id) {
+        void this.loadTranslation();
+        return;
+      }
 
       const pick = mode ?? this.lyricsPick ?? undefined;
       this.lyricsLoading = true;
