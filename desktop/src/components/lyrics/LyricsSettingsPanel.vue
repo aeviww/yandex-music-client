@@ -269,6 +269,48 @@
     </div>
 
     <div class="lset-group">
+      <div class="lset-group-head">Перевод</div>
+
+      <button
+        type="button"
+        class="lset-switch"
+        :class="{ on: s.lyricsTranslate }"
+        @click="ui.set('lyricsTranslate', !s.lyricsTranslate)"
+      >
+        <span>Переводить текст</span>
+        <span class="lset-track"><i /></span>
+      </button>
+
+      <template v-if="s.lyricsTranslate">
+        <div class="lset-label">Как показывать</div>
+        <div class="lset-seg">
+          <button
+            v-for="item in translateModes"
+            :key="item.id"
+            type="button"
+            :class="{ on: s.lyricsTranslateMode === item.id }"
+            @click="ui.set('lyricsTranslateMode', item.id)"
+          >
+            {{ item.label }}
+          </button>
+        </div>
+
+        <div class="lset-label">Язык</div>
+        <div class="lset-seg">
+          <button
+            v-for="item in translateTargets"
+            :key="item.id"
+            type="button"
+            :class="{ on: s.lyricsTranslateTarget === item.id }"
+            @click="ui.set('lyricsTranslateTarget', item.id)"
+          >
+            {{ item.label }}
+          </button>
+        </div>
+      </template>
+    </div>
+
+    <div class="lset-group">
       <div class="lset-group-head">Разборы Genius</div>
 
       <button
@@ -361,6 +403,7 @@ import type {
   LyricsFont,
   LyricsHighlight,
   LyricsSource,
+  LyricsTranslateMode,
 } from "@/stores/ui/defaults";
 import { useUiStore } from "@/stores/ui/index";
 
@@ -572,5 +615,16 @@ const lyricsSources: Array<{ id: LyricsSource; label: string }> = [
   { id: "auto", label: "Авто" },
   { id: "lrclib", label: "LRCLIB" },
   { id: "genius", label: "Genius" },
+];
+
+const translateModes: Array<{ id: LyricsTranslateMode; label: string }> = [
+  { id: "under", label: "Под строкой" },
+  { id: "replace", label: "Вместо оригинала" },
+];
+
+const translateTargets: Array<{ id: string; label: string }> = [
+  { id: "ru", label: "Русский" },
+  { id: "en", label: "English" },
+  { id: "uk", label: "Українська" },
 ];
 </script>

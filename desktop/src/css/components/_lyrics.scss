@@ -792,3 +792,14 @@
   -webkit-background-clip: text;
   background-clip: text;
 }
+
+/* Перевод строки под оригиналом. */
+.lyric-tr {
+  display: block;
+  margin-top: 0.18em;
+  font-size: 0.62em;
+  font-weight: 500;
+  line-height: 1.25;
+  opacity: 0.66;
+  font-style: italic;
+}

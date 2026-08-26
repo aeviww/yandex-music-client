@@ -212,6 +212,9 @@ export const api = {
 
   lyrics: (id: string) => call<Lyrics>("get_lyrics", { id }),
 
+  translateLines: (target: string, lines: string[]) =>
+    call<string[]>("translate_lines", { target, lines }),
+
   updateDiscordPresence: (payload: PresencePayload) =>
     call<void>("update_discord_presence", { payload }),
 

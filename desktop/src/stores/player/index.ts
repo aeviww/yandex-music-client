@@ -128,6 +128,9 @@ interface PlayerState {
   lyricsError: string | null;
   lyricsOrigin: LyricsOrigin | null;
   lyricsPick: LyricsSource | null;
+  lyricsTranslation: string[] | null;
+  lyricsTranslateKey: string | null;
+  lyricsTranslateLoading: boolean;
   showLyrics: boolean;
   lyricsFullscreen: boolean;
   fullscreen: boolean;
@@ -145,6 +148,7 @@ let lastProgress = 0;
 let lastMediaSync = 0;
 let mediaBound = false;
 let normBound = false;
+let translateBound = false;
 let quietSince = 0;
 let skipGuard = 0;
 
@@ -194,6 +198,9 @@ export const usePlayerStore = defineStore("player", {
       lyricsError: null,
       lyricsOrigin: null,
       lyricsPick: null,
+      lyricsTranslation: null,
+      lyricsTranslateKey: null,
+      lyricsTranslateLoading: false,
       showLyrics: false,
       lyricsFullscreen: false,
       fullscreen: false,
@@ -344,6 +351,17 @@ export const usePlayerStore = defineStore("player", {
         watch(
           () => useUiStore().settings.normalizeVolume,
           (on) => setNormalization(on),
+        );
+      }
+
+      if (!translateBound) {
+        translateBound = true;
+        watch(
+          () => [
+            useUiStore().settings.lyricsTranslate,
+            useUiStore().settings.lyricsTranslateTarget,
+          ],
+          () => void this.loadTranslation(true),
         );
       }
     },
@@ -956,6 +974,8 @@ export const usePlayerStore = defineStore("player", {
       const pick = mode ?? this.lyricsPick ?? undefined;
       this.lyricsLoading = true;
       this.lyricsError = null;
+      this.lyricsTranslation = null;
+      this.lyricsTranslateKey = null;
 
       const key = pick ? `lyrics.${track.id}.${pick}` : `lyrics.${track.id}`;
       const cached = force ? null : readCache<Lyrics>(key);
@@ -992,6 +1012,44 @@ export const usePlayerStore = defineStore("player", {
 
       if (this.lyricsFullscreen && !this.lyrics?.lines?.length) {
         this.openFullscreen();
+      }
+
+      void this.loadTranslation();
+    },
+
+    async loadTranslation(force = false) {
+      const ui = useUiStore().settings;
+      const track = this.current;
+      const lyrics = this.lyrics;
+      if (!ui.lyricsTranslate || !track || !lyrics?.lines?.length) {
+        this.lyricsTranslation = null;
+        this.lyricsTranslateKey = null;
+        return;
+      }
+      const target = (ui.lyricsTranslateTarget || "ru").toLowerCase();
+      const key = `${track.id}:${target}`;
+      if (!force && key === this.lyricsTranslateKey && this.lyricsTranslation) {
+        return;
+      }
+      this.lyricsTranslateLoading = true;
+      try {
+        const source = lyrics.lines.map((l) => l.text ?? "");
+        const out = await api.translateLines(target, source);
+        if (this.current?.id !== track.id || this.lyrics !== lyrics) return;
+        if (out.length === source.length) {
+          this.lyricsTranslation = out;
+          this.lyricsTranslateKey = key;
+        } else {
+          this.lyricsTranslation = null;
+          this.lyricsTranslateKey = null;
+        }
+      } catch {
+        if (this.current?.id === track.id && this.lyrics === lyrics) {
+          this.lyricsTranslation = null;
+          this.lyricsTranslateKey = null;
+        }
+      } finally {
+        if (this.current?.id === track.id) this.lyricsTranslateLoading = false;
       }
     },
 

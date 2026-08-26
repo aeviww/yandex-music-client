@@ -260,7 +260,10 @@
                 @contextmenu.stop.prevent="onLineMenu($event, i)"
               >
                 <span class="lyric-text"
-                  ><template v-if="karaokeWordActive(i)"
+                  ><template v-if="translateReplace && lineTranslation(i)">{{
+                    lineTranslation(i)
+                  }}</template
+                  ><template v-else-if="karaokeWordActive(i)"
                     ><span
                       v-for="(w, wi) in activeWords"
                       :key="wi"
@@ -278,6 +281,11 @@
                 >
                   <Icon name="info" :size="13" />
                 </span>
+                <span
+                  v-if="!translateReplace && lineTranslation(i)"
+                  class="lyric-tr"
+                  >{{ lineTranslation(i) }}</span
+                >
               </button>
             </template>
             <div v-else class="lyrics-plain-text">
@@ -295,7 +303,11 @@
                 "
                 @contextmenu.stop.prevent="onLineMenu($event, i)"
               >
-                <span class="lyric-text">{{ partLabel(line.text) }}</span>
+                <span class="lyric-text">{{
+                  !isPart(line.text) && translateReplace && lineTranslation(i)
+                    ? lineTranslation(i)
+                    : partLabel(line.text)
+                }}</span>
                 <span
                   v-if="!isPart(line.text) && lineAnnotations[i]"
                   class="lyric-note"
@@ -304,6 +316,11 @@
                 >
                   <Icon name="info" :size="12" />
                 </span>
+                <span
+                  v-if="!isPart(line.text) && !translateReplace && lineTranslation(i)"
+                  class="lyric-tr"
+                  >{{ lineTranslation(i) }}</span
+                >
               </p>
             </div>
           </div>
@@ -687,6 +704,21 @@ const ambientOn = computed(
     ui.settings.lyricsVisualizer,
 );
 useVisualizer(vizCanvas, () => ambientOn.value, { bars: 64 });
+
+const translateReplace = computed(
+  () => ui.settings.lyricsTranslateMode === "replace",
+);
+
+function lineTranslation(i: number): string {
+  if (!ui.settings.lyricsTranslate) return "";
+  const tr = player.lyricsTranslation?.[i];
+  if (!tr) return "";
+  const trimmed = tr.trim();
+  if (!trimmed) return "";
+  const orig = (lines.value[i]?.text || "").trim();
+  if (trimmed.toLowerCase() === orig.toLowerCase()) return "";
+  return trimmed;
+}
 
 const fill = ref(0);
 const fillStyle = computed(() => ({ "--lp": `${fill.value}%` }));

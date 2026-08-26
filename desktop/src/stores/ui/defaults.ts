@@ -23,6 +23,7 @@ export type LyricsAlign = "left" | "center" | "right";
 export type LyricsBackdrop = "cover" | "gradient" | "solid";
 export type LyricsHighlight = "white" | "accent" | "karaoke";
 export type LyricsAnnotationMark = "off" | "underline" | "dot" | "tint";
+export type LyricsTranslateMode = "under" | "replace";
 
 export const DEFAULT_DISCORD_CLIENT_ID = "1532382113821753354";
 
@@ -95,6 +96,9 @@ export interface InterfaceSettings {
   lyricsAnnotations: boolean;
   lyricsAnnotationMark: LyricsAnnotationMark;
   lyricsSource: LyricsSource;
+  lyricsTranslate: boolean;
+  lyricsTranslateTarget: string;
+  lyricsTranslateMode: LyricsTranslateMode;
   togetherShowDock: boolean;
   discordEnabled: boolean;
   discordClientId: string;
@@ -193,6 +197,9 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   lyricsAnnotations: true,
   lyricsAnnotationMark: "underline",
   lyricsSource: "auto",
+  lyricsTranslate: false,
+  lyricsTranslateTarget: "ru",
+  lyricsTranslateMode: "under",
   togetherShowDock: true,
   discordEnabled: true,
   discordClientId: DEFAULT_DISCORD_CLIENT_ID,

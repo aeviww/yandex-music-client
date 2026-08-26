@@ -9,6 +9,7 @@ mod presence;
 mod proxy;
 mod state;
 mod together;
+mod translate;
 mod tray;
 mod yandex;
 
@@ -104,6 +105,8 @@ pub fn run() {
             genius::genius_clear_cache,
             lrclib::lrclib_lookup,
             lrclib::lrclib_clear_cache,
+            translate::translate_lines,
+            translate::translate_clear_cache,
             presence::validate_discord_app,
             presence::update_discord_presence,
             presence::clear_discord_presence,

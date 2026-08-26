@@ -244,6 +244,49 @@
       @update:model-value="ui.set('lyricsShowOrigin', $event)"
     />
 
+    <div class="settings-subgroup-head">Перевод</div>
+
+    <SettingToggle
+      :model-value="ui.settings.lyricsTranslate"
+      label="Переводить текст"
+      description="Показывать перевод строк песни. Берётся автоматически, работает и для синхронного текста."
+      @update:model-value="ui.set('lyricsTranslate', $event)"
+    />
+
+    <div v-if="ui.settings.lyricsTranslate" class="setting-row">
+      <div class="setting-copy">
+        <b>Как показывать</b>
+        <span>«Под строкой» - оригинал и перевод вместе; «Вместо» - только перевод.</span>
+      </div>
+      <div class="settings-choice">
+        <button
+          v-for="item in translateModes"
+          :key="item.value"
+          :class="{ on: ui.settings.lyricsTranslateMode === item.value }"
+          @click="ui.set('lyricsTranslateMode', item.value)"
+        >
+          {{ item.label }}
+        </button>
+      </div>
+    </div>
+
+    <div v-if="ui.settings.lyricsTranslate" class="setting-row">
+      <div class="setting-copy">
+        <b>Язык перевода</b>
+        <span>На какой язык переводить текст песни.</span>
+      </div>
+      <div class="settings-choice">
+        <button
+          v-for="item in translateTargets"
+          :key="item.value"
+          :class="{ on: ui.settings.lyricsTranslateTarget === item.value }"
+          @click="ui.set('lyricsTranslateTarget', item.value)"
+        >
+          {{ item.label }}
+        </button>
+      </div>
+    </div>
+
     <div class="settings-subgroup-head">Разборы Genius</div>
 
     <SettingToggle
@@ -299,6 +342,7 @@ import type {
   LyricsFont,
   LyricsHighlight,
   LyricsSource,
+  LyricsTranslateMode,
 } from "@/stores/ui/defaults";
 import { useUiStore } from "@/stores/ui/index";
 
@@ -345,5 +389,16 @@ const marks: Array<{ value: LyricsAnnotationMark; label: string }> = [
   { value: "tint", label: "Заливка" },
   { value: "dot", label: "Значок" },
   { value: "off", label: "Без метки" },
+];
+
+const translateModes: Array<{ value: LyricsTranslateMode; label: string }> = [
+  { value: "under", label: "Под строкой" },
+  { value: "replace", label: "Вместо оригинала" },
+];
+
+const translateTargets: Array<{ value: string; label: string }> = [
+  { value: "ru", label: "Русский" },
+  { value: "en", label: "English" },
+  { value: "uk", label: "Українська" },
 ];
 </script>

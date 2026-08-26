@@ -305,6 +305,9 @@ export const useUiStore = defineStore("ui", {
       this.settings.lyricsAnnotations = d.lyricsAnnotations;
       this.settings.lyricsAnnotationMark = d.lyricsAnnotationMark;
       this.settings.lyricsSource = d.lyricsSource;
+      this.settings.lyricsTranslate = d.lyricsTranslate;
+      this.settings.lyricsTranslateTarget = d.lyricsTranslateTarget;
+      this.settings.lyricsTranslateMode = d.lyricsTranslateMode;
       this.apply();
     },
   },
