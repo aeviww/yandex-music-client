@@ -15,6 +15,8 @@ import {
   isCurrentToken,
   nextSourceToken,
   resumeAudioContext,
+  resetNormalization,
+  setNormalization,
   safePlay,
   warmNext,
   resumeOnGesture,
@@ -142,6 +144,7 @@ let lastSessionSave = 0;
 let lastProgress = 0;
 let lastMediaSync = 0;
 let mediaBound = false;
+let normBound = false;
 let quietSince = 0;
 let skipGuard = 0;
 
@@ -334,6 +337,15 @@ export const usePlayerStore = defineStore("player", {
       }
 
       this.setupMediaSession();
+
+      setNormalization(useUiStore().settings.normalizeVolume);
+      if (!normBound) {
+        normBound = true;
+        watch(
+          () => useUiStore().settings.normalizeVolume,
+          (on) => setNormalization(on),
+        );
+      }
     },
 
     setupMediaSession() {
@@ -680,6 +692,7 @@ export const usePlayerStore = defineStore("player", {
       const ui = useUiStore().settings;
       const rapid = Date.now() - lastLoadAt < 900;
       lastLoadAt = Date.now();
+      if (ui.normalizeVolume) resetNormalization();
       const fadeMs =
         ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
           ? Math.round(Math.max(0, ui.crossfadeSeconds) * 1000)

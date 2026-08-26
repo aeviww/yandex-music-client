@@ -117,6 +117,12 @@
         @update:model-value="ui.set('gaplessEnabled', $event)"
       />
       <SettingToggle
+        :model-value="ui.settings.normalizeVolume"
+        label="Нормализация громкости"
+        description="Выравнивает громкость между треками в стиле ReplayGain: тихие записи звучат громче, а слишком громкие - тише, чтобы не тянуться к регулятору при смене трека."
+        @update:model-value="ui.set('normalizeVolume', $event)"
+      />
+      <SettingToggle
         :model-value="ui.settings.systemMediaControls"
         label="Системные медиа-контролы"
         description="Управление плеером с медиа-клавиш и системных виджетов - панель громкости Windows, Пункт управления macOS, MPRIS в Linux. Показывает название трека и обложку. Это не то же самое, что глобальные горячие клавиши."

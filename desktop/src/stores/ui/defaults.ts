@@ -110,6 +110,7 @@ export interface InterfaceSettings {
   crossfadeEnabled: boolean;
   crossfadeSeconds: number;
   gaplessEnabled: boolean;
+  normalizeVolume: boolean;
   trimSilence: boolean;
   autoWaveOnQueueEnd: boolean;
   autoWaveSource: AutoWaveSource;
@@ -207,6 +208,7 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   crossfadeEnabled: true,
   crossfadeSeconds: 4,
   gaplessEnabled: false,
+  normalizeVolume: false,
   trimSilence: false,
   autoWaveOnQueueEnd: true,
   autoWaveSource: "playlist",

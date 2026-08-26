@@ -111,6 +111,7 @@ interface Graph {
   source: MediaElementAudioSourceNode;
   preamp: GainNode;
   filters: BiquadFilterNode[];
+  normGain: GainNode;
   routed: boolean;
 }
 
@@ -124,7 +125,7 @@ function route(current: Graph, throughFilters: boolean): void {
     current.source.disconnect();
   } catch {}
   if (throughFilters) current.source.connect(current.preamp);
-  else current.source.connect(current.context.destination);
+  else current.source.connect(current.normGain);
   if (analyser) {
     try {
       current.source.connect(analyser);
@@ -139,6 +140,9 @@ function build(): Graph | null {
     const context = new AudioContext({ latencyHint: "playback" });
     const source = context.createMediaElementSource(audio);
     const preamp = context.createGain();
+    const normGain = context.createGain();
+    normGain.gain.value = 1;
+    normGain.connect(context.destination);
     const filters = EQ_BANDS.map((frequency, index) => {
       const filter = context.createBiquadFilter();
       filter.type =
@@ -158,10 +162,10 @@ function build(): Graph | null {
       node.connect(filter);
       node = filter;
     }
-    node.connect(context.destination);
+    node.connect(normGain);
 
-    graph = { context, source, preamp, filters, routed: false };
-    source.connect(context.destination);
+    graph = { context, source, preamp, filters, normGain, routed: false };
+    source.connect(normGain);
     void context.resume().catch(() => undefined);
     return graph;
   } catch {
@@ -239,6 +243,62 @@ export function currentLevel(): number {
     sum += v * v;
   }
   return Math.sqrt(sum / levelBuffer.length);
+}
+
+// Нормализация громкости (ReplayGain-style): живой AGC выравнивает
+// воспринимаемую громкость между треками через мастер-гейн normGain.
+let normTimer: number | null = null;
+let normEma = 0;
+let normSamples = 0;
+
+// Сбрасываем оценку громкости при смене трека (гейн не трогаем — плавно переадаптируется).
+export function resetNormalization(): void {
+  normEma = 0;
+  normSamples = 0;
+}
+
+export function setNormalization(enabled: boolean): void {
+  if (!enabled) {
+    if (normTimer !== null) {
+      clearInterval(normTimer);
+      normTimer = null;
+    }
+    normEma = 0;
+    normSamples = 0;
+    if (graph) {
+      try {
+        graph.normGain.gain.cancelScheduledValues(graph.context.currentTime);
+        graph.normGain.gain.setTargetAtTime(1, graph.context.currentTime, 0.25);
+      } catch {}
+    }
+    return;
+  }
+  if (normTimer !== null) return;
+  if (!build()) return;
+  ensureAnalyser();
+  const TARGET = 0.16; // целевой RMS (~ -16 dBFS)
+  const FLOOR = 0.02; // ниже — тишина/интро, не трогаем
+  normTimer = window.setInterval(() => {
+    if (!graph || audio.paused) return;
+    const vol = audio.volume;
+    if (vol < 0.02) return;
+    // Делим на громкость, чтобы AGC не боролся с регулятором громкости.
+    const decoupled = currentLevel() / Math.max(0.05, vol);
+    if (decoupled < FLOOR) return;
+    const alpha = normSamples < 8 ? 0.25 : 0.06;
+    normEma =
+      normEma === 0 ? decoupled : normEma + alpha * (decoupled - normEma);
+    normSamples += 1;
+    if (normSamples < 4) return;
+    const desired = Math.max(0.4, Math.min(2.0, TARGET / normEma));
+    try {
+      graph.normGain.gain.setTargetAtTime(
+        desired,
+        graph.context.currentTime,
+        0.6,
+      );
+    } catch {}
+  }, 250);
 }
 
 let gestureArmed = false;
