@@ -783,7 +783,9 @@
 }
 
 .lyric-kw {
-  white-space: pre;
+  white-space: pre-wrap;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
   background-image: linear-gradient(
     90deg,
     #fff 0%,
