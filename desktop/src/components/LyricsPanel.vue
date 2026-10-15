@@ -252,11 +252,13 @@
           >
             <template v-if="synced">
               <div v-if="introDots" class="lyrics-intro-dots">
-                <span class="lyric-dots live"
-                  ><i :class="{ on: introStage >= 1 }" /><i
-                    :class="{ on: introStage >= 2 }" /><i
-                    :class="{ on: introStage >= 3 }"
-                /></span>
+                <span class="lyric-dots live" :class="{ out: dotsOut }">
+                  <i
+                    v-for="n in 3"
+                    :key="n"
+                    :style="{ '--f': dotLevel(n - 1) }"
+                  />
+                </span>
               </div>
               <button
                 v-for="(line, i) in lines"
@@ -288,14 +290,18 @@
                     ></template
                   ><template v-else-if="line.text">{{ line.text }}</template
                   ><span
-                    v-else
+                    v-else-if="dotsAllowed(i)"
                     class="lyric-dots"
-                    :class="{ live: i === player.activeLine }"
-                    ><i :class="{ on: dotStage(i) >= 1 }" /><i
-                      :class="{ on: dotStage(i) >= 2 }" /><i
-                      :class="{ on: dotStage(i) >= 3 }" /></span
-                ></span>
-                <span
+                    :class="{
+                      live: i === player.activeLine,
+                      out: i === player.activeLine && dotsOut,
+                    }"
+                    ><i
+                      v-for="n in 3"
+                      :key="n"
+                      :style="{ '--f': lineDotLevel(i, n - 1) }"
+                  /></span> </span
+                ><span
                   v-if="lineAnnotations[i]"
                   class="lyric-note"
                   title="Разбор строки"
@@ -779,9 +785,37 @@ const wordKaraoke = computed(
   () => karaoke.value && ui.settings.lyricsKaraokeWord,
 );
 
-// Три точки в инструментальных паузах и во вступлении: заполняются
-// по очереди, как в Apple Music.
-const introFill = ref(0);
+// Три точки в инструментальных паузах и во вступлении, как в Apple Music:
+// показываем только в паузах от DOTS_MIN_GAP, сначала небольшая задержка
+// (точки плавно появляются), затем заливка по очереди, а в конце точки
+// «схлопываются» прямо перед следующей строкой.
+const DOTS_MIN_GAP = 4000; // минимальная длина паузы, мс
+const DOTS_LEAD = 700; // задержка до начала заливки, мс
+const DOTS_TAIL = 450; // время на анимацию ухода в конце паузы, мс
+
+const dotsFill = ref(0);
+const dotsOut = computed(() => dotsFill.value >= 100);
+
+function gapProgress(elapsed: number, total: number): number {
+  const usable = total - DOTS_LEAD - DOTS_TAIL;
+  if (usable <= 0) return 0;
+  return Math.min(100, Math.max(0, ((elapsed - DOTS_LEAD) / usable) * 100));
+}
+
+// Уровень заливки точки n (0..2) в диапазоне 0..1.
+function dotLevel(n: number): number {
+  return Math.min(1, Math.max(0, (dotsFill.value / 100) * 3 - n));
+}
+
+function lineDotLevel(i: number, n: number): number {
+  return i === player.activeLine ? dotLevel(n) : 0;
+}
+
+function dotsAllowed(i: number): boolean {
+  const list = lines.value;
+  const next = list[i + 1];
+  return !!next && next.time_ms - list[i].time_ms >= DOTS_MIN_GAP;
+}
 
 const tickOn = computed(() => player.showLyrics && synced.value);
 
@@ -789,20 +823,8 @@ const introDots = computed(
   () =>
     synced.value &&
     player.activeLine < 0 &&
-    (lines.value[0]?.time_ms ?? 0) > 1500,
+    (lines.value[0]?.time_ms ?? 0) >= DOTS_MIN_GAP,
 );
-
-function stageFrom(percent: number): number {
-  if (percent <= 0) return 0;
-  return Math.min(3, Math.floor((percent / 100) * 3) + 1);
-}
-
-function dotStage(i: number): number {
-  if (i !== player.activeLine) return 0;
-  return stageFrom(fill.value);
-}
-
-const introStage = computed(() => stageFrom(introFill.value));
 
 // Слова активной строки вместе с хвостовыми пробелами.
 const activeWords = computed<string[]>(() => {
@@ -851,13 +873,12 @@ function tick() {
     const end = list[index + 1]?.time_ms ?? start + 4200;
     const span = Math.max(320, end - start);
     fill.value = Math.min(100, Math.max(0, ((now - start) / span) * 100));
-    introFill.value = 0;
+    dotsFill.value = line.text ? 0 : gapProgress(now - start, end - start);
   } else {
     fill.value = 0;
     // Вступление до первой строки.
     const first = list[0]?.time_ms ?? 0;
-    introFill.value =
-      first > 0 ? Math.min(100, Math.max(0, (now / first) * 100)) : 0;
+    dotsFill.value = first > 0 ? gapProgress(now, first) : 0;
   }
   raf = requestAnimationFrame(tick);
 }
@@ -867,7 +888,7 @@ function stopTick() {
   cancelAnimationFrame(raf);
   raf = 0;
   fill.value = 0;
-  introFill.value = 0;
+  dotsFill.value = 0;
 }
 
 watch(
