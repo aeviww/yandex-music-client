@@ -24,6 +24,7 @@ export interface Track {
   album_id: string | null;
   album_title: string | null;
   cover_url: string | null;
+  cover_url_large?: string | null;
   duration_ms: number | null;
   available: boolean;
 }

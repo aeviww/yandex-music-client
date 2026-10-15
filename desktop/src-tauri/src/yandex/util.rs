@@ -66,15 +66,18 @@ pub fn map_artist(a: &YArtist) -> ArtistDto {
 
 pub fn map_track(t: &YTrack) -> TrackDto {
     let album = t.albums.first();
+    let cover_uri = t
+        .cover_uri
+        .clone()
+        .or_else(|| album.and_then(|a| a.cover_uri.clone()));
     TrackDto {
         id: val_to_id(&t.id),
         title: t.title.clone().unwrap_or_default(),
         artists: t.artists.iter().map(map_artist).collect(),
         album_id: album.map(|a| val_to_id(&a.id)),
         album_title: album.and_then(|a| a.title.clone()),
-        cover_url: cover_url(&t.cover_uri.clone().or_else(|| {
-            album.and_then(|a| a.cover_uri.clone())
-        })),
+        cover_url: cover_url(&cover_uri),
+        cover_url_large: img(cover_uri.as_deref(), "1000x1000"),
         duration_ms: t.duration_ms,
         available: t.available.unwrap_or(true),
     }

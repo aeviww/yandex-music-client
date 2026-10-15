@@ -214,7 +214,15 @@ const showQueue = ref(false);
 const native = ref(false);
 const dotsButton = ref<HTMLElement | null>(null);
 
-const coverUrl = computed(() => player.current?.cover_url || "");
+// const coverUrl = computed(
+//   () => player.current?.cover_url_large || player.current?.cover_url || "",
+// );
+
+const coverUrl = computed(() => {
+  const track = player.current;
+  const url = track?.cover_url_large || track?.cover_url || "";
+  return url.replace(/\/\d+x\d+(?=$|\?)/, "/1000x1000");
+}); // костыль, но работает
 
 const scrubbing = ref<number | null>(null);
 const seekValue = computed(() => scrubbing.value ?? player.progress);

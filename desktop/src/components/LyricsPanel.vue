@@ -254,8 +254,8 @@
               <div v-if="introDots" class="lyrics-intro-dots">
                 <span class="lyric-dots live"
                   ><i :class="{ on: introStage >= 1 }" /><i
-                    :class="{ on: introStage >= 2 }"
-                  /><i :class="{ on: introStage >= 3 }"
+                    :class="{ on: introStage >= 2 }" /><i
+                    :class="{ on: introStage >= 3 }"
                 /></span>
               </div>
               <button
@@ -286,18 +286,15 @@
                       :style="{ '--wp': wordFill(wi) + '%' }"
                       >{{ w }}</span
                     ></template
-                  ><template v-else-if="line.text">{{
-                    line.text
-                  }}</template
+                  ><template v-else-if="line.text">{{ line.text }}</template
                   ><span
                     v-else
                     class="lyric-dots"
                     :class="{ live: i === player.activeLine }"
                     ><i :class="{ on: dotStage(i) >= 1 }" /><i
-                      :class="{ on: dotStage(i) >= 2 }"
-                    /><i :class="{ on: dotStage(i) >= 3 }"
-                  /></span></span
-                >
+                      :class="{ on: dotStage(i) >= 2 }" /><i
+                      :class="{ on: dotStage(i) >= 3 }" /></span
+                ></span>
                 <span
                   v-if="lineAnnotations[i]"
                   class="lyric-note"
@@ -342,7 +339,11 @@
                   <Icon name="info" :size="10" />
                 </span>
                 <span
-                  v-if="!isPart(line.text) && !translateReplace && lineTranslation(i)"
+                  v-if="
+                    !isPart(line.text) &&
+                    !translateReplace &&
+                    lineTranslation(i)
+                  "
                   class="lyric-tr"
                   >{{ lineTranslation(i) }}</span
                 >
@@ -513,7 +514,15 @@ onBeforeUnmount(() => {
 
 const lines = computed(() => player.lyrics?.lines || []);
 const synced = computed(() => Boolean(player.lyrics?.synced));
-const coverUrl = computed(() => player.current?.cover_url || "");
+// const coverUrl = computed(
+//   () => player.current?.cover_url_large || player.current?.cover_url || "",
+// );
+
+const coverUrl = computed(() => {
+  const track = player.current;
+  const url = track?.cover_url_large || track?.cover_url || "";
+  return url.replace(/\/\d+x\d+(?=$|\?)/, "/1000x1000");
+}); // костыль, но работает
 const artistLabel = computed(() =>
   player.current ? artistNames(player.current.artists) : "",
 );
@@ -826,9 +835,7 @@ function wordFill(index: number): number {
 
 function karaokeWordActive(i: number): boolean {
   return (
-    wordKaraoke.value &&
-    i === player.activeLine &&
-    activeWords.value.length > 0
+    wordKaraoke.value && i === player.activeLine && activeWords.value.length > 0
   );
 }
 

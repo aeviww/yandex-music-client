@@ -15,6 +15,7 @@ pub struct TrackDto {
     pub album_id: Option<String>,
     pub album_title: Option<String>,
     pub cover_url: Option<String>,
+    pub cover_url_large: Option<String>,
     pub duration_ms: Option<i64>,
     pub available: bool,
 }
@@ -53,7 +54,8 @@ pub struct PlaylistTracksDto {
 }
 
 #[derive(Serialize, Clone)]
-pub struct PlaylistDto {    pub kind: i64,
+pub struct PlaylistDto {
+    pub kind: i64,
     pub title: String,
     pub track_count: i64,
     pub cover_url: Option<String>,
