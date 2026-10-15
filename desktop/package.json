@@ -1,8 +1,8 @@
 {
   "name": "mashiro-desktop",
   "private": true,
-  "version": "0.2.0",
-  "description": "Mashiro - лёгкий форк-клиент Яндекс Музыки на Quasar + Tauri",
+  "version": "b0.3",
+  "description": "mashiro - клиент я.музыки",
   "type": "module",
   "scripts": {
     "dev": "quasar dev",

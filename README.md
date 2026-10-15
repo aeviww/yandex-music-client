@@ -6,7 +6,7 @@
 
 неофициальный десктоп-клиент яндекс музыки на tauri 2 и vue 3
 
-[![версия](https://img.shields.io/badge/версия-b0.1-fa2d48?style=flat-square)](https://github.com/elytrya/yandex-music-client/releases)
+[![версия](https://img.shields.io/badge/версия-b0.3-fa2d48?style=flat-square)](https://github.com/elytrya/yandex-music-client/releases)
 [![статус](https://img.shields.io/badge/статус-бета-orange?style=flat-square)](https://github.com/elytrya/yandex-music-client)
 [![лицензия](https://img.shields.io/badge/лицензия-GPL--3.0-blue?style=flat-square)](LICENSE)
 [![платформы](https://img.shields.io/badge/платформы-windows%20%7C%20linux%20%7C%20macos-lightgrey?style=flat-square)](#сборка)
@@ -142,7 +142,7 @@
   "дополнительное" его можно посмотреть, ввести старый или сбросить
 
 сервер можно поднять у себя - исходники и инструкция лежат в отдельном
-репозитории: [elytrya/mashiro-together](https://github.com/elytrya/mashiro-together). 
+репозитории: [elytrya/mashiro-together](https://github.com/elytrya/mashiro-together).
 после запуска просто впишите свой адрес вместо дефолтного - все участники должны указать один
 и тот же сервер.
 
