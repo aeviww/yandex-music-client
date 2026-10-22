@@ -6,9 +6,8 @@
 
 неофициальный десктоп-клиент яндекс музыки на tauri 2 и vue 3
 
-[!WARNING]
-клиент сейчас переписывается, поэтому обновлений пока не будет. новые версии будут публиковаться в ветке v2.
-
+> [!WARNING]
+> клиент сейчас переписывается, поэтому обновлений пока не будет. новые версии будут публиковаться в ветке [`v2`](https://github.com/aeviww/yandex-music-client/tree/v2).
 
 
 [![версия](https://img.shields.io/badge/версия-b0.3-fa2d48?style=flat-square)](https://github.com/elytrya/yandex-music-client/releases)
