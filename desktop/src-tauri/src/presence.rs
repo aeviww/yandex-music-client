@@ -1,15 +1,13 @@
 use serde::{Deserialize, Serialize};
-use std::io::{Read, Write};
-use std::sync::Mutex;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tauri::State;
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::sync::Mutex;
 
 #[cfg(windows)]
-use std::fs::OpenOptions;
-#[cfg(windows)]
-use std::fs::File;
+use tokio::net::windows::named_pipe::{ClientOptions, NamedPipeClient};
 #[cfg(unix)]
-use std::os::unix::net::UnixStream;
+use tokio::net::UnixStream;
 
 macro_rules! dev_log {
     ($($arg:tt)*) => {
@@ -27,10 +25,11 @@ const OP_PING: u32 = 3;
 const OP_PONG: u32 = 4;
 
 const RETRY_COOLDOWN: Duration = Duration::from_secs(5);
+const IPC_TIMEOUT: Duration = Duration::from_millis(1500);
 
 #[cfg(windows)]
 struct Pipe {
-    file: File,
+    stream: NamedPipeClient,
 }
 
 #[cfg(unix)]
@@ -40,18 +39,16 @@ struct Pipe {
 
 impl Pipe {
     #[cfg(windows)]
-    fn open(index: u8) -> Result<Self, String> {
+    async fn open(index: u8) -> Result<Self, String> {
         let path = format!(r"\\.\pipe\discord-ipc-{index}");
-        let file = OpenOptions::new()
-            .read(true)
-            .write(true)
+        let stream = ClientOptions::new()
             .open(&path)
             .map_err(|e| format!("{path}: {e}"))?;
-        Ok(Self { file })
+        Ok(Self { stream })
     }
 
     #[cfg(unix)]
-    fn open(index: u8) -> Result<Self, String> {
+    async fn open(index: u8) -> Result<Self, String> {
         let base = std::env::var("XDG_RUNTIME_DIR")
             .or_else(|_| std::env::var("TMPDIR"))
             .or_else(|_| std::env::var("TMP"))
@@ -67,10 +64,8 @@ impl Pipe {
 
         let mut last = String::new();
         for path in candidates {
-            match UnixStream::connect(&path) {
+            match UnixStream::connect(&path).await {
                 Ok(stream) => {
-                    let _ = stream.set_read_timeout(Some(Duration::from_secs(5)));
-                    let _ = stream.set_write_timeout(Some(Duration::from_secs(5)));
                     return Ok(Self { stream });
                 }
                 Err(e) => last = format!("{path}: {e}"),
@@ -79,33 +74,26 @@ impl Pipe {
         Err(last)
     }
 
-    #[cfg(windows)]
-    fn raw(&mut self) -> &mut File {
-        &mut self.file
-    }
-
-    #[cfg(unix)]
-    fn raw(&mut self) -> &mut UnixStream {
-        &mut self.stream
-    }
-
-    fn send(&mut self, opcode: u32, payload: &str) -> Result<(), String> {
+    async fn send(&mut self, opcode: u32, payload: &str) -> Result<(), String> {
         let bytes = payload.as_bytes();
         let mut frame = Vec::with_capacity(8 + bytes.len());
         frame.extend_from_slice(&opcode.to_le_bytes());
         frame.extend_from_slice(&(bytes.len() as u32).to_le_bytes());
         frame.extend_from_slice(bytes);
 
-        let io = self.raw();
-        io.write_all(&frame).map_err(|e| e.to_string())?;
-        io.flush().map_err(|e| e.to_string())
+        self.stream
+            .write_all(&frame)
+            .await
+            .map_err(|e| e.to_string())?;
+        self.stream.flush().await.map_err(|e| e.to_string())
     }
 
-    fn receive(&mut self) -> Result<(u32, String), String> {
-        let io = self.raw();
-
+    async fn receive(&mut self) -> Result<(u32, String), String> {
         let mut header = [0u8; 8];
-        io.read_exact(&mut header).map_err(|e| e.to_string())?;
+        self.stream
+            .read_exact(&mut header)
+            .await
+            .map_err(|e| e.to_string())?;
 
         let opcode = u32::from_le_bytes([header[0], header[1], header[2], header[3]]);
         let length = u32::from_le_bytes([header[4], header[5], header[6], header[7]]) as usize;
@@ -116,7 +104,10 @@ impl Pipe {
 
         let mut body = vec![0u8; length];
         if length > 0 {
-            io.read_exact(&mut body).map_err(|e| e.to_string())?;
+            self.stream
+                .read_exact(&mut body)
+                .await
+                .map_err(|e| e.to_string())?;
         }
 
         Ok((opcode, String::from_utf8_lossy(&body).to_string()))
@@ -190,11 +181,11 @@ fn clamp(text: &str) -> String {
     trimmed.chars().take(128).collect()
 }
 
-fn handshake(application_id: &str) -> Result<Connection, String> {
+async fn handshake(application_id: &str) -> Result<Connection, String> {
     let mut last = String::new();
 
     for index in 0u8..10 {
-        let mut pipe = match Pipe::open(index) {
+        let mut pipe = match Pipe::open(index).await {
             Ok(pipe) => pipe,
             Err(e) => {
                 last = e;
@@ -205,15 +196,20 @@ fn handshake(application_id: &str) -> Result<Connection, String> {
         dev_log!("pipe {index} opened");
 
         let hello = serde_json::json!({ "v": 1, "client_id": application_id }).to_string();
-        if let Err(e) = pipe.send(OP_HANDSHAKE, &hello) {
+        if let Err(e) = pipe.send(OP_HANDSHAKE, &hello).await {
             last = e;
             continue;
         }
 
-        let (opcode, body) = match pipe.receive() {
-            Ok(frame) => frame,
-            Err(e) => {
+        let receive_res = tokio::time::timeout(IPC_TIMEOUT, pipe.receive()).await;
+        let (opcode, body) = match receive_res {
+            Ok(Ok(frame)) => frame,
+            Ok(Err(e)) => {
                 last = e;
+                continue;
+            }
+            Err(_) => {
+                last = format!("таймаут ответа Discord на канале {index}");
                 continue;
             }
         };
@@ -340,7 +336,7 @@ fn activity_json(payload: &PresencePayload, level: u8) -> serde_json::Value {
     activity
 }
 
-fn send_activity(
+async fn send_activity(
     connection: &mut Connection,
     activity: Option<serde_json::Value>,
 ) -> Result<(), String> {
@@ -357,15 +353,25 @@ fn send_activity(
     .to_string();
 
     dev_log!("-> {frame}");
-    connection.pipe.send(OP_FRAME, &frame)?;
+    connection.pipe.send(OP_FRAME, &frame).await?;
 
     loop {
-        let (opcode, body) = connection.pipe.receive()?;
+        let receive_res = tokio::time::timeout(IPC_TIMEOUT, connection.pipe.receive()).await;
+        let (opcode, body) = match receive_res {
+            Ok(Ok(frame)) => frame,
+            Ok(Err(e)) => return Err(e),
+            Err(_) => {
+                return Err(
+                    "Таймаут ожидания ответа Discord (клиент заблокирован или завис)".to_string(),
+                )
+            }
+        };
+
         dev_log!("<- op={opcode} {body}");
 
         match opcode {
             OP_PING => {
-                connection.pipe.send(OP_PONG, &body)?;
+                connection.pipe.send(OP_PONG, &body).await?;
                 continue;
             }
             OP_PONG => continue,
@@ -399,11 +405,11 @@ fn send_activity(
     }
 }
 
-fn push(connection: &mut Connection, payload: &PresencePayload) -> Result<(), String> {
+async fn push(connection: &mut Connection, payload: &PresencePayload) -> Result<(), String> {
     let mut last = String::new();
 
     for level in 0u8..4 {
-        match send_activity(connection, Some(activity_json(payload, level))) {
+        match send_activity(connection, Some(activity_json(payload, level))).await {
             Ok(()) => {
                 dev_log!("activity accepted at level {level}");
                 return Ok(());
@@ -418,10 +424,9 @@ fn push(connection: &mut Connection, payload: &PresencePayload) -> Result<(), St
     Err(last)
 }
 
-fn remember_error(state: &State<'_, DiscordState>, message: Option<String>) {
-    if let Ok(mut slot) = state.last_error.lock() {
-        *slot = message;
-    }
+async fn remember_error(state: &State<'_, DiscordState>, message: Option<String>) {
+    let mut slot = state.last_error.lock().await;
+    *slot = message;
 }
 
 fn status_of(slot: &Option<Connection>, last_error: Option<String>) -> PresenceStatus {
@@ -434,18 +439,18 @@ fn status_of(slot: &Option<Connection>, last_error: Option<String>) -> PresenceS
 }
 
 #[tauri::command]
-pub fn update_discord_presence(
+pub async fn update_discord_presence(
     payload: PresencePayload,
     state: State<'_, DiscordState>,
 ) -> Result<(), String> {
-    let mut slot = state.inner.lock().map_err(|e| e.to_string())?;
+    let mut slot = state.inner.lock().await;
 
     if !payload.enabled || payload.application_id.trim().is_empty() {
         if let Some(mut connection) = slot.take() {
-            let _ = send_activity(&mut connection, None);
+            let _ = send_activity(&mut connection, None).await;
         }
         drop(slot);
-        remember_error(&state, None);
+        remember_error(&state, None).await;
         return Ok(());
     }
 
@@ -459,7 +464,7 @@ pub fn update_discord_presence(
     }
 
     if slot.is_none() {
-        let mut last = state.last_attempt.lock().map_err(|e| e.to_string())?;
+        let mut last = state.last_attempt.lock().await;
         if let Some(at) = *last {
             if at.elapsed() < RETRY_COOLDOWN {
                 return Ok(());
@@ -468,11 +473,11 @@ pub fn update_discord_presence(
         *last = Some(Instant::now());
         drop(last);
 
-        match handshake(payload.application_id.trim()) {
+        match handshake(payload.application_id.trim()).await {
             Ok(connection) => *slot = Some(connection),
             Err(message) => {
                 drop(slot);
-                remember_error(&state, Some(message.clone()));
+                remember_error(&state, Some(message.clone())).await;
                 return Err(message);
             }
         }
@@ -482,10 +487,10 @@ pub fn update_discord_presence(
         .as_mut()
         .ok_or_else(|| "Нет соединения с Discord".to_string())?;
 
-    match push(connection, &payload) {
+    match push(connection, &payload).await {
         Ok(()) => {
             drop(slot);
-            remember_error(&state, None);
+            remember_error(&state, None).await;
             Ok(())
         }
         Err(first) => {
@@ -493,25 +498,25 @@ pub fn update_discord_presence(
             dev_log!("retrying with a fresh connection after: {first}");
             slot.take();
 
-            let mut fresh = match handshake(payload.application_id.trim()) {
+            let mut fresh = match handshake(payload.application_id.trim()).await {
                 Ok(connection) => connection,
                 Err(message) => {
                     drop(slot);
-                    remember_error(&state, Some(message.clone()));
+                    remember_error(&state, Some(message.clone())).await;
                     return Err(message);
                 }
             };
 
-            match push(&mut fresh, &payload) {
+            match push(&mut fresh, &payload).await {
                 Ok(()) => {
                     *slot = Some(fresh);
                     drop(slot);
-                    remember_error(&state, None);
+                    remember_error(&state, None).await;
                     Ok(())
                 }
                 Err(message) => {
                     drop(slot);
-                    remember_error(&state, Some(message.clone()));
+                    remember_error(&state, Some(message.clone())).await;
                     Err(message)
                 }
             }
@@ -520,23 +525,25 @@ pub fn update_discord_presence(
 }
 
 #[tauri::command]
-pub fn clear_discord_presence(state: State<'_, DiscordState>) -> Result<(), String> {
-    let mut slot = state.inner.lock().map_err(|e| e.to_string())?;
+pub async fn clear_discord_presence(state: State<'_, DiscordState>) -> Result<(), String> {
+    let mut slot = state.inner.lock().await;
     if let Some(connection) = slot.as_mut() {
-        let _ = send_activity(connection, None);
+        let _ = send_activity(connection, None).await;
     }
     Ok(())
 }
 
 #[tauri::command]
-pub fn discord_presence_status(state: State<'_, DiscordState>) -> Result<PresenceStatus, String> {
-    let slot = state.inner.lock().map_err(|e| e.to_string())?;
-    let last_error = state.last_error.lock().ok().and_then(|e| e.clone());
+pub async fn discord_presence_status(
+    state: State<'_, DiscordState>,
+) -> Result<PresenceStatus, String> {
+    let slot = state.inner.lock().await;
+    let last_error = state.last_error.lock().await.clone();
     Ok(status_of(&slot, last_error))
 }
 
 #[tauri::command]
-pub fn reconnect_discord_presence(
+pub async fn reconnect_discord_presence(
     application_id: String,
     state: State<'_, DiscordState>,
 ) -> Result<PresenceStatus, String> {
@@ -545,24 +552,24 @@ pub fn reconnect_discord_presence(
         return Err("Не задан Application ID".to_string());
     }
 
-    let mut slot = state.inner.lock().map_err(|e| e.to_string())?;
+    let mut slot = state.inner.lock().await;
     slot.take();
 
-    if let Ok(mut last) = state.last_attempt.lock() {
-        *last = None;
-    }
+    let mut last = state.last_attempt.lock().await;
+    *last = None;
+    drop(last);
 
-    match handshake(&id) {
+    match handshake(&id).await {
         Ok(connection) => {
             *slot = Some(connection);
             let status = status_of(&slot, None);
             drop(slot);
-            remember_error(&state, None);
+            remember_error(&state, None).await;
             Ok(status)
         }
         Err(message) => {
             drop(slot);
-            remember_error(&state, Some(message.clone()));
+            remember_error(&state, Some(message.clone())).await;
             Err(message)
         }
     }
@@ -580,11 +587,20 @@ pub async fn validate_discord_app(application_id: String) -> Result<String, Stri
         "https"
     );
 
-    let res = reqwest::Client::new()
+    let client = match reqwest::Client::builder()
+        .connect_timeout(Duration::from_secs(2))
+        .timeout(Duration::from_secs(3))
+        .build()
+    {
+        Ok(c) => c,
+        Err(e) => return Err(format!("Ошибка инициализации HTTP: {e}")),
+    };
+
+    let res = client
         .get(&url)
         .send()
         .await
-        .map_err(|e| format!("Не удалось проверить ID: {e}"))?;
+        .map_err(|e| format!("Серверы Discord недоступны (возможна блокировка сети): {e}"))?;
 
     if res.status().as_u16() == 404 {
         return Err(
