@@ -228,14 +228,19 @@ function reconnect() {
 
 onMounted(async () => {
   await player.refreshPresenceStatus();
-  try {
-    appName.value = await api.validateDiscordApp(
-      ui.settings.discordClientId || DEFAULT_DISCORD_CLIENT_ID,
-    );
-    idError.value = null;
-  } catch (error) {
-    appName.value = null;
-    idError.value = String((error as Error)?.message ?? error);
+  if (ui.settings.discordEnabled) {
+    void api
+      .validateDiscordApp(
+        ui.settings.discordClientId || DEFAULT_DISCORD_CLIENT_ID,
+      )
+      .then((name) => {
+        appName.value = name;
+        idError.value = null;
+      })
+      .catch((error) => {
+        appName.value = null;
+        idError.value = String((error as Error)?.message ?? error);
+      });
   }
 });
 </script>
