@@ -1,8 +1,7 @@
 <template>
-  <q-layout view="lHh Lpr lFf" class="app-shell">
+  <q-layout view="lHh Lpr lFf" class="bg-[var(--bg)]">
     <div
-      class="titlebar"
-      style="justify-content: flex-end"
+      class="flex h-[40px] select-none items-center justify-end gap-[4px] pl-[8px] [html[data-mode=light]_&]:bg-[color-mix(in_srgb,var(--surface)_88%,var(--bg))]"
       @mousedown="startWindowDrag"
       @dblclick="toggleWindowMaximize"
     >
@@ -10,87 +9,127 @@
     </div>
 
     <q-page-container>
-      <q-page class="flex flex-center">
-        <div class="panel login-panel">
-          <div class="login-brand">
-            <div class="login-logo">
-              <Icon name="wave" :size="20" />
+      <q-page class="flex items-center justify-center">
+        <div
+          class="w-[352px] max-w-[calc(100vw-48px)] rounded-[14px] border border-solid border-[color:var(--line)] bg-[var(--surface)] p-[20px] [html[data-mode=light]_&]:text-[color:var(--fg)] [html[data-mode=light]_&]:shadow-[0_12px_32px_var(--shadow-soft)]"
+        >
+          <div class="flex items-center gap-[10px]">
+            <div
+              class="grid h-[36px] w-[36px] flex-none place-items-center rounded-[10px] bg-[color-mix(in_srgb,var(--accent)_14%,transparent)] text-[color:var(--accent)]"
+            >
+              <Icon name="wave" :size="18" />
             </div>
             <div>
-              <div class="h2 login-title">Mashiro</div>
-              <div class="faint t-12">Клиент Яндекс Музыки</div>
+              <div
+                class="text-[length:calc(16px*var(--text-scale,1))] font-semibold leading-[1.15] tracking-[-0.02em] text-[color:var(--fg)]"
+              >
+                Mashiro
+              </div>
+              <div
+                class="text-[length:calc(12px*var(--text-scale,1))] leading-[1.3] text-[color:var(--fg-faint)]"
+              >
+                Клиент Яндекс Музыки
+              </div>
             </div>
           </div>
 
           <template v-if="!waiting">
-            <p class="dim t-13 login-lead">
-              Войди через аккаунт Яндекса - откроется браузер. Токен приложение
+            <p
+              class="mx-0 mb-[14px] mt-[14px] text-[length:calc(13px*var(--text-scale,1))] leading-[1.5] text-[color:var(--fg-dim)]"
+            >
+              Войди через аккаунт Яндекса — откроется браузер. Токен приложение
               получит само, копировать ничего не нужно.
             </p>
 
             <button
               type="button"
-              class="login-primary"
+              class="flex h-[40px] w-full cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[var(--accent)] text-[13.5px] font-semibold text-[#0b0b0d] transition-[filter,opacity] duration-[120ms] ease-[ease] hover:brightness-[1.06] active:brightness-[0.96] focus-visible:outline focus-visible:outline-[1.5px] focus-visible:outline-offset-[2px] focus-visible:outline-[color:var(--accent)] disabled:cursor-default disabled:opacity-60"
               :disabled="auth.loading"
               @click="loginAuto"
             >
-              <q-spinner v-if="auth.loading" size="16px" color="white" />
+              <q-spinner v-if="auth.loading" size="16px" color="dark" />
               <span v-else>Войти через Яндекс</span>
             </button>
           </template>
 
-          <div v-else class="login-waiting">
-            <p class="dim t-13 login-wait-lead">
-              В браузере открылась страница входа Яндекса. Войди и введи там
-              этот код:
+          <div v-else class="mt-[14px]">
+            <p
+              class="mx-0 mb-[10px] mt-0 text-[length:calc(13px*var(--text-scale,1))] leading-[1.5] text-[color:var(--fg-dim)]"
+            >
+              В браузере открылась страница входа Яндекса. Введи там этот код:
             </p>
-            <div class="login-code-row">
-              <div class="login-code">{{ userCode }}</div>
+            <div class="flex gap-[6px]">
+              <div
+                class="flex h-[46px] flex-1 items-center justify-center rounded-[10px] bg-[var(--surface-2)] text-[22px] font-semibold tabular-nums tracking-[4px] text-[color:var(--fg)] select-all"
+              >
+                {{ userCode }}
+              </div>
               <button
                 type="button"
-                class="login-copy"
+                class="grid h-[46px] w-[46px] flex-none cursor-pointer place-items-center rounded-[10px] border-0 bg-[var(--surface-2)] text-[color:var(--fg-dim)] transition-colors duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] focus-visible:outline focus-visible:outline-[1.5px] focus-visible:outline-offset-[2px] focus-visible:outline-[color:var(--accent)]"
                 :title="copied ? 'Скопировано' : 'Скопировать код'"
                 @click="copyCode"
               >
-                <Icon :name="copied ? 'check' : 'copy'" :size="18" />
+                <Icon :name="copied ? 'check' : 'copy'" :size="16" />
               </button>
             </div>
-            <div class="login-wait-row">
-              <q-spinner size="14px" />
-              <span class="t-12 dim">Ждём подтверждения…</span>
-              <button type="button" class="login-link" @click="cancelAuto">
+            <div class="mt-[10px] flex items-center gap-[8px]">
+              <q-spinner size="13px" />
+              <span
+                class="text-[length:calc(12px*var(--text-scale,1))] text-[color:var(--fg-dim)]"
+                >Ждём подтверждения…</span
+              >
+              <button
+                type="button"
+                class="ml-auto flex-none cursor-pointer border-0 bg-transparent px-[2px] py-0 text-[11.5px] text-[color:var(--fg-faint)] transition-colors duration-[120ms] ease-[ease] hover:text-[color:var(--fg)]"
+                @click="cancelAuto"
+              >
                 Отмена
               </button>
             </div>
-            <p class="faint t-11 login-url">
+            <p
+              class="mx-0 mb-0 mt-[8px] break-all text-[length:calc(11px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-faint)]"
+            >
               Если браузер не открылся, зайди вручную на {{ verifyUrl }}
             </p>
           </div>
 
-          <div v-if="autoError" class="t-12 login-error">{{ autoError }}</div>
+          <div
+            v-if="autoError"
+            class="mt-[8px] text-[length:calc(12px*var(--text-scale,1))] text-[#f87171]"
+          >
+            {{ autoError }}
+          </div>
 
-          <button type="button" class="login-toggle" @click="manual = !manual">
+          <button
+            type="button"
+            class="mt-[14px] flex w-full cursor-pointer items-center gap-[8px] border-0 bg-transparent p-0 text-[12.5px] text-[color:var(--fg-dim)] transition-colors duration-[120ms] ease-[ease] hover:text-[color:var(--fg)]"
+            @click="manual = !manual"
+          >
             <Icon name="key" :size="14" />
             <span>Ввести токен вручную</span>
             <Icon
               name="chevronDown"
               :size="14"
-              class="login-toggle-chev"
-              :class="{ open: manual }"
+              class="ml-auto transition-transform duration-[160ms] ease-[ease]"
+              :class="{ 'rotate-180': manual }"
             />
           </button>
 
-          <div v-if="manual" class="login-manual">
-            <div class="field login-field">
+          <div v-if="manual" class="mt-[10px]">
+            <div
+              class="flex h-[34px] items-center gap-[8px] rounded-[10px] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] px-[12px] py-0 transition-[border-color] duration-[140ms] ease-[ease] focus-within:border-[color-mix(in_srgb,var(--accent)_55%,transparent)]"
+            >
               <input
                 v-model="raw"
+                class="min-w-0 flex-1 border-0 bg-transparent text-[13px] text-[color:var(--fg)] [outline:none] placeholder:text-[color:var(--fg-faint)]"
                 :type="reveal ? 'text' : 'password'"
                 placeholder="Токен y0_Ag… или ссылка с access_token"
                 @keyup.enter="submitManual"
               />
               <button
                 type="button"
-                class="login-link"
+                class="flex-none cursor-pointer border-0 bg-transparent px-[2px] py-0 text-[11.5px] text-[color:var(--fg-faint)] transition-colors duration-[120ms] ease-[ease] hover:text-[color:var(--fg)]"
                 @click="reveal = !reveal"
               >
                 {{ reveal ? "Скрыть" : "Показать" }}
@@ -98,23 +137,32 @@
             </div>
             <button
               type="button"
-              class="btn full-width q-mt-sm"
+              class="mt-[8px] inline-flex h-[32px] w-full cursor-pointer items-center justify-center rounded-[10px] border border-solid border-[color:var(--line)] bg-transparent px-[14px] py-0 text-[length:calc(12px*var(--text-scale,1))] font-medium text-[color:var(--fg-dim)] transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:border-[color:var(--fg-faint)] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:pointer-events-none disabled:opacity-[0.45] [html[data-mode=light]_&]:text-[color:var(--fg)]"
               :disabled="auth.loading || !raw.trim()"
               @click="submitManual"
             >
-              <span>Войти с токеном</span>
+              Войти с токеном
             </button>
-            <p class="faint t-11 login-hint">
-              Токен можно взять из адресной строки после входа - вставь целиком,
+            <p
+              class="mx-0 mb-0 mt-[8px] text-[length:calc(11px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-faint)]"
+            >
+              Токен можно взять из адресной строки после входа — вставь целиком,
               нужная часть извлечётся сама.
             </p>
           </div>
 
-          <div v-if="auth.error" class="t-12 login-error">{{ auth.error }}</div>
+          <div
+            v-if="auth.error"
+            class="mt-[8px] text-[length:calc(12px*var(--text-scale,1))] text-[#f87171]"
+          >
+            {{ auth.error }}
+          </div>
 
-          <div class="sep login-sep" />
+          <div class="mx-0 mb-[12px] mt-[16px] h-px bg-[var(--line)]" />
 
-          <div class="faint t-11">
+          <div
+            class="text-[length:calc(11px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-faint)]"
+          >
             Токен хранится только на твоём компьютере и используется лишь для
             API Яндекс Музыки.
           </div>
@@ -226,195 +274,3 @@ onBeforeUnmount(() => {
   void stopWaiting();
 });
 </script>
-
-<style scoped>
-.login-panel {
-  width: 380px;
-  max-width: calc(100vw - 48px);
-  padding: 26px;
-}
-
-.login-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.login-logo {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  flex: none;
-  place-items: center;
-  border-radius: 13px;
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  color: var(--accent);
-}
-
-.login-title {
-  line-height: 1.1;
-}
-
-.login-lead {
-  margin: 18px 0 20px;
-  line-height: 1.5;
-}
-
-.login-primary {
-  display: flex;
-  width: 100%;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    filter 0.12s ease,
-    opacity 0.12s ease;
-}
-
-.login-primary:hover {
-  filter: brightness(1.07);
-}
-
-.login-primary:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.login-waiting {
-  margin: 18px 0 4px;
-}
-
-.login-wait-lead {
-  margin: 0 0 12px;
-  line-height: 1.5;
-}
-
-.login-code-row {
-  display: flex;
-  gap: 8px;
-}
-
-.login-code {
-  display: flex;
-  flex: 1;
-  height: 52px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: var(--surface-2);
-  color: var(--fg);
-  font-size: 26px;
-  font-weight: 600;
-  letter-spacing: 4px;
-  font-variant-numeric: tabular-nums;
-}
-
-.login-copy {
-  display: grid;
-  width: 52px;
-  height: 52px;
-  flex: none;
-  place-items: center;
-  border: 0;
-  border-radius: 12px;
-  background: var(--surface-2);
-  color: var(--fg-dim);
-  cursor: pointer;
-  transition:
-    background 0.12s ease,
-    color 0.12s ease;
-}
-
-.login-copy:hover {
-  background: var(--hover);
-  color: var(--fg);
-}
-
-.login-wait-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.login-url {
-  margin: 12px 2px 0;
-  line-height: 1.45;
-  word-break: break-all;
-}
-
-.login-toggle {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--fg-dim);
-  font-size: 12.5px;
-  cursor: pointer;
-  transition: color 0.12s ease;
-}
-
-.login-toggle:hover {
-  color: var(--fg);
-}
-
-.login-toggle-chev {
-  margin-left: auto;
-  transition: transform 0.16s ease;
-}
-
-.login-toggle-chev.open {
-  transform: rotate(180deg);
-}
-
-.login-manual {
-  margin-top: 12px;
-}
-
-.login-field {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.login-link {
-  flex: none;
-  padding: 0 2px;
-  border: 0;
-  background: none;
-  color: var(--fg-faint);
-  font-size: 11.5px;
-  cursor: pointer;
-  transition: color 0.12s ease;
-}
-
-.login-link:hover {
-  color: var(--fg);
-}
-
-.login-hint {
-  margin: 10px 2px 0;
-  line-height: 1.45;
-}
-
-.login-error {
-  margin-top: 10px;
-  color: #f87171;
-}
-
-.login-sep {
-  margin: 20px 0 14px;
-}
-</style>

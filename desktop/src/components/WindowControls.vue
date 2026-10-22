@@ -1,23 +1,26 @@
 <template>
-  <div class="win-controls">
-    <div class="win-btn" @click="minimize">
-      <Icon name="minimize" :size="15" :width="1.5" />
-    </div>
-    <div class="win-btn" @click="toggleMaximize">
-      <Icon
-        :name="maximized ? 'restore' : 'maximize'"
-        :size="13"
-        :width="1.5"
-      />
-    </div>
-    <div class="win-btn close" @click="close">
-      <Icon name="close" :size="15" :width="1.5" />
-    </div>
+  <div class="flex h-full items-stretch" @mousedown.stop @dblclick.stop>
+    <button
+      v-for="b in buttons"
+      :key="b.key"
+      type="button"
+      :aria-label="b.label"
+      :title="b.label"
+      class="grid w-[44px] cursor-pointer place-items-center border-0 bg-transparent p-0 text-[color:var(--fg-faint)] transition-[background,color] duration-[120ms] ease-[ease] focus-visible:outline focus-visible:outline-[1.5px] focus-visible:-outline-offset-[3px] focus-visible:outline-[color:var(--accent)]"
+      :class="
+        b.key === 'close'
+          ? 'hover:bg-[#e5484d] hover:text-white active:bg-[#c93c40]'
+          : 'hover:bg-[var(--hover)] hover:text-[color:var(--fg)] active:bg-[color-mix(in_srgb,var(--fg)_12%,transparent)]'
+      "
+      @click="b.action"
+    >
+      <Icon :name="b.icon" :size="b.size" :width="1.5" />
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Icon from "@/components/Icon.vue";
 
 const maximized = ref(false);
@@ -54,6 +57,30 @@ async function close() {
   const win = await appWindow();
   await win?.close();
 }
+
+const buttons = computed(() => [
+  {
+    key: "minimize",
+    label: "Свернуть",
+    icon: "minimize",
+    size: 14,
+    action: minimize,
+  },
+  {
+    key: "maximize",
+    label: maximized.value ? "Восстановить" : "Развернуть",
+    icon: maximized.value ? "restore" : "maximize",
+    size: 12,
+    action: toggleMaximize,
+  },
+  {
+    key: "close",
+    label: "Закрыть",
+    icon: "close",
+    size: 14,
+    action: close,
+  },
+]);
 
 onMounted(async () => {
   const win = await appWindow();
