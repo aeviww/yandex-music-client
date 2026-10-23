@@ -75,7 +75,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import TrackRow from "@/components/TrackRow.vue";
+import TrackRow from "@/components/common/TrackRow.vue";
 import { api } from "@/api/client";
 import type { Track } from "@/api/types";
 import { plural } from "@/lib/format";

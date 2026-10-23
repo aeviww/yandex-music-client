@@ -87,7 +87,11 @@
           @click="player.toggleLyricsFullscreen()"
         >
           <Icon
-            :name="player.lyricsFullscreen ? 'mingcute:restore-line' : 'mingcute:square-line'"
+            :name="
+              player.lyricsFullscreen
+                ? 'mingcute:restore-line'
+                : 'mingcute:square-line'
+            "
             :size="15"
           />
           <q-tooltip>
@@ -123,7 +127,7 @@
     </div>
 
     <div v-else-if="!lines.length" class="lyrics-empty lyrics-layer">
-      <Icon name="mingcute:subtitle-line" :size="26" />
+      <Icon name="maki:karaoke" :size="26" />
       <div class="lyrics-empty-title">
         {{ player.lyricsError || "Текста для этого трека нет" }}
       </div>
@@ -172,7 +176,12 @@
                 :class="{ on: isLiked }"
                 @click.stop="toggleLike"
               >
-                <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="17" />
+                <Icon
+                  :name="
+                    isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'
+                  "
+                  :size="17"
+                />
                 <q-tooltip>
                   {{ isLiked ? "Убрать из любимых" : "Мне нравится" }}
                 </q-tooltip>
@@ -210,7 +219,14 @@
                 class="la-btn la-btn-main"
                 @click.stop="player.toggle()"
               >
-                <Icon :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'" :size="22" />
+                <Icon
+                  :name="
+                    player.isPlaying
+                      ? 'mingcute:pause-fill'
+                      : 'mingcute:play-fill'
+                  "
+                  :size="22"
+                />
               </button>
               <button
                 type="button"
@@ -227,7 +243,11 @@
                 @click.stop="player.cycleRepeat()"
               >
                 <Icon
-                  :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'"
+                  :name="
+                    player.repeat === 'one'
+                      ? 'mingcute:repeat-one-line'
+                      : 'mingcute:repeat-line'
+                  "
                   :size="16"
                 />
                 <q-tooltip>Повтор</q-tooltip>
@@ -444,8 +464,8 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import type { QScrollArea } from "quasar";
 import { useRoute, useRouter } from "vue-router";
-import LyricsSettingsPanel from "@/components/lyrics/LyricsSettingsPanel.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import LyricsSettingsPanel from "@/components/player/LyricsSettingsPanel.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { api } from "@/api/client";
 import type { GeniusQuote } from "@/api/types";
 import { audio } from "@/lib/audio";

@@ -120,7 +120,7 @@
 import LoginWelcome from "@/components/login/LoginWelcome.vue";
 import LoginDeviceCode from "@/components/login/LoginDeviceCode.vue";
 import LoginTokenForm from "@/components/login/LoginTokenForm.vue";
-import WindowControls from "@/components/WindowControls.vue";
+import WindowControls from "@/components/window/WindowControls.vue";
 import { startWindowDrag, toggleWindowMaximize } from "@/lib/window";
 import { onBeforeUnmount, ref } from "vue";
 import { useRouter } from "vue-router";

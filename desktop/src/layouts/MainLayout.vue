@@ -409,16 +409,16 @@ import {
   watch,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
-import FullscreenPlayer from "@/components/FullscreenPlayer.vue";
-import LyricsPanel from "@/components/LyricsPanel.vue";
-import MiniPlayer from "@/components/MiniPlayer.vue";
-import PlayerBar from "@/components/PlayerBar.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
+import FullscreenPlayer from "@/components/player/FullscreenPlayer.vue";
+import LyricsPanel from "@/components/player/LyricsPanel.vue";
+import MiniPlayer from "@/components/player/MiniPlayer.vue";
+import PlayerBar from "@/components/player/PlayerBar.vue";
 import TogetherDock from "@/components/together/TogetherDock.vue";
-import TrackLyricsDialog from "@/components/TrackLyricsDialog.vue";
-import AppDialog from "@/components/AppDialog.vue";
-import WindowControls from "@/components/WindowControls.vue";
+import TrackLyricsDialog from "@/components/player/TrackLyricsDialog.vue";
+import AppDialog from "@/components/common/AppDialog.vue";
+import WindowControls from "@/components/window/WindowControls.vue";
 import { trackLyricsDialog } from "@/lib/dialogs";
 import {
   bindGlobalHotkeyEvents,

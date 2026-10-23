@@ -604,7 +604,7 @@ import {
 } from "vue";
 import { Notify } from "quasar";
 import { useRoute, useRouter } from "vue-router";
-import TrackRow from "@/components/TrackRow.vue";
+import TrackRow from "@/components/common/TrackRow.vue";
 import { api } from "@/api/client";
 import type { Playlist, Track } from "@/api/types";
 import { artistNames, formatDuration, plural } from "@/lib/format";

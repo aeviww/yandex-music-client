@@ -255,12 +255,12 @@
 </template>
 
 <script setup lang="ts">
-import ArtistsLine from "@/components/ArtistsLine.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";
-import LazyTracks from "@/components/LazyTracks.vue";
-import TrackRow from "@/components/TrackRow.vue";
+import LazyTracks from "@/components/common/LazyTracks.vue";
+import TrackRow from "@/components/common/TrackRow.vue";
 import { api } from "@/api/client";
 import type { AlbumPage } from "@/api/types";
 import { plural } from "@/lib/format";

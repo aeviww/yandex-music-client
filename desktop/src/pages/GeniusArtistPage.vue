@@ -284,7 +284,7 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Notify } from "quasar";
-import ImageViewer from "@/components/ImageViewer.vue";
+import ImageViewer from "@/components/common/ImageViewer.vue";
 import { api } from "@/api/client";
 import type { GeniusArtist, GeniusHit } from "@/api/types";
 import { plural, pluralWord } from "@/lib/format";

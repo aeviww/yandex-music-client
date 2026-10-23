@@ -198,8 +198,8 @@ import {
 import { api } from "@/api/client";
 import { Notify } from "quasar";
 import type { StationInfo, Track, WheelItem } from "@/api/types";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { readCache, swr } from "@/lib/cache";
 import { usePlayerStore } from "@/stores/player/index";
 

@@ -71,7 +71,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import GeniusPanel from "@/components/GeniusPanel.vue";
+import GeniusPanel from "@/components/player/GeniusPanel.vue";
 import { api } from "@/api/client";
 import type { Lyrics } from "@/api/types";
 import { readCache, writeCache } from "@/lib/cache";

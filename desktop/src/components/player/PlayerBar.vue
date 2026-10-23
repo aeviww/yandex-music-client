@@ -82,17 +82,7 @@
             class="pb-dots"
             aria-label="Действия с треком"
           >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <circle cx="5" cy="12" r="2" />
-              <circle cx="12" cy="12" r="2" />
-              <circle cx="19" cy="12" r="2" />
-            </svg>
+            <Icon name="mingcute:more-1-fill" :size="18" />
             <q-tooltip>Действия с треком</q-tooltip>
             <TrackMenu :track="player.current" />
           </button>
@@ -204,11 +194,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import AiTag from "@/components/AiTag.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import AiTag from "@/components/common/AiTag.vue";
 import PlayerButton from "@/components/player/PlayerButton.vue";
 import PlayerEditor from "@/components/player/PlayerEditor.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { useVisualizer } from "@/composables/useVisualizer";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";

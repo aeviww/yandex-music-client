@@ -16,7 +16,7 @@
         <div class="fs-drag" @mousedown="onDrag" @dblclick="toggleNative" />
         <div class="fs-top-actions">
           <button class="icon-btn round" @click="openLyrics">
-            <Icon name="mingcute:subtitle-line" :size="18" />
+            <Icon name="maki:karaoke" :size="18" />
             <q-tooltip>Текст трека</q-tooltip>
           </button>
           <button
@@ -28,7 +28,10 @@
             <q-tooltip>Очередь</q-tooltip>
           </button>
           <button class="icon-btn round" @click="toggleNative">
-            <Icon :name="native ? 'mingcute:restore-line' : 'mingcute:square-line'" :size="16" />
+            <Icon
+              :name="native ? 'mingcute:restore-line' : 'mingcute:square-line'"
+              :size="16"
+            />
             <q-tooltip>
               {{ native ? "Оконный режим" : "Весь экран" }}
             </q-tooltip>
@@ -52,7 +55,12 @@
                 alt=""
                 @click="openLyrics"
               />
-              <Icon v-else name="mingcute:music-line" :size="72" class="faint" />
+              <Icon
+                v-else
+                name="mingcute:music-line"
+                :size="72"
+                class="faint"
+              />
             </Transition>
 
             <div class="fs-art-hover">
@@ -70,7 +78,11 @@
                   @click.stop="player.toggle()"
                 >
                   <Icon
-                    :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
+                    :name="
+                      player.isPlaying
+                        ? 'mingcute:pause-fill'
+                        : 'mingcute:play-fill'
+                    "
                     :size="28"
                   />
                   <q-tooltip>
@@ -92,7 +104,12 @@
                   :class="{ on: liked }"
                   @click.stop="like"
                 >
-                  <Icon :name="liked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="19" />
+                  <Icon
+                    :name="
+                      liked ? 'mingcute:heart-fill' : 'mingcute:heart-line'
+                    "
+                    :size="19"
+                  />
                   <q-tooltip>
                     {{ liked ? "Убрать лайк" : "Мне нравится" }}
                   </q-tooltip>
@@ -166,7 +183,12 @@
                     decoding="async"
                     alt=""
                   />
-                  <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
+                  <Icon
+                    v-else
+                    name="mingcute:music-line"
+                    :size="14"
+                    class="faint"
+                  />
                 </div>
                 <div class="col" style="min-width: 0">
                   <div class="ellipsis t-13">{{ item.track.title }}</div>
@@ -176,7 +198,11 @@
                 </div>
                 <Icon
                   v-if="item.index === player.index"
-                  :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
+                  :name="
+                    player.isPlaying
+                      ? 'mingcute:pause-fill'
+                      : 'mingcute:play-fill'
+                  "
                   :size="13"
                 />
               </div>
@@ -194,8 +220,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { formatDuration } from "@/lib/format";
 import {
   isNativeFullscreen,

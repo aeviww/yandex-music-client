@@ -3,7 +3,7 @@
     <h2
       class="mb-[12px] mt-[16px] text-[28px] font-semibold leading-[1.15] tracking-[-0.035em] text-white"
     >
-      Продолжи в браузере
+      Продолжим в браузере
     </h2>
     <p class="m-0 text-[15px] leading-[1.6] text-[#b3b3b3]">
       Войди в аккаунт Яндекса и введи код на открывшейся странице.
@@ -22,7 +22,10 @@
         :title="copied ? 'Скопировано' : 'Скопировать код'"
         @click="$emit('copy')"
       >
-        <Icon :name="copied ? 'mingcute:check-line' : 'mingcute:copy-2-line'" :size="20" />
+        <Icon
+          :name="copied ? 'mingcute:check-line' : 'mingcute:copy-2-line'"
+          :size="20"
+        />
       </button>
     </div>
     <div

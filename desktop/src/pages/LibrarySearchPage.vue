@@ -138,9 +138,9 @@
 import { computed, onMounted, ref } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import LazyTracks from "@/components/LazyTracks.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import LazyTracks from "@/components/common/LazyTracks.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { api } from "@/api/client";
 import type { Track } from "@/api/types";
 import { readCache, writeCache } from "@/lib/cache";

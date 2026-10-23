@@ -42,7 +42,14 @@
     :class="{ on: player.repeat !== 'off' }"
     @click="player.cycleRepeat()"
   >
-    <Icon :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'" :size="18" />
+    <Icon
+      :name="
+        player.repeat === 'one'
+          ? 'mingcute:repeat-one-line'
+          : 'mingcute:repeat-line'
+      "
+      :size="18"
+    />
     <q-tooltip>{{ repeatLabel }}</q-tooltip>
   </div>
 
@@ -52,7 +59,10 @@
     :class="{ on: isLiked, off: !player.current }"
     @click="player.current && player.like()"
   >
-    <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="18" />
+    <Icon
+      :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'"
+      :size="18"
+    />
     <q-tooltip>
       {{ isLiked ? "Убрать из «Мне нравится»" : "Нравится" }}
     </q-tooltip>
@@ -74,7 +84,7 @@
     :class="{ on: player.showLyrics, off: !player.current }"
     @click="player.current && player.toggleLyrics()"
   >
-    <Icon name="mingcute:subtitle-line" :size="18" />
+    <Icon name="maki:karaoke" :size="18" />
     <q-tooltip>Текст песни</q-tooltip>
   </div>
 
@@ -145,7 +155,11 @@
           @click="player.setPlaybackRate(r)"
         >
           <span>{{ r }}x</span>
-          <Icon v-if="player.playbackRate === r" name="mingcute:check-line" :size="15" />
+          <Icon
+            v-if="player.playbackRate === r"
+            name="mingcute:check-line"
+            :size="15"
+          />
         </div>
       </div>
     </q-menu>
@@ -165,7 +179,11 @@
           @click="player.setQuality(q.value)"
         >
           <span>{{ q.label }}</span>
-          <Icon v-if="player.quality === q.value" name="mingcute:check-line" :size="15" />
+          <Icon
+            v-if="player.quality === q.value"
+            name="mingcute:check-line"
+            :size="15"
+          />
         </div>
       </div>
     </q-menu>
@@ -173,7 +191,12 @@
 
   <div v-else-if="id === 'volume'" class="player-volume">
     <div class="icon-btn" @click="player.toggleMute()">
-      <Icon :name="player.muted ? 'mingcute:volume-off-line' : 'mingcute:volume-line'" :size="18" />
+      <Icon
+        :name="
+          player.muted ? 'mingcute:volume-off-line' : 'mingcute:volume-line'
+        "
+        :size="18"
+      />
       <q-tooltip>{{
         player.muted ? "Включить звук" : "Выключить звук"
       }}</q-tooltip>

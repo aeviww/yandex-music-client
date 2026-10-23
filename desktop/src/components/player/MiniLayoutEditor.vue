@@ -181,7 +181,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import MiniPlayer from "@/components/MiniPlayer.vue";
+import MiniPlayer from "@/components/player/MiniPlayer.vue";
 import EditRange from "@/components/player/EditRange.vue";
 import EditSwitch from "@/components/player/EditSwitch.vue";
 import { api } from "@/api/client";

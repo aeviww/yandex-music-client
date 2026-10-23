@@ -82,7 +82,9 @@
             <Icon
               v-else
               :key="player.isPlaying ? 'pause' : 'play'"
-              :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
+              :name="
+                player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'
+              "
               :size="16"
             />
           </Transition>
@@ -136,7 +138,11 @@
           @click.stop="player.cycleRepeat()"
         >
           <Icon
-            :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'"
+            :name="
+              player.repeat === 'one'
+                ? 'mingcute:repeat-one-line'
+                : 'mingcute:repeat-line'
+            "
             :size="15"
           />
           <q-tooltip>Повтор</q-tooltip>
@@ -151,7 +157,10 @@
           aria-label="Нравится"
           @click.stop="player.current && player.like()"
         >
-          <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="15" />
+          <Icon
+            :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'"
+            :size="15"
+          />
           <q-tooltip>Нравится</q-tooltip>
         </button>
 
@@ -177,7 +186,7 @@
           aria-label="Текст песни"
           @click.stop="player.current && player.toggleLyrics()"
         >
-          <Icon name="mingcute:subtitle-line" :size="15" />
+          <Icon name="maki:karaoke" :size="15" />
           <q-tooltip>Текст песни</q-tooltip>
         </button>
 
@@ -249,9 +258,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import AiTag from "@/components/AiTag.vue";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import AiTag from "@/components/common/AiTag.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import { useVisualizer } from "@/composables/useVisualizer";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";

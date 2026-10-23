@@ -149,8 +149,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import LazyTracks from "@/components/LazyTracks.vue";
-import TrackRow from "@/components/TrackRow.vue";
+import LazyTracks from "@/components/common/LazyTracks.vue";
+import TrackRow from "@/components/common/TrackRow.vue";
 import { api } from "@/api/client";
 import type { Artist, SearchResult } from "@/api/types";
 import { cachedAvatar, fetchAvatars } from "@/lib/artistAvatar";

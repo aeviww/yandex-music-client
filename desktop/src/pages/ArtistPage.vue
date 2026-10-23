@@ -344,11 +344,11 @@ import { Notify } from "quasar";
 import { api } from "@/api/client";
 
 import type { ArtistLink, ArtistPage } from "@/api/types";
-import LazyTracks from "@/components/LazyTracks.vue";
-import TrackRow from "@/components/TrackRow.vue";
-import ImageViewer from "@/components/ImageViewer.vue";
-import ArtistInfoDialog from "@/components/ArtistInfoDialog.vue";
-import AiTag from "@/components/AiTag.vue";
+import LazyTracks from "@/components/common/LazyTracks.vue";
+import TrackRow from "@/components/common/TrackRow.vue";
+import ImageViewer from "@/components/common/ImageViewer.vue";
+import ArtistInfoDialog from "@/components/dialog/ArtistInfoDialog.vue";
+import AiTag from "@/components/common/AiTag.vue";
 import { plural, pluralWord } from "@/lib/format";
 import { readCache, swr } from "@/lib/cache";
 import { recordArtistStats } from "@/lib/artistStats";

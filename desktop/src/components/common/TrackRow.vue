@@ -137,9 +137,9 @@
 <script setup lang="ts">
 import { computed, watch } from "vue";
 import { useRouter } from "vue-router";
-import ArtistsLine from "@/components/ArtistsLine.vue";
-import AiTag from "@/components/AiTag.vue";
-import TrackMenu from "@/components/TrackMenu.vue";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import AiTag from "@/components/common/AiTag.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
 import type { Track } from "@/api/types";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";
