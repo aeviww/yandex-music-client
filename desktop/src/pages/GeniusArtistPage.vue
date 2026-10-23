@@ -24,9 +24,9 @@
                 decoding="async"
                 :src="person.image"
               />
-              <Icon v-else name="person" :size="56" class="faint" />
+              <Icon v-else name="mingcute:user-2-line" :size="56" class="faint" />
               <div v-if="photos.length" class="cover-zoom">
-                <Icon name="maximize" :size="22" />
+                <Icon name="mingcute:square-line" :size="22" />
               </div>
               <div v-if="photos.length > 1" class="cover-badge">
                 {{ photos.length }} фото
@@ -42,7 +42,7 @@
                   class="genius-check"
                   title="Подтверждённый аккаунт"
                 >
-                  <Icon name="check" :size="15" />
+                  <Icon name="mingcute:check-line" :size="15" />
                 </span>
               </div>
 
@@ -73,22 +73,22 @@
                   type="button"
                   @click="open(person.url)"
                 >
-                  <Icon name="globe" :size="15" />
+                  <Icon name="mingcute:earth-2-line" :size="15" />
                   <span>Открыть на Genius</span>
                 </button>
 
                 <button class="btn" type="button" @click="load(true)">
-                  <Icon name="repeat" :size="15" />
+                  <Icon name="mingcute:repeat-line" :size="15" />
                   <span>Обновить</span>
                 </button>
 
                 <button class="btn" type="button" @click="goBack">
-                  <Icon name="chevronLeft" :size="15" />
+                  <Icon name="mingcute:left-line" :size="15" />
                   <span>Назад</span>
                 </button>
 
                 <button class="icon-btn" type="button" title="Ещё">
-                  <Icon name="more" :size="18" />
+                  <Icon name="mingcute:more-2-fill" :size="18" />
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body" style="min-width: 224px">
                       <div
@@ -96,11 +96,11 @@
                         v-close-popup
                         @click="open(person.url)"
                       >
-                        <Icon name="globe" :size="17" />
+                        <Icon name="mingcute:earth-2-line" :size="17" />
                         <span>Открыть на Genius</span>
                       </div>
                       <div class="menu-item" v-close-popup @click="copyLink">
-                        <Icon name="copy" :size="17" />
+                        <Icon name="mingcute:copy-2-line" :size="17" />
                         <span>Скопировать ссылку</span>
                       </div>
                       <div
@@ -109,7 +109,7 @@
                         v-close-popup
                         @click="openViewer"
                       >
-                        <Icon name="maximize" :size="17" />
+                        <Icon name="mingcute:square-line" :size="17" />
                         <span>{{
                           photos.length > 1 ? "Все фото" : "Открыть фото"
                         }}</span>
@@ -127,7 +127,7 @@
                 >
                   <span>Ссылки и соцсети</span>
                   <span class="chip-count">{{ person.socials.length }}</span>
-                  <Icon name="chevronDown" :size="12" />
+                  <Icon name="mingcute:down-line" :size="12" />
 
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body links-menu">
@@ -158,7 +158,7 @@
                   <span class="chip-count">{{
                     person.alternate_names.length
                   }}</span>
-                  <Icon name="chevronDown" :size="12" />
+                  <Icon name="mingcute:down-line" :size="12" />
 
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body links-menu">
@@ -192,7 +192,7 @@
                   @click="openAllSongs"
                 >
                   <span>Показать все ({{ person.songs.length }})</span>
-                  <Icon name="chevronRight" :size="15" />
+                  <Icon name="mingcute:right-line" :size="15" />
                 </button>
                 <button
                   class="more-link"
@@ -200,7 +200,7 @@
                   @click="open(person.url)"
                 >
                   <span>Всё на Genius</span>
-                  <Icon name="chevronRight" :size="15" />
+                  <Icon name="mingcute:right-line" :size="15" />
                 </button>
               </div>
             </div>
@@ -219,7 +219,7 @@
                       decoding="async"
                       :src="song.art"
                     />
-                    <Icon v-else name="note" :size="26" class="faint" />
+                    <Icon v-else name="mingcute:music-line" :size="26" class="faint" />
 
                     <button
                       class="home-card-play"
@@ -227,7 +227,7 @@
                       title="Открыть на Genius"
                       @click.stop="open(song.url)"
                     >
-                      <Icon name="globe" :size="15" />
+                      <Icon name="mingcute:earth-2-line" :size="15" />
                     </button>
                   </div>
 
@@ -243,7 +243,7 @@
                         v-close-popup
                         @click="open(song.url)"
                       >
-                        <Icon name="globe" :size="17" />
+                        <Icon name="mingcute:earth-2-line" :size="17" />
                         <span>Открыть разбор на Genius</span>
                       </div>
                       <div
@@ -251,7 +251,7 @@
                         v-close-popup
                         @click="searchInApp(song)"
                       >
-                        <Icon name="search" :size="17" />
+                        <Icon name="mingcute:search-2-line" :size="17" />
                         <span>Найти в Яндекс Музыке</span>
                       </div>
                     </div>
@@ -284,7 +284,6 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Notify } from "quasar";
-import Icon from "@/components/Icon.vue";
 import ImageViewer from "@/components/ImageViewer.vue";
 import { api } from "@/api/client";
 import type { GeniusArtist, GeniusHit } from "@/api/types";
@@ -315,20 +314,20 @@ const photos = computed(() =>
 );
 
 const SOCIAL_ICONS: Record<string, string> = {
-  instagram: "instagram",
-  twitter: "twitter",
-  x: "twitter",
-  facebook: "facebook",
-  youtube: "youtube",
-  soundcloud: "soundcloud",
-  spotify: "spotify",
-  vk: "vk",
-  telegram: "telegram",
-  tiktok: "tiktok",
+  instagram: "simple-icons:instagram",
+  twitter: "simple-icons:x",
+  x: "simple-icons:x",
+  facebook: "simple-icons:facebook",
+  youtube: "simple-icons:youtube",
+  soundcloud: "simple-icons:soundcloud",
+  spotify: "simple-icons:spotify",
+  vk: "simple-icons:vk",
+  telegram: "simple-icons:telegram",
+  tiktok: "simple-icons:tiktok",
 };
 
 function iconFor(kind: string): string {
-  return SOCIAL_ICONS[kind.toLowerCase()] ?? "globe";
+  return SOCIAL_ICONS[kind.toLowerCase()] ?? "mingcute:earth-2-line";
 }
 
 async function load(force = false) {

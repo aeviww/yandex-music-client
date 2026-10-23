@@ -22,9 +22,9 @@
                 decoding="async"
                 :src="artist.cover_url"
               />
-              <Icon v-else name="person" :size="56" class="faint" />
+              <Icon v-else name="mingcute:user-2-line" :size="56" class="faint" />
               <div v-if="coverImages.length" class="cover-zoom">
-                <Icon name="maximize" :size="22" />
+                <Icon name="mingcute:square-line" :size="22" />
               </div>
               <div v-if="coverImages.length > 1" class="cover-badge">
                 {{ coverImages.length }} фото
@@ -72,7 +72,7 @@
                   :disabled="!popular.length"
                   @click="playPopular(0)"
                 >
-                  <Icon name="play" :size="15" />
+                  <Icon name="mingcute:play-fill" :size="15" />
                   <span>Слушать</span>
                 </button>
 
@@ -82,17 +82,17 @@
                   :disabled="!popular.length"
                   @click="shufflePlay"
                 >
-                  <Icon name="shuffle" :size="15" />
+                  <Icon name="mingcute:shuffle-line" :size="15" />
                   <span>Перемешать</span>
                 </button>
 
                 <button class="btn" type="button" @click="playArtistWave">
-                  <Icon name="wave" :size="15" />
+                  <Icon name="mingcute:wave-line" :size="15" />
                   <span>Волна по артисту</span>
                 </button>
 
                 <button class="icon-btn" type="button" title="Ещё">
-                  <Icon name="more" :size="18" />
+                  <Icon name="mingcute:more-2-fill" :size="18" />
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body" style="min-width: 224px">
                       <div
@@ -101,7 +101,7 @@
                         v-close-popup
                         @click="enqueuePopular"
                       >
-                        <Icon name="addQueue" :size="17" />
+                        <Icon name="mingcute:add-circle-line" :size="17" />
                         <span>Популярное в очередь</span>
                       </div>
                       <div
@@ -109,7 +109,7 @@
                         v-close-popup
                         @click="openAllTracks"
                       >
-                        <Icon name="library" :size="17" />
+                        <Icon name="mingcute:book-2-line" :size="17" />
                         <span>Все треки артиста</span>
                       </div>
                       <div
@@ -118,7 +118,7 @@
                         v-close-popup
                         @click="openViewer"
                       >
-                        <Icon name="maximize" :size="17" />
+                        <Icon name="mingcute:square-line" :size="17" />
                         <span>{{
                           coverImages.length > 1
                             ? "Все фото артиста"
@@ -138,7 +138,7 @@
                 >
                   <span>Ссылки и соцсети</span>
                   <span class="chip-count">{{ normalizedLinks.length }}</span>
-                  <Icon name="chevronDown" :size="12" />
+                  <Icon name="mingcute:down-line" :size="12" />
 
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body links-menu">
@@ -195,7 +195,7 @@
               <div class="h2">Популярное</div>
               <button class="more-link" type="button" @click="openAllTracks">
                 <span>Все треки</span>
-                <Icon name="chevronRight" :size="15" />
+                <Icon name="mingcute:right-line" :size="15" />
               </button>
             </div>
 
@@ -220,9 +220,9 @@
               <div class="h2">Альбомы</div>
               <div class="album-tools">
                 <button class="btn" type="button" title="Сортировка">
-                  <Icon name="filter" :size="14" />
+                  <Icon name="mingcute:filter-line" :size="14" />
                   <span>{{ albumSortLabel }}</span>
-                  <Icon name="chevronDown" :size="12" />
+                  <Icon name="mingcute:down-line" :size="12" />
                   <q-menu class="menu" anchor="bottom right" self="top right">
                     <div class="menu-body" style="min-width: 190px">
                       <div
@@ -233,7 +233,7 @@
                         @click="albumSort = opt.id"
                       >
                         <Icon
-                          :name="albumSort === opt.id ? 'check' : 'name'"
+                          :name="albumSort === opt.id ? 'mingcute:check-line' : 'mingcute:pencil-line'"
                           :size="16"
                         />
                         <span>{{ opt.label }}</span>
@@ -272,7 +272,7 @@
                       decoding="async"
                       :src="album.cover_url"
                     />
-                    <Icon v-else name="album" :size="26" class="faint" />
+                    <Icon v-else name="mingcute:album-line" :size="26" class="faint" />
 
                     <div v-if="album.id === latestAlbumId" class="album-latest">
                       Последний релиз
@@ -284,7 +284,7 @@
                       title="Слушать альбом"
                       @click.stop="playAlbum(album.id)"
                     >
-                      <Icon name="play" :size="16" />
+                      <Icon name="mingcute:play-fill" :size="16" />
                     </button>
                   </div>
 
@@ -300,7 +300,7 @@
                         v-close-popup
                         @click="playAlbum(album.id)"
                       >
-                        <Icon name="play" :size="17" />
+                        <Icon name="mingcute:play-fill" :size="17" />
                         <span>Слушать альбом</span>
                       </div>
                       <div
@@ -308,7 +308,7 @@
                         v-close-popup
                         @click="router.push(`/album/${album.id}`)"
                       >
-                        <Icon name="album" :size="17" />
+                        <Icon name="mingcute:album-line" :size="17" />
                         <span>Открыть альбом</span>
                       </div>
                     </div>
@@ -344,7 +344,6 @@ import { Notify } from "quasar";
 import { api } from "@/api/client";
 
 import type { ArtistLink, ArtistPage } from "@/api/types";
-import Icon from "@/components/Icon.vue";
 import LazyTracks from "@/components/LazyTracks.vue";
 import TrackRow from "@/components/TrackRow.vue";
 import ImageViewer from "@/components/ImageViewer.vue";
@@ -446,49 +445,49 @@ function linkLabel(link: ArtistLink): string {
 }
 
 const socialIcons: Record<string, string> = {
-  vk: "vk",
-  telegram: "telegram",
-  instagram: "instagram",
-  youtube: "youtube",
-  twitter: "twitter",
-  x: "twitter",
-  tiktok: "tiktok",
-  facebook: "facebook",
-  soundcloud: "soundcloud",
-  spotify: "spotify",
-  apple: "globe",
-  itunes: "globe",
-  bandcamp: "bandcamp",
-  twitch: "twitch",
-  dzen: "dzen",
-  zen: "dzen",
-  ok: "ok",
-  odnoklassniki: "ok",
-  discord: "discord",
+  vk: "simple-icons:vk",
+  telegram: "simple-icons:telegram",
+  instagram: "simple-icons:instagram",
+  youtube: "simple-icons:youtube",
+  twitter: "simple-icons:x",
+  x: "simple-icons:x",
+  tiktok: "simple-icons:tiktok",
+  facebook: "simple-icons:facebook",
+  soundcloud: "simple-icons:soundcloud",
+  spotify: "simple-icons:spotify",
+  apple: "mingcute:earth-2-line",
+  itunes: "mingcute:earth-2-line",
+  bandcamp: "simple-icons:bandcamp",
+  twitch: "simple-icons:twitch",
+  dzen: "mingcute:sparkles-line",
+  zen: "mingcute:sparkles-line",
+  ok: "simple-icons:odnoklassniki",
+  odnoklassniki: "simple-icons:odnoklassniki",
+  discord: "simple-icons:discord",
 };
 
 const hostIcons: Array<[string, string]> = [
-  ["vk.com", "vk"],
-  ["vk.ru", "vk"],
-  ["t.me", "telegram"],
-  ["telegram", "telegram"],
-  ["instagram", "instagram"],
-  ["youtube", "youtube"],
-  ["youtu.be", "youtube"],
-  ["twitter", "twitter"],
-  ["x.com", "twitter"],
-  ["tiktok", "tiktok"],
-  ["facebook", "facebook"],
-  ["fb.com", "facebook"],
-  ["soundcloud", "soundcloud"],
-  ["spotify", "spotify"],
-  ["apple", "globe"],
-  ["bandcamp", "bandcamp"],
-  ["twitch", "twitch"],
-  ["dzen.ru", "dzen"],
-  ["zen.yandex", "dzen"],
-  ["ok.ru", "ok"],
-  ["discord", "discord"],
+  ["vk.com", "simple-icons:vk"],
+  ["vk.ru", "simple-icons:vk"],
+  ["t.me", "simple-icons:telegram"],
+  ["telegram", "simple-icons:telegram"],
+  ["instagram", "simple-icons:instagram"],
+  ["youtube", "simple-icons:youtube"],
+  ["youtu.be", "simple-icons:youtube"],
+  ["twitter", "simple-icons:x"],
+  ["x.com", "simple-icons:x"],
+  ["tiktok", "simple-icons:tiktok"],
+  ["facebook", "simple-icons:facebook"],
+  ["fb.com", "simple-icons:facebook"],
+  ["soundcloud", "simple-icons:soundcloud"],
+  ["spotify", "simple-icons:spotify"],
+  ["apple", "mingcute:earth-2-line"],
+  ["bandcamp", "simple-icons:bandcamp"],
+  ["twitch", "simple-icons:twitch"],
+  ["dzen.ru", "mingcute:sparkles-line"],
+  ["zen.yandex", "mingcute:sparkles-line"],
+  ["ok.ru", "simple-icons:odnoklassniki"],
+  ["discord", "simple-icons:discord"],
 ];
 
 function iconForLink(link: { network?: string; href: string }): string {
@@ -496,7 +495,7 @@ function iconForLink(link: { network?: string; href: string }): string {
   if (network && socialIcons[network]) return socialIcons[network]!;
   const host = hostOf(link.href).toLowerCase();
   const hit = hostIcons.find(([needle]) => host.includes(needle));
-  return hit ? hit[1] : "globe";
+  return hit ? hit[1] : "mingcute:earth-2-line";
 }
 
 const normalizedLinks = computed(() => {

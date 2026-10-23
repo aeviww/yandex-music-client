@@ -15,7 +15,7 @@
                 v-if="album.cover_url"
                 :src="album.cover_url"
               />
-              <Icon v-else name="album" :size="42" class="faint" />
+              <Icon v-else name="mingcute:album-line" :size="42" class="faint" />
             </div>
 
             <div class="head-info">
@@ -39,7 +39,7 @@
                   :disabled="!album.tracks.length"
                   @click="playFrom(0)"
                 >
-                  <Icon name="play" :size="15" />
+                  <Icon name="mingcute:play-fill" :size="15" />
                   <span>Слушать</span>
                 </button>
 
@@ -49,12 +49,12 @@
                   :disabled="!album.tracks.length"
                   @click="shufflePlay"
                 >
-                  <Icon name="shuffle" :size="15" />
+                  <Icon name="mingcute:shuffle-line" :size="15" />
                   <span>Перемешать</span>
                 </button>
 
                 <button class="btn" type="button" @click="playAlbumWave">
-                  <Icon name="wave" :size="15" />
+                  <Icon name="mingcute:wave-line" :size="15" />
                   <span>Волна по альбому</span>
                 </button>
 
@@ -70,13 +70,13 @@
                   @click="toggleAlbumLike"
                 >
                   <Icon
-                    :name="albumLiked ? 'heartFilled' : 'heart'"
+                    :name="albumLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'"
                     :size="18"
                   />
                 </button>
 
                 <button class="icon-btn" type="button" title="Ещё">
-                  <Icon name="moreH" :size="18" />
+                  <Icon name="mingcute:more-1-fill" :size="18" />
                   <q-menu class="menu" anchor="bottom left" self="top left">
                     <div class="menu-body" style="min-width: 226px">
                       <div
@@ -85,16 +85,16 @@
                         v-close-popup
                         @click="enqueueAll"
                       >
-                        <Icon name="addQueue" :size="17" />
+                        <Icon name="mingcute:add-circle-line" :size="17" />
                         <span>Добавить в конец очереди</span>
                       </div>
                       <div
                         class="menu-item"
                         :class="{ disabled: !album.tracks.length }"
                       >
-                        <Icon name="playlistAdd" :size="17" />
+                        <Icon name="mingcute:classify-add-line" :size="17" />
                         <span>Перенести все треки в плейлист</span>
-                        <Icon name="chevronRight" :size="15" class="faint" />
+                        <Icon name="mingcute:right-line" :size="15" class="faint" />
                         <q-menu class="menu" anchor="top end" self="top start">
                           <div class="menu-body" style="min-width: 200px">
                             <div
@@ -119,7 +119,7 @@
                                 />
                                 <Icon
                                   v-else
-                                  name="queue"
+                                  name="mingcute:playlist-2-line"
                                   :size="14"
                                   class="faint"
                                 />
@@ -138,7 +138,7 @@
                         v-close-popup
                         @click="openArtist"
                       >
-                        <Icon name="artist" :size="17" />
+                        <Icon name="mingcute:mic-line" :size="17" />
                         <span>Перейти к исполнителю</span>
                       </div>
                     </div>
@@ -156,7 +156,7 @@
               title="Выбрать все"
               @click="toggleSelectAll"
             >
-              <Icon v-if="allSelected" name="check" :size="13" />
+              <Icon v-if="allSelected" name="mingcute:check-line" :size="13" />
             </button>
 
             <div class="select-bar-count t-12 w-600">
@@ -170,7 +170,7 @@
                 :disabled="!selectedIds.length"
                 @click="playSelected"
               >
-                <Icon name="play" :size="14" />
+                <Icon name="mingcute:play-fill" :size="14" />
                 <span>Слушать</span>
               </button>
 
@@ -180,12 +180,12 @@
                 :disabled="!selectedIds.length"
                 @click="enqueueSelected"
               >
-                <Icon name="addQueue" :size="14" />
+                <Icon name="mingcute:add-circle-line" :size="14" />
                 <span>В очередь</span>
               </button>
 
               <button class="btn" type="button" :disabled="!selectedIds.length">
-                <Icon name="playlistAdd" :size="14" />
+                <Icon name="mingcute:classify-add-line" :size="14" />
                 <span>В плейлист</span>
                 <q-menu class="menu" anchor="bottom start" self="top start">
                   <div class="menu-body">
@@ -209,7 +209,7 @@
                           loading="lazy"
                           decoding="async"
                         />
-                        <Icon v-else name="queue" :size="14" class="faint" />
+                        <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
                       </div>
                       <span class="ellipsis">{{ playlist.title }}</span>
                     </div>
@@ -223,7 +223,7 @@
                 title="Снять выделение"
                 @click="clearSelection"
               >
-                <Icon name="close" :size="15" />
+                <Icon name="mingcute:close-line" :size="15" />
               </button>
             </div>
           </div>
@@ -256,7 +256,6 @@
 
 <script setup lang="ts">
 import ArtistsLine from "@/components/ArtistsLine.vue";
-import Icon from "@/components/Icon.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";

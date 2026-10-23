@@ -5,7 +5,7 @@
       <Icon
         v-else
         :key="player.isPlaying ? 'pause' : 'play'"
-        :name="player.isPlaying ? 'pause' : 'play'"
+        :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
         :size="18"
       />
     </Transition>
@@ -17,7 +17,7 @@
     :class="{ on: player.shuffle }"
     @click="player.toggleShuffle()"
   >
-    <Icon name="shuffle" :size="18" />
+    <Icon name="mingcute:shuffle-line" :size="18" />
     <q-tooltip>Перемешать</q-tooltip>
   </div>
 
@@ -27,12 +27,12 @@
     :class="{ off: !player.hasPrev }"
     @click="player.prev()"
   >
-    <Icon name="prev" :size="19" />
+    <Icon name="mingcute:skip-previous-fill" :size="19" />
     <q-tooltip>Предыдущий</q-tooltip>
   </div>
 
   <div v-else-if="id === 'next'" class="icon-btn" @click="player.next(false)">
-    <Icon name="next" :size="19" />
+    <Icon name="mingcute:fast-forward-fill" :size="19" />
     <q-tooltip>Следующий</q-tooltip>
   </div>
 
@@ -42,7 +42,7 @@
     :class="{ on: player.repeat !== 'off' }"
     @click="player.cycleRepeat()"
   >
-    <Icon :name="player.repeat === 'one' ? 'repeatOne' : 'repeat'" :size="18" />
+    <Icon :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'" :size="18" />
     <q-tooltip>{{ repeatLabel }}</q-tooltip>
   </div>
 
@@ -52,7 +52,7 @@
     :class="{ on: isLiked, off: !player.current }"
     @click="player.current && player.like()"
   >
-    <Icon :name="isLiked ? 'heartFilled' : 'heart'" :size="18" />
+    <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="18" />
     <q-tooltip>
       {{ isLiked ? "Убрать из «Мне нравится»" : "Нравится" }}
     </q-tooltip>
@@ -64,7 +64,7 @@
     :class="{ off: !player.current }"
     @click="player.current && player.dislike()"
   >
-    <Icon name="heartOff" :size="18" />
+    <Icon name="mingcute:heart-crack-line" :size="18" />
     <q-tooltip>Не нравится</q-tooltip>
   </div>
 
@@ -74,7 +74,7 @@
     :class="{ on: player.showLyrics, off: !player.current }"
     @click="player.current && player.toggleLyrics()"
   >
-    <Icon name="lyrics" :size="18" />
+    <Icon name="mingcute:subtitle-line" :size="18" />
     <q-tooltip>Текст песни</q-tooltip>
   </div>
 
@@ -84,12 +84,12 @@
     :class="{ on: panels.queueOpen }"
     @click="panels.toggleQueue()"
   >
-    <Icon name="queue" :size="18" />
+    <Icon name="mingcute:playlist-2-line" :size="18" />
     <q-tooltip>Очередь треков</q-tooltip>
   </div>
 
   <div v-else-if="id === 'mini'" class="icon-btn" @click="panels.enterMini()">
-    <Icon name="mini" :size="18" />
+    <Icon name="mingcute:miniplayer-fill" :size="18" />
     <q-tooltip>Мини-плеер поверх окон</q-tooltip>
   </div>
 
@@ -98,7 +98,7 @@
     class="icon-btn"
     :class="{ on: sleep.active }"
   >
-    <Icon name="clock" :size="18" />
+    <Icon name="mingcute:time-line" :size="18" />
     <q-tooltip>Таймер сна: {{ sleep.label }}</q-tooltip>
     <q-menu class="panel menu" anchor="top middle" self="bottom middle">
       <div class="menu-body" style="min-width: 178px">
@@ -132,7 +132,7 @@
     class="icon-btn"
     :class="{ on: player.playbackRate !== 1 }"
   >
-    <Icon name="speed" :size="18" />
+    <Icon name="mingcute:dashboard-line" :size="18" />
     <q-tooltip>Скорость</q-tooltip>
     <q-menu class="panel menu" anchor="top middle" self="bottom middle">
       <div class="menu-body" style="min-width: 132px">
@@ -145,14 +145,14 @@
           @click="player.setPlaybackRate(r)"
         >
           <span>{{ r }}x</span>
-          <Icon v-if="player.playbackRate === r" name="check" :size="15" />
+          <Icon v-if="player.playbackRate === r" name="mingcute:check-line" :size="15" />
         </div>
       </div>
     </q-menu>
   </div>
 
   <div v-else-if="id === 'quality'" class="icon-btn">
-    <Icon name="quality" :size="18" />
+    <Icon name="mingcute:barcode-line" :size="18" />
     <q-tooltip>{{ player.qualityLabel || "Качество" }}</q-tooltip>
     <q-menu class="panel menu" anchor="top middle" self="bottom middle">
       <div class="menu-body" style="min-width: 172px">
@@ -165,7 +165,7 @@
           @click="player.setQuality(q.value)"
         >
           <span>{{ q.label }}</span>
-          <Icon v-if="player.quality === q.value" name="check" :size="15" />
+          <Icon v-if="player.quality === q.value" name="mingcute:check-line" :size="15" />
         </div>
       </div>
     </q-menu>
@@ -173,7 +173,7 @@
 
   <div v-else-if="id === 'volume'" class="player-volume">
     <div class="icon-btn" @click="player.toggleMute()">
-      <Icon :name="player.muted ? 'volumeOff' : 'volume'" :size="18" />
+      <Icon :name="player.muted ? 'mingcute:volume-off-line' : 'mingcute:volume-line'" :size="18" />
       <q-tooltip>{{
         player.muted ? "Включить звук" : "Выключить звук"
       }}</q-tooltip>
@@ -193,7 +193,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import Icon from "@/components/Icon.vue";
 import type { Quality } from "@/api/types";
 import { useLibraryStore } from "@/stores/library";
 import { usePanelsStore } from "@/stores/panels";

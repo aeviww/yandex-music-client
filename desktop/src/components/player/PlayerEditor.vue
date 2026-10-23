@@ -145,7 +145,6 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import EditRange from "@/components/player/EditRange.vue";
 import EditSwitch from "@/components/player/EditSwitch.vue";
 import { playerButtonCatalog } from "@/stores/ui/playerButtons";
@@ -165,7 +164,7 @@ function labelOf(id: PlayerButtonId): string {
 }
 
 function iconOf(id: PlayerButtonId): string {
-  return playerButtonCatalog.find((item) => item.id === id)?.icon ?? "drag";
+  return playerButtonCatalog.find((item) => item.id === id)?.icon ?? "mingcute:dots-line";
 }
 
 function onDragStart(id: PlayerButtonId, event: DragEvent) {

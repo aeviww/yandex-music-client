@@ -6,7 +6,7 @@
           <div class="h1">Коллекция</div>
           <div class="col" />
           <button class="btn-solid" type="button" @click="createPlaylist">
-            <Icon name="plus" :size="15" />
+            <Icon name="mingcute:add-line" :size="15" />
             <span>Новый плейлист</span>
           </button>
         </div>
@@ -32,14 +32,14 @@
                   v-if="pl.cover_url"
                   :src="pl.cover_url"
                 />
-                <Icon v-else name="queue" :size="26" class="faint" />
+                <Icon v-else name="mingcute:playlist-2-line" :size="26" class="faint" />
                 <button
                   class="card-play"
                   type="button"
                   title="Слушать плейлист"
                   @click.stop="playPlaylist(pl)"
                 >
-                  <Icon name="play" :size="18" />
+                  <Icon name="mingcute:play-fill" :size="18" />
                 </button>
               </div>
               <div class="row items-center no-wrap q-mt-sm" style="gap: 6px">
@@ -50,7 +50,7 @@
                   @click.stop="library.togglePin(pl.kind)"
                 >
                   <Icon
-                    :name="library.isPinned(pl.kind) ? 'pinOff' : 'pin'"
+                    :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
                     :size="14"
                   />
                   <q-tooltip>{{
@@ -70,7 +70,7 @@
                     @click="library.togglePin(pl.kind)"
                   >
                     <Icon
-                      :name="library.isPinned(pl.kind) ? 'pinOff' : 'pin'"
+                      :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
                       :size="17"
                     />
                     <span>{{
@@ -82,16 +82,16 @@
                     v-close-popup
                     @click="router.push(`/playlists/${pl.kind}`)"
                   >
-                    <Icon name="queue" :size="17" />
+                    <Icon name="mingcute:playlist-2-line" :size="17" />
                     <span>Открыть плейлист</span>
                   </div>
                   <div class="menu-sep" />
                   <div class="menu-item" v-close-popup @click="rename(pl)">
-                    <Icon name="name" :size="17" />
+                    <Icon name="mingcute:pencil-line" :size="17" />
                     <span>Переименовать</span>
                   </div>
                   <div class="menu-item" v-close-popup @click="share(pl, true)">
-                    <Icon name="share" :size="17" />
+                    <Icon name="mingcute:share-2-line" :size="17" />
                     <span>Сделать публичным</span>
                   </div>
                   <div
@@ -99,7 +99,7 @@
                     v-close-popup
                     @click="share(pl, false)"
                   >
-                    <Icon name="person" :size="17" />
+                    <Icon name="mingcute:user-2-line" :size="17" />
                     <span>Сделать личным</span>
                   </div>
                   <div class="menu-sep" />
@@ -109,7 +109,7 @@
                     @click="library.toggleHidden(pl.kind)"
                   >
                     <Icon
-                      :name="library.isHidden(pl.kind) ? 'eye' : 'eyeOff'"
+                      :name="library.isHidden(pl.kind) ? 'mingcute:eye-2-line' : 'mingcute:eye-close-line'"
                       :size="17"
                     />
                     <span>{{
@@ -119,7 +119,7 @@
                     }}</span>
                   </div>
                   <div class="menu-item" v-close-popup @click="clearTracks(pl)">
-                    <Icon name="filter" :size="17" />
+                    <Icon name="mingcute:filter-line" :size="17" />
                     <span>Очистить треки</span>
                   </div>
                   <div
@@ -127,7 +127,7 @@
                     v-close-popup
                     @click="removePlaylist(pl)"
                   >
-                    <Icon name="trash" :size="17" />
+                    <Icon name="mingcute:delete-2-line" :size="17" />
                     <span>Удалить плейлист</span>
                   </div>
                 </div>
@@ -152,7 +152,7 @@
                   v-if="al.cover_url"
                   :src="al.cover_url"
                 />
-                <Icon v-else name="album" :size="26" class="faint" />
+                <Icon v-else name="mingcute:album-line" :size="26" class="faint" />
                 <div class="card-badge t-11">Альбом</div>
               </div>
               <div class="row items-center no-wrap q-mt-sm" style="gap: 6px">
@@ -161,7 +161,7 @@
                   class="icon-btn xs card-pin on"
                   @click.stop="library.removeAlbumLike(al.id)"
                 >
-                  <Icon name="heartFilled" :size="14" />
+                  <Icon name="mingcute:heart-fill" :size="14" />
                   <q-tooltip>Убрать из коллекции</q-tooltip>
                 </div>
               </div>
@@ -174,7 +174,7 @@
                     v-close-popup
                     @click="router.push(`/album/${al.id}`)"
                   >
-                    <Icon name="album" :size="17" />
+                    <Icon name="mingcute:album-line" :size="17" />
                     <span>Открыть альбом</span>
                   </div>
                   <div
@@ -182,7 +182,7 @@
                     v-close-popup
                     @click="library.removeAlbumLike(al.id)"
                   >
-                    <Icon name="heartOff" :size="17" />
+                    <Icon name="mingcute:heart-crack-line" :size="17" />
                     <span>Убрать из коллекции</span>
                   </div>
                 </div>
@@ -225,7 +225,7 @@
                     loading="lazy"
                     decoding="async"
                   />
-                  <Icon v-else name="queue" :size="26" class="faint" />
+                  <Icon v-else name="mingcute:playlist-2-line" :size="26" class="faint" />
                 </div>
 
                 <div class="row items-center no-wrap q-mt-sm">
@@ -236,7 +236,7 @@
                     title="Вернуть в коллекцию"
                     @click="library.toggleHidden(pl.kind)"
                   >
-                    <Icon name="eye" :size="15" />
+                    <Icon name="mingcute:eye-2-line" :size="15" />
                   </button>
                 </div>
                 <div class="faint t-11">
@@ -250,7 +250,7 @@
                       v-close-popup
                       @click="library.toggleHidden(pl.kind)"
                     >
-                      <Icon name="eye" :size="17" />
+                      <Icon name="mingcute:eye-2-line" :size="17" />
                       <span>Вернуть в коллекцию</span>
                     </div>
                     <div
@@ -258,7 +258,7 @@
                       v-close-popup
                       @click="router.push(`/playlists/${pl.kind}`)"
                     >
-                      <Icon name="queue" :size="17" />
+                      <Icon name="mingcute:playlist-2-line" :size="17" />
                       <span>Открыть плейлист</span>
                     </div>
                     <div class="menu-sep" />
@@ -267,7 +267,7 @@
                       v-close-popup
                       @click="removePlaylist(pl)"
                     >
-                      <Icon name="trash" :size="17" />
+                      <Icon name="mingcute:delete-2-line" :size="17" />
                       <span>Удалить плейлист</span>
                     </div>
                   </div>
@@ -282,7 +282,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { api } from "@/api/client";

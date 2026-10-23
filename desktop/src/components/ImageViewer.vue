@@ -8,7 +8,7 @@
           title="Закрыть"
           @click="close"
         >
-          <Icon name="close" :size="20" />
+          <Icon name="mingcute:close-line" :size="20" />
         </button>
 
         <button
@@ -18,7 +18,7 @@
           title="Предыдущее"
           @click.stop="prev"
         >
-          <Icon name="chevronLeft" :size="24" />
+          <Icon name="mingcute:left-line" :size="24" />
         </button>
 
         <div class="viewer-stage" @click.self="close">
@@ -33,7 +33,7 @@
               :disabled="saving"
               @click.stop="download"
             >
-              <Icon name="download" :size="15" />
+              <Icon name="mingcute:download-2-line" :size="15" />
               <span>{{ saving ? "Сохранение…" : "Скачать" }}</span>
             </button>
           </div>
@@ -46,7 +46,7 @@
           title="Следующее"
           @click.stop="next"
         >
-          <Icon name="chevronRight" :size="24" />
+          <Icon name="mingcute:right-line" :size="24" />
         </button>
 
         <div v-if="images.length > 1" class="viewer-thumbs" @click.stop>
@@ -69,7 +69,6 @@
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from "vue";
 import { Notify } from "quasar";
-import Icon from "@/components/Icon.vue";
 import { api } from "@/api/client";
 
 const props = withDefaults(

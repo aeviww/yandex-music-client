@@ -5,7 +5,7 @@
         <div class="settings-nav-title">Настройки</div>
 
         <label class="settings-search">
-          <Icon name="search" :size="14" />
+          <Icon name="mingcute:search-2-line" :size="14" />
 
           <input
             v-model="query"
@@ -20,7 +20,7 @@
             type="button"
             @click="query = ''"
           >
-            <Icon name="close" :size="11" />
+            <Icon name="mingcute:close-line" :size="11" />
           </button>
         </label>
       </div>
@@ -78,7 +78,6 @@ import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Notify } from "quasar";
 import { askConfirm } from "@/lib/dialogs";
-import Icon from "@/components/Icon.vue";
 import AppearanceSection from "@/components/settings/sections/AppearanceSection.vue";
 import AboutSection from "@/components/settings/sections/AboutSection.vue";
 import BehaviorSection from "@/components/settings/sections/BehaviorSection.vue";
@@ -112,7 +111,7 @@ const sections = [
   {
     id: "theme",
     label: "Оформление",
-    icon: "display",
+    icon: "mingcute:computer-line",
     group: "Основное",
     hint: "тема цвет акцент шрифт фон",
     component: AppearanceSection,
@@ -120,7 +119,7 @@ const sections = [
   {
     id: "layout",
     label: "Интерфейс",
-    icon: "layout",
+    icon: "mingcute:layout-left-line",
     group: "Основное",
     hint: "макет сайдбар панели очередь",
     component: LayoutSection,
@@ -128,7 +127,7 @@ const sections = [
   {
     id: "behavior",
     label: "Поведение",
-    icon: "settings",
+    icon: "mingcute:settings-5-line",
     group: "Основное",
     hint: "трей запуск закрытие окно",
     component: BehaviorSection,
@@ -136,7 +135,7 @@ const sections = [
   {
     id: "player",
     label: "Плеер",
-    icon: "play",
+    icon: "mingcute:play-fill",
     group: "Плеер",
     hint: "качество громкость воспроизведение",
     component: PlayerSection,
@@ -144,7 +143,7 @@ const sections = [
   {
     id: "mini",
     label: "Мини-плеер",
-    icon: "mini",
+    icon: "mingcute:miniplayer-fill",
     group: "Плеер",
     hint: "маленькое окно поверх всех",
     component: MiniPlayerSection,
@@ -152,7 +151,7 @@ const sections = [
   {
     id: "equalizer",
     label: "Эквалайзер",
-    icon: "wave",
+    icon: "mingcute:wave-line",
     group: "Плеер",
     hint: "звук басы частоты",
     component: EqualizerSection,
@@ -160,7 +159,7 @@ const sections = [
   {
     id: "lyrics",
     label: "Текст песни",
-    icon: "lyrics",
+    icon: "mingcute:subtitle-line",
     group: "Плеер",
     hint: "слова караоке строки",
     component: LyricsSection,
@@ -168,7 +167,7 @@ const sections = [
   {
     id: "playlists",
     label: "Плейлисты",
-    icon: "library",
+    icon: "mingcute:book-2-line",
     group: "Библиотека",
     hint: "скрытые сортировка главное",
     component: PlaylistToolsSection,
@@ -176,7 +175,7 @@ const sections = [
   {
     id: "downloads",
     label: "Загрузки",
-    icon: "download",
+    icon: "mingcute:download-2-line",
     group: "Библиотека",
     hint: "скачивание папка файлы",
     component: DownloadsSection,
@@ -184,7 +183,7 @@ const sections = [
   {
     id: "cache",
     label: "Кеш",
-    icon: "trash",
+    icon: "mingcute:delete-2-line",
     group: "Библиотека",
     hint: "очистка место обложки",
     component: CacheSection,
@@ -192,7 +191,7 @@ const sections = [
   {
     id: "together",
     label: "Слушать вместе",
-    icon: "person",
+    icon: "mingcute:user-2-line",
     group: "Сеть",
     hint: "комната радмин локалка синхрон",
     component: TogetherSection,
@@ -200,7 +199,7 @@ const sections = [
   {
     id: "genius",
     label: "Genius",
-    icon: "note",
+    icon: "mingcute:music-line",
     group: "Сеть",
     hint: "genius тексты токен",
     component: GeniusSection,
@@ -208,7 +207,7 @@ const sections = [
   {
     id: "discord",
     label: "Discord",
-    icon: "discord",
+    icon: "simple-icons:discord",
     group: "Сеть",
     hint: "discord дискорд статус rpc",
     component: DiscordSection,
@@ -216,7 +215,7 @@ const sections = [
   {
     id: "hotkeys",
     label: "Горячие клавиши",
-    icon: "key",
+    icon: "mingcute:key-2-line",
     group: "Система",
     hint: "кнопки сочетания глобальные",
     component: HotkeysSection,
@@ -224,7 +223,7 @@ const sections = [
   {
     id: "about",
     label: "О проекте",
-    icon: "info",
+    icon: "mingcute:information-line",
     group: "Система",
     hint: "версия github автор",
     component: AboutSection,

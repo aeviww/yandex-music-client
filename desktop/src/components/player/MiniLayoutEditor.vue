@@ -26,7 +26,7 @@
 
       <div class="mpe-preview-actions">
         <button class="btn accent" type="button" @click="openMini">
-          <Icon name="mini" :size="15" />
+          <Icon name="mingcute:miniplayer-fill" :size="15" />
           {{ panels.mini ? "Мини-плеер открыт" : "Открыть мини-плеер" }}
         </button>
         <button class="settings-reset-button" type="button" @click="reset">
@@ -156,7 +156,7 @@
               @dragstart="onDragStart(id, $event)"
               @dragend="endDrag"
             >
-              <Icon name="drag" :size="13" class="faint mpe-item-grip" />
+              <Icon name="mingcute:dots-line" :size="13" class="faint mpe-item-grip" />
               <Icon :name="iconOf(id)" :size="15" />
               <span class="mpe-item-label ellipsis">{{ labelOf(id) }}</span>
               <span v-if="locked.has(id)" class="mpe-item-lock">всегда</span>
@@ -168,7 +168,7 @@
                 :title="visible(id) ? 'Скрыть кнопку' : 'Показать кнопку'"
                 @click.stop="toggle(id)"
               >
-                <Icon :name="visible(id) ? 'check' : 'close'" :size="13" />
+                <Icon :name="visible(id) ? 'mingcute:check-line' : 'mingcute:close-line'" :size="13" />
               </button>
             </div>
           </template>
@@ -181,7 +181,6 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import MiniPlayer from "@/components/MiniPlayer.vue";
 import EditRange from "@/components/player/EditRange.vue";
 import EditSwitch from "@/components/player/EditSwitch.vue";
@@ -264,7 +263,7 @@ function labelOf(id: MiniButtonId): string {
 }
 
 function iconOf(id: MiniButtonId): string {
-  return miniButtonCatalog.find((item) => item.id === id)?.icon ?? "drag";
+  return miniButtonCatalog.find((item) => item.id === id)?.icon ?? "mingcute:dots-line";
 }
 
 function visible(id: MiniButtonId): boolean {

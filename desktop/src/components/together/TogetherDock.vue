@@ -13,7 +13,7 @@
       @pointerup="onUp"
       @pointercancel="onCancel"
     >
-      <Icon class="together-dock-grip" name="drag" :size="12" />
+      <Icon class="together-dock-grip" name="mingcute:dots-line" :size="12" />
 
       <span class="together-dock-dot" :class="{ wait: waiting }" />
 
@@ -22,7 +22,7 @@
       </span>
 
       <span class="together-dock-count">{{ together.peers.length }}</span>
-      <Icon :name="open ? 'minimize' : 'expand'" :size="12" />
+      <Icon :name="open ? 'mingcute:minimize-line' : 'mingcute:fullscreen-line'" :size="12" />
     </div>
 
     <div v-if="open" class="together-dock-body">
@@ -46,7 +46,7 @@
           :title="shown ? 'Скрыть' : 'Показать'"
           @click="shown = !shown"
         >
-          <Icon :name="shown ? 'eyeOff' : 'eye'" :size="12" />
+          <Icon :name="shown ? 'mingcute:eye-close-line' : 'mingcute:eye-2-line'" :size="12" />
         </button>
 
         <button
@@ -55,7 +55,7 @@
           title="Скопировать"
           @click="copyInvite"
         >
-          <Icon name="copy" :size="12" />
+          <Icon name="mingcute:copy-2-line" :size="12" />
         </button>
       </div>
 
@@ -103,7 +103,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import TogetherPeers from "@/components/together/TogetherPeers.vue";
 import { copyText } from "@/lib/clipboard";
 import { clampPlace, loadPlace, savePlace } from "@/lib/dock-place";

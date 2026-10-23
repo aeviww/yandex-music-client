@@ -111,7 +111,7 @@
           @dragover.prevent
           @drop.prevent="onDrop(index)"
         >
-          <Icon name="drag" :size="11" class="faint" />
+          <Icon name="mingcute:dots-line" :size="11" class="faint" />
           <Icon :name="iconOf(id)" :size="13" />
           <span class="me-item-label ellipsis">{{ labelOf(id) }}</span>
           <button
@@ -121,7 +121,7 @@
             :title="locked.has(id) ? 'Всегда на месте' : 'Показать или скрыть'"
             @click.stop="toggle(id)"
           >
-            <Icon :name="visible(id) ? 'check' : 'close'" :size="12" />
+            <Icon :name="visible(id) ? 'mingcute:check-line' : 'mingcute:close-line'" :size="12" />
           </button>
         </div>
       </div>
@@ -131,7 +131,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import EditRange from "@/components/player/EditRange.vue";
 import EditSwitch from "@/components/player/EditSwitch.vue";
 import { setWindowSize } from "@/lib/window";
@@ -151,7 +150,7 @@ function labelOf(id: MiniButtonId): string {
 }
 
 function iconOf(id: MiniButtonId): string {
-  return miniButtonCatalog.find((item) => item.id === id)?.icon ?? "drag";
+  return miniButtonCatalog.find((item) => item.id === id)?.icon ?? "mingcute:dots-line";
 }
 
 function visible(id: MiniButtonId): boolean {

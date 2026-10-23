@@ -89,7 +89,7 @@
           >
             <div class="cover libsearch-cover" @click="playAll(i)">
               <img v-if="item.cover_url" :src="item.cover_url" loading="lazy" />
-              <Icon v-else name="note" :size="15" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="15" class="faint" />
             </div>
             <div class="col" style="min-width: 0" @click="playAll(i)">
               <div class="ellipsis t-13">{{ item.title }}</div>
@@ -113,7 +113,7 @@
                     v-close-popup
                     @click="openSource(src, item.id)"
                   >
-                    <Icon name="queue" :size="16" />
+                    <Icon name="mingcute:playlist-2-line" :size="16" />
                     <span class="ellipsis">Открыть: {{ src }}</span>
                   </div>
                 </div>
@@ -124,7 +124,7 @@
               {{ formatDuration(item.duration_ms || 0) }}
             </span>
             <div class="icon-btn">
-              <Icon name="more" :size="17" />
+              <Icon name="mingcute:more-2-fill" :size="17" />
               <TrackMenu :track="item" />
             </div>
           </div>
@@ -138,7 +138,6 @@
 import { computed, onMounted, ref } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import LazyTracks from "@/components/LazyTracks.vue";
 import TrackMenu from "@/components/TrackMenu.vue";

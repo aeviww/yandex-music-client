@@ -16,7 +16,7 @@
         <div class="fs-drag" @mousedown="onDrag" @dblclick="toggleNative" />
         <div class="fs-top-actions">
           <button class="icon-btn round" @click="openLyrics">
-            <Icon name="lyrics" :size="18" />
+            <Icon name="mingcute:subtitle-line" :size="18" />
             <q-tooltip>Текст трека</q-tooltip>
           </button>
           <button
@@ -24,17 +24,17 @@
             :class="{ on: showQueue }"
             @click="showQueue = !showQueue"
           >
-            <Icon name="queue" :size="18" />
+            <Icon name="mingcute:playlist-2-line" :size="18" />
             <q-tooltip>Очередь</q-tooltip>
           </button>
           <button class="icon-btn round" @click="toggleNative">
-            <Icon :name="native ? 'restore' : 'maximize'" :size="16" />
+            <Icon :name="native ? 'mingcute:restore-line' : 'mingcute:square-line'" :size="16" />
             <q-tooltip>
               {{ native ? "Оконный режим" : "Весь экран" }}
             </q-tooltip>
           </button>
           <button class="icon-btn round" @click="close">
-            <Icon name="close" :size="19" />
+            <Icon name="mingcute:close-line" :size="19" />
             <q-tooltip>Закрыть (Esc)</q-tooltip>
           </button>
         </div>
@@ -52,7 +52,7 @@
                 alt=""
                 @click="openLyrics"
               />
-              <Icon v-else name="note" :size="72" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="72" class="faint" />
             </Transition>
 
             <div class="fs-art-hover">
@@ -62,7 +62,7 @@
                   :disabled="!player.hasPrev"
                   @click.stop="player.prev()"
                 >
-                  <Icon name="prev" :size="22" />
+                  <Icon name="mingcute:skip-previous-fill" :size="22" />
                   <q-tooltip>Предыдущий</q-tooltip>
                 </button>
                 <button
@@ -70,7 +70,7 @@
                   @click.stop="player.toggle()"
                 >
                   <Icon
-                    :name="player.isPlaying ? 'pause' : 'play'"
+                    :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
                     :size="28"
                   />
                   <q-tooltip>
@@ -82,7 +82,7 @@
                   :disabled="!player.hasNext"
                   @click.stop="player.next()"
                 >
-                  <Icon name="next" :size="22" />
+                  <Icon name="mingcute:fast-forward-fill" :size="22" />
                   <q-tooltip>Следующий</q-tooltip>
                 </button>
               </div>
@@ -92,7 +92,7 @@
                   :class="{ on: liked }"
                   @click.stop="like"
                 >
-                  <Icon :name="liked ? 'heartFilled' : 'heart'" :size="19" />
+                  <Icon :name="liked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="19" />
                   <q-tooltip>
                     {{ liked ? "Убрать лайк" : "Мне нравится" }}
                   </q-tooltip>
@@ -102,11 +102,11 @@
                   :class="{ on: showQueue }"
                   @click.stop="showQueue = !showQueue"
                 >
-                  <Icon name="queue" :size="19" />
+                  <Icon name="mingcute:playlist-2-line" :size="19" />
                   <q-tooltip>Очередь</q-tooltip>
                 </button>
                 <button ref="dotsButton" class="fs-ctl" @click.stop>
-                  <Icon name="more" :size="19" />
+                  <Icon name="mingcute:more-2-fill" :size="19" />
                   <TrackMenu :track="player.current" />
                 </button>
               </div>
@@ -147,7 +147,7 @@
             <div class="fs-queue-head">
               <span>Очередь</span>
               <button class="icon-btn round" @click="showQueue = false">
-                <Icon name="close" :size="16" />
+                <Icon name="mingcute:close-line" :size="16" />
               </button>
             </div>
             <q-scroll-area class="fs-queue-list">
@@ -166,7 +166,7 @@
                     decoding="async"
                     alt=""
                   />
-                  <Icon v-else name="note" :size="14" class="faint" />
+                  <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
                 </div>
                 <div class="col" style="min-width: 0">
                   <div class="ellipsis t-13">{{ item.track.title }}</div>
@@ -176,7 +176,7 @@
                 </div>
                 <Icon
                   v-if="item.index === player.index"
-                  :name="player.isPlaying ? 'pause' : 'play'"
+                  :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
                   :size="13"
                 />
               </div>
@@ -195,7 +195,6 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ArtistsLine from "@/components/ArtistsLine.vue";
-import Icon from "@/components/Icon.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
 import { formatDuration } from "@/lib/format";
 import {

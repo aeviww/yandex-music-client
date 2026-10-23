@@ -11,7 +11,7 @@
 
     <div v-else-if="personOpen" class="gp-person">
       <button class="gp-back" type="button" @click="genius.closePerson()">
-        <Icon name="chevronLeft" :size="14" />
+        <Icon name="mingcute:left-line" :size="14" />
         <span>Назад к треку</span>
       </button>
 
@@ -28,7 +28,7 @@
         <div class="gp-head">
           <div class="cover gp-art round">
             <img v-if="genius.person.image" :src="genius.person.image" />
-            <Icon v-else name="person" :size="18" class="faint" />
+            <Icon v-else name="mingcute:user-2-line" :size="18" class="faint" />
           </div>
           <div class="col" style="min-width: 0">
             <div class="gp-title ellipsis">{{ genius.person.name }}</div>
@@ -55,7 +55,7 @@
 
     <div v-else-if="picking" class="gp-person">
       <button class="gp-back" type="button" @click="picking = false">
-        <Icon name="chevronLeft" :size="14" />
+        <Icon name="mingcute:left-line" :size="14" />
         <span>Назад</span>
       </button>
 
@@ -97,7 +97,7 @@
       <div class="gp-head">
         <div class="cover gp-art">
           <img v-if="song.art" :src="song.art" />
-          <Icon v-else name="note" :size="18" class="faint" />
+          <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
         </div>
         <div class="col" style="min-width: 0">
           <div class="gp-title ellipsis">
@@ -261,7 +261,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import Icon from "@/components/Icon.vue";
 import { api } from "@/api/client";
 import type {
   GeniusHit,

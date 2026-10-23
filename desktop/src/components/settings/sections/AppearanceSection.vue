@@ -90,7 +90,7 @@
         >
           <Icon
             v-if="ui.settings.accent === color.value"
-            name="check"
+            name="mingcute:check-line"
             :size="14"
           />
         </button>
@@ -106,7 +106,6 @@
 
 <script setup lang="ts">
 import ColorField from "@/components/settings/ColorField.vue";
-import Icon from "@/components/Icon.vue";
 import {
   accentColors,
   themeNames,

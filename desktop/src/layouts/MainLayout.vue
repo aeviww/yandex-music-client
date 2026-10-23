@@ -12,14 +12,14 @@
       >
         <div class="topbar-search-wrap" data-no-drag>
           <div class="searchbar">
-            <Icon name="search" :size="15" class="faint" />
+            <Icon name="mingcute:search-2-line" :size="15" class="faint" />
             <input
               v-model="query"
               placeholder="Найти трек, артиста или альбом"
               @keyup.enter="submitSearch"
             />
             <div v-if="query" class="icon-btn xs round" @click="query = ''">
-              <Icon name="close" :size="13" />
+              <Icon name="mingcute:close-line" :size="13" />
             </div>
           </div>
         </div>
@@ -30,7 +30,7 @@
           :class="{ on: rightPanel }"
           @click="rightPanel = !rightPanel"
         >
-          <Icon name="queue" :size="17" />
+          <Icon name="mingcute:playlist-2-line" :size="17" />
           <q-tooltip>Очередь</q-tooltip>
         </div>
 
@@ -47,7 +47,7 @@
             <span v-else class="avatar-monogram">{{ accountInitial }}</span>
           </div>
           <span class="account-name ellipsis">{{ accountName }}</span>
-          <Icon name="chevronDown" :size="13" class="account-chevron" />
+          <Icon name="mingcute:down-line" :size="13" class="account-chevron" />
           <q-menu class="menu" anchor="bottom right" self="top right">
             <div class="menu-body profile-menu">
               <div class="profile-head">
@@ -88,7 +88,7 @@
               <div class="menu-sep" />
 
               <div class="menu-item danger" v-close-popup @click="doLogout">
-                <Icon name="logout" :size="17" />
+                <Icon name="mingcute:exit-line" :size="17" />
                 <span>Выйти из аккаунта</span>
               </div>
             </div>
@@ -151,14 +151,14 @@
                 v-if="pl.cover_url"
                 :src="pl.cover_url"
               />
-              <Icon v-else name="queue" :size="14" class="faint" />
+              <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
             </div>
             <div class="col" style="min-width: 0">
               <div class="ellipsis t-13">{{ pl.title }}</div>
             </div>
             <Icon
               v-if="library.isPinned(pl.kind)"
-              name="pin"
+              name="mingcute:pin-2-line"
               :size="13"
               class="faint"
             />
@@ -172,7 +172,7 @@
                   @click="library.togglePin(pl.kind)"
                 >
                   <Icon
-                    :name="library.isPinned(pl.kind) ? 'pinOff' : 'pin'"
+                    :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
                     :size="17"
                   />
                   <span>{{
@@ -184,7 +184,7 @@
                   v-close-popup
                   @click="router.push(`/playlists/${pl.kind}`)"
                 >
-                  <Icon name="queue" :size="17" />
+                  <Icon name="mingcute:playlist-2-line" :size="17" />
                   <span>Открыть плейлист</span>
                 </div>
                 <div class="menu-sep" />
@@ -194,7 +194,7 @@
                   @click="library.toggleHidden(pl.kind)"
                 >
                   <Icon
-                    :name="library.isHidden(pl.kind) ? 'eye' : 'eyeOff'"
+                    :name="library.isHidden(pl.kind) ? 'mingcute:eye-2-line' : 'mingcute:eye-close-line'"
                     :size="17"
                   />
                   <span>{{
@@ -215,7 +215,7 @@
               @click="showHidden = !showHidden"
             >
               <span class="side-hidden-chevron">
-                <Icon name="chevronRight" :size="12" />
+                <Icon name="mingcute:right-line" :size="12" />
               </span>
               <span class="col">Скрытые</span>
               <span class="side-hidden-count">{{
@@ -240,7 +240,7 @@
                   v-if="pl.cover_url"
                   :src="pl.cover_url"
                 />
-                <Icon v-else name="queue" :size="14" class="faint" />
+                <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
               </div>
               <div class="col" style="min-width: 0">
                 <div class="ellipsis t-13">{{ pl.title }}</div>
@@ -251,7 +251,7 @@
                 title="Вернуть в коллекцию"
                 @click.stop="library.toggleHidden(pl.kind)"
               >
-                <Icon name="eye" :size="14" />
+                <Icon name="mingcute:eye-2-line" :size="14" />
               </button>
             </div>
           </template>
@@ -288,7 +288,7 @@
               v-if="player.current.cover_url"
               :src="player.current.cover_url"
             />
-            <Icon v-else name="note" :size="30" class="faint" />
+            <Icon v-else name="mingcute:music-line" :size="30" class="faint" />
           </div>
           <div class="q-mt-md t-15 w-600 ellipsis">
             {{ player.current.title }}
@@ -312,7 +312,7 @@
             title="Пролистать к текущему треку"
             @click="locateCurrent"
           >
-            <Icon name="queue" :size="13" />
+            <Icon name="mingcute:playlist-2-line" :size="13" />
           </button>
         </div>
 
@@ -342,7 +342,7 @@
                 v-if="item.track.cover_url"
                 :src="item.track.cover_url"
               />
-              <Icon v-else name="note" :size="14" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
             </div>
             <div class="col" style="min-width: 0">
               <div class="ellipsis t-13">{{ item.track.title }}</div>
@@ -352,7 +352,7 @@
             </div>
             <Icon
               v-if="item.index === player.index"
-              :name="player.isPlaying ? 'pause' : 'play'"
+              :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
               :size="13"
               class="queue-state"
             />
@@ -411,7 +411,6 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
-import Icon from "@/components/Icon.vue";
 import FullscreenPlayer from "@/components/FullscreenPlayer.vue";
 import LyricsPanel from "@/components/LyricsPanel.vue";
 import MiniPlayer from "@/components/MiniPlayer.vue";
@@ -478,10 +477,10 @@ const accountSub = computed(() =>
 );
 
 const profileLinks = [
-  { to: "/liked", label: "Любимое", icon: "heart" },
-  { to: "/playlists", label: "Коллекция", icon: "library" },
-  { to: "/stats", label: "Статистика", icon: "stats" },
-  { to: "/settings", label: "Настройки", icon: "settings" },
+  { to: "/liked", label: "Любимое", icon: "mingcute:heart-line" },
+  { to: "/playlists", label: "Коллекция", icon: "mingcute:book-2-line" },
+  { to: "/stats", label: "Статистика", icon: "mingcute:chart-bar-line" },
+  { to: "/settings", label: "Настройки", icon: "mingcute:settings-5-line" },
 ];
 
 const showHidden = ref(false);
@@ -505,13 +504,13 @@ const lyricsBox = computed(() => ({
 }));
 
 const nav = [
-  { to: "/", label: "Главное", icon: "home" },
-  { to: "/search", label: "Поиск", icon: "search" },
-  { to: "/wave", label: "Моя волна", icon: "wave" },
-  { to: "/liked", label: "Мне нравится", icon: "heart" },
-  { to: "/playlists", label: "Коллекция", icon: "library" },
-  { to: "/library", label: "Поиск в библиотеке", icon: "filter" },
-  { to: "/stats", label: "Статистика", icon: "stats" },
+  { to: "/", label: "Главное", icon: "mingcute:home-3-line" },
+  { to: "/search", label: "Поиск", icon: "mingcute:search-2-line" },
+  { to: "/wave", label: "Моя волна", icon: "mingcute:wave-line" },
+  { to: "/liked", label: "Мне нравится", icon: "mingcute:heart-line" },
+  { to: "/playlists", label: "Коллекция", icon: "mingcute:book-2-line" },
+  { to: "/library", label: "Поиск в библиотеке", icon: "mingcute:filter-line" },
+  { to: "/stats", label: "Статистика", icon: "mingcute:chart-bar-line" },
 ];
 
 type ScrollAreaRef = {

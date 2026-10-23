@@ -18,7 +18,7 @@
         size="18px"
         class="flex-none text-black motion-reduce:animate-none motion-reduce:[&_*]:!animate-none"
       />
-      <Icon v-else name="chevronRight" :size="20" class="flex-none" />
+      <Icon v-else name="mingcute:right-line" :size="20" class="flex-none" />
     </button>
     <p
       id="login-plus-note"
@@ -32,14 +32,13 @@
       class="mt-[28px] inline-flex min-h-[44px] cursor-pointer items-center gap-[10px] rounded-[6px] border-0 border-none bg-transparent p-0 text-[14px] text-[#a3a3a3] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white disabled:cursor-wait disabled:opacity-50 motion-reduce:transition-none"
       @click="$emit('manual')"
     >
-      <Icon name="key" :size="17" />
+      <Icon name="mingcute:key-2-line" :size="17" />
       <span>Войти с токеном</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 defineProps<{ loading: boolean }>();
 defineEmits<{ login: []; manual: [] }>();
 </script>

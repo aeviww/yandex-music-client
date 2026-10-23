@@ -17,7 +17,7 @@
       class="handle"
       @pointerdown.stop.prevent="emit('reorderStart', index, $event)"
     >
-      <Icon name="drag" :size="16" />
+      <Icon name="mingcute:dots-line" :size="16" />
     </div>
 
     <button
@@ -28,14 +28,14 @@
       :title="selected ? 'Снять выделение' : 'Выделить трек'"
       @click.stop="emit('toggleSelect', $event)"
     >
-      <Icon v-if="selected" name="check" :size="13" />
+      <Icon v-if="selected" name="mingcute:check-line" :size="13" />
     </button>
 
     <div style="width: 20px; text-align: center; flex: 0 0 auto">
       <div v-if="showIndex" class="num faint t-13">{{ index + 1 }}</div>
       <div class="num-play" @click.stop="onPlayClick">
         <Icon
-          :name="isCurrent && player.isPlaying ? 'pause' : 'play'"
+          :name="isCurrent && player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
           :size="16"
         />
       </div>
@@ -48,7 +48,7 @@
         v-if="track.cover_url"
         :src="track.cover_url"
       />
-      <Icon v-else name="note" :size="15" class="faint" />
+      <Icon v-else name="mingcute:music-line" :size="15" class="faint" />
     </div>
 
     <div class="col" style="min-width: 0">
@@ -58,18 +58,18 @@
 
         <Icon
           v-if="downloaded"
-          name="download"
+          name="mingcute:download-2-line"
           :size="13"
           class="faint row-track-saved"
         />
 
         <div v-if="isDisliked" class="row-track-disliked">
-          <Icon name="heartOff" :size="13" />
+          <Icon name="mingcute:heart-crack-line" :size="13" />
           <q-tooltip>Отмечен как «Не нравится»</q-tooltip>
         </div>
 
         <div class="icon-btn xs row-track-dots" @click.stop>
-          <Icon name="moreH" :size="15" />
+          <Icon name="mingcute:more-1-fill" :size="15" />
           <q-tooltip>Действия с треком</q-tooltip>
           <TrackMenu
             :track="track"
@@ -96,7 +96,7 @@
 
     <div class="actions">
       <div v-if="reorderable" class="icon-btn sm" @click.stop="emit('remove')">
-        <Icon name="trash" :size="17" />
+        <Icon name="mingcute:delete-2-line" :size="17" />
         <q-tooltip>Удалить из плейлиста</q-tooltip>
       </div>
 
@@ -105,14 +105,14 @@
         :class="{ on: isLiked }"
         @click.stop="library.toggleLike(track)"
       >
-        <Icon :name="isLiked ? 'heartFilled' : 'heart'" :size="17" />
+        <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="17" />
         <q-tooltip>{{
           isLiked ? "Убрать из «Мне нравится»" : "Нравится"
         }}</q-tooltip>
       </div>
 
       <div class="icon-btn sm" @click.stop>
-        <Icon name="moreH" :size="17" />
+        <Icon name="mingcute:more-1-fill" :size="17" />
         <TrackMenu
           :track="track"
           :playlist-kind="playlistKind"
@@ -139,7 +139,6 @@ import { computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import AiTag from "@/components/AiTag.vue";
-import Icon from "@/components/Icon.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
 import type { Track } from "@/api/types";
 import { formatDuration } from "@/lib/format";

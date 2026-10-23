@@ -60,7 +60,7 @@
         :title="shown ? 'Скрыть адрес' : 'Показать адрес'"
         @click="shown = !shown"
       >
-        <Icon :name="shown ? 'eyeOff' : 'eye'" :size="14" />
+        <Icon :name="shown ? 'mingcute:eye-close-line' : 'mingcute:eye-2-line'" :size="14" />
       </button>
 
       <button
@@ -69,7 +69,7 @@
         title="Скопировать адрес"
         @click="copyInvite"
       >
-        <Icon name="copy" :size="14" />
+        <Icon name="mingcute:copy-2-line" :size="14" />
       </button>
     </div>
 
@@ -83,7 +83,6 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import { copyText } from "@/lib/clipboard";
 import { useTogetherStore } from "@/stores/together/index";
 

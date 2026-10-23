@@ -24,7 +24,7 @@
             decoding="async"
             :src="coverUrl"
           />
-          <Icon v-else name="note" :size="16" class="faint" />
+          <Icon v-else name="mingcute:music-line" :size="16" class="faint" />
         </div>
         <div style="min-width: 0">
           <div
@@ -64,11 +64,11 @@
           data-no-drag
           @click="player.loadLyrics(true)"
         >
-          <Icon name="repeat" :size="16" />
+          <Icon name="mingcute:repeat-line" :size="16" />
           <q-tooltip>Загрузить текст заново</q-tooltip>
         </div>
         <div v-if="player.current" class="icon-btn round" data-no-drag>
-          <Icon name="more" :size="18" />
+          <Icon name="mingcute:more-2-fill" :size="18" />
           <TrackMenu :track="player.current" />
         </div>
         <div
@@ -77,7 +77,7 @@
           data-no-drag
           @click="showSettings = !showSettings"
         >
-          <Icon name="settings" :size="17" />
+          <Icon name="mingcute:settings-5-line" :size="17" />
           <q-tooltip>Вид текста</q-tooltip>
         </div>
         <div
@@ -87,7 +87,7 @@
           @click="player.toggleLyricsFullscreen()"
         >
           <Icon
-            :name="player.lyricsFullscreen ? 'restore' : 'maximize'"
+            :name="player.lyricsFullscreen ? 'mingcute:restore-line' : 'mingcute:square-line'"
             :size="15"
           />
           <q-tooltip>
@@ -103,11 +103,11 @@
           data-no-drag
           @click="player.openFullscreen()"
         >
-          <Icon name="album" :size="17" />
+          <Icon name="mingcute:album-line" :size="17" />
           <q-tooltip>Большая обложка</q-tooltip>
         </div>
         <div class="icon-btn round" data-no-drag @click="player.toggleLyrics()">
-          <Icon name="close" :size="18" />
+          <Icon name="mingcute:close-line" :size="18" />
         </div>
       </div>
     </div>
@@ -123,7 +123,7 @@
     </div>
 
     <div v-else-if="!lines.length" class="lyrics-empty lyrics-layer">
-      <Icon name="lyrics" :size="26" />
+      <Icon name="mingcute:subtitle-line" :size="26" />
       <div class="lyrics-empty-title">
         {{ player.lyricsError || "Текста для этого трека нет" }}
       </div>
@@ -172,7 +172,7 @@
                 :class="{ on: isLiked }"
                 @click.stop="toggleLike"
               >
-                <Icon :name="isLiked ? 'heartFilled' : 'heart'" :size="17" />
+                <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="17" />
                 <q-tooltip>
                   {{ isLiked ? "Убрать из любимых" : "Мне нравится" }}
                 </q-tooltip>
@@ -182,7 +182,7 @@
                 class="la-btn"
                 @click.stop="player.openFullscreen()"
               >
-                <Icon name="album" :size="17" />
+                <Icon name="mingcute:album-line" :size="17" />
                 <q-tooltip>Большая обложка</q-tooltip>
               </button>
             </div>
@@ -194,7 +194,7 @@
                 :class="{ on: player.shuffle }"
                 @click.stop="player.toggleShuffle()"
               >
-                <Icon name="shuffle" :size="16" />
+                <Icon name="mingcute:shuffle-line" :size="16" />
                 <q-tooltip>Перемешать</q-tooltip>
               </button>
               <button
@@ -203,14 +203,14 @@
                 :disabled="!player.hasPrev"
                 @click.stop="player.prev()"
               >
-                <Icon name="prev" :size="18" />
+                <Icon name="mingcute:skip-previous-fill" :size="18" />
               </button>
               <button
                 type="button"
                 class="la-btn la-btn-main"
                 @click.stop="player.toggle()"
               >
-                <Icon :name="player.isPlaying ? 'pause' : 'play'" :size="22" />
+                <Icon :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'" :size="22" />
               </button>
               <button
                 type="button"
@@ -218,7 +218,7 @@
                 :disabled="!player.hasNext"
                 @click.stop="player.next()"
               >
-                <Icon name="next" :size="18" />
+                <Icon name="mingcute:fast-forward-fill" :size="18" />
               </button>
               <button
                 type="button"
@@ -227,7 +227,7 @@
                 @click.stop="player.cycleRepeat()"
               >
                 <Icon
-                  :name="player.repeat === 'one' ? 'repeatOne' : 'repeat'"
+                  :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'"
                   :size="16"
                 />
                 <q-tooltip>Повтор</q-tooltip>
@@ -307,7 +307,7 @@
                   title="Разбор строки"
                   @click.stop="openAnnotation(lineAnnotations[i])"
                 >
-                  <Icon name="info" :size="10" />
+                  <Icon name="mingcute:information-line" :size="10" />
                 </span>
                 <span
                   v-if="!translateReplace && lineTranslation(i)"
@@ -342,7 +342,7 @@
                   title="Разбор строки"
                   @click.stop="openAnnotation(lineAnnotations[i])"
                 >
-                  <Icon name="info" :size="10" />
+                  <Icon name="mingcute:information-line" :size="10" />
                 </span>
                 <span
                   v-if="
@@ -396,7 +396,7 @@
       :style="{ left: `${hint.x}px`, top: `${hint.y}px` }"
       @click.stop="openHint"
     >
-      <Icon name="info" :size="14" />
+      <Icon name="mingcute:information-line" :size="14" />
       <span>Разбор строки</span>
     </button>
 
@@ -405,7 +405,7 @@
         <div class="ann-head">
           <div class="ann-title ellipsis">{{ player.current?.title }}</div>
           <div class="icon-btn round" @click="annotationOpen = false">
-            <Icon name="close" :size="16" />
+            <Icon name="mingcute:close-line" :size="16" />
           </div>
         </div>
         <div v-if="activeAnnotation" class="ann-frag">
@@ -444,7 +444,6 @@
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import type { QScrollArea } from "quasar";
 import { useRoute, useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import LyricsSettingsPanel from "@/components/lyrics/LyricsSettingsPanel.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
 import { api } from "@/api/client";

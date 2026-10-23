@@ -34,3 +34,15 @@
 @use "overrides/runtime";
 @use "overrides/responsive";
 @use "overrides/light";
+
+
+.ic {
+  flex: 0 0 auto;
+  display: block;
+
+  path,
+  circle,
+  rect {
+    stroke-width: 1.7px;
+  }
+}

@@ -6,7 +6,7 @@
 
         <div class="suggest-wrap q-mt-lg">
           <div class="field">
-            <Icon name="search" :size="16" class="faint" />
+            <Icon name="mingcute:search-2-line" :size="16" class="faint" />
             <input
               v-model="text"
               type="text"
@@ -24,7 +24,7 @@
               title="Очистить"
               @click="clearQuery"
             >
-              <Icon name="close" :size="13" />
+              <Icon name="mingcute:close-line" :size="13" />
             </button>
           </div>
 
@@ -36,7 +36,7 @@
               type="button"
               @mousedown.prevent="pick(hint)"
             >
-              <Icon name="search" :size="14" class="faint" />
+              <Icon name="mingcute:search-2-line" :size="14" class="faint" />
               <span class="ellipsis">{{ hint }}</span>
             </button>
           </div>
@@ -63,7 +63,7 @@
                       decoding="async"
                       :src="avatarOf(a) ?? undefined"
                     />
-                    <Icon v-else name="person" :size="24" class="faint" />
+                    <Icon v-else name="mingcute:user-2-line" :size="24" class="faint" />
                   </div>
                   <div class="t-13 w-500 ellipsis q-mt-sm">{{ a.name }}</div>
                 </div>
@@ -87,7 +87,7 @@
                       decoding="async"
                       :src="p.image"
                     />
-                    <Icon v-else name="person" :size="24" class="faint" />
+                    <Icon v-else name="mingcute:user-2-line" :size="24" class="faint" />
                   </div>
                   <div class="t-13 w-500 ellipsis q-mt-sm">{{ p.name }}</div>
                   <div class="faint t-11">
@@ -114,7 +114,7 @@
                       v-if="al.cover_url"
                       :src="al.cover_url"
                     />
-                    <Icon v-else name="album" :size="24" class="faint" />
+                    <Icon v-else name="mingcute:album-line" :size="24" class="faint" />
                   </div>
                   <div class="t-13 w-500 ellipsis q-mt-sm">{{ al.title }}</div>
                   <div class="faint t-11">{{ al.year || "" }}</div>
@@ -147,7 +147,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import LazyTracks from "@/components/LazyTracks.vue";

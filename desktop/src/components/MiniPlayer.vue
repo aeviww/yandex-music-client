@@ -21,7 +21,7 @@
             :src="player.current.cover_url"
             decoding="async"
           />
-          <Icon v-else name="note" :size="18" class="faint" />
+          <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
         </Transition>
       </div>
 
@@ -57,7 +57,7 @@
         aria-label="Вернуться в обычный вид"
         @click.stop="leaveMini()"
       >
-        <Icon name="restore" :size="15" />
+        <Icon name="mingcute:restore-line" :size="15" />
         <q-tooltip>Обычное окно (Esc)</q-tooltip>
       </button>
     </div>
@@ -82,7 +82,7 @@
             <Icon
               v-else
               :key="player.isPlaying ? 'pause' : 'play'"
-              :name="player.isPlaying ? 'pause' : 'play'"
+              :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
               :size="16"
             />
           </Transition>
@@ -97,7 +97,7 @@
           aria-label="Предыдущий трек"
           @click.stop="player.prev()"
         >
-          <Icon name="prev" :size="16" />
+          <Icon name="mingcute:skip-previous-fill" :size="16" />
           <q-tooltip>Предыдущий трек</q-tooltip>
         </button>
 
@@ -109,7 +109,7 @@
           aria-label="Следующий трек"
           @click.stop="player.next(false)"
         >
-          <Icon name="next" :size="16" />
+          <Icon name="mingcute:fast-forward-fill" :size="16" />
           <q-tooltip>Следующий трек</q-tooltip>
         </button>
 
@@ -122,7 +122,7 @@
           aria-label="Перемешать"
           @click.stop="player.toggleShuffle()"
         >
-          <Icon name="shuffle" :size="15" />
+          <Icon name="mingcute:shuffle-line" :size="15" />
           <q-tooltip>Перемешать</q-tooltip>
         </button>
 
@@ -136,7 +136,7 @@
           @click.stop="player.cycleRepeat()"
         >
           <Icon
-            :name="player.repeat === 'one' ? 'repeatOne' : 'repeat'"
+            :name="player.repeat === 'one' ? 'mingcute:repeat-one-line' : 'mingcute:repeat-line'"
             :size="15"
           />
           <q-tooltip>Повтор</q-tooltip>
@@ -151,7 +151,7 @@
           aria-label="Нравится"
           @click.stop="player.current && player.like()"
         >
-          <Icon :name="isLiked ? 'heartFilled' : 'heart'" :size="15" />
+          <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="15" />
           <q-tooltip>Нравится</q-tooltip>
         </button>
 
@@ -164,7 +164,7 @@
           aria-label="Не нравится"
           @click.stop="player.current && player.dislike()"
         >
-          <Icon name="heartOff" :size="15" />
+          <Icon name="mingcute:heart-crack-line" :size="15" />
           <q-tooltip>Не нравится</q-tooltip>
         </button>
 
@@ -177,7 +177,7 @@
           aria-label="Текст песни"
           @click.stop="player.current && player.toggleLyrics()"
         >
-          <Icon name="lyrics" :size="15" />
+          <Icon name="mingcute:subtitle-line" :size="15" />
           <q-tooltip>Текст песни</q-tooltip>
         </button>
 
@@ -249,7 +249,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import AiTag from "@/components/AiTag.vue";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
@@ -341,7 +340,9 @@ const volumePercent = computed(() =>
 );
 
 const volumeIcon = computed(() =>
-  player.muted || player.volume <= 0.001 ? "volumeOff" : "volume",
+  player.muted || player.volume <= 0.001
+    ? "mingcute:volume-off-line"
+    : "mingcute:volume-line",
 );
 
 function openVolume() {

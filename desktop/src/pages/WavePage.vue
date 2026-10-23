@@ -11,7 +11,7 @@
               loading="lazy"
               decoding="async"
             />
-            <Icon v-else name="wave" :size="26" class="faint" />
+            <Icon v-else name="mingcute:wave-line" :size="26" class="faint" />
             <TrackMenu
               v-if="player.current"
               :context-menu="true"
@@ -44,7 +44,7 @@
                   title="Нравится"
                   @click="player.like()"
                 >
-                  <Icon name="heart" :size="16" />
+                  <Icon name="mingcute:heart-line" :size="16" />
                 </button>
                 <button
                   type="button"
@@ -52,7 +52,7 @@
                   title="Не нравится"
                   @click="player.dislike()"
                 >
-                  <Icon name="heartOff" :size="16" />
+                  <Icon name="mingcute:heart-crack-line" :size="16" />
                 </button>
                 <button
                   type="button"
@@ -60,7 +60,7 @@
                   title="Следующий"
                   @click="player.next(false)"
                 >
-                  <Icon name="next" :size="16" />
+                  <Icon name="mingcute:fast-forward-fill" :size="16" />
                 </button>
               </template>
             </div>
@@ -80,7 +80,7 @@
             aria-label="Прокрутить влево"
             @click="scrollStations(-1)"
           >
-            <Icon name="chevronLeft" :size="15" />
+            <Icon name="mingcute:left-line" :size="15" />
           </button>
 
           <nav
@@ -114,7 +114,7 @@
             aria-label="Прокрутить вправо"
             @click="scrollStations(1)"
           >
-            <Icon name="chevronRight" :size="15" />
+            <Icon name="mingcute:right-line" :size="15" />
           </button>
         </div>
 
@@ -160,7 +160,7 @@
                 loading="lazy"
                 decoding="async"
               />
-              <Icon v-else name="note" :size="14" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
             </span>
             <span class="wave-item-copy">
               <span class="wave-item-title">{{ item.track.title }}</span>
@@ -170,7 +170,7 @@
             </span>
             <Icon
               v-if="item.index === player.index"
-              :name="player.isPlaying ? 'pause' : 'play'"
+              :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
               :size="13"
               class="wave-item-state"
             />
@@ -198,7 +198,6 @@ import {
 import { api } from "@/api/client";
 import { Notify } from "quasar";
 import type { StationInfo, Track, WheelItem } from "@/api/types";
-import Icon from "@/components/Icon.vue";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import TrackMenu from "@/components/TrackMenu.vue";
 import { readCache, swr } from "@/lib/cache";
@@ -317,7 +316,7 @@ const heroSubtitle = computed(() =>
 );
 
 const primaryIcon = computed(() =>
-  hasCurrent.value && player.isPlaying ? "pause" : "play",
+  hasCurrent.value && player.isPlaying ? "mingcute:pause-fill" : "mingcute:play-fill",
 );
 
 const primaryLabel = computed(() => {

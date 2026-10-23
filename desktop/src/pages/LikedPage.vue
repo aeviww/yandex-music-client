@@ -11,7 +11,7 @@
             background: var(--surface-2);
           "
         >
-          <Icon name="heartFilled" :size="40" />
+          <Icon name="mingcute:heart-fill" :size="40" />
         </div>
         <div class="col">
           <div
@@ -27,11 +27,11 @@
 
           <div class="row items-center q-mt-md" style="gap: 10px">
             <div class="btn-solid" @click="playFrom(0)">
-              <Icon name="play" :size="15" />
+              <Icon name="mingcute:play-fill" :size="15" />
               <span>Слушать</span>
             </div>
             <div class="btn" @click="shufflePlay">
-              <Icon name="shuffle" :size="15" />
+              <Icon name="mingcute:shuffle-line" :size="15" />
               <span>Перемешать</span>
             </div>
           </div>
@@ -74,7 +74,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import { onMounted, ref } from "vue";
 import TrackRow from "@/components/TrackRow.vue";
 import { api } from "@/api/client";

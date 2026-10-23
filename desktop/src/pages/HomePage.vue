@@ -6,17 +6,17 @@
 
         <div class="home-actions">
           <button class="btn-solid" type="button" @click="openWave">
-            <Icon name="wave" :size="15" />
+            <Icon name="mingcute:wave-line" :size="15" />
             <span>Моя волна</span>
           </button>
 
           <button class="btn" type="button" @click="router.push('/liked')">
-            <Icon name="heartFilled" :size="15" />
+            <Icon name="mingcute:heart-fill" :size="15" />
             <span>Мне нравится</span>
           </button>
 
           <button class="btn" type="button" @click="router.push('/library')">
-            <Icon name="search" :size="15" />
+            <Icon name="mingcute:search-2-line" :size="15" />
             <span>Поиск в библиотеке</span>
           </button>
         </div>
@@ -30,7 +30,7 @@
               @click="router.push('/playlists')"
             >
               <span>Вся коллекция</span>
-              <Icon name="chevronRight" :size="14" />
+              <Icon name="mingcute:right-line" :size="14" />
             </button>
           </div>
 
@@ -48,7 +48,7 @@
                     decoding="async"
                     :src="pl.cover_url"
                   />
-                  <Icon v-else name="queue" :size="24" class="faint" />
+                  <Icon v-else name="mingcute:playlist-2-line" :size="24" class="faint" />
 
                   <button
                     class="home-card-play"
@@ -56,7 +56,7 @@
                     title="Слушать"
                     @click.stop="playPlaylist(pl)"
                   >
-                    <Icon name="play" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="16" />
                   </button>
 
                   <span
@@ -64,7 +64,7 @@
                     class="home-card-pin"
                     title="Закреплён в боковой панели"
                   >
-                    <Icon name="pin" :size="11" />
+                    <Icon name="mingcute:pin-2-line" :size="11" />
                   </span>
                 </div>
 
@@ -80,7 +80,7 @@
                       v-close-popup
                       @click="playPlaylist(pl)"
                     >
-                      <Icon name="play" :size="17" />
+                      <Icon name="mingcute:play-fill" :size="17" />
                       <span>Слушать</span>
                     </div>
                     <div
@@ -88,7 +88,7 @@
                       v-close-popup
                       @click="router.push(`/playlists/${pl.kind}`)"
                     >
-                      <Icon name="queue" :size="17" />
+                      <Icon name="mingcute:playlist-2-line" :size="17" />
                       <span>Открыть плейлист</span>
                     </div>
                     <div
@@ -97,7 +97,7 @@
                       @click="library.togglePin(pl.kind)"
                     >
                       <Icon
-                        :name="library.isPinned(pl.kind) ? 'pinOff' : 'pin'"
+                        :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
                         :size="17"
                       />
                       <span>{{
@@ -108,7 +108,7 @@
                     <div class="menu-sep" />
 
                     <div class="menu-item" v-close-popup @click="rename(pl)">
-                      <Icon name="name" :size="17" />
+                      <Icon name="mingcute:pencil-line" :size="17" />
                       <span>Переименовать</span>
                     </div>
                     <div
@@ -116,7 +116,7 @@
                       v-close-popup
                       @click="library.setPlaylistPublic(pl.kind, true)"
                     >
-                      <Icon name="share" :size="17" />
+                      <Icon name="mingcute:share-2-line" :size="17" />
                       <span>Сделать публичным</span>
                     </div>
                     <div
@@ -124,7 +124,7 @@
                       v-close-popup
                       @click="library.setPlaylistPublic(pl.kind, false)"
                     >
-                      <Icon name="person" :size="17" />
+                      <Icon name="mingcute:user-2-line" :size="17" />
                       <span>Сделать личным</span>
                     </div>
 
@@ -135,7 +135,7 @@
                       v-close-popup
                       @click="removePlaylist(pl)"
                     >
-                      <Icon name="trash" :size="17" />
+                      <Icon name="mingcute:delete-2-line" :size="17" />
                       <span>Удалить плейлист</span>
                     </div>
                   </div>
@@ -170,7 +170,7 @@
                   />
                   <Icon
                     v-else
-                    :name="p.kind === 'artist' ? 'person' : 'album'"
+                    :name="p.kind === 'artist' ? 'mingcute:user-2-line' : 'mingcute:album-line'"
                     :size="24"
                     class="faint"
                   />
@@ -181,7 +181,7 @@
                     title="Слушать"
                     @click.stop="playPick(p)"
                   >
-                    <Icon name="play" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="16" />
                   </button>
                 </div>
 
@@ -195,12 +195,12 @@
                 <q-menu context-menu touch-position class="menu">
                   <div class="menu-body" style="min-width: 212px">
                     <div class="menu-item" v-close-popup @click="playPick(p)">
-                      <Icon name="play" :size="17" />
+                      <Icon name="mingcute:play-fill" :size="17" />
                       <span>Слушать</span>
                     </div>
                     <div class="menu-item" v-close-popup @click="openPick(p)">
                       <Icon
-                        :name="p.kind === 'artist' ? 'artist' : 'album'"
+                        :name="p.kind === 'artist' ? 'mingcute:mic-line' : 'mingcute:album-line'"
                         :size="17"
                       />
                       <span>{{
@@ -210,7 +210,7 @@
                       }}</span>
                     </div>
                     <div class="menu-item" v-close-popup @click="waveFrom(p)">
-                      <Icon name="wave" :size="17" />
+                      <Icon name="mingcute:wave-line" :size="17" />
                       <span>Волна по этому</span>
                     </div>
                   </div>
@@ -229,7 +229,7 @@
               @click="router.push('/wave')"
             >
               <span>Все станции</span>
-              <Icon name="chevronRight" :size="14" />
+              <Icon name="mingcute:right-line" :size="14" />
             </button>
           </div>
 
@@ -250,10 +250,10 @@
                     decoding="async"
                     :src="w.cover_url"
                   />
-                  <Icon v-else name="wave" :size="22" class="faint" />
+                  <Icon v-else name="mingcute:wave-line" :size="22" class="faint" />
 
                   <span class="home-card-play" title="Запустить">
-                    <Icon name="play" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="16" />
                   </span>
                 </div>
 
@@ -263,7 +263,7 @@
                 <q-menu context-menu touch-position class="menu">
                   <div class="menu-body" style="min-width: 200px">
                     <div class="menu-item" v-close-popup @click="playWave(w)">
-                      <Icon name="play" :size="17" />
+                      <Icon name="mingcute:play-fill" :size="17" />
                       <span>Запустить волну</span>
                     </div>
                     <div
@@ -271,7 +271,7 @@
                       v-close-popup
                       @click="router.push('/wave')"
                     >
-                      <Icon name="wave" :size="17" />
+                      <Icon name="mingcute:wave-line" :size="17" />
                       <span>Открыть страницу волны</span>
                     </div>
                   </div>
@@ -295,7 +295,6 @@ import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
 import type { Playlist, Track, WheelItem } from "@/api/types";
-import Icon from "@/components/Icon.vue";
 import { artistNames, plural } from "@/lib/format";
 import { askConfirm, askText } from "@/lib/dialogs";
 import { readCache, swr, writeCache } from "@/lib/cache";

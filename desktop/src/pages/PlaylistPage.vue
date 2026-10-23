@@ -8,9 +8,9 @@
           @click="playFrom(0)"
         >
           <img loading="lazy" decoding="async" v-if="cover" :src="cover" />
-          <Icon v-else name="queue" :size="42" class="faint" />
+          <Icon v-else name="mingcute:playlist-2-line" :size="42" class="faint" />
           <div v-if="tracks.length" class="playlist-cover-play">
-            <Icon name="play" :size="20" />
+            <Icon name="mingcute:play-fill" :size="20" />
           </div>
         </div>
 
@@ -18,7 +18,7 @@
           <div class="head-kind">
             Плейлист
             <span v-if="isPinned" class="head-pin-mark">
-              <Icon name="pin" :size="12" />
+              <Icon name="mingcute:pin-2-line" :size="12" />
               закреплён
             </span>
           </div>
@@ -43,7 +43,7 @@
             @click="beginEdit"
           >
             <span>{{ title }}</span>
-            <Icon class="head-title-pen" name="name" :size="20" />
+            <Icon class="head-title-pen" name="mingcute:pencil-line" :size="20" />
           </button>
 
           <div class="head-meta">
@@ -58,7 +58,7 @@
               :disabled="!tracks.length"
               @click="playFrom(0)"
             >
-              <Icon name="play" :size="15" />
+              <Icon name="mingcute:play-fill" :size="15" />
               <span>Слушать</span>
             </button>
 
@@ -68,7 +68,7 @@
               :disabled="!tracks.length"
               @click="shufflePlay"
             >
-              <Icon name="shuffle" :size="15" />
+              <Icon name="mingcute:shuffle-line" :size="15" />
               <span>Перемешать</span>
             </button>
 
@@ -81,7 +81,7 @@
             >
               <q-spinner size="15px" />
               <span>{{ downloadLabel }}</span>
-              <Icon name="close" :size="14" />
+              <Icon name="mingcute:close-line" :size="14" />
             </button>
 
             <button
@@ -97,7 +97,7 @@
               "
               @click="downloadAll"
             >
-              <Icon :name="fullyDownloaded ? 'check' : 'download'" :size="15" />
+              <Icon :name="fullyDownloaded ? 'mingcute:check-line' : 'mingcute:download-2-line'" :size="15" />
               <span>{{ downloadLabel }}</span>
             </button>
 
@@ -112,16 +112,16 @@
               "
               @click="library.togglePin(kindNumber)"
             >
-              <Icon :name="isPinned ? 'pinOff' : 'pin'" :size="15" />
+              <Icon :name="isPinned ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'" :size="15" />
               <span>{{ isPinned ? "Открепить" : "Закрепить" }}</span>
             </button>
 
             <button class="icon-btn" type="button" title="Ещё">
-              <Icon name="more" :size="18" />
+              <Icon name="mingcute:more-2-fill" :size="18" />
               <q-menu class="menu" anchor="bottom left" self="top left">
                 <div class="menu-body" style="min-width: 232px">
                   <div class="menu-item" v-close-popup @click="beginEdit">
-                    <Icon name="name" :size="17" />
+                    <Icon name="mingcute:pencil-line" :size="17" />
                     <span>Переименовать</span>
                   </div>
 
@@ -131,7 +131,7 @@
                     @click="enqueueAll"
                     :class="{ disabled: !tracks.length }"
                   >
-                    <Icon name="addQueue" :size="17" />
+                    <Icon name="mingcute:add-circle-line" :size="17" />
                     <span>Добавить всё в очередь</span>
                   </div>
 
@@ -141,7 +141,7 @@
                     :class="{ disabled: !tracks.length || fullyDownloaded }"
                     @click="downloadAll"
                   >
-                    <Icon name="download" :size="17" />
+                    <Icon name="mingcute:download-2-line" :size="17" />
                     <span>{{
                       fullyDownloaded ? "Уже скачано" : "Скачать всё"
                     }}</span>
@@ -153,19 +153,19 @@
                     v-close-popup
                     @click="cancelDownload"
                   >
-                    <Icon name="close" :size="17" />
+                    <Icon name="mingcute:close-line" :size="17" />
                     <span>Отменить загрузку</span>
                   </div>
 
                   <div class="menu-item" v-close-popup @click="playRecommended">
-                    <Icon name="wave" :size="17" />
+                    <Icon name="mingcute:wave-line" :size="17" />
                     <span>Похожее на плейлист</span>
                   </div>
 
                   <div class="menu-sep" />
 
                   <div class="menu-item" v-close-popup @click="setPublic(true)">
-                    <Icon name="share" :size="17" />
+                    <Icon name="mingcute:share-2-line" :size="17" />
                     <span>Сделать публичным</span>
                   </div>
 
@@ -174,14 +174,14 @@
                     v-close-popup
                     @click="setPublic(false)"
                   >
-                    <Icon name="person" :size="17" />
+                    <Icon name="mingcute:user-2-line" :size="17" />
                     <span>Сделать личным</span>
                   </div>
 
                   <div class="menu-sep" />
 
                   <div class="menu-item" v-close-popup @click="clearTracks">
-                    <Icon name="filter" :size="17" />
+                    <Icon name="mingcute:filter-line" :size="17" />
                     <span>Очистить плейлист</span>
                   </div>
 
@@ -190,7 +190,7 @@
                     v-close-popup
                     @click="removePlaylist"
                   >
-                    <Icon name="trash" :size="17" />
+                    <Icon name="mingcute:delete-2-line" :size="17" />
                     <span>Удалить плейлист</span>
                   </div>
                 </div>
@@ -214,7 +214,7 @@
           title="Выбрать все"
           @click="toggleSelectAllRows"
         >
-          <Icon v-if="allVisibleSelected" name="check" :size="13" />
+          <Icon v-if="allVisibleSelected" name="mingcute:check-line" :size="13" />
         </button>
 
         <div class="select-bar-count t-12 w-600">
@@ -228,7 +228,7 @@
             :disabled="!selectedIds.length"
             @click="playRowSelection"
           >
-            <Icon name="play" :size="14" />
+            <Icon name="mingcute:play-fill" :size="14" />
             <span>Слушать</span>
           </button>
 
@@ -238,12 +238,12 @@
             :disabled="!selectedIds.length"
             @click="enqueueRowSelection"
           >
-            <Icon name="addQueue" :size="14" />
+            <Icon name="mingcute:add-circle-line" :size="14" />
             <span>В очередь</span>
           </button>
 
           <button class="btn" type="button" :disabled="!selectedIds.length">
-            <Icon name="playlistAdd" :size="14" />
+            <Icon name="mingcute:classify-add-line" :size="14" />
             <span>В плейлист</span>
             <q-menu class="menu" anchor="bottom start" self="top start">
               <div class="menu-body">
@@ -264,7 +264,7 @@
                       loading="lazy"
                       decoding="async"
                     />
-                    <Icon v-else name="queue" :size="14" class="faint" />
+                    <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
                   </div>
                   <span class="ellipsis">{{ playlist.title }}</span>
                 </div>
@@ -278,7 +278,7 @@
             :disabled="!selectedIds.length || downloading"
             @click="downloadRowSelection"
           >
-            <Icon name="download" :size="14" />
+            <Icon name="mingcute:download-2-line" :size="14" />
             <span>Скачать</span>
           </button>
 
@@ -289,7 +289,7 @@
             :disabled="!selectedIds.length"
             @click="removeRowSelection"
           >
-            <Icon name="trash" :size="14" />
+            <Icon name="mingcute:delete-2-line" :size="14" />
             <span>Удалить</span>
           </button>
 
@@ -299,14 +299,14 @@
             title="Снять выделение"
             @click="clearRowSelection"
           >
-            <Icon name="close" :size="15" />
+            <Icon name="mingcute:close-line" :size="15" />
           </button>
         </div>
       </div>
 
       <div v-if="tracks.length" class="playlist-toolbar">
         <div class="field playlist-filter">
-          <Icon name="search" :size="15" class="faint" />
+          <Icon name="mingcute:search-2-line" :size="15" class="faint" />
           <input
             v-model="filter"
             type="text"
@@ -320,14 +320,14 @@
             title="Сбросить"
             @click="filter = ''"
           >
-            <Icon name="close" :size="13" />
+            <Icon name="mingcute:close-line" :size="13" />
           </button>
         </div>
 
         <button class="btn" type="button" title="Сортировка">
-          <Icon name="filter" :size="15" />
+          <Icon name="mingcute:filter-line" :size="15" />
           <span>{{ sortLabel }}</span>
-          <Icon name="chevronDown" :size="13" />
+          <Icon name="mingcute:down-line" :size="13" />
           <q-menu class="menu" anchor="bottom left" self="top left">
             <div class="menu-body" style="min-width: 220px">
               <div
@@ -338,7 +338,7 @@
                 @click="sortMode = option.id"
               >
                 <Icon
-                  :name="sortMode === option.id ? 'check' : 'name'"
+                  :name="sortMode === option.id ? 'mingcute:check-line' : 'mingcute:pencil-line'"
                   :size="16"
                 />
                 <span>{{ option.label }}</span>
@@ -411,7 +411,7 @@
       </q-virtual-scroll>
 
       <div v-else-if="filter" class="playlist-empty">
-        <Icon name="search" :size="22" class="faint" />
+        <Icon name="mingcute:search-2-line" :size="22" class="faint" />
         <div class="t-13">По запросу «{{ filter }}» ничего нет</div>
         <button class="btn" type="button" @click="filter = ''">
           Сбросить поиск
@@ -419,13 +419,13 @@
       </div>
 
       <div v-else class="playlist-empty">
-        <Icon name="queue" :size="22" class="faint" />
+        <Icon name="mingcute:playlist-2-line" :size="22" class="faint" />
         <div class="t-13">Плейлист пуст</div>
         <div class="faint t-12">
           Добавляй треки через меню трека - «Добавить в плейлист»
         </div>
         <button class="btn" type="button" @click="playRecommended">
-          <Icon name="wave" :size="15" />
+          <Icon name="mingcute:wave-line" :size="15" />
           <span>Подобрать похожее</span>
         </button>
       </div>
@@ -446,13 +446,13 @@
             title="Закрыть"
             @click="pickerOpen = false"
           >
-            <Icon name="close" :size="15" />
+            <Icon name="mingcute:close-line" :size="15" />
           </button>
         </div>
 
         <div class="picker-toolbar">
           <div class="field picker-search">
-            <Icon name="search" :size="15" class="faint" />
+            <Icon name="mingcute:search-2-line" :size="15" class="faint" />
             <input
               v-model="pickerFilter"
               type="text"
@@ -488,7 +488,7 @@
             >
               <Icon
                 v-if="selected.includes(row.index)"
-                name="check"
+                name="mingcute:check-line"
                 :size="12"
               />
             </span>
@@ -500,7 +500,7 @@
                 decoding="async"
                 :src="row.track.cover_url"
               />
-              <Icon v-else name="note" :size="14" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
             </div>
 
             <span class="picker-meta">
@@ -531,7 +531,7 @@
             :disabled="!selected.length"
             @click="playSelected"
           >
-            <Icon name="play" :size="15" />
+            <Icon name="mingcute:play-fill" :size="15" />
             <span>Слушать</span>
           </button>
 
@@ -541,12 +541,12 @@
             :disabled="!selected.length"
             @click="enqueueSelected"
           >
-            <Icon name="addQueue" :size="15" />
+            <Icon name="mingcute:add-circle-line" :size="15" />
             <span>В очередь</span>
           </button>
 
           <button class="btn" type="button" :disabled="!selected.length">
-            <Icon name="playlistAdd" :size="15" />
+            <Icon name="mingcute:classify-add-line" :size="15" />
             <span>В плейлист</span>
             <q-menu class="menu" anchor="top right" self="bottom right">
               <div class="menu-body" style="min-width: 220px">
@@ -558,7 +558,7 @@
                   v-close-popup
                   @click="addSelectedTo(item.kind)"
                 >
-                  <Icon name="queue" :size="16" />
+                  <Icon name="mingcute:playlist-2-line" :size="16" />
                   <span class="ellipsis">{{ item.title }}</span>
                 </div>
                 <div v-if="!otherPlaylists.length" class="menu-item disabled">
@@ -574,7 +574,7 @@
             :disabled="!selected.length || downloading"
             @click="downloadSelected"
           >
-            <Icon name="download" :size="15" />
+            <Icon name="mingcute:download-2-line" :size="15" />
             <span>Скачать</span>
           </button>
 
@@ -584,7 +584,7 @@
             :disabled="!selected.length"
             @click="removeSelected"
           >
-            <Icon name="trash" :size="15" />
+            <Icon name="mingcute:delete-2-line" :size="15" />
             <span>Удалить</span>
           </button>
         </div>
@@ -604,7 +604,6 @@ import {
 } from "vue";
 import { Notify } from "quasar";
 import { useRoute, useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import TrackRow from "@/components/TrackRow.vue";
 import { api } from "@/api/client";
 import type { Playlist, Track } from "@/api/types";

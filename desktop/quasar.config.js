@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 
 export default defineConfig(() => {
   return {
-    boot: ["native", "auth"],
+    boot: ["native", "auth", "icons"],
 
     css: ["app.scss", "tailwind.css"],
 

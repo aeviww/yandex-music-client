@@ -41,7 +41,7 @@
           :disabled="together.active"
           @click="setTransport('local')"
         >
-          <Icon name="wave" :size="15" />
+          <Icon name="mingcute:wave-line" :size="15" />
           <span>Локально</span>
         </button>
 
@@ -52,7 +52,7 @@
           :disabled="together.active"
           @click="setTransport('server')"
         >
-          <Icon name="globe" :size="15" />
+          <Icon name="mingcute:earth-2-line" :size="15" />
           <span>Через сервер</span>
         </button>
       </div>
@@ -117,7 +117,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
 import TogetherHostCard from "@/components/together/TogetherHostCard.vue";
 import TogetherJoinCard from "@/components/together/TogetherJoinCard.vue";

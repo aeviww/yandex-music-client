@@ -34,7 +34,7 @@
         @contextmenu.prevent="openAlbum"
       >
         <div class="player-cover-hover">
-          <Icon name="expand" :size="16" />
+          <Icon name="mingcute:fullscreen-line" :size="16" />
         </div>
         <Transition name="pb-cover">
           <img
@@ -44,7 +44,7 @@
             decoding="async"
             :src="player.current.cover_url"
           />
-          <Icon v-else name="note" :size="18" class="faint" />
+          <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
         </Transition>
       </div>
 
@@ -206,7 +206,6 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import ArtistsLine from "@/components/ArtistsLine.vue";
 import AiTag from "@/components/AiTag.vue";
-import Icon from "@/components/Icon.vue";
 import PlayerButton from "@/components/player/PlayerButton.vue";
 import PlayerEditor from "@/components/player/PlayerEditor.vue";
 import TrackMenu from "@/components/TrackMenu.vue";

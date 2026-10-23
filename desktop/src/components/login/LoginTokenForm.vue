@@ -6,7 +6,7 @@
       class="-ml-[8px] mb-[20px] flex min-h-[44px] cursor-pointer items-center gap-[4px] rounded-[6px] border-0 border-none bg-transparent px-[8px] py-[8px] text-[14px] text-[#b3b3b3] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white disabled:opacity-50 flex-nowrap"
       @click="$emit('back')"
     >
-      <Icon name="chevronLeft" :size="18" />К входу через Яндекс
+      <Icon name="mingcute:left-line" :size="18" />К входу через Яндекс
     </button>
     <h2
       class="mb-[12px] mt-0 text-[28px] font-semibold leading-[1.15] tracking-[-0.035em] text-white"
@@ -41,7 +41,7 @@
         class="grid h-[44px] w-[44px] flex-none cursor-pointer place-items-center rounded-[6px] border-0 border-none bg-transparent text-[#b3b3b3] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
         @click="reveal = !reveal"
       >
-        <Icon :name="reveal ? 'eyeOff' : 'eye'" :size="18" />
+        <Icon :name="reveal ? 'mingcute:eye-close-line' : 'mingcute:eye-2-line'" :size="18" />
       </button>
     </div>
 
@@ -64,7 +64,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import Icon from "@/components/Icon.vue";
 defineProps<{ loading: boolean }>();
 defineEmits<{ submit: []; back: [] }>();
 const token = defineModel<string>({ required: true });

@@ -43,7 +43,7 @@
     <div class="setting-row column" style="gap: 10px; align-items: stretch">
       <div class="row items-center wrap" style="gap: 8px">
         <button class="btn" :disabled="busy" @click="pickFile">
-          <Icon name="upload" :size="15" />
+          <Icon name="mingcute:upload-2-line" :size="15" />
           <span>Выбрать файл…</span>
         </button>
         <span v-if="fileName" class="faint t-12 ellipsis">{{ fileName }}</span>
@@ -94,7 +94,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Notify } from "quasar";
-import Icon from "@/components/Icon.vue";
 import { api } from "@/api/client";
 import type { Track } from "@/api/types";
 import { askText } from "@/lib/dialogs";

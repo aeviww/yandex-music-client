@@ -12,6 +12,7 @@
     "tauri:build": "tauri build"
   },
   "dependencies": {
+    "@iconify/vue": "^5.0.4",
     "@quasar/extras": "^1.16.13",
     "@tauri-apps/api": "^2.1.1",
     "pinia": "^2.2.6",

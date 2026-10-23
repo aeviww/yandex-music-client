@@ -23,7 +23,7 @@
               </button>
             </div>
             <button class="btn stats-clear" type="button" @click="clear">
-              <Icon name="trash" :size="14" />
+              <Icon name="mingcute:delete-2-line" :size="14" />
               <span>Очистить</span>
             </button>
           </div>
@@ -140,7 +140,7 @@
             </div>
 
             <div v-else class="stats-empty">
-              <Icon name="stats" :size="22" class="faint" />
+              <Icon name="mingcute:chart-bar-line" :size="22" class="faint" />
               <span class="faint t-13"
                 >Пока нечего показать за этот период.</span
               >
@@ -168,7 +168,7 @@
 
             <div class="card stats-panel stats-list">
               <div v-if="!topTracks.length" class="stats-empty">
-                <Icon name="note" :size="20" class="faint" />
+                <Icon name="mingcute:music-line" :size="20" class="faint" />
                 <span class="faint t-13"
                   >Пока пусто - послушай что-нибудь.</span
                 >
@@ -184,7 +184,7 @@
                 </span>
                 <div class="cover stats-cover">
                   <img v-if="row.cover" :src="row.cover" decoding="async" />
-                  <Icon v-else name="note" :size="14" class="faint" />
+                  <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
                 </div>
                 <div class="stats-row-meta">
                   <div class="ellipsis t-13">{{ row.label }}</div>
@@ -214,7 +214,7 @@
 
             <div class="card stats-panel stats-list">
               <div v-if="!topArtists.length" class="stats-empty">
-                <Icon name="artist" :size="20" class="faint" />
+                <Icon name="mingcute:mic-line" :size="20" class="faint" />
                 <span class="faint t-13">Пока пусто.</span>
               </div>
 
@@ -228,7 +228,7 @@
                 </span>
                 <div class="cover stats-cover round">
                   <img v-if="row.cover" :src="row.cover" decoding="async" />
-                  <Icon v-else name="artist" :size="14" class="faint" />
+                  <Icon v-else name="mingcute:mic-line" :size="14" class="faint" />
                 </div>
                 <div class="stats-row-meta">
                   <div class="ellipsis t-13">{{ row.label }}</div>
@@ -249,7 +249,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { askConfirm } from "@/lib/dialogs";
-import Icon from "@/components/Icon.vue";
 import type { RankRow } from "@/stores/stats";
 import { plural } from "@/lib/format";
 import { useStatsStore } from "@/stores/stats";

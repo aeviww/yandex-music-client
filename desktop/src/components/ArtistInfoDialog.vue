@@ -4,14 +4,14 @@
       <div class="ainfo-head">
         <div class="cover ainfo-avatar round">
           <img v-if="artist?.cover_url" :src="artist.cover_url" />
-          <Icon v-else name="person" :size="22" class="faint" />
+          <Icon v-else name="mingcute:user-2-line" :size="22" class="faint" />
         </div>
         <div class="col" style="min-width: 0">
           <div class="ainfo-name ellipsis">{{ artist?.name }}</div>
           <div class="ainfo-sub ellipsis">{{ subtitle }}</div>
         </div>
         <div class="icon-btn round" @click="model = false">
-          <Icon name="close" :size="16" />
+          <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
 
@@ -79,7 +79,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import Icon from "@/components/Icon.vue";
 import { api } from "@/api/client";
 import type { ArtistPage } from "@/api/types";
 import type { ArtistSnapshot } from "@/lib/artistStats";

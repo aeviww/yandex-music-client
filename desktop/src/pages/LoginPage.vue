@@ -117,7 +117,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import LoginWelcome from "@/components/login/LoginWelcome.vue";
 import LoginDeviceCode from "@/components/login/LoginDeviceCode.vue";
 import LoginTokenForm from "@/components/login/LoginTokenForm.vue";

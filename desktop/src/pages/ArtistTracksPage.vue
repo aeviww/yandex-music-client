@@ -5,7 +5,7 @@
         <div class="section-head">
           <div>
             <button class="more-link" type="button" @click="back">
-              <Icon name="chevronLeft" :size="14" />
+              <Icon name="mingcute:left-line" :size="14" />
               <span>{{ name || "Артист" }}</span>
             </button>
             <div class="h1 q-mt-sm">Все треки</div>
@@ -21,7 +21,7 @@
               :disabled="!tracks.length"
               @click="playFrom(0)"
             >
-              <Icon name="play" :size="15" />
+              <Icon name="mingcute:play-fill" :size="15" />
               <span>Слушать</span>
             </button>
 
@@ -31,7 +31,7 @@
               :disabled="!tracks.length"
               @click="shufflePlay"
             >
-              <Icon name="shuffle" :size="15" />
+              <Icon name="mingcute:shuffle-line" :size="15" />
               <span>Перемешать</span>
             </button>
 
@@ -41,7 +41,7 @@
               :disabled="!tracks.length"
               @click="enqueueAll"
             >
-              <Icon name="addQueue" :size="15" />
+              <Icon name="mingcute:add-circle-line" :size="15" />
               <span>В очередь</span>
             </button>
           </div>
@@ -83,7 +83,6 @@ import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
 import type { ArtistPage, Track } from "@/api/types";
-import Icon from "@/components/Icon.vue";
 import LazyTracks from "@/components/LazyTracks.vue";
 import TrackRow from "@/components/TrackRow.vue";
 import { plural } from "@/lib/format";

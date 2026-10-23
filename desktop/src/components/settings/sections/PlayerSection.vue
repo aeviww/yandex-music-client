@@ -17,23 +17,23 @@
 
       <ul class="editor-steps">
         <li>
-          <Icon name="drag" :size="14" />
+          <Icon name="mingcute:dots-line" :size="14" />
           Перетаскивай любую кнопку между левой, центральной и правой частями
         </li>
         <li>
-          <Icon name="close" :size="14" />
+          <Icon name="mingcute:close-line" :size="14" />
           Лишнее тяни в корзину «Скрытые кнопки», оттуда же возвращай обратно
         </li>
         <li>
-          <Icon name="expand" :size="14" />
+          <Icon name="mingcute:fullscreen-line" :size="14" />
           Верхний край тянет высоту, боковой — ширину блока с треком
         </li>
         <li>
-          <Icon name="settings" :size="14" />
+          <Icon name="mingcute:settings-5-line" :size="14" />
           Ползунки рядом — обложка, иконки, отступы, полоса прогресса
         </li>
         <li>
-          <Icon name="check" :size="14" />
+          <Icon name="mingcute:check-line" :size="14" />
           «Готово» сохраняет, «Отмена» возвращает всё как было
         </li>
       </ul>
@@ -44,7 +44,7 @@
           type="button"
           @click="ui.togglePlayerEdit(true)"
         >
-          <Icon name="layout" :size="15" />
+          <Icon name="mingcute:layout-left-line" :size="15" />
           Редактировать на плеере
         </button>
         <span class="editor-hint">
@@ -98,7 +98,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
 import { useUiStore } from "@/stores/ui/index";
 

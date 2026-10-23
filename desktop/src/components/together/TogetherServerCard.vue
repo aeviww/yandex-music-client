@@ -70,7 +70,7 @@
         title="Скопировать код"
         @click="copy(roomCode)"
       >
-        <Icon name="copy" :size="14" />
+        <Icon name="mingcute:copy-2-line" :size="14" />
       </button>
     </div>
 
@@ -155,14 +155,13 @@
   <p v-if="reason" class="together-reason">{{ reason }}</p>
 
   <button class="together-repo" type="button" @click="openRepo">
-    <Icon name="github" :size="14" />
+    <Icon name="simple-icons:github" :size="14" />
     <span>Исходный код сервера</span>
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import Icon from "@/components/Icon.vue";
 import { copyText } from "@/lib/clipboard";
 import { api } from "@/api/client";
 import { seedExists, seedForget, seedNew, seedSet, seedShow } from "@/api/relay";

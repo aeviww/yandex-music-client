@@ -22,7 +22,7 @@
         :title="copied ? 'Скопировано' : 'Скопировать код'"
         @click="$emit('copy')"
       >
-        <Icon :name="copied ? 'check' : 'copy'" :size="20" />
+        <Icon :name="copied ? 'mingcute:check-line' : 'mingcute:copy-2-line'" :size="20" />
       </button>
     </div>
     <div
@@ -57,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-import Icon from "@/components/Icon.vue";
 defineProps<{ userCode: string; verifyUrl: string; copied: boolean }>();
 defineEmits<{ copy: []; cancel: [] }>();
 </script>

@@ -8,44 +8,44 @@
   >
     <div class="menu-body">
       <div class="menu-item" v-close-popup @click="library.toggleLike(track)">
-        <Icon :name="isLiked ? 'heartFilled' : 'heart'" :size="18" />
+        <Icon :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'" :size="18" />
         <span>{{ isLiked ? "Убрать из «Мне нравится»" : "Нравится" }}</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="player.waveByTrack(track)">
-        <Icon name="wave" :size="18" />
+        <Icon name="mingcute:wave-line" :size="18" />
         <span>Моя волна по треку</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="playSimilar">
-        <Icon name="paths" :size="18" />
+        <Icon name="mingcute:route-line" :size="18" />
         <span>Похожие треки</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="download">
-        <Icon name="download" :size="18" />
+        <Icon name="mingcute:download-2-line" :size="18" />
         <span>Скачать</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="player.playNext(track)">
-        <Icon name="playNext" :size="18" />
+        <Icon name="mingcute:playlist-line" :size="18" />
         <span>Играть следующим</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="player.enqueue(track)">
-        <Icon name="addQueue" :size="18" />
+        <Icon name="mingcute:add-circle-line" :size="18" />
         <span>Добавить в конец очереди</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="library.dislike(track)">
-        <Icon name="heartOff" :size="18" />
+        <Icon name="mingcute:heart-crack-line" :size="18" />
         <span>Не нравится</span>
       </div>
 
       <div class="menu-item">
-        <Icon name="playlistAdd" :size="18" />
+        <Icon name="mingcute:classify-add-line" :size="18" />
         <span class="col">Добавить в плейлист</span>
-        <Icon name="chevronRight" :size="15" />
+        <Icon name="mingcute:right-line" :size="15" />
         <q-menu
           anchor="top end"
           self="top start"
@@ -68,12 +68,12 @@
                   loading="lazy"
                   decoding="async"
                 />
-                <Icon v-else name="queue" :size="14" class="faint" />
+                <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
               </div>
               <span class="ellipsis col">{{ pl.title }}</span>
               <Icon
                 v-if="library.inPlaylist(pl.kind, track.id)"
-                name="check"
+                name="mingcute:check-line"
                 :size="16"
                 class="pl-check"
               />
@@ -92,12 +92,12 @@
       </div>
 
       <div class="menu-item" v-close-popup @click="showLyrics">
-        <Icon name="lyrics" :size="18" />
+        <Icon name="mingcute:subtitle-line" :size="18" />
         <span>Показать текст песни</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="share">
-        <Icon name="share" :size="18" />
+        <Icon name="mingcute:share-2-line" :size="18" />
         <span>Поделиться</span>
       </div>
 
@@ -107,7 +107,7 @@
         v-close-popup
         @click="goAlbum"
       >
-        <Icon name="album" :size="18" />
+        <Icon name="mingcute:album-line" :size="18" />
         <span>Перейти к альбому</span>
       </div>
 
@@ -117,14 +117,14 @@
         v-close-popup
         @click="goArtist(track.artists[0]?.id)"
       >
-        <Icon name="artist" :size="18" />
+        <Icon name="mingcute:mic-line" :size="18" />
         <span>Перейти к исполнителю</span>
       </div>
 
       <div v-else-if="track.artists.length > 1" class="menu-item">
-        <Icon name="artist" :size="18" />
+        <Icon name="mingcute:mic-line" :size="18" />
         <span class="col">Перейти к исполнителям</span>
-        <Icon name="chevronRight" :size="15" />
+        <Icon name="mingcute:right-line" :size="15" />
         <q-menu anchor="top end" self="top start" class="panel menu">
           <div class="menu-body">
             <div
@@ -143,7 +143,7 @@
       <template v-if="playlistKind !== null && playlistKind !== undefined">
         <div class="sep" style="margin: 6px 4px" />
         <div class="menu-item danger" v-close-popup @click="emit('remove')">
-          <Icon name="trash" :size="18" />
+          <Icon name="mingcute:delete-2-line" :size="18" />
           <span>Удалить из плейлиста</span>
         </div>
       </template>
@@ -156,7 +156,7 @@
         v-close-popup
         @click="toggleCensorVersion"
       >
-        <Icon :name="playsOriginal ? 'heartOff' : 'yandexmusic'" :size="18" />
+        <Icon :name="playsOriginal ? 'mingcute:heart-crack-line' : 'gravity-ui:logo-yandex'" :size="18" />
         <span>{{
           playsOriginal
             ? "Играть версию без цензуры"
@@ -165,14 +165,14 @@
       </div>
 
       <div class="menu-item" v-close-popup @click="openReplace">
-        <Icon name="upload" :size="18" />
+        <Icon name="mingcute:upload-2-line" :size="18" />
         <span>{{
           hasReplacement ? "Своя версия — настроить" : "Подменить версию"
         }}</span>
       </div>
 
       <div class="menu-item" v-close-popup @click="openInfo">
-        <Icon name="info" :size="18" />
+        <Icon name="mingcute:information-line" :size="18" />
         <span>О треке</span>
       </div>
     </div>
@@ -186,7 +186,7 @@
           <div class="dim t-12 ellipsis">{{ track.title }}</div>
         </div>
         <div class="icon-btn round" v-close-popup>
-          <Icon name="close" :size="16" />
+          <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
 
@@ -239,10 +239,10 @@
           <span class="info-title ellipsis">{{
             details?.title || track.title
           }}</span>
-          <Icon v-if="details?.explicit" name="info" :size="16" class="faint" />
+          <Icon v-if="details?.explicit" name="mingcute:information-line" :size="16" class="faint" />
         </div>
         <div class="icon-btn round" v-close-popup>
-          <Icon name="close" :size="16" />
+          <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
 
@@ -266,7 +266,6 @@
 import { computed, onMounted, ref } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import { api } from "@/api/client";
 import type { Track, TrackInfo } from "@/api/types";
 import { openTrackLyrics } from "@/lib/dialogs";

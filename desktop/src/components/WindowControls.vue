@@ -14,15 +14,13 @@
       "
       @click="b.action"
     >
-      <Icon :name="b.icon" :size="b.size" :width="1.5" />
+      <Icon :name="b.icon" :size="b.size" />
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import Icon from "@/components/Icon.vue";
-
 const maximized = ref(false);
 
 type AppWindow = {
@@ -62,21 +60,21 @@ const buttons = computed(() => [
   {
     key: "minimize",
     label: "Свернуть",
-    icon: "minimize",
+    icon: "mingcute:minimize-line",
     size: 14,
     action: minimize,
   },
   {
     key: "maximize",
     label: maximized.value ? "Восстановить" : "Развернуть",
-    icon: maximized.value ? "restore" : "maximize",
+    icon: maximized.value ? "mingcute:restore-line" : "mingcute:square-line",
     size: 12,
     action: toggleMaximize,
   },
   {
     key: "close",
     label: "Закрыть",
-    icon: "close",
+    icon: "mingcute:close-line",
     size: 14,
     action: close,
   },

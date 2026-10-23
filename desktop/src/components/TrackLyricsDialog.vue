@@ -23,7 +23,7 @@
           </button>
         </div>
         <div class="icon-btn round" @click="open = false">
-          <Icon name="close" :size="16" />
+          <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
 
@@ -71,7 +71,6 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import Icon from "@/components/Icon.vue";
 import GeniusPanel from "@/components/GeniusPanel.vue";
 import { api } from "@/api/client";
 import type { Lyrics } from "@/api/types";

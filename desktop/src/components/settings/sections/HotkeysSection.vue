@@ -64,7 +64,7 @@
             {{ globalLabel(row) }}
           </button>
           <div class="icon-btn xs round">
-            <Icon name="more" :size="14" />
+            <Icon name="mingcute:more-2-fill" :size="14" />
             <q-menu class="menu">
               <div class="menu-body">
                 <div
@@ -106,7 +106,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
 import { Notify } from "quasar";
-import Icon from "@/components/Icon.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
 import type { HotkeyAction } from "@/lib/hotkeys/defaults";
 import {

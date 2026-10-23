@@ -30,7 +30,7 @@
                 loading="lazy"
                 decoding="async"
               />
-              <Icon v-else name="artist" :size="14" class="faint" />
+              <Icon v-else name="mingcute:mic-line" :size="14" class="faint" />
             </div>
             <span class="ellipsis">{{ a.name }}</span>
           </div>
@@ -43,7 +43,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import Icon from "@/components/Icon.vue";
 import type { Artist } from "@/api/types";
 import { cachedAvatar, fetchAvatars } from "@/lib/artistAvatar";
 
