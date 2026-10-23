@@ -150,3 +150,54 @@
 .card-pin.on {
   opacity: 1;
 }
+
+.home-card {
+  position: relative;
+}
+
+.home-card-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.home-card-play {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+}
+
+.home-card:hover .home-card-play {
+  opacity: 1;
+  transform: none;
+}
+
+.home-card-pin {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--fg);
+}

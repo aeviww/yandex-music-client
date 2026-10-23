@@ -1,10 +1,10 @@
 <template>
-  <q-page class="home-page">
+  <q-page class="h-[calc(100vh-117px)] !min-h-0 !overflow-hidden">
     <q-scroll-area class="home-scroll">
-      <div class="home-content">
+      <div class="min-w-0 px-[var(--page-padding,40px)] pt-[32px] pb-[44px]">
         <div class="h1">{{ greeting }}</div>
 
-        <div class="home-actions">
+        <div class="mt-[18px] flex flex-wrap gap-[10px]">
           <button class="btn-solid" type="button" @click="openWave">
             <Icon name="mingcute:wave-line" :size="15" />
             <span>Моя волна</span>
@@ -22,8 +22,14 @@
         </div>
 
         <template v-if="visiblePlaylists.length">
-          <div class="home-section-head">
-            <div class="h2">Твои плейлисты</div>
+          <div
+            class="mb-[14px] mt-[34px] flex items-center justify-between gap-[12px]"
+          >
+            <div
+              class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
+            >
+              Твои плейлисты
+            </div>
             <button
               class="more-link"
               type="button"
@@ -37,21 +43,25 @@
           <div class="row q-col-gutter-md">
             <div v-for="pl in visiblePlaylists" :key="pl.kind" class="col-auto">
               <div
-                class="card home-card"
-                style="width: 150px"
+                class="card group relative w-[var(--card-size,150px)]"
                 @click="router.push(`/playlists/${pl.kind}`)"
               >
-                <div class="cover home-card-art">
+                <div class="cover relative w-full aspect-square">
                   <img
                     v-if="pl.cover_url"
                     loading="lazy"
                     decoding="async"
                     :src="pl.cover_url"
                   />
-                  <Icon v-else name="mingcute:playlist-2-line" :size="24" class="faint" />
+                  <Icon
+                    v-else
+                    name="mingcute:playlist-2-line"
+                    :size="24"
+                    class="faint"
+                  />
 
                   <button
-                    class="home-card-play"
+                    class="absolute right-[8px] bottom-[8px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0"
                     type="button"
                     title="Слушать"
                     @click.stop="playPlaylist(pl)"
@@ -61,7 +71,7 @@
 
                   <span
                     v-if="library.isPinned(pl.kind)"
-                    class="home-card-pin"
+                    class="absolute left-[8px] top-[8px] flex h-[22px] w-[22px] items-center justify-center rounded-full bg-black/55 text-[color:var(--fg)]"
                     title="Закреплён в боковой панели"
                   >
                     <Icon name="mingcute:pin-2-line" :size="11" />
@@ -97,7 +107,11 @@
                       @click="library.togglePin(pl.kind)"
                     >
                       <Icon
-                        :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
+                        :name="
+                          library.isPinned(pl.kind)
+                            ? 'gravity-ui:pin-slash'
+                            : 'mingcute:pin-2-line'
+                        "
                         :size="17"
                       />
                       <span>{{
@@ -146,15 +160,20 @@
         </template>
 
         <template v-if="picks.length">
-          <div class="home-section-head">
-            <div class="h2">Новое для тебя</div>
+          <div
+            class="mb-[14px] mt-[34px] flex items-center justify-between gap-[12px]"
+          >
+            <div
+              class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
+            >
+              Новое для тебя
+            </div>
           </div>
 
           <div class="row q-col-gutter-md">
             <div v-for="p in picks" :key="`${p.kind}-${p.id}`" class="col-auto">
               <div
-                class="card home-card"
-                style="width: 150px"
+                class="card group relative w-[var(--card-size,150px)]"
                 @click="openPick(p)"
               >
                 <div
@@ -170,13 +189,17 @@
                   />
                   <Icon
                     v-else
-                    :name="p.kind === 'artist' ? 'mingcute:user-2-line' : 'mingcute:album-line'"
+                    :name="
+                      p.kind === 'artist'
+                        ? 'mingcute:user-2-line'
+                        : 'mingcute:album-line'
+                    "
                     :size="24"
                     class="faint"
                   />
 
                   <button
-                    class="home-card-play"
+                    class="absolute right-[8px] bottom-[8px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0"
                     type="button"
                     title="Слушать"
                     @click.stop="playPick(p)"
@@ -200,7 +223,11 @@
                     </div>
                     <div class="menu-item" v-close-popup @click="openPick(p)">
                       <Icon
-                        :name="p.kind === 'artist' ? 'mingcute:mic-line' : 'mingcute:album-line'"
+                        :name="
+                          p.kind === 'artist'
+                            ? 'mingcute:mic-line'
+                            : 'mingcute:album-line'
+                        "
                         :size="17"
                       />
                       <span>{{
@@ -221,8 +248,14 @@
         </template>
 
         <template v-if="waves.length">
-          <div class="home-section-head">
-            <div class="h2">Волны по настроению</div>
+          <div
+            class="mb-[14px] mt-[34px] flex items-center justify-between gap-[12px]"
+          >
+            <div
+              class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
+            >
+              Волны по настроению
+            </div>
             <button
               class="more-link"
               type="button"
@@ -236,12 +269,11 @@
           <div class="row q-col-gutter-md">
             <div v-for="w in waves" :key="w.id" class="col-auto">
               <div
-                class="card home-card"
-                style="width: 150px"
+                class="card group relative w-[var(--card-size,150px)]"
                 @click="playWave(w)"
               >
                 <div
-                  class="cover round home-card-art"
+                  class="cover round relative w-full aspect-square"
                   :style="w.color ? { background: w.color } : {}"
                 >
                   <img
@@ -250,9 +282,17 @@
                     decoding="async"
                     :src="w.cover_url"
                   />
-                  <Icon v-else name="mingcute:wave-line" :size="22" class="faint" />
+                  <Icon
+                    v-else
+                    name="mingcute:wave-line"
+                    :size="22"
+                    class="faint"
+                  />
 
-                  <span class="home-card-play" title="Запустить">
+                  <span
+                    class="absolute right-[8px] bottom-[8px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0"
+                    title="Запустить"
+                  >
                     <Icon name="mingcute:play-fill" :size="16" />
                   </span>
                 </div>
