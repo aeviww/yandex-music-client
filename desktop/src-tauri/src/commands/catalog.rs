@@ -1,7 +1,10 @@
 use tauri::State;
 
 use crate::state::AppState;
-use crate::yandex::{AlbumPageDto, ArtistPageDto, SearchDto, TrackDto, TrackInfoDto, Yandex};
+use crate::yandex::{
+    AlbumBriefDto, AlbumPageDto, ArtistPageDto, NeuroItemDto, NeuroStreamDto, SearchDto, TrackDto,
+    TrackInfoDto, Yandex,
+};
 
 #[tauri::command]
 pub async fn get_artist(id: String, state: State<'_, AppState>) -> Result<ArtistPageDto, String> {
@@ -22,6 +25,29 @@ pub async fn get_artist_tracks(
 pub async fn get_album(id: String, state: State<'_, AppState>) -> Result<AlbumPageDto, String> {
     let session = state.session()?;
     Yandex::new(&session.token).album(&id).await
+}
+
+#[tauri::command]
+pub async fn get_new_releases(
+    state: State<'_, AppState>,
+) -> Result<Vec<AlbumBriefDto>, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token).new_releases().await
+}
+
+#[tauri::command]
+pub async fn get_neuro_items(state: State<'_, AppState>) -> Result<Vec<NeuroItemDto>, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token).neuro_items().await
+}
+
+#[tauri::command]
+pub async fn get_neuro_stream(
+    station: String,
+    state: State<'_, AppState>,
+) -> Result<NeuroStreamDto, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token).neuro_stream(&station).await
 }
 
 #[tauri::command]

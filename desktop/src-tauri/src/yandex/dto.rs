@@ -109,6 +109,7 @@ pub struct WheelItemDto {
 pub struct AlbumBriefDto {
     pub id: String,
     pub title: String,
+    pub artist: String,
     pub cover_url: Option<String>,
     pub year: Option<i64>,
 }
@@ -181,4 +182,22 @@ pub struct StationInfoDto {
     pub languages: Vec<StationOptionDto>,
     pub moods: Vec<StationOptionDto>,
     pub diversities: Vec<StationOptionDto>,
+}
+
+#[derive(Serialize)]
+pub struct NeuroItemDto {
+    pub id: String,
+    pub title: String,
+    pub cover_url: Option<String>,
+    pub color: Option<String>,
+    pub text_color: Option<String>,
+}
+
+#[derive(Serialize)]
+pub struct NeuroStreamDto {
+    pub title: String,
+    pub subtitle: String,
+    pub cover_url: Option<String>,
+    pub color: Option<String>,
+    pub stream_url: String,
 }

@@ -30,7 +30,7 @@
     <div class="player-left">
       <div
         class="cover player-cover"
-        @click="player.openFullscreen()"
+        @click="onCoverClick"
         @contextmenu.prevent="openAlbum"
       >
         <div class="player-cover-hover">
@@ -38,11 +38,11 @@
         </div>
         <Transition name="pb-cover">
           <img
-            v-if="player.current?.cover_url"
-            :key="player.current.cover_url"
+            v-if="coverSrc"
+            :key="coverSrc"
             loading="lazy"
             decoding="async"
-            :src="player.current.cover_url"
+            :src="coverSrc"
           />
           <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
         </Transition>
@@ -54,22 +54,29 @@
             <span
               :key="displayTitle"
               class="ellipsis t-13 w-600 player-title-text"
-              :class="{ 'player-title-link': Boolean(trackTarget) }"
-              :title="trackTargetHint"
+              :class="{ 'player-title-link': !neuroActive && Boolean(trackTarget) }"
+              :title="neuroActive ? neuroSub : trackTargetHint"
               @click="openTrackSource"
             >
               {{ displayTitle }}
             </span>
           </Transition>
-          <AiTag :show="isAiCurrent" />
-          <span v-if="showCensorBadge" class="censor-tag">
+          <span v-if="neuroActive" class="censor-tag">нейромузыка</span>
+          <AiTag v-else :show="isAiCurrent" />
+          <span
+            v-if="!neuroActive && showCensorBadge"
+            class="censor-tag"
+          >
             без цензуры
             <q-tooltip>
               Оригинальный трек заменён на версию без цензуры из базы
               FckCensorData
             </q-tooltip>
           </span>
-          <span v-else-if="showOriginalBadge" class="censor-tag muted">
+          <span
+            v-else-if="!neuroActive && showOriginalBadge"
+            class="censor-tag muted"
+          >
             с цензурой
             <q-tooltip>
               Играет версия с Яндекс Музыки. Версию без цензуры можно вернуть в
@@ -77,7 +84,7 @@
             </q-tooltip>
           </span>
           <button
-            v-if="player.current"
+            v-if="!neuroActive && player.current"
             type="button"
             class="pb-dots"
             aria-label="Действия с треком"
@@ -89,8 +96,9 @@
         </div>
         <div class="dim t-12 ellipsis">
           <Transition name="pb-swap" mode="out-in">
+            <span v-if="neuroActive" :key="neuroSub">{{ neuroSub }}</span>
             <ArtistsLine
-              v-if="player.current"
+              v-else-if="player.current"
               :key="player.current.id"
               :artists="player.current.artists"
               :limit="2"
@@ -146,7 +154,10 @@
         <i v-if="caretAt('center', centerButtons.length)" class="pe-caret" />
       </div>
 
-      <div class="player-progress">
+      <div v-if="neuroActive" class="player-progress">
+        <div class="nz-live"><span>прямой эфир</span></div>
+      </div>
+      <div v-else class="player-progress">
         <div class="faint t-11 player-time">
           {{ formatDuration(seekValue * 1000) }}
         </div>
@@ -202,6 +213,7 @@ import TrackMenu from "@/components/common/TrackMenu.vue";
 import { useVisualizer } from "@/composables/useVisualizer";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";
+import { neuro } from "@/lib/neuro";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
 import type { PlayerButtonId, PlayerZone } from "@/stores/ui/index";
@@ -215,12 +227,27 @@ const ui = useUiStore();
 const vizCanvas = ref<HTMLCanvasElement | null>(null);
 useVisualizer(vizCanvas, () => ui.settings.playerVisualizer, { bars: 72 });
 
+const neuroActive = computed(() => Boolean(neuro.item));
+const neuroSub = computed(
+  () =>
+    neuro.stream?.subtitle ||
+    neuro.stream?.title ||
+    "нейромузыка Яндекса",
+);
+const coverSrc = computed(() =>
+  neuroActive.value
+    ? neuro.stream?.cover_url || neuro.item?.cover_url || ""
+    : player.current?.cover_url || "",
+);
+
 const primaryArtistId = computed(
   () => player.current?.artists?.[0]?.id ?? null,
 );
 const isAiCurrent = computed(() => isAiArtist(primaryArtistId.value));
-const displayTitle = computed(
-  () => player.current?.title || "Ничего не играет",
+const displayTitle = computed(() =>
+  neuroActive.value
+    ? neuro.stream?.title || neuro.item?.title || "Нейромузыка"
+    : player.current?.title || "Ничего не играет",
 );
 const showCensorBadge = computed(
   () => ui.settings.censorBadge && player.censorReplaced,
@@ -247,7 +274,13 @@ const trackTargetHint = computed(() => {
 });
 
 function openTrackSource() {
+  if (neuroActive.value) return;
   if (trackTarget.value) void router.push(trackTarget.value);
+}
+
+function onCoverClick() {
+  if (neuroActive.value) return;
+  player.openFullscreen();
 }
 
 const scrubbing = ref<number | null>(null);
@@ -408,6 +441,7 @@ function startResize(kind: ResizeKind, event: PointerEvent) {
 onBeforeUnmount(onResizeUp);
 
 function openAlbum() {
+  if (neuroActive.value) return;
   const id = player.current?.album_id;
   if (id) void router.push(`/album/${id}`);
 }
@@ -556,6 +590,18 @@ onBeforeUnmount(() => {
 
 .player-title-link {
   cursor: pointer;
+}
+
+.nz-live {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--fg-faint);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: lowercase;
 }
 
 .player-title-link:hover {

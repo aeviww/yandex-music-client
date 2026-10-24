@@ -4,18 +4,49 @@
     class="app-shell"
     :class="{ 'queue-open': rightPanel }"
   >
-    <q-header v-if="!panels.hidden && !panels.mini" class="topbar">
+    <q-header
+      v-if="!panels.hidden && !panels.mini"
+      class="topbar relative z-[1] !border-b-0 !shadow-none transition-[background] duration-300"
+      :class="!homeMode ? 'backdrop-blur-[18px] backdrop-saturate-[1.2]' : ''"
+      :style="{
+        background: homeMode
+          ? 'transparent'
+          : 'linear-gradient(180deg, rgba(9,9,11,0.82) 0%, rgba(9,9,11,0.45) 60%, rgba(9,9,11,0) 100%)',
+      }"
+    >
       <div
-        class="titlebar"
+        class="titlebar relative flex h-[52px] select-none items-center gap-2 pl-[14px]"
         @mousedown="startWindowDrag"
         @dblclick="toggleWindowMaximize"
       >
-        <div class="topbar-search-wrap" data-no-drag>
-          <div class="searchbar">
-            <Icon name="mingcute:search-2-line" :size="15" class="faint" />
+        <div
+          class="brand flex items-center gap-2.5 text-[16px] font-extrabold tracking-[-0.03em] whitespace-nowrap"
+        >
+          <img
+            src="/icons/favicon-128x128.png"
+            alt=""
+            draggable="false"
+            class="h-6 w-6 select-none rounded-[6px]"
+          />
+          <span>Mashiro</span>
+        </div>
+
+        <div
+          class="topbar-search-wrap absolute inset-0 flex items-center justify-center pointer-events-none"
+          data-no-drag
+        >
+          <div
+            class="searchbar pointer-events-auto flex h-[38px] w-[min(460px,100%)] items-center gap-2.5 !max-w-none !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] !px-[14px] transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_11%,transparent)] focus-within:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] focus-within:!border-[color-mix(in_srgb,var(--fg)_20%,transparent)]"
+          >
+            <Icon
+              name="mingcute:search-2-line"
+              :size="15"
+              class="text-[color:var(--fg-faint)]"
+            />
             <input
               v-model="query"
               placeholder="Найти трек, артиста или альбом"
+              class="!text-[13.5px]"
               @keyup.enter="submitSearch"
             />
             <div v-if="query" class="icon-btn xs round" @click="query = ''">
@@ -23,19 +54,25 @@
             </div>
           </div>
         </div>
-        <div class="topbar-drag-space" />
+        <div class="self-stretch min-w-0 flex-1" />
 
         <div
-          class="icon-btn sm round"
-          :class="{ on: rightPanel }"
+          class="icon-btn sm round flex h-[38px] w-[38px] items-center justify-center !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_12%,transparent)]"
+          :class="
+            rightPanel
+              ? '!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] !border-[color-mix(in_srgb,var(--fg)_12%,transparent)]'
+              : ''
+          "
           @click="rightPanel = !rightPanel"
         >
           <Icon name="mingcute:playlist-2-line" :size="17" />
           <q-tooltip>Очередь</q-tooltip>
         </div>
 
-        <div class="account">
-          <div class="account-avatar">
+        <div
+          class="account flex h-[38px] cursor-pointer items-center gap-2 rounded-[10px] pl-1 pr-3 transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
+        >
+          <div class="account-avatar h-[30px] w-[30px] !rounded-full">
             <img
               v-if="avatarUrl"
               :src="avatarUrl"
@@ -46,7 +83,7 @@
             />
             <span v-else class="avatar-monogram">{{ accountInitial }}</span>
           </div>
-          <span class="account-name ellipsis">{{ accountName }}</span>
+          <span class="account-name ellipsis !text-[13px] font-semibold">{{ accountName }}</span>
           <Icon name="mingcute:down-line" :size="13" class="account-chevron" />
           <q-menu class="menu" anchor="bottom right" self="top right">
             <div class="menu-body profile-menu">
@@ -106,17 +143,20 @@
       side="left"
       :width="ui.settings.sidebarWidth"
       :breakpoint="0"
-      class="sidebar"
+      class="sidebar !bg-[color-mix(in_srgb,var(--bg)_88%,var(--surface))] !border-r-0"
+      content-class="overflow-x-hidden pt-[14px]"
     >
       <div class="column full-height">
-        <div class="brand">Mashiro</div>
-
-        <div class="nav-group">
+        <div class="pt-0.5 pb-1.5">
           <div
             v-for="item in nav"
             :key="item.to"
-            class="nav"
-            :class="{ on: route.path === item.to }"
+            class="nav flex h-[34px] cursor-pointer items-center mx-3 my-0.5 gap-3 rounded-[10px] px-3 text-[13.5px] font-medium text-[color:var(--fg-dim)] transition-[background,color] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:text-[color:var(--fg)]"
+            :class="
+              route.path === item.to
+                ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] font-semibold text-[color:var(--fg)]'
+                : ''
+            "
             @click="router.push(item.to)"
           >
             <Icon :name="item.icon" :size="18" />
@@ -124,21 +164,27 @@
           </div>
         </div>
 
-        <div class="nav-sep" />
+        <div class="mx-3 mt-1.5 mb-1 h-px bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]" />
 
-        <div class="row items-center no-wrap side-head">
-          <span class="col">Плейлисты</span>
-          <span class="faint t-11">{{
+        <div
+          class="flex items-center gap-2 px-5 pt-3 pb-2 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
+        >
+          <span class="flex-1 min-w-0">Плейлисты</span>
+          <span class="text-[color:var(--fg-faint)] text-[11px]">{{
             library.visiblePlaylists.length || ""
           }}</span>
         </div>
 
-        <q-scroll-area class="col">
+        <q-scroll-area class="min-h-0 flex-1">
           <div
             v-for="pl in sidebarPlaylists"
             :key="pl.kind"
-            class="side-item"
-            :class="{ on: route.path === `/playlists/${pl.kind}` }"
+            class="side-item flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
+            :class="
+              route.path === `/playlists/${pl.kind}`
+                ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)]'
+                : ''
+            "
             @click="router.push(`/playlists/${pl.kind}`)"
           >
             <div
@@ -210,24 +256,32 @@
           <template v-if="library.hiddenPlaylists.length">
             <button
               type="button"
-              class="side-hidden-toggle"
+              class="flex w-[calc(100%-16px)] cursor-pointer flex-none items-center mx-2 mt-2.5 mb-0.5 gap-[9px] border-0 bg-transparent rounded-[9px] px-3 py-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.05em] text-[color:var(--fg-faint)] transition-[background,color] duration-150 hover:bg-[var(--hover)] hover:text-[color:var(--fg-dim)]"
               :class="{ open: showHidden }"
               @click="showHidden = !showHidden"
             >
-              <span class="side-hidden-chevron">
+              <span
+                class="inline-flex items-center flex-none transition-transform duration-150"
+                :class="{ 'rotate-90': showHidden }"
+              >
                 <Icon name="mingcute:right-line" :size="12" />
               </span>
-              <span class="col">Скрытые</span>
-              <span class="side-hidden-count">{{
-                library.hiddenPlaylists.length
-              }}</span>
+              <span class="flex-1">Скрытые</span>
+              <span
+                class="flex-none rounded-[7px] bg-[var(--surface-2)] px-1.5 text-[10px] font-semibold text-[color:var(--fg-dim)]"
+                >{{ library.hiddenPlaylists.length }}</span
+              >
             </button>
 
             <div
               v-for="pl in showHidden ? library.hiddenPlaylists : []"
               :key="`hidden-${pl.kind}`"
-              class="side-item side-item-hidden"
-              :class="{ on: route.path === `/playlists/${pl.kind}` }"
+              class="side-item opacity-60 flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:opacity-100"
+              :class="
+                route.path === `/playlists/${pl.kind}`
+                  ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)]'
+                  : ''
+              "
               @click="router.push(`/playlists/${pl.kind}`)"
             >
               <div
@@ -272,12 +326,17 @@
       side="right"
       :width="300"
       :breakpoint="0"
-      class="rightbar"
+      class="rightbar !bg-[var(--bg)] border-l border-[var(--line)]"
+      content-class="overflow-x-hidden"
     >
       <div class="column full-height" style="overflow: hidden">
-        <div class="side-head">Сейчас играет</div>
+        <div
+          class="flex-none px-4 pt-3.5 pb-1.5 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
+        >
+          Сейчас играет
+        </div>
 
-        <div v-if="player.current" class="now-block">
+        <div v-if="player.current" class="now-block min-w-0 flex-none px-4 pt-0.5 pb-2.5">
           <div
             class="cover"
             style="width: 100%; height: 268px; border-radius: 12px"
@@ -297,11 +356,16 @@
             <ArtistsLine :artists="player.current.artists" :limit="2" />
           </div>
         </div>
-        <div v-else class="now-empty faint t-12">Очередь пуста</div>
+        <div v-else class="flex-none px-4 pt-0.5 pb-2.5 text-[color:var(--fg-faint)] text-[12px]">Очередь пуста</div>
 
-        <div class="side-head queue-head">
-          <span class="col">Очередь</span>
-          <span v-if="queueItems.length" class="faint t-11 queue-pos">
+        <div
+          class="queue-head flex-none flex items-center gap-2 px-4 pt-3 pb-1.5 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
+        >
+          <span class="flex-1 min-w-0">Очередь</span>
+          <span
+            v-if="queueItems.length"
+            class="flex-none text-[color:var(--fg-faint)] text-[11px] tabular-nums"
+          >
             {{ player.index + 1 }} / {{ queueItems.length }}
           </span>
           <button
@@ -318,16 +382,16 @@
 
         <q-scroll-area
           ref="queueScroll"
-          class="col queue-scroll"
+          class="queue-scroll min-h-0 flex-1 pb-2"
           @scroll="onQueueScroll"
         >
           <div
             v-for="item in queueItems"
             :key="`${item.track.id}-${item.index}`"
-            class="side-item"
+            class="side-item flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-2 py-1.5 transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
             :class="{
-              'is-current': item.index === player.index,
-              'is-played': item.index < player.index,
+              'is-current bg-[var(--surface-2)]': item.index === player.index,
+              'opacity-50': item.index < player.index,
             }"
             :data-queue-current="item.index === player.index ? '1' : null"
             @click="jumpTo(item.index)"
@@ -344,8 +408,17 @@
               />
               <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
             </div>
-            <div class="col" style="min-width: 0">
-              <div class="ellipsis t-13">{{ item.track.title }}</div>
+            <div class="flex-1 min-w-0">
+              <div
+                class="ellipsis t-13"
+                :class="
+                  item.index === player.index
+                    ? 'font-semibold text-[color:var(--accent)]'
+                    : ''
+                "
+              >
+                {{ item.track.title }}
+              </div>
               <div class="faint t-11 ellipsis">
                 <ArtistsLine :artists="item.track.artists" :limit="2" />
               </div>
@@ -354,7 +427,7 @@
               v-if="item.index === player.index"
               :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
               :size="13"
-              class="queue-state"
+              class="text-[color:var(--accent)] flex-none"
             />
             <TrackMenu :context-menu="true" :track="item.track" />
           </div>
@@ -392,6 +465,8 @@
 
     <MiniPlayer v-if="panels.mini && !panels.hidden" />
 
+    <NeuroPlayer />
+
     <TogetherDock />
     <FullscreenPlayer />
     <TrackLyricsDialog />
@@ -414,6 +489,7 @@ import TrackMenu from "@/components/common/TrackMenu.vue";
 import FullscreenPlayer from "@/components/player/FullscreenPlayer.vue";
 import LyricsPanel from "@/components/player/LyricsPanel.vue";
 import MiniPlayer from "@/components/player/MiniPlayer.vue";
+import NeuroPlayer from "@/components/player/NeuroPlayer.vue";
 import PlayerBar from "@/components/player/PlayerBar.vue";
 import TogetherDock from "@/components/together/TogetherDock.vue";
 import TrackLyricsDialog from "@/components/player/TrackLyricsDialog.vue";
@@ -441,6 +517,7 @@ import { useUiStore } from "@/stores/ui/index";
 
 const route = useRoute();
 const router = useRouter();
+const homeMode = computed(() => route.path === "/");
 const auth = useAuthStore();
 const player = usePlayerStore();
 const library = useLibraryStore();
@@ -497,8 +574,8 @@ const rightPanel = computed({
 const lyricsVisible = computed(() => player.showLyrics && !!player.current);
 
 const lyricsBox = computed(() => ({
-  top: "40px",
-  bottom: "77px",
+  top: "52px",
+  bottom: "var(--player-height, 78px)",
   left: `${ui.settings.sidebarWidth}px`,
   right: rightPanel.value ? "300px" : "0px",
 }));
@@ -701,15 +778,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.queue-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.queue-pos {
-  flex: 0 0 auto;
-  font-variant-numeric: tabular-nums;
-}
 .queue-locate {
   display: inline-flex;
   align-items: center;

@@ -126,6 +126,66 @@ fn percent_decode(input: &str) -> String {
     String::from_utf8_lossy(&out).to_string()
 }
 
+fn encode_component(input: &str) -> String {
+    let mut out = String::with_capacity(input.len());
+    for byte in input.as_bytes() {
+        match *byte {
+            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+                out.push(*byte as char);
+            }
+            _ => out.push_str(&format!("%{byte:02X}")),
+        }
+    }
+    out
+}
+
+fn rewrite_playlist(body: &[u8], base: &str) -> Option<Vec<u8>> {
+    if !body.starts_with(b"#EXTM3U") {
+        return None;
+    }
+    let base = url::Url::parse(base).ok()?;
+    let text = String::from_utf8_lossy(body).into_owned();
+    let mut out = String::with_capacity(text.len() + 128);
+    for line in text.split_inclusive('\n') {
+        let trimmed = line.trim_end_matches(['\n', '\r']);
+        if trimmed.is_empty() {
+            out.push('\n');
+            continue;
+        }
+        if !trimmed.starts_with('#') {
+            let resolved = base.join(trimmed).ok()?.to_string();
+            out.push_str(&format!(
+                "{SCHEME_HOST}/{}",
+                encode_component(&resolved)
+            ));
+        } else if let Some(pos) = trimmed.find("URI=\"") {
+            let head = pos + 5;
+            let body = &trimmed[head..];
+            match body.find('"') {
+                Some(end) => match base.join(&body[..end]) {
+                    Ok(resolved) => {
+                        out.push_str(&trimmed[..head]);
+                        out.push_str(&format!(
+                            "{SCHEME_HOST}/{}",
+                            encode_component(&resolved.to_string())
+                        ));
+                        out.push('"');
+                        out.push_str(&body[end + 1..]);
+                    }
+                    Err(_) => out.push_str(trimmed),
+                },
+                None => out.push_str(trimmed),
+            }
+        } else {
+            out.push_str(trimmed);
+        }
+        out.push('\n');
+    }
+    Some(out.into_bytes())
+}
+
+const SCHEME_HOST: &str = "http://ymstream.localhost";
+
 fn mime_for(url: &str) -> &'static str {
     let clean = url.split('?').next().unwrap_or(url).to_lowercase();
     if clean.contains("flac-mp4") || clean.contains("alac-mp4") {
@@ -145,7 +205,11 @@ fn mime_for(url: &str) -> &'static str {
 }
 
 fn pick_mime(upstream: &str, target: &str) -> String {
-    if upstream.starts_with("audio/") {
+    let up = upstream.to_lowercase();
+    if up.contains("mpegurl") || target.to_lowercase().contains(".m3u8") {
+        return "application/vnd.apple.mpegurl".to_string();
+    }
+    if up.starts_with("audio/") {
         return upstream.to_string();
     }
     mime_for(target).to_string()
@@ -360,9 +424,30 @@ async fn fetch(target: String, range: Option<String>) -> Response<Vec<u8>> {
         return empty(400);
     }
 
+    if range.is_none() {
+        return match download_all(&target).await {
+            Some((body, mime)) => {
+                let body = if mime.contains("mpegurl") {
+                    rewrite_playlist(&body, &target).unwrap_or(body)
+                } else {
+                    body
+                };
+                whole(body, mime, None)
+            }
+            None => empty(502),
+        };
+    }
+
     let Some((total, mime)) = meta(&target).await else {
         return match download_all(&target).await {
-            Some((body, mime)) => whole(body, mime, range),
+            Some((body, mime)) => {
+                let body = if mime.contains("mpegurl") {
+                    rewrite_playlist(&body, &target).unwrap_or(body)
+                } else {
+                    body
+                };
+                whole(body, mime, range)
+            }
             None => empty(502),
         };
     };

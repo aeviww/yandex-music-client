@@ -11,6 +11,7 @@ export interface PlayEvent {
   title: string;
   artist: string;
   artistId: string;
+  albumId: string | null;
   cover: string | null;
   at: number;
   seconds: number;
@@ -213,6 +214,7 @@ export const useStatsStore = defineStore("stats", {
         title: track.title,
         artist: artistNames(track.artists),
         artistId: track.artists[0]?.id ?? "",
+        albumId: track.album_id ?? null,
         cover: track.cover_url,
         at: Date.now(),
         seconds: 0,

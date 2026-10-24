@@ -15,6 +15,7 @@ pub struct YAlbum {
     pub id: serde_json::Value,
     pub title: Option<String>,
     pub cover_uri: Option<String>,
+    pub artists: Vec<YArtist>,
     pub year: Option<i64>,
 }
 

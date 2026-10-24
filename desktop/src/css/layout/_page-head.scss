@@ -158,7 +158,7 @@
 .scroll-page {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 117px);
+  height: calc(100vh - 52px - var(--player-height, 78px));
   min-height: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;

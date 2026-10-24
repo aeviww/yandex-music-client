@@ -375,7 +375,7 @@ html[data-mini] {
 .stats-page,
 .libsearch-page {
   display: flex;
-  height: calc(100vh - 117px);
+  height: calc(100vh - 52px - var(--player-height, 78px));
   min-height: 0 !important;
   flex-direction: column;
   padding: 0 var(--page-padding);

@@ -1,21 +1,21 @@
 <template>
-  <div v-if="id === 'play'" class="play play-sm" @click="player.toggle()">
+  <div v-if="id === 'play'" class="play play-sm" @click="onPlayToggle">
     <Transition name="ic-pop" mode="out-in">
-      <q-spinner v-if="player.loading" key="load" size="14px" color="dark" />
-      <Icon
-        v-else
-        :key="player.isPlaying ? 'pause' : 'play'"
-        :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
-        :size="18"
+      <q-spinner
+        v-if="neuroWait || player.loading"
+        key="load"
+        size="14px"
+        color="dark"
       />
+      <Icon v-else :key="playIcon" :name="playIcon" :size="18" />
     </Transition>
   </div>
 
   <div
     v-else-if="id === 'shuffle'"
     class="icon-btn"
-    :class="{ on: player.shuffle }"
-    @click="player.toggleShuffle()"
+    :class="{ on: player.shuffle, off: !!neuro.item }"
+    @click="guard(() => player.toggleShuffle())"
   >
     <Icon name="mingcute:shuffle-line" :size="18" />
     <q-tooltip>Перемешать</q-tooltip>
@@ -24,14 +24,19 @@
   <div
     v-else-if="id === 'prev'"
     class="icon-btn"
-    :class="{ off: !player.hasPrev }"
-    @click="player.prev()"
+    :class="{ off: !player.hasPrev || !!neuro.item }"
+    @click="guard(() => player.prev())"
   >
     <Icon name="mingcute:skip-previous-fill" :size="19" />
     <q-tooltip>Предыдущий</q-tooltip>
   </div>
 
-  <div v-else-if="id === 'next'" class="icon-btn" @click="player.next(false)">
+  <div
+    v-else-if="id === 'next'"
+    class="icon-btn"
+    :class="{ off: !!neuro.item }"
+    @click="guard(() => player.next(false))"
+  >
     <Icon name="mingcute:fast-forward-fill" :size="19" />
     <q-tooltip>Следующий</q-tooltip>
   </div>
@@ -39,8 +44,8 @@
   <div
     v-else-if="id === 'repeat'"
     class="icon-btn"
-    :class="{ on: player.repeat !== 'off' }"
-    @click="player.cycleRepeat()"
+    :class="{ on: player.repeat !== 'off', off: !!neuro.item }"
+    @click="guard(() => player.cycleRepeat())"
   >
     <Icon
       :name="
@@ -56,8 +61,8 @@
   <div
     v-else-if="id === 'like'"
     class="icon-btn"
-    :class="{ on: isLiked, off: !player.current }"
-    @click="player.current && player.like()"
+    :class="{ on: isLiked, off: !player.current || !!neuro.item }"
+    @click="guard(() => player.like())"
   >
     <Icon
       :name="isLiked ? 'mingcute:heart-fill' : 'mingcute:heart-line'"
@@ -71,8 +76,8 @@
   <div
     v-else-if="id === 'dislike'"
     class="icon-btn"
-    :class="{ off: !player.current }"
-    @click="player.current && player.dislike()"
+    :class="{ off: !player.current || !!neuro.item }"
+    @click="guard(() => player.dislike())"
   >
     <Icon name="mingcute:heart-crack-line" :size="18" />
     <q-tooltip>Не нравится</q-tooltip>
@@ -81,8 +86,8 @@
   <div
     v-else-if="id === 'lyrics'"
     class="icon-btn"
-    :class="{ on: player.showLyrics, off: !player.current }"
-    @click="player.current && player.toggleLyrics()"
+    :class="{ on: player.showLyrics, off: !player.current || !!neuro.item }"
+    @click="guard(() => player.toggleLyrics())"
   >
     <Icon name="maki:karaoke" :size="18" />
     <q-tooltip>Текст песни</q-tooltip>
@@ -190,7 +195,7 @@
   </div>
 
   <div v-else-if="id === 'volume'" class="player-volume">
-    <div class="icon-btn" @click="player.toggleMute()">
+    <div class="icon-btn" @click="onMuteClick">
       <Icon
         :name="
           player.muted ? 'mingcute:volume-off-line' : 'mingcute:volume-line'
@@ -209,7 +214,7 @@
       :step="0.01"
       dense
       color="primary"
-      @update:model-value="(v) => player.setVolume(Number(v ?? 0))"
+      @update:model-value="(v) => onVolumeInput(Number(v ?? 0))"
     />
   </div>
 </template>
@@ -217,6 +222,13 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Quality } from "@/api/types";
+import {
+  neuro,
+  pauseNeuro,
+  resumeNeuro,
+  setNeuroVolume,
+  startNeuro,
+} from "@/lib/neuro";
 import { useLibraryStore } from "@/stores/library";
 import { usePanelsStore } from "@/stores/panels";
 import { usePlayerStore } from "@/stores/player/index";
@@ -229,6 +241,46 @@ const player = usePlayerStore();
 const library = useLibraryStore();
 const panels = usePanelsStore();
 const sleep = useSleepStore();
+
+const neuroWait = computed(() => Boolean(neuro.item && !neuro.stream));
+
+const playIcon = computed(() => {
+  if (neuro.item) {
+    return neuro.playing
+      ? "mingcute:pause-fill"
+      : "mingcute:play-fill";
+  }
+  return player.isPlaying ? "mingcute:pause-fill" : "mingcute:play-fill";
+});
+
+function onPlayToggle() {
+  if (!neuro.item) {
+    player.toggle();
+    return;
+  }
+  if (!neuro.playing && !neuro.built) {
+    void startNeuro(neuro.item);
+    return;
+  }
+  if (neuro.playing) pauseNeuro();
+  else resumeNeuro();
+}
+
+function guard(run: () => void) {
+  if (neuro.item) return;
+  run();
+}
+
+function onVolumeInput(v: number) {
+  player.setVolume(v);
+  if (neuro.item) setNeuroVolume(v);
+}
+
+function onMuteClick() {
+  const willMute = !player.muted;
+  player.toggleMute();
+  if (neuro.item) setNeuroVolume(willMute ? 0 : player.volume);
+}
 
 const sleepPresets = [15, 30, 45, 60];
 const rates = [0.75, 1, 1.25, 1.5, 1.75, 2];

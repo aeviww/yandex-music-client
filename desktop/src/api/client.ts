@@ -2,8 +2,11 @@ import { invoke } from "@tauri-apps/api/core";
 import type {
   AiArtistResult,
   AiTrackResult,
+  AlbumBrief,
   AlbumPage,
   ArtistPage,
+  NeuroItem,
+  NeuroStream,
   FeedbackPayload,
   GeniusArtist,
   GeniusHit,
@@ -84,6 +87,12 @@ export const api = {
     call<AiTrackResult[]>("ai_check_tracks", { ids }),
 
   album: (id: string) => call<AlbumPage>("get_album", { id }),
+
+    newReleases: () => call<AlbumBrief[]>("get_new_releases"),
+
+    neuroItems: () => call<NeuroItem[]>("get_neuro_items"),
+
+    neuroStream: (station: string) => call<NeuroStream>("get_neuro_stream", { station }),
 
   search: (text: string) => call<SearchResult>("search_tracks", { text }),
 

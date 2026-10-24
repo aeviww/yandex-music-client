@@ -90,6 +90,153 @@ impl Yandex {
         Ok(tracks)
     }
 
+    pub async fn new_releases(&self) -> Result<Vec<AlbumBriefDto>, String> {
+        let resp = self
+            .http
+            .get(format!("{BASE}/landing-blocks/new-releases"))
+            .header("Authorization", self.auth())
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        let status = resp.status();
+        if status.as_u16() == 401 {
+            return Err("Невалидный токен Яндекс Музыки".to_string());
+        }
+        let val: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
+        if !status.is_success() {
+            return Err(format!("Ошибка API Яндекса: {status}"));
+        }
+        let top = val
+            .get("result")
+            .or_else(|| val.get("payload"))
+            .unwrap_or(&val);
+        let empty = Vec::new();
+        let arr = top
+            .get("newReleases")
+            .and_then(|v| v.as_array())
+            .or_else(|| top.as_array())
+            .unwrap_or(&empty);
+        Ok(arr
+            .iter()
+            .take(40)
+            .map(|item| {
+                let album = item.get("album").cloned().unwrap_or_default();
+                let missing = serde_json::Value::Null;
+                let id = val_to_id(album.get("id").unwrap_or(&missing));
+                let title = album
+                    .get("title")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("Альбом")
+                    .to_string();
+                let cover_uri = str_at(&album, &["cover", "uri"]);
+                let artist = item
+                    .get("artists")
+                    .and_then(|a| a.as_array())
+                    .and_then(|a| a.first())
+                    .and_then(|a| a.get("name"))
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("")
+                    .to_string();
+                let year = item
+                    .get("releaseDate")
+                    .and_then(|v| v.as_str())
+                    .and_then(|s| s.get(0..4))
+                    .and_then(|y| y.parse::<i64>().ok());
+                AlbumBriefDto {
+                    id,
+                    title,
+                    artist,
+                    cover_url: img(cover_uri.as_deref(), "300x300"),
+                    year,
+                }
+            })
+            .filter(|a| !a.id.is_empty())
+            .collect())
+    }
+
+    pub async fn neuro_items(&self) -> Result<Vec<NeuroItemDto>, String> {
+        let resp = self
+            .http
+            .get(format!("{BASE}/landing/block/neuromusic_mobile/neuromusic"))
+            .header("Authorization", self.auth())
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        let status = resp.status();
+        if status.as_u16() == 401 {
+            return Err("Невалидный токен Яндекс Музыки".to_string());
+        }
+        let val: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
+        if !status.is_success() {
+            return Err(format!("Ошибка API Яндекса: {status}"));
+        }
+        let top = val
+            .get("result")
+            .or_else(|| val.get("payload"))
+            .unwrap_or(&val);
+        let items = top.get("items").and_then(|v| v.as_array()).cloned();
+        Ok(items
+            .unwrap_or_default()
+            .iter()
+            .filter_map(|item| {
+                let station = item.get("stationId").and_then(|v| v.as_str())?;
+                if item
+                    .get("type")
+                    .and_then(|v| v.as_str())
+                    .map(|t| !t.eq_ignore_ascii_case("generative_station_item"))
+                    .unwrap_or(false)
+                {
+                    return None;
+                }
+                Some(NeuroItemDto {
+                    id: station.to_string(),
+                    title: item
+                        .get("title")
+                        .and_then(|v| v.as_str())
+                        .unwrap_or("Нейростанция")
+                        .to_string(),
+                    cover_url: img(
+                        item.get("imageUrl").and_then(|v| v.as_str()),
+                        "300x300",
+                    ),
+                    color: str_at(&item.clone(), &["style", "backgroundColor"]),
+                    text_color: str_at(&item.clone(), &["style", "titleColor"]),
+                })
+            })
+            .collect())
+    }
+
+    pub async fn neuro_stream(&self, station: &str) -> Result<NeuroStreamDto, String> {
+        let station = station.trim();
+        let result = self
+            .get_result(&format!("/rotor/station/{station}/stream"))
+            .await?;
+        let data = result.get("data").cloned().unwrap_or_default();
+        let stream_url = str_at(&result, &["stream", "url"]).unwrap_or_default();
+        if stream_url.is_empty() {
+            return Err("Стрим недоступен".to_string());
+        }
+        Ok(NeuroStreamDto {
+            title: data
+                .get("title")
+                .and_then(|v| v.as_str())
+                .unwrap_or("Нейромузыка")
+                .to_string(),
+            subtitle: data
+                .get("explanations")
+                .and_then(|v| v.as_str())
+                .or_else(|| data.get("subtitle").and_then(|v| v.as_str()))
+                .unwrap_or("")
+                .to_string(),
+            cover_url: img(
+                str_at(&data, &["imageUrl"]).as_deref(),
+                "400x400",
+            ),
+            color: str_at(&data, &["backgroundColor"]),
+            stream_url,
+        })
+    }
+
     pub async fn artist(&self, artist_id: &str) -> Result<ArtistPageDto, String> {
         let result = self
             .get_result(&format!("/artists/{artist_id}/brief-info"))

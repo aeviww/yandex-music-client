@@ -129,8 +129,25 @@ export interface WheelItem {
 export interface AlbumBrief {
   id: string;
   title: string;
+  artist?: string;
   cover_url: string | null;
   year: number | null;
+}
+
+export interface NeuroItem {
+  id: string;
+  title: string;
+  cover_url: string | null;
+  color: string | null;
+  text_color: string | null;
+}
+
+export interface NeuroStream {
+  title: string;
+  subtitle: string;
+  cover_url: string | null;
+  color: string | null;
+  stream_url: string;
 }
 
 export interface AlbumPage {

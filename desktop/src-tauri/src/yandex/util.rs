@@ -87,6 +87,11 @@ pub fn map_album_brief(a: &YAlbum) -> AlbumBriefDto {
     AlbumBriefDto {
         id: val_to_id(&a.id),
         title: a.title.clone().unwrap_or_default(),
+        artist: a
+            .artists
+            .first()
+            .and_then(|ar| ar.name.clone())
+            .unwrap_or_default(),
         cover_url: cover_url(&a.cover_uri),
         year: a.year,
     }
