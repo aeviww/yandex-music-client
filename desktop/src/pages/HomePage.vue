@@ -574,7 +574,7 @@
             <span
               class="font-semibold text-[color:var(--fg-dim)]"
               :title="commitTitle"
-              >Mashiro b0.3{{ commit ? ` · ${commit}` : "" }}</span
+              >Mashiro{{ commit ? ` · ${commit}` : "" }}</span
             >
             <span>неофициальный десктоп-клиент Я.Музыки</span>
             <a
@@ -850,7 +850,7 @@ const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 
 const commit =
   typeof __APP_COMMIT__ === "string" ? __APP_COMMIT__ : "local";
-const commitTitle = `сборка ${__APP_COMMIT__} · ${__APP_COMMIT_DATE__}`;
+const commitTitle = `сборка от коммита ${__APP_COMMIT__} · ${__APP_COMMIT_DATE__}`;
 
 function openAboutLink(url: string) {
   void api.openExternal(url);
