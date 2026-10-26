@@ -67,10 +67,9 @@
             v-if="!neuroActive && showCensorBadge"
             class="censor-tag"
           >
-            без цензуры
+            {{ replacementLabel }}
             <q-tooltip>
-              Оригинальный трек заменён на версию без цензуры из базы
-              FckCensorData
+              Играет заменённая версия: {{ replacementLabel }}
             </q-tooltip>
           </span>
           <span
@@ -249,6 +248,9 @@ const displayTitle = computed(() =>
   neuroActive.value
     ? neuro.stream?.title || neuro.item?.title || "Нейромузыка"
     : player.current?.title || "Ничего не играет",
+);
+const replacementLabel = computed(
+  () => player.replacementLabel || "FckCensorData",
 );
 const showCensorBadge = computed(
   () => ui.settings.censorBadge && player.censorReplaced,

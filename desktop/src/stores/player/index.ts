@@ -40,7 +40,7 @@ import {
   prefersOriginal,
   setPrefersOriginal,
 } from "@/lib/censor";
-import { overrideUrl } from "@/lib/censorOverrides";
+import { getOverride, overrideUrl } from "@/lib/censorOverrides";
 import { createLogger, logQuality } from "@/lib/log";
 import { useEqualizerStore } from "@/stores/equalizer";
 import { useLibraryStore } from "@/stores/library";
@@ -70,6 +70,7 @@ interface PrefetchEntry {
   bitrate: number | null;
   local: boolean;
   censored: boolean;
+  label: string | null;
   source: string;
 }
 
@@ -123,6 +124,7 @@ interface PlayerState {
   playingLocal: boolean;
   censorReplaced: boolean;
   censorAvailable: boolean;
+  replacementLabel: string | null;
   loading: boolean;
   waveBatchId: string | null;
   waveSessionId: string | null;
@@ -193,6 +195,7 @@ export const usePlayerStore = defineStore("player", {
       playingLocal: false,
       censorReplaced: false,
       censorAvailable: false,
+      replacementLabel: null,
       loading: false,
       waveBatchId: null,
       waveSessionId: null,
@@ -755,11 +758,14 @@ export const usePlayerStore = defineStore("player", {
         this.playingLocal = false;
         this.censorReplaced = false;
         this.censorAvailable = false;
+        this.replacementLabel = null;
 
         const custom = overrideUrl(track.id);
         if (custom) {
           source = custom;
           this.censorReplaced = true;
+          this.replacementLabel =
+            getOverride(track.id)?.label.trim() || "FckCensorData";
           this.currentCodec = null;
           this.currentBitrate = null;
           this.currentSource = "custom-replacement";
@@ -773,8 +779,10 @@ export const usePlayerStore = defineStore("player", {
           if (replacement && !prefersOriginal(track.id)) {
             source = replacement;
             this.censorReplaced = true;
+            this.replacementLabel = "FckCensorData";
             this.currentCodec = null;
             this.currentBitrate = null;
+            this.currentSource = "censor-replacement";
             log.info("source from FckCensor", track.title);
           }
         }
@@ -785,6 +793,7 @@ export const usePlayerStore = defineStore("player", {
           source = ready.url;
           this.playingLocal = ready.local;
           this.censorReplaced = ready.censored;
+          this.replacementLabel = ready.censored ? ready.label : null;
           this.currentCodec = ready.codec;
           this.currentBitrate = ready.bitrate;
           this.currentSource = ready.source;
@@ -935,6 +944,19 @@ export const usePlayerStore = defineStore("player", {
         .filter((track) => !prefetched.has(track.id));
       await Promise.all(
         targets.map(async (next) => {
+          const custom = overrideUrl(next.id);
+          if (custom) {
+            rememberPrefetch(next.id, {
+              url: custom,
+              codec: null,
+              bitrate: null,
+              local: false,
+              censored: true,
+              label: getOverride(next.id)?.label.trim() || "FckCensorData",
+              source: "custom-replacement",
+            });
+            return;
+          }
           if (ui.censorBypass && !prefersOriginal(next.id)) {
             const censored = censorUrl(next.id);
             if (censored) {
@@ -944,6 +966,7 @@ export const usePlayerStore = defineStore("player", {
                 bitrate: null,
                 local: false,
                 censored: true,
+                label: "FckCensorData",
                 source: "censor-replacement",
               });
               void api.prefetchStream(censored).catch(() => undefined);
@@ -962,6 +985,7 @@ export const usePlayerStore = defineStore("player", {
                   bitrate: null,
                   local: true,
                   censored: false,
+                  label: null,
                   source: "local-file",
                 });
                 log.info("prefetched from disk", next.title);
@@ -975,6 +999,7 @@ export const usePlayerStore = defineStore("player", {
               bitrate: stream.bitrate,
               local: false,
               censored: false,
+              label: null,
               source: stream.source,
             });
             await api.prefetchStream(stream.url).catch(() => undefined);
@@ -1174,6 +1199,10 @@ export const usePlayerStore = defineStore("player", {
       if (overrideUrl(this.current.id)) return;
       const position = audio.currentTime;
       const wasPlaying = !audio.paused;
+      if (this.censorReplaced) {
+        await this.loadCurrent({ startAt: position, autoplay: wasPlaying });
+        return;
+      }
       try {
         const stream = await api.stream(this.current.id, quality);
         this.currentCodec = stream.codec;
