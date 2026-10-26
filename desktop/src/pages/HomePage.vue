@@ -1,99 +1,69 @@
 <template>
   <q-page class="h-[calc(100vh-52px-var(--player-height,78px))] !min-h-0 !overflow-hidden">
     <q-scroll-area class="home-scroll">
-      <div class="min-w-0 pb-[44px]">
-        <header
-          class="relative flex min-h-[196px] items-end overflow-hidden px-[var(--page-padding,40px)] pt-[64px] pb-[22px] -mt-[52px]"
+      <div class="min-w-0 pb-[40px]">
+        <div
+          class="mx-auto w-full max-w-[1240px] px-[var(--page-padding,40px)]"
         >
-          <div
-            class="pointer-events-none absolute inset-y-0 right-0 w-[70%] [mask-image:linear-gradient(to_right,transparent,#000_45%)] [-webkit-mask-image:linear-gradient(to_right,transparent,#000_45%)]"
-            aria-hidden="true"
+          <header
+            class="flex flex-wrap items-end justify-between gap-x-8 gap-y-5 border-b border-[var(--line)] pb-6 pt-8"
           >
-            <div
-              class="h-full w-full [mask-image:linear-gradient(to_bottom,#000_65%,transparent)] [-webkit-mask-image:linear-gradient(to_bottom,#000_65%,transparent)]"
-            >
-              <div class="relative h-full w-full">
-                <img
-                  src="/banner.png"
-                  alt=""
-                  class="h-full w-full object-cover object-center opacity-90 grayscale contrast-[1.25] brightness-[0.8]"
-                />
-                <div
-                  class="absolute inset-0 opacity-[0.9] mix-blend-overlay"
-                  :style="{ backgroundImage: noise }"
-                />
-                <div
-                  class="absolute inset-0 opacity-[0.12]"
-                  :style="{ backgroundImage: noise }"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(9,9,11,0.72)_0%,rgba(9,9,11,0.28)_56px,rgba(9,9,11,0)_150px),linear-gradient(0deg,rgba(9,9,11,0.92)_0%,rgba(9,9,11,0)_140px)]"
-          />
-
-          <div class="relative z-[1]">
-            <div
-              class="font-semibold leading-[1.05] tracking-[-0.04em]"
-              :class="userName ? 'text-[34px]' : 'text-[60px]'"
-            >
-              {{ greeting }}<span v-if="userName">,</span>
-            </div>
-            <div
-              v-if="userName"
-              class="mt-[2px] text-[64px] font-bold leading-[1.02] tracking-[-0.05em]"
-            >
-              {{ userName }}
-            </div>
-            <div class="mt-[22px] flex flex-wrap items-center gap-[10px]">
-              <button
-                :class="quickPrimary"
-                type="button"
-                @click="openWave"
+            <div class="min-w-0">
+              <h1
+                class="m-0 text-[26px] font-semibold leading-[1.1] tracking-[-0.045em]"
               >
-                <Icon name="mingcute:wave-line" :size="17" class="flex-none" />
+                {{ greeting
+                }}<template v-if="userName">, {{ userName }}</template>
+              </h1>
+              <p
+                class="mb-0 mt-2 text-[12.5px] leading-relaxed text-[color:var(--fg-faint)]"
+              >
+                ваша музыка на сегодня
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <button :class="quickPrimary" type="button" @click="openWave">
+                <Icon name="mingcute:wave-line" :size="15" class="flex-none" />
                 <span>Моя волна</span>
               </button>
-
               <button
                 :class="quickGhost"
                 type="button"
                 @click="router.push('/playlists')"
               >
-                <Icon name="mingcute:book-2-line" :size="16" class="flex-none" />
+                <Icon name="mingcute:book-2-line" :size="14" class="flex-none" />
                 <span>Коллекция</span>
               </button>
-
               <button
                 :class="quickGhost"
                 type="button"
                 @click="router.push('/search')"
               >
-                <Icon name="mingcute:search-2-line" :size="16" class="flex-none" />
+                <Icon
+                  name="mingcute:search-2-line"
+                  :size="14"
+                  class="flex-none"
+                />
                 <span>Поиск</span>
               </button>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <div class="px-[var(--page-padding,40px)]">
-                    <template v-if="visiblePlaylists.length">
-            <div
-              class="mb-[14px] mt-[32px] flex items-center justify-between gap-[12px]"
-            >
-              <div
-                class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
+          <template v-if="visiblePlaylists.length">
+            <div class="section-head">
+              <h2
+                class="m-0 text-[14px] font-semibold tracking-[-0.02em]"
               >
                 для тебя
-              </div>
+              </h2>
               <button
                 class="more-link"
                 type="button"
                 @click="router.push('/playlists')"
               >
                 <span>смотреть всё</span>
-                <Icon name="mingcute:arrow-right-line" :size="14" />
+                <Icon name="mingcute:arrow-right-line" :size="13" />
               </button>
             </div>
 
@@ -104,7 +74,7 @@
                 class="card group relative min-w-0"
                 @click="router.push(`/playlists/${pl.kind}`)"
               >
-                <div class="cover relative w-full aspect-[1.08/1]">
+                <div class="cover relative aspect-square w-full">
                   <img
                     v-if="pl.cover_url"
                     loading="lazy"
@@ -114,7 +84,7 @@
                   <Icon
                     v-else
                     name="mingcute:playlist-2-line"
-                    :size="26"
+                    :size="24"
                     class="faint"
                   />
 
@@ -124,7 +94,7 @@
                     title="Слушать"
                     @click.stop="playPlaylist(pl)"
                   >
-                    <Icon name="mingcute:play-fill" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="15" />
                   </button>
 
                   <span
@@ -137,7 +107,7 @@
                 </div>
 
                 <div
-                  class="mt-[8px] text-[15px] font-semibold tracking-[-0.02em] ellipsis"
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
                 >
                   {{ pl.title }}
                 </div>
@@ -220,14 +190,10 @@
             </div>
           </template>
 
-                    <div
-            class="mb-[14px] mt-[32px] flex items-center justify-between gap-[12px]"
-          >
-            <div
-              class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
-            >
+          <div class="section-head">
+            <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
               недавно прослушанные
-            </div>
+            </h2>
           </div>
 
           <div :class="[strip, colsMd]">
@@ -238,7 +204,7 @@
                 class="card group relative min-w-0"
                 @click="openRecent(r)"
               >
-                <div class="cover relative w-full aspect-square">
+                <div class="cover relative aspect-square w-full">
                   <img
                     v-if="r.cover_url"
                     loading="lazy"
@@ -248,7 +214,7 @@
                   <Icon
                     v-else
                     name="mingcute:album-line"
-                    :size="24"
+                    :size="22"
                     class="faint"
                   />
 
@@ -258,11 +224,11 @@
                     title="Слушать"
                     @click.stop="playRecent(r)"
                   >
-                    <Icon name="mingcute:play-fill" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="15" />
                   </button>
                 </div>
                 <div
-                  class="mt-[8px] text-[15px] font-semibold tracking-[-0.02em] ellipsis"
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
                 >
                   {{ r.title }}
                 </div>
@@ -270,21 +236,19 @@
               </div>
             </template>
 
-                        <template v-else>
-              <div class="col-span-full py-[26px] text-[14px] text-white/45">
+            <template v-else>
+              <div
+                class="col-span-full py-[22px] text-[12.5px] text-[color:var(--fg-faint)]"
+              >
                 тут появится то, что послушаешь
               </div>
             </template>
           </div>
 
-                    <div
-            class="mb-[14px] mt-[32px] flex items-center justify-between gap-[12px]"
-          >
-            <div
-              class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
-            >
+          <div class="section-head">
+            <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
               новые релизы
-            </div>
+            </h2>
           </div>
 
           <div :class="[strip, colsSm]">
@@ -295,7 +259,7 @@
                 class="card group relative min-w-0"
                 @click="router.push(`/album/${a.id}`)"
               >
-                <div class="cover relative w-full aspect-square">
+                <div class="cover relative aspect-square w-full">
                   <img
                     v-if="a.cover_url"
                     loading="lazy"
@@ -305,7 +269,7 @@
                   <Icon
                     v-else
                     name="mingcute:album-line"
-                    :size="24"
+                    :size="22"
                     class="faint"
                   />
 
@@ -315,11 +279,11 @@
                     title="Слушать"
                     @click.stop="playAlbum(a.id)"
                   >
-                    <Icon name="mingcute:play-fill" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="15" />
                   </button>
                 </div>
                 <div
-                  class="mt-[8px] text-[15px] font-semibold tracking-[-0.02em] ellipsis"
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
                 >
                   {{ a.title }}
                 </div>
@@ -332,30 +296,23 @@
             <template v-else>
               <div v-for="n in 12" :key="n" class="min-w-0">
                 <div
-                  class="relative aspect-square w-full overflow-hidden rounded-[10px] bg-white/5"
-                >
-                  <div
-                    class="absolute inset-0 opacity-[0.25] mix-blend-overlay"
-                    :style="{ backgroundImage: noise }"
-                  />
-                </div>
-                <div
-                  class="mt-[10px] h-[12px] w-[70%] rounded-[4px] bg-white/5"
+                  class="relative aspect-square w-full overflow-hidden rounded-[10px] bg-[var(--surface)]"
                 />
-                <div class="mt-[6px] h-[10px] w-[45%] rounded-[4px] bg-white/5" />
+                <div
+                  class="mt-[10px] h-[11px] w-[70%] rounded bg-[var(--surface)]"
+                />
+                <div
+                  class="mt-[6px] h-[9px] w-[45%] rounded bg-[var(--surface)]"
+                />
               </div>
             </template>
           </div>
 
-                    <template v-if="picks.length">
-            <div
-              class="mb-[14px] mt-[32px] flex items-center justify-between gap-[12px]"
-            >
-              <div
-                class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
-              >
+          <template v-if="picks.length">
+            <div class="section-head">
+              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
                 новое для тебя
-              </div>
+              </h2>
             </div>
 
             <div :class="[strip, colsSm]">
@@ -366,7 +323,7 @@
                 @click="openPick(p)"
               >
                 <div
-                  class="cover home-card-art relative w-full aspect-square"
+                  class="cover home-card-art relative aspect-square w-full"
                   :class="{ round: p.kind === 'artist' }"
                   :style="p.color ? { background: p.color } : {}"
                 >
@@ -383,7 +340,7 @@
                         ? 'mingcute:user-2-line'
                         : 'mingcute:album-line'
                     "
-                    :size="24"
+                    :size="22"
                     class="faint"
                   />
 
@@ -393,11 +350,15 @@
                     title="Слушать"
                     @click.stop="playPick(p)"
                   >
-                    <Icon name="mingcute:play-fill" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="15" />
                   </button>
                 </div>
 
-                <div class="t-13 w-500 ellipsis q-mt-sm">{{ p.name }}</div>
+                <div
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
+                >
+                  {{ p.name }}
+                </div>
                 <div class="faint t-11 ellipsis">
                   {{
                     p.artists.length ? artistNames(p.artists) : p.description
@@ -435,22 +396,18 @@
             </div>
           </template>
 
-                    <template v-if="waves.length">
-            <div
-              class="mb-[14px] mt-[32px] flex items-center justify-between gap-[12px]"
-            >
-              <div
-                class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]"
-              >
+          <template v-if="waves.length">
+            <div class="section-head">
+              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
                 миксы для тебя
-              </div>
+              </h2>
               <button
                 class="more-link"
                 type="button"
                 @click="router.push('/wave')"
               >
                 <span>смотреть всё</span>
-                <Icon name="mingcute:arrow-right-line" :size="14" />
+                <Icon name="mingcute:arrow-right-line" :size="13" />
               </button>
             </div>
 
@@ -462,7 +419,7 @@
                 @click="playWave(w)"
               >
                 <div
-                  class="cover round relative w-full aspect-square"
+                  class="cover round relative aspect-square w-full"
                   :style="w.color ? { background: w.color } : {}"
                 >
                   <img
@@ -474,16 +431,20 @@
                   <Icon
                     v-else
                     name="mingcute:wave-line"
-                    :size="22"
+                    :size="20"
                     class="faint"
                   />
 
                   <span :class="fab" title="Запустить">
-                    <Icon name="mingcute:play-fill" :size="16" />
+                    <Icon name="mingcute:play-fill" :size="15" />
                   </span>
                 </div>
 
-                <div class="t-13 w-500 clamp-2 q-mt-sm">{{ w.name }}</div>
+                <div
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] clamp-2"
+                >
+                  {{ w.name }}
+                </div>
                 <div class="faint t-11 ellipsis">{{ w.description }}</div>
 
                 <q-menu context-menu touch-position class="menu">
@@ -500,81 +461,80 @@
                       <Icon name="mingcute:wave-line" :size="17" />
                       <span>Открыть страницу волны</span>
                     </div>
+                  </div>
+                </q-menu>
               </div>
-              </q-menu>
-            </div>
             </div>
           </template>
 
           <template v-if="neuroItems.length">
-            <div class="mb-[3px] mt-[32px] flex items-center justify-between gap-[12px]">
-              <div class="text-[20px] font-semibold leading-[1.2] tracking-[-0.03em]">
+            <div class="section-head">
+              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
                 нейромузыка
-              </div>
+              </h2>
             </div>
-            <div class="text-[13px] text-[color:var(--fg-faint)] tracking-[-0.01em]">
-              Отвлечёт от шума и сфокусирует на важном
-            </div>
+            <p
+              class="mb-0 mt-[-6px] text-[12px] text-[color:var(--fg-faint)]"
+            >
+              отвлечёт от шума и сфокусирует на важном
+            </p>
 
             <div :class="[strip, colsMd]" class="mt-[16px]">
-              <button
+              <div
                 v-for="n in neuroItems"
                 :key="n.id"
-                type="button"
-                class="group relative mt-0 aspect-square w-full min-w-0 overflow-hidden rounded-[12px] border-0 p-0 cursor-pointer text-left"
-                :style="n.color ? { background: n.color } : {}"
+                class="card group relative min-w-0"
                 @click="playNeuro(n)"
               >
-                <img
-                  v-if="n.cover_url"
-                  loading="lazy"
-                  decoding="async"
-                  :src="n.cover_url"
-                  class="absolute inset-0 h-full w-full object-cover opacity-80 transition-[opacity,transform] duration-200 group-hover:scale-[1.03] group-hover:opacity-100"
-                />
                 <div
-                  class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.52)_100%)]"
-                />
+                  class="cover relative aspect-square w-full"
+                  :style="n.color ? { background: n.color } : {}"
+                >
+                  <img
+                    v-if="n.cover_url"
+                    loading="lazy"
+                    decoding="async"
+                    :src="n.cover_url"
+                  />
+                  <Icon
+                    v-else
+                    name="mingcute:wave-line"
+                    :size="20"
+                    class="faint"
+                  />
 
+                  <span :class="fab" title="Слушать">
+                    <Icon
+                      :name="
+                        neuro.item?.id === n.id && neuro.playing
+                          ? 'mingcute:sound-fill'
+                          : 'mingcute:play-fill'
+                      "
+                      :size="15"
+                    />
+                  </span>
+                </div>
                 <div
-                  class="absolute left-[12px] right-[12px] bottom-[10px] text-[14px] font-semibold tracking-[-0.01em]"
-                  :style="{ color: n.text_color || '#ffffff' }"
+                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
                 >
                   {{ n.title }}
                 </div>
-
-                <div
-                  class="absolute right-[8px] top-[8px] flex h-[30px] w-[30px] items-center justify-center rounded-full bg-black/45 text-white transition-opacity duration-150"
-                  :class="
-                    neuro.item?.id === n.id
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                  "
-                >
-                  <Icon
-                    :name="
-                      neuro.item?.id === n.id && neuro.playing
-                        ? 'mingcute:sound-fill'
-                        : 'mingcute:play-fill'
-                    "
-                    :size="15"
-                  />
-                </div>
-              </button>
+                <div class="faint t-11 ellipsis">нейромузыка</div>
+              </div>
             </div>
           </template>
 
-          <div v-if="loading" class="q-mt-xl">
-            <q-spinner size="24px" color="primary" />
+          <div v-if="loading" class="mt-8">
+            <q-spinner size="20px" color="primary" />
           </div>
 
           <footer
-            class="mt-[36px] flex flex-wrap items-center gap-x-[16px] gap-y-[6px] border-t border-[var(--line)] pt-[16px] pb-[28px] text-[12px] leading-[1.6] text-[color:var(--fg-faint)]"
+            class="mt-9 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-[var(--line)] pb-7 pt-4 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]"
           >
             <span
               class="font-semibold text-[color:var(--fg-dim)]"
               :title="commitTitle"
-              >Mashiro{{ commit ? ` · ${commit}` : "" }}</span
+              >mashiro{{ commit ? ` · ${commit}` : "" }}</span
             >
             <span>неофициальный десктоп-клиент Я.Музыки</span>
             <a
@@ -680,21 +640,18 @@ async function playRecent(item: RecentItem) {
 
 const hiddenWaves = ["встряхнуть", "назад к привычному"];
 
-const noise =
-  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.4' intercept='-0.7'/%3E%3CfeFuncG type='linear' slope='2.4' intercept='-0.7'/%3E%3CfeFuncB type='linear' slope='2.4' intercept='-0.7'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")";
-
 const strip =
   "grid grid-rows-[auto] auto-rows-[0px] gap-x-[18px] gap-y-0 overflow-hidden";
 const colsLg = "grid-cols-[repeat(auto-fill,minmax(200px,1fr))]";
 const colsMd = "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]";
 const colsSm = "grid-cols-[repeat(auto-fill,minmax(132px,1fr))]";
 const quickPrimary =
-  "flex min-h-[42px] flex-nowrap items-center gap-[9px] rounded-[11px] border-0 bg-white px-[20px] py-[10px] text-[14px] font-semibold text-black transition-colors hover:bg-[#e4e4e4] active:bg-[#d6d6d6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
+  "flex h-9 flex-nowrap items-center gap-[8px] rounded-lg border-0 bg-[var(--fg)] px-[14px] text-[12.5px] font-semibold text-[var(--bg)] transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
 const quickGhost =
-  "flex min-h-[42px] flex-nowrap items-center gap-[9px] rounded-[11px] border-0 bg-white/[0.07] px-[16px] py-[10px] text-[14px] font-medium text-white/80 transition-colors hover:bg-white/[0.12] active:bg-white/[0.2] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
+  "flex h-9 flex-nowrap items-center gap-[8px] rounded-lg border border-[var(--line)] bg-transparent px-[14px] text-[12.5px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
 
 const fab =
-  "absolute right-[8px] bottom-[8px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
+  "absolute bottom-[8px] right-[8px] flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
 
 const visiblePlaylists = computed(() =>
   playlists.value.filter((pl) => !library.isHidden(pl.kind)),
@@ -749,6 +706,11 @@ async function playPick(item: WheelItem) {
     return;
   }
   waveFrom(item);
+}
+
+function openWave() {
+  void player.startWave(undefined, "Моя волна");
+  void router.push("/wave");
 }
 
 function waveFrom(item: WheelItem) {
@@ -839,7 +801,7 @@ onMounted(() => {
 
 function playNeuro(item: NeuroItem) {
   if (neuro.item?.id === item.id && neuro.playing) {
-   Notify.create({ message: "Уже играет: " + item.title });
+    Notify.create({ message: "Уже играет: " + item.title });
     return;
   }
   void startNeuro(item);

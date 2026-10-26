@@ -77,7 +77,7 @@ function load(): InterfaceSettings {
     ) as Partial<InterfaceSettings>;
     const merged: InterfaceSettings = { ...defaultInterfaceSettings, ...saved };
     const themeKey = merged.theme as string;
-    if (themeKey !== "custom" && !(themeKey in themePalettes)) {
+    if (themeKey !== "custom" && !Object.hasOwn(themePalettes, themeKey)) {
       merged.theme = retiredThemeMap[themeKey] ?? defaultInterfaceSettings.theme;
     }
     merged.playerButtons = {

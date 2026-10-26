@@ -11,16 +11,11 @@
           >
             <Icon name="mingcute:settings-5-line" :size="18" />
           </span>
-          <div class="min-w-0">
-            <h1
-              class="m-0 text-[15px] font-bold leading-tight tracking-[-0.02em] text-[var(--fg)]"
-            >
-              Настройки
-            </h1>
-            <p class="mb-0 text-[11px] text-[color:var(--fg-faint)]">
-              Mashiro · {{ sections.length }} разделов
-            </p>
-          </div>
+          <h1
+            class="m-0 text-[15px] font-bold leading-tight tracking-[-0.02em] text-[var(--fg)]"
+          >
+            Настройки
+          </h1>
         </div>
 
         <div class="mx-auto w-full max-w-[440px]">

@@ -19,23 +19,6 @@
         </div>
 
         <SettingToggle
-          :model-value="ui.settings.glass"
-          label="Эффект стекла на панелях"
-          description="Боковая панель, шапка страницы, панель плеера и контекстные меню становятся матовым стеклом: сквозь них размыто видно то, что под ними. Выключишь - панели станут плотными и непрозрачными, а интерфейс чуть быстрее."
-          @update:model-value="ui.set('glass', $event)"
-        />
-        <SettingSlider
-          v-if="ui.settings.glass"
-          label="Сила размытия"
-          description="0 px - панели почти прозрачные без размытия, 40 px - фон за панелью размывается полностью."
-          :model-value="ui.settings.glassBlur"
-          :min="0"
-          :max="40"
-          :step="2"
-          suffix=" px"
-          @update:model-value="ui.set('glassBlur', $event)"
-        />
-        <SettingToggle
           :model-value="ui.settings.animations"
           label="Анимации интерфейса"
           description="Плавные переходы между страницами, появление меню и движение элементов. Без них интерфейс переключается мгновенно."
@@ -200,7 +183,6 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
 import SettingsCard from "@/components/settings/SettingsCard.vue";
 import SettingsChoice from "@/components/settings/SettingsChoice.vue";

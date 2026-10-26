@@ -2,94 +2,89 @@
   <SettingsSection
     id="settings-about"
     title="О проекте"
-    description="Автор, версия сборки, лицензия и использованные проекты."
+    description="Версия, автор и проекты, на которых держится клиент."
     icon="mingcute:information-line"
   >
     <div class="space-y-4">
-      <div
-        class="flex flex-col gap-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5 sm:flex-row sm:items-center"
-      >
-        <img
-          class="h-16 w-16 flex-none rounded-xl object-cover"
-          :src="avatar"
-          alt="elytrya"
-        />
-        <div class="min-w-0">
-          <div class="text-[17px] font-bold tracking-[-0.02em]">Mashiro</div>
-          <div class="mt-0.5 text-[12px] text-[color:var(--fg-dim)]">
-            неофициальный десктоп-клиент Яндекс Музыки
-          </div>
-          <div class="mt-2 text-[12px] text-[color:var(--fg-dim)]">
-            автор:
-            <a
-              :href="AUTHOR_URL"
-              :class="LINK"
-              @click.prevent="openLink(AUTHOR_URL)"
-              >elytrya</a
-            >
+      <SettingsCard>
+        <div class="flex items-center gap-4 px-5 py-5">
+          <img
+            class="h-11 w-11 flex-none rounded-lg object-cover"
+            :src="avatar"
+            alt="aeviww"
+          />
+          <div class="min-w-0">
+            <div class="text-[16px] font-bold tracking-[-0.02em]">mashiro</div>
+            <div class="mt-0.5 text-[12px] text-[color:var(--fg-dim)]">
+              неофициальный десктоп-клиент Яндекс Музыки
+            </div>
+            <div class="mt-1.5 text-[12px] text-[color:var(--fg-dim)]">
+              автор:
+              <a
+                :href="AUTHOR_URL"
+                :class="LINK"
+                @click.prevent="openLink(AUTHOR_URL)"
+                >aeviww</a
+              >
+            </div>
           </div>
         </div>
-      </div>
 
-      <SettingsCard>
-        <div class="flex gap-3 px-5 py-4 text-[13px]">
-          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
-            >Версия</span
-          >
+        <div
+          class="grid gap-1 px-5 py-3.5 text-[12.5px] sm:grid-cols-[100px_minmax(0,1fr)] sm:gap-3"
+        >
+          <span class="text-[color:var(--fg-faint)]">Версия</span>
           <span class="flex min-w-0 flex-wrap items-center gap-2">
-            <span class="text-[14px] font-bold tracking-[-0.01em]">r1.0</span>
+            <span class="font-semibold text-[var(--fg)]">r1.0</span>
             <span
-              class="rounded-full border border-[color-mix(in_srgb,var(--accent)_45%,transparent)] bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] px-2 py-0.5 text-[10.5px] font-bold uppercase leading-tight tracking-[0.04em] text-[var(--accent)]"
+              class="rounded-full border border-[color-mix(in_srgb,var(--accent)_35%,var(--line))] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-[var(--accent)]"
             >
               pre-release
             </span>
             <button
               type="button"
-              class="rounded-md border border-[var(--line)] bg-transparent px-2 py-0.5 font-mono text-[11px] leading-snug text-[color:var(--fg-dim)] transition hover:border-[color-mix(in_srgb,var(--accent)_50%,var(--line))] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] hover:text-[var(--fg)]"
+              class="rounded border border-[var(--line)] bg-transparent px-1.5 py-0.5 font-mono text-[10.5px] leading-snug text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
               title="Скопировать хэш коммита"
               @click="copyCommit"
             >
               {{ commit }}
             </button>
-            <span class="text-[12px] text-[color:var(--fg-faint)]"
-              >сборка от {{ buildDate }}</span
+            <span class="text-[11.5px] text-[color:var(--fg-faint)]"
+              >от {{ buildDate }}</span
             >
           </span>
         </div>
 
-        <div class="flex gap-3 px-5 py-4 text-[13px]">
-          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
-            >Лицензия</span
-          >
+        <div
+          class="grid gap-1 px-5 py-3.5 text-[12.5px] sm:grid-cols-[100px_minmax(0,1fr)] sm:gap-3"
+        >
+          <span class="text-[color:var(--fg-faint)]">Лицензия</span>
           <a
             :href="LICENSE_URL"
             :class="LINK"
-            class="text-[13px]"
+            class="w-fit text-[12.5px]"
             @click.prevent="openLink(LICENSE_URL)"
             >GPL-3.0</a
           >
         </div>
 
-        <div class="flex gap-3 px-5 py-4 text-[13px]">
-          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
-            >Авторство</span
-          >
-          <span class="text-[13px] text-[var(--fg)]">
+        <div
+          class="grid gap-1 px-5 py-3.5 text-[12.5px] sm:grid-cols-[100px_minmax(0,1fr)] sm:gap-3"
+        >
+          <span class="text-[color:var(--fg-faint)]">Авторство</span>
+          <span class="text-[color:var(--fg-dim)]">
             ООО «Яндекс» к проекту отношения не имеет
           </span>
         </div>
       </SettingsCard>
 
       <SettingsCard>
-        <div class="px-5 pb-2 pt-4">
+        <div class="px-5 pb-1 pt-4">
           <div
             class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
           >
             Благодарности
           </div>
-          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
-            Проекты, без которых этот клиент не работал бы в текущем виде.
-          </p>
         </div>
 
         <a
@@ -97,10 +92,10 @@
           :key="item.url"
           :href="item.url"
           :title="item.url"
-          class="group flex flex-col gap-0.5 px-5 py-3 transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
+          class="group flex flex-col gap-0.5 px-5 py-2.5 transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
           @click.prevent="openLink(item.url)"
         >
-          <span :class="LINK" class="text-[13px] font-medium">{{
+          <span :class="LINK" class="text-[12.5px] font-medium">{{
             item.name
           }}</span>
           <span class="text-[11.5px] text-[color:var(--fg-dim)]">{{
@@ -121,12 +116,12 @@ import SettingsSection from "@/components/settings/SettingsSection.vue";
 import { LINK } from "@/components/settings/classes";
 import { cachedImage, loadCachedImage } from "@/lib/imageCache";
 
-const AUTHOR_URL = "https://github.com/elytrya";
-const AVATAR_URL = "https://github.com/elytrya.png?size=200";
+const AUTHOR_URL = "https://github.com/aeviww";
+const AVATAR_URL = "https://github.com/aeviww.png?size=200";
 const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 const FALLBACK = "icons/128x128.png";
 
-const avatar = ref(cachedImage("elytrya") ?? FALLBACK);
+const avatar = ref(cachedImage("aeviww") ?? FALLBACK);
 
 const commit = __APP_COMMIT__;
 const buildDate = formatDate(__APP_COMMIT_DATE__);
@@ -154,7 +149,7 @@ function openLink(url: string) {
 }
 
 onMounted(async () => {
-  avatar.value = await loadCachedImage("elytrya", AVATAR_URL);
+  avatar.value = await loadCachedImage("aeviww", AVATAR_URL);
 });
 
 const credits = [
@@ -170,7 +165,7 @@ const credits = [
   },
   {
     name: "Hazzz895/FckCensor",
-    desc: "оттуда позаимствована логика подмены зацензуренных треков",
+    desc: "логика подмены зацензуренных треков",
     url: "https://github.com/Hazzz895/FckCensor",
   },
   {

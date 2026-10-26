@@ -13,6 +13,9 @@ export const BUTTON =
 export const BUTTON_ACCENT =
   "inline-flex h-8 flex-none items-center justify-center gap-1.5 rounded-lg bg-[var(--accent)] px-3.5 text-[12px] font-semibold text-white transition duration-150 hover:brightness-110 disabled:pointer-events-none disabled:opacity-50";
 
+export const BUTTON_ACCENT_OUTLINE =
+  "inline-flex h-8 flex-none items-center justify-center gap-1.5 rounded-lg border border-[color-mix(in_srgb,var(--accent)_50%,var(--line))] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] px-3.5 text-[12px] font-semibold text-[var(--accent)] transition duration-150 hover:bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] disabled:pointer-events-none disabled:opacity-50";
+
 export const BUTTON_DANGER =
   "inline-flex h-8 flex-none items-center justify-center gap-1.5 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_40%,var(--line))] bg-transparent px-3 text-[12px] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_12%,transparent)] hover:text-[#ff5d5d] disabled:pointer-events-none disabled:opacity-50";
 

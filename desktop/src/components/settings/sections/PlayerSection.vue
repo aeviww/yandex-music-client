@@ -28,7 +28,7 @@
 
         <div class="mt-2 flex flex-wrap items-center gap-3">
           <button
-            :class="BUTTON_ACCENT"
+            :class="BUTTON_ACCENT_OUTLINE"
             type="button"
             @click="editOnPlayer"
           >
@@ -82,7 +82,7 @@ import SettingToggle from "@/components/settings/SettingToggle.vue";
 import SettingsCard from "@/components/settings/SettingsCard.vue";
 import SettingsRow from "@/components/settings/SettingsRow.vue";
 import SettingsSection from "@/components/settings/SettingsSection.vue";
-import { BUTTON, BUTTON_ACCENT } from "@/components/settings/classes";
+import { BUTTON, BUTTON_ACCENT_OUTLINE } from "@/components/settings/classes";
 import { useUiStore } from "@/stores/ui/index";
 
 const ui = useUiStore();
