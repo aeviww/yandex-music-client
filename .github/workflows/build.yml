@@ -18,13 +18,16 @@ jobs:
           - platform: windows-latest
             artifact: windows
             args: ""
+            bundle: target/release/bundle
           - platform: macos-latest
             artifact: macos
             args: "--target universal-apple-darwin"
             targets: "aarch64-apple-darwin,x86_64-apple-darwin"
+            bundle: target/universal-apple-darwin/release/bundle
           - platform: ubuntu-22.04
             artifact: linux
             args: ""
+            bundle: target/release/bundle
 
     steps:
       - uses: actions/checkout@v4
@@ -69,12 +72,12 @@ jobs:
         with:
           name: mashiro-${{ matrix.artifact }}
           path: |
-            desktop/src-tauri/target/release/bundle/**/*.exe
-            desktop/src-tauri/target/release/bundle/**/*.msi
-            desktop/src-tauri/target/release/bundle/**/*.dmg
-            desktop/src-tauri/target/release/bundle/**/*.app.tar.gz
-            desktop/src-tauri/target/release/bundle/**/*.deb
-            desktop/src-tauri/target/release/bundle/**/*.rpm
-            desktop/src-tauri/target/release/bundle/**/*.AppImage
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.exe
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.msi
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.dmg
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.app.tar.gz
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.deb
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.rpm
+            desktop/src-tauri/${{ matrix.bundle }}/**/*.AppImage
           if-no-files-found: error
           retention-days: 30
