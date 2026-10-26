@@ -3,7 +3,7 @@
     <h2
       class="mb-[32px] mt-0 text-[28px] font-semibold leading-[1.15] tracking-[-0.035em] text-white sm:text-[32px]"
     >
-      Войти в Mashiro
+      Войти в mashiro
     </h2>
     <button
       type="button"

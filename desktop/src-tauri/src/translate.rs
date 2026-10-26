@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use serde_json::Value;
 
-const UA: &str = "Mashiro/1.0 (Yandex Music desktop client)";
+const UA: &str = "mashiro/1.0 (Yandex Music desktop client)";
 const HOST: &str = "translate.googleapis.com";
 const PATH: &str = "/translate_a/single";
 

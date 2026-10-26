@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Mashiro",
+  "productName": "mashiro",
   "version": "0.2.0",
   "identifier": "app.mashiro.desktop",
   "build": {
@@ -14,7 +14,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Mashiro",
+        "title": "mashiro",
         "width": 1200,
         "height": 800,
         "minWidth": 940,

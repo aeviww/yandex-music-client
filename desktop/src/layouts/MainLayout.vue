@@ -28,7 +28,7 @@
             draggable="false"
             class="h-6 w-6 select-none rounded-[6px]"
           />
-          <span>Mashiro</span>
+          <span>mashiro</span>
         </div>
 
         <div

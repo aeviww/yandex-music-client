@@ -55,6 +55,7 @@ export interface Stream {
   url: string;
   codec: string;
   bitrate: number;
+  source: string;
 }
 
 export interface LyricsLine {

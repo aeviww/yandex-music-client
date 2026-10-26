@@ -16,7 +16,7 @@
       <SettingsRow
         column
         label="Client Access Token"
-        description="genius.com/api-clients → New API Client. App Name - любое, например Mashiro. App Website URL и Redirect URI обязательные, подойдёт https://example.com - без них форма не сохраняется. После Save нажми Generate Access Token и вставь строку сюда. Токен хранится только на этом компьютере."
+        description="genius.com/api-clients → New API Client. App Name - любое, например mashiro. App Website URL и Redirect URI обязательные, подойдёт https://example.com - без них форма не сохраняется. После Save нажми Generate Access Token и вставь строку сюда. Токен хранится только на этом компьютере."
       >
         <input
           :class="INPUT"

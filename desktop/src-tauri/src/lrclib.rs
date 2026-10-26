@@ -7,7 +7,7 @@ use serde::Serialize;
 use serde_json::Value;
 
 const API: &str = "https://lrclib.net/api";
-const UA: &str = "Mashiro/1.0 (Yandex Music desktop client)";
+const UA: &str = "mashiro/1.0 (Yandex Music desktop client)";
 const SEARCH_LIMIT: usize = 12;
 
 #[derive(Serialize, Clone, Debug)]

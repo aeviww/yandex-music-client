@@ -16,7 +16,7 @@
 
         <SettingToggle
           label="Глобальные горячие клавиши"
-          description="Работают в любых приложениях, даже когда Mashiro в трее"
+          description="Работают в любых приложениях, даже когда mashiro в трее"
           :model-value="hotkeys.globalEnabled"
           @update:model-value="onGlobalEnabled"
         />

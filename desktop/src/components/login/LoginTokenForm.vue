@@ -54,7 +54,7 @@
         v-if="loading"
         size="18px"
         class="text-black motion-reduce:animate-none motion-reduce:[&_*]:!animate-none"
-      />{{ loading ? "Проверяем токен…" : "Войти в Mashiro" }}
+      />{{ loading ? "Проверяем токен…" : "Войти в mashiro" }}
     </button>
     <p class="mb-0 mt-[16px] text-[14px] leading-[1.5] text-[#a3a3a3]">
       Для прослушивания нужен Яндекс Плюс.

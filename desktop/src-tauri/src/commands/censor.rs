@@ -18,7 +18,7 @@ pub struct CensorTrack {
 fn build_client() -> reqwest::Client {
     reqwest::Client::builder()
         .timeout(Duration::from_secs(15))
-        .user_agent("Mashiro")
+        .user_agent("mashiro")
         .build()
         .unwrap_or_else(|_| reqwest::Client::new())
 }

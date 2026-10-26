@@ -529,7 +529,7 @@ impl Yandex {
             .get(url)
             .timeout(std::time::Duration::from_secs(6))
             .header("Accept", "application/json")
-            .header("User-Agent", "Mashiro (https://github.com/mashiro/mashiro)")
+            .header("User-Agent", "mashiro (https://github.com/mashiro/mashiro)")
             .send()
             .await
             .ok()?;
@@ -578,7 +578,7 @@ impl Yandex {
             .http
             .get(exact)
             .header("Accept", "application/json")
-            .header("User-Agent", "Mashiro (https://github.com/mashiro)")
+            .header("User-Agent", "mashiro (https://github.com/mashiro)")
             .send()
             .await
         {
@@ -601,7 +601,7 @@ impl Yandex {
             .http
             .get(search)
             .header("Accept", "application/json")
-            .header("User-Agent", "Mashiro (https://github.com/mashiro)")
+            .header("User-Agent", "mashiro (https://github.com/mashiro)")
             .send()
             .await
             .map_err(|e| e.to_string())?;

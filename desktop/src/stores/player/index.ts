@@ -556,7 +556,7 @@ export const usePlayerStore = defineStore("player", {
       const track = this.current;
       const text = track
         ? `${track.title} - ${artistNames(track.artists)}`
-        : "Mashiro";
+        : "mashiro";
       await setTrayTooltip(text);
     },
 

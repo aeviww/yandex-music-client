@@ -29,7 +29,7 @@ pub fn hide<R: Runtime>(app: &AppHandle<R>) {
 }
 
 pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
-    let show = MenuItem::with_id(app, "tray_show", "Открыть Mashiro", true, None::<&str>)?;
+    let show = MenuItem::with_id(app, "tray_show", "Открыть mashiro", true, None::<&str>)?;
     let toggle = MenuItem::with_id(app, "tray_toggle", "Пауза / Продолжить", true, None::<&str>)?;
     let prev = MenuItem::with_id(app, "tray_prev", "Предыдущий трек", true, None::<&str>)?;
     let next = MenuItem::with_id(app, "tray_next", "Следующий трек", true, None::<&str>)?;
@@ -53,7 +53,7 @@ pub fn build<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     )?;
 
     let mut builder = TrayIconBuilder::with_id(TRAY_ID)
-        .tooltip("Mashiro")
+        .tooltip("mashiro")
         .menu(&menu);
 
     if let Some(icon) = app.default_window_icon().cloned() {
@@ -100,7 +100,7 @@ pub fn set_close_to_tray(enabled: bool) {
 pub fn set_tray_tooltip(app: AppHandle, text: String) -> Result<(), String> {
     if let Some(tray) = app.tray_by_id(TRAY_ID) {
         let value = if text.trim().is_empty() {
-            "Mashiro".to_string()
+            "mashiro".to_string()
         } else {
             text
         };

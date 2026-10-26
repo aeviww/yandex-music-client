@@ -39,7 +39,7 @@
       >
         <main
           class="my-auto grid w-full flex-none max-w-[1040px] gap-[24px] sm:gap-[32px] lg:grid-cols-[minmax(0,1fr)_400px] lg:items-center lg:gap-x-[80px] lg:gap-y-[36px]"
-          aria-label="Добро пожаловать в Mashiro"
+          aria-label="Добро пожаловать в mashiro"
         >
           <section
             class="mx-auto w-full max-w-[440px] lg:mx-0"
@@ -57,7 +57,7 @@
               id="welcome-title"
               class="m-0 text-[36px] font-semibold leading-[1.04] tracking-[-0.055em] text-white sm:text-[56px]"
             >
-              Привет,<br />это Mashiro.
+              Привет,<br />это mashiro.
             </h1>
           </section>
 

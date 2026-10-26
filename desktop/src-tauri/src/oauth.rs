@@ -8,7 +8,7 @@ const CLIENT_SECRET: &str = "53bc75238f0c4d08a118e51fe9203300";
 const DEVICE_CODE_URL: &str = "https://oauth.yandex.ru/device/code";
 const TOKEN_URL: &str = "https://oauth.yandex.ru/token";
 const DEVICE_ID: &str = "mashiro-desktop-client";
-const DEVICE_NAME: &str = "Mashiro Desktop";
+const DEVICE_NAME: &str = "mashiro desktop";
 
 static GENERATION: AtomicU64 = AtomicU64::new(0);
 

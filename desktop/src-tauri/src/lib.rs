@@ -17,8 +17,21 @@ use presence::DiscordState;
 use state::AppState;
 use tauri::Manager;
 
+#[cfg(windows)]
+fn set_app_user_model_id() {
+    use windows::core::HSTRING;
+    use windows::Win32::UI::Shell::SetCurrentProcessExplicitAppUserModelID;
+
+    unsafe {
+        let _ = SetCurrentProcessExplicitAppUserModelID(&HSTRING::from("app.mashiro.desktop"));
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    #[cfg(windows)]
+    set_app_user_model_id();
+
     tauri::Builder::default()
         .plugin(tauri_plugin_global_shortcut::Builder::new().build())
         .register_asynchronous_uri_scheme_protocol(proxy::SCHEME, |_app, request, responder| {
@@ -150,5 +163,5 @@ pub fn run() {
             files::open_external,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running Mashiro");
+        .expect("error while running mashiro");
 }

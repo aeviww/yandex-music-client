@@ -8,7 +8,7 @@
   grid-template-columns:
     minmax(0, var(--player-meta-width, 260px))
     minmax(320px, 1.35fr)
-    minmax(0, var(--player-meta-width, 260px));
+    auto;
 }
 
 .player-visualizer {
@@ -142,7 +142,6 @@
 .player-progress {
   display: flex;
   width: var(--player-progress-width, 100%);
-  max-width: 540px;
   align-items: center;
   gap: 10px;
   flex-wrap: nowrap;
@@ -201,12 +200,7 @@
 
 @media (max-width: 1120px) {
   .player-bar {
-    grid-template-columns: minmax(180px, 1fr) minmax(260px, 1.4fr) minmax(
-        180px,
-        1fr
-      );
     gap: 10px;
-    padding: 0 12px;
   }
 
   .player-volume-slider {

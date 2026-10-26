@@ -35,6 +35,7 @@ const MANAGED_ACTIONS: MediaSessionAction[] = [
 ];
 
 const ARTWORK_SIZES = ["100x100", "200x200", "400x400", "600x600"];
+const APP_ARTWORK = "icons/favicon-128x128.png";
 
 let enabled = true;
 let owner: MediaSessionOwner = "main";
@@ -75,7 +76,16 @@ function normalizeCover(url: string | null | undefined): string | null {
 
 function artworkFor(url: string | null): MediaImage[] {
   const base = normalizeCover(url);
-  if (!base) return [];
+  if (!base) {
+    if (typeof window === "undefined") return [];
+    return [
+      {
+        src: new URL(APP_ARTWORK, window.location.href).href,
+        sizes: "128x128",
+        type: "image/png",
+      },
+    ];
+  }
   if (base.endsWith("%%")) {
     const stem = base.slice(0, -2);
     return ARTWORK_SIZES.map((size) => ({

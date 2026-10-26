@@ -39,7 +39,7 @@
               :artists="player.current.artists"
               :limit="2"
             />
-            <span v-else>Mashiro</span>
+            <span v-else>mashiro</span>
           </Transition>
         </div>
         <TrackMenu
