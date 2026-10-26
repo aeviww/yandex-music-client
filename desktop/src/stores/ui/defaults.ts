@@ -24,7 +24,6 @@ export type LyricsBackdrop = "cover" | "gradient" | "solid";
 export type LyricsHighlight = "white" | "accent" | "karaoke";
 export type LyricsAnnotationMark = "off" | "underline" | "dot" | "tint";
 export type LyricsTranslateMode = "under" | "replace";
-// Что делать с треками, помеченными как AI-генерация.
 export type AiTrackAction = "none" | "skip" | "dislike";
 
 export const DEFAULT_DISCORD_CLIENT_ID = "1532382113821753354";

@@ -1,342 +1,322 @@
 <template>
-  <section id="settings-lyrics" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Текст песни</h2>
-      <p>
-        Всё то же есть в самой панели текста - кнопка с шестерёнкой справа
-        сверху.
-      </p>
-    </div>
-
-    <div class="setting-row setting-row-column">
-      <div class="setting-copy">
-        <b>Источник текста</b>
-        <span>
-          «Авто» - сначала LRCLIB (там чаще есть синхронный текст), потом
-          Genius. Яндекс не спрашивается, пока его не выберешь вручную. В самой
-          панели источник переключается для одного трека.
-        </span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in sources"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsSource === item.value }"
-          @click="ui.set('lyricsSource', item.value)"
+  <SettingsSection
+    id="settings-lyrics"
+    title="Текст песни"
+    description="Всё то же есть в самой панели текста - кнопка с шестерёнкой справа сверху."
+    icon="mingcute:subtitle-line"
+  >
+    <div class="space-y-4">
+      <SettingsCard>
+        <SettingsRow
+          column
+          label="Источник текста"
+          description="«Авто» - сначала LRCLIB (там чаще есть синхронный текст), потом Genius. Яндекс не спрашивается, пока его не выберешь вручную. В самой панели источник переключается для одного трека."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsSource"
+            :options="sources"
+            @update:model-value="ui.set('lyricsSource', $event)"
+          />
+        </SettingsRow>
+      </SettingsCard>
 
-    <div class="settings-subgroup-head">Шрифт и строки</div>
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Шрифт и строки
+          </div>
+        </div>
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Гарнитура</b><span>Каким шрифтом набран текст песни.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in fonts"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsFont === item.value }"
-          @click="ui.set('lyricsFont', item.value)"
+        <SettingsRow
+          label="Гарнитура"
+          description="Каким шрифтом набран текст песни."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsFont"
+            :options="fonts"
+            @update:model-value="ui.set('lyricsFont', $event)"
+          />
+        </SettingsRow>
 
-    <div v-if="ui.settings.lyricsFont === 'custom'" class="setting-row">
-      <div class="setting-copy">
-        <b>Свой шрифт</b>
-        <span>
-          Имя шрифта, установленного в системе. Можно перечислить несколько
-          через запятую - возьмётся первый доступный.
-        </span>
-      </div>
-      <input
-        class="settings-input"
-        type="text"
-        placeholder="Например: Inter"
-        :value="ui.settings.lyricsFontCustom"
-        @change="onCustomFont"
-      />
-    </div>
-
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Выравнивание</b><span>Положение строк в области текста.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in aligns"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsAlign === item.value }"
-          @click="ui.set('lyricsAlign', item.value)"
+        <SettingsRow
+          v-if="ui.settings.lyricsFont === 'custom'"
+          label="Свой шрифт"
+          description="Имя шрифта, установленного в системе. Можно перечислить несколько через запятую - возьмётся первый доступный."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <input
+            :class="INPUT"
+            type="text"
+            placeholder="Например: Inter"
+            :value="ui.settings.lyricsFontCustom"
+            @change="onCustomFont"
+          />
+        </SettingsRow>
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Активная строка</b>
-        <span>
-          «Караоке» заливает строку по ходу песни - нужен синхронный текст.
-        </span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in highlights"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsHighlight === item.value }"
-          @click="ui.set('lyricsHighlight', item.value)"
+        <SettingsRow
+          label="Выравнивание"
+          description="Положение строк в области текста."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsAlign"
+            :options="aligns"
+            @update:model-value="ui.set('lyricsAlign', $event)"
+          />
+        </SettingsRow>
 
-    <SettingToggle
-      :model-value="
-        ui.settings.lyricsHighlight === 'karaoke' &&
-        ui.settings.lyricsKaraokeWord
-      "
-      label="Караоке-режим"
-      description="Активная строка заливается по словам по ходу песни. Сам включает подсветку «Караоке» выше - нужен синхронный текст."
-      @update:model-value="setKaraoke($event)"
-    />
-
-    <SettingSlider
-      label="Размер строк"
-      description="Размер текста песни."
-      :model-value="ui.settings.lyricsFontSize"
-      :min="18"
-      :max="72"
-      :step="1"
-      suffix=" px"
-      @update:model-value="ui.set('lyricsFontSize', $event)"
-    />
-
-    <SettingSlider
-      label="Интерлиньяж"
-      description="Расстояние между строками."
-      :model-value="ui.settings.lyricsLineHeight"
-      :min="1"
-      :max="1.8"
-      :step="0.02"
-      suffix=""
-      @update:model-value="ui.set('lyricsLineHeight', $event)"
-    />
-
-    <SettingSlider
-      label="Жирность"
-      description="Насыщенность шрифта активной строки."
-      :model-value="ui.settings.lyricsWeight"
-      :min="400"
-      :max="900"
-      :step="50"
-      suffix=""
-      @update:model-value="ui.set('lyricsWeight', $event)"
-    />
-
-    <SettingSlider
-      label="Яркость остальных строк"
-      description="Насколько видны строки вокруг активной."
-      :model-value="ui.settings.lyricsInactive"
-      :min="8"
-      :max="70"
-      :step="1"
-      suffix="%"
-      @update:model-value="ui.set('lyricsInactive', $event)"
-    />
-
-    <SettingSlider
-      label="Размытие строк"
-      description="Размытие строк вокруг активной."
-      :model-value="ui.settings.lyricsLineBlur"
-      :min="0"
-      :max="8"
-      :step="0.5"
-      suffix=" px"
-      @update:model-value="ui.set('lyricsLineBlur', $event)"
-    />
-
-    <div class="settings-subgroup-head">Фон и эффекты</div>
-
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Фон панели</b><span>Что показывать за текстом.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in backdrops"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsBackdrop === item.value }"
-          @click="ui.set('lyricsBackdrop', item.value)"
+        <SettingsRow
+          label="Активная строка"
+          description="«Караоке» заливает строку по ходу песни - нужен синхронный текст."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsHighlight"
+            :options="highlights"
+            @update:model-value="ui.set('lyricsHighlight', $event)"
+          />
+        </SettingsRow>
 
-    <SettingSlider
-      label="Размытие фона"
-      description="Размытие обложки за текстом."
-      :model-value="ui.settings.lyricsBackgroundBlur"
-      :min="0"
-      :max="90"
-      :step="1"
-      suffix=" px"
-      @update:model-value="ui.set('lyricsBackgroundBlur', $event)"
-    />
+        <SettingToggle
+          :model-value="
+            ui.settings.lyricsHighlight === 'karaoke' &&
+            ui.settings.lyricsKaraokeWord
+          "
+          label="Караоке-режим"
+          description="Активная строка заливается по словам по ходу песни. Сам включает подсветку «Караоке» выше - нужен синхронный текст."
+          @update:model-value="setKaraoke($event)"
+        />
 
-    <SettingSlider
-      label="Яркость фона"
-      description="Насколько виден фон."
-      :model-value="ui.settings.lyricsBackgroundOpacity"
-      :min="0"
-      :max="100"
-      :step="1"
-      suffix="%"
-      @update:model-value="ui.set('lyricsBackgroundOpacity', $event)"
-    />
+        <SettingSlider
+          label="Размер строк"
+          description="Размер текста песни."
+          :model-value="ui.settings.lyricsFontSize"
+          :min="18"
+          :max="72"
+          :step="1"
+          suffix=" px"
+          @update:model-value="ui.set('lyricsFontSize', $event)"
+        />
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsShowArtwork"
-      label="Большая обложка"
-      description="Показывать обложку рядом с текстом."
-      @update:model-value="ui.set('lyricsShowArtwork', $event)"
-    />
+        <SettingSlider
+          label="Интерлиньяж"
+          description="Расстояние между строками."
+          :model-value="ui.settings.lyricsLineHeight"
+          :min="1"
+          :max="1.8"
+          :step="0.02"
+          suffix=""
+          @update:model-value="ui.set('lyricsLineHeight', $event)"
+        />
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsGlow"
-      label="Свечение активной строки"
-      description="Мягкий свет вокруг текущей строки."
-      @update:model-value="ui.set('lyricsGlow', $event)"
-    />
+        <SettingSlider
+          label="Жирность"
+          description="Насыщенность шрифта активной строки."
+          :model-value="ui.settings.lyricsWeight"
+          :min="400"
+          :max="900"
+          :step="50"
+          suffix=""
+          @update:model-value="ui.set('lyricsWeight', $event)"
+        />
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsMotion"
-      label="Анимация строк"
-      description="Плавно прокручивать и увеличивать активную строку."
-      @update:model-value="ui.set('lyricsMotion', $event)"
-    />
+        <SettingSlider
+          label="Яркость остальных строк"
+          description="Насколько видны строки вокруг активной."
+          :model-value="ui.settings.lyricsInactive"
+          :min="8"
+          :max="70"
+          :step="1"
+          suffix="%"
+          @update:model-value="ui.set('lyricsInactive', $event)"
+        />
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsVisualizer"
-      label="Визуализатор на весь экран"
-      description="Спектр звука фоном в полноэкранном режиме текста - ambient «обложка + текст + визуализатор»."
-      @update:model-value="ui.set('lyricsVisualizer', $event)"
-    />
+        <SettingSlider
+          label="Размытие строк"
+          description="Размытие строк вокруг активной."
+          :model-value="ui.settings.lyricsLineBlur"
+          :min="0"
+          :max="8"
+          :step="0.5"
+          suffix=" px"
+          @update:model-value="ui.set('lyricsLineBlur', $event)"
+        />
+      </SettingsCard>
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsShowCredits"
-      label="Участники записи"
-      description="Показывать продюсеров и авторов с Genius в подвале панели текста."
-      @update:model-value="ui.set('lyricsShowCredits', $event)"
-    />
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Фон и эффекты
+          </div>
+        </div>
 
-    <SettingToggle
-      :model-value="ui.settings.lyricsShowOrigin"
-      label="Подпись «Источник»"
-      description="Строка с названием сервиса, откуда загружен текст. Если выключить её и участников записи, подвал исчезнет."
-      @update:model-value="ui.set('lyricsShowOrigin', $event)"
-    />
-
-    <div class="settings-subgroup-head">Перевод</div>
-
-    <SettingToggle
-      :model-value="ui.settings.lyricsTranslate"
-      label="Переводить текст"
-      description="Показывать перевод строк песни. Берётся автоматически, работает и для синхронного текста."
-      @update:model-value="ui.set('lyricsTranslate', $event)"
-    />
-
-    <div v-if="ui.settings.lyricsTranslate" class="setting-row">
-      <div class="setting-copy">
-        <b>Как показывать</b>
-        <span>«Под строкой» - оригинал и перевод вместе; «Вместо» - только перевод.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in translateModes"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsTranslateMode === item.value }"
-          @click="ui.set('lyricsTranslateMode', item.value)"
+        <SettingsRow
+          label="Фон панели"
+          description="Что показывать за текстом."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsBackdrop"
+            :options="backdrops"
+            @update:model-value="ui.set('lyricsBackdrop', $event)"
+          />
+        </SettingsRow>
 
-    <div v-if="ui.settings.lyricsTranslate" class="setting-row">
-      <div class="setting-copy">
-        <b>Язык перевода</b>
-        <span>На какой язык переводить текст песни.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in translateTargets"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsTranslateTarget === item.value }"
-          @click="ui.set('lyricsTranslateTarget', item.value)"
+        <SettingSlider
+          label="Размытие фона"
+          description="Размытие обложки за текстом."
+          :model-value="ui.settings.lyricsBackgroundBlur"
+          :min="0"
+          :max="90"
+          :step="1"
+          suffix=" px"
+          @update:model-value="ui.set('lyricsBackgroundBlur', $event)"
+        />
+
+        <SettingSlider
+          label="Яркость фона"
+          description="Насколько виден фон."
+          :model-value="ui.settings.lyricsBackgroundOpacity"
+          :min="0"
+          :max="100"
+          :step="1"
+          suffix="%"
+          @update:model-value="ui.set('lyricsBackgroundOpacity', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsShowArtwork"
+          label="Большая обложка"
+          description="Показывать обложку рядом с текстом."
+          @update:model-value="ui.set('lyricsShowArtwork', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsGlow"
+          label="Свечение активной строки"
+          description="Мягкий свет вокруг текущей строки."
+          @update:model-value="ui.set('lyricsGlow', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsMotion"
+          label="Анимация строк"
+          description="Плавно прокручивать и увеличивать активную строку."
+          @update:model-value="ui.set('lyricsMotion', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsVisualizer"
+          label="Визуализатор на весь экран"
+          description="Спектр звука фоном в полноэкранном режиме текста - ambient «обложка + текст + визуализатор»."
+          @update:model-value="ui.set('lyricsVisualizer', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsShowCredits"
+          label="Участники записи"
+          description="Показывать продюсеров и авторов с Genius в подвале панели текста."
+          @update:model-value="ui.set('lyricsShowCredits', $event)"
+        />
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsShowOrigin"
+          label="Подпись «Источник»"
+          description="Строка с названием сервиса, откуда загружен текст. Если выключить её и участников записи, подвал исчезнет."
+          @update:model-value="ui.set('lyricsShowOrigin', $event)"
+        />
+      </SettingsCard>
+
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Перевод
+          </div>
+        </div>
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsTranslate"
+          label="Переводить текст"
+          description="Показывать перевод строк песни. Берётся автоматически, работает и для синхронного текста."
+          @update:model-value="ui.set('lyricsTranslate', $event)"
+        />
+
+        <SettingsRow
+          v-if="ui.settings.lyricsTranslate"
+          label="Как показывать"
+          description="«Под строкой» - оригинал и перевод вместе; «Вместо» - только перевод."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsTranslateMode"
+            :options="translateModes"
+            @update:model-value="ui.set('lyricsTranslateMode', $event)"
+          />
+        </SettingsRow>
 
-    <div class="settings-subgroup-head">Разборы Genius</div>
-
-    <SettingToggle
-      :model-value="ui.settings.lyricsAnnotations"
-      label="Разборы строк"
-      description="Отмечать строки, у которых на Genius есть аннотация. Работает и с синхронным текстом из LRCLIB."
-      @update:model-value="ui.set('lyricsAnnotations', $event)"
-    />
-
-    <div v-if="ui.settings.lyricsAnnotations" class="setting-row">
-      <div class="setting-copy">
-        <b>Как отмечать</b>
-        <span>
-          Левый клик по строке перематывает трек, правый - показывает значок
-          разбора, по нему откроется аннотация.
-        </span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="item in marks"
-          :key="item.value"
-          :class="{ on: ui.settings.lyricsAnnotationMark === item.value }"
-          @click="ui.set('lyricsAnnotationMark', item.value)"
+        <SettingsRow
+          v-if="ui.settings.lyricsTranslate"
+          label="Язык перевода"
+          description="На какой язык переводить текст песни."
         >
-          {{ item.label }}
-        </button>
-      </div>
-    </div>
+          <SettingsChoice
+            :model-value="ui.settings.lyricsTranslateTarget"
+            :options="translateTargets"
+            @update:model-value="ui.set('lyricsTranslateTarget', $event)"
+          />
+        </SettingsRow>
+      </SettingsCard>
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Сбросить вид текста</b>
-        <span>Шрифт, фон, эффекты и источник вернутся к исходным.</span>
-      </div>
-      <button
-        class="settings-reset-button"
-        type="button"
-        @click="ui.resetLyrics()"
-      >
-        Сбросить
-      </button>
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Разборы Genius
+          </div>
+        </div>
+
+        <SettingToggle
+          :model-value="ui.settings.lyricsAnnotations"
+          label="Разборы строк"
+          description="Отмечать строки, у которых на Genius есть аннотация. Работает и с синхронным текстом из LRCLIB."
+          @update:model-value="ui.set('lyricsAnnotations', $event)"
+        />
+
+        <SettingsRow
+          v-if="ui.settings.lyricsAnnotations"
+          label="Как отмечать"
+          description="Левый клик по строке перематывает трек, правый - показывает значок разбора, по нему откроется аннотация."
+        >
+          <SettingsChoice
+            :model-value="ui.settings.lyricsAnnotationMark"
+            :options="marks"
+            @update:model-value="ui.set('lyricsAnnotationMark', $event)"
+          />
+        </SettingsRow>
+
+        <SettingsRow
+          label="Сбросить вид текста"
+          description="Шрифт, фон, эффекты и источник вернутся к исходным."
+        >
+          <button :class="BUTTON" type="button" @click="ui.resetLyrics()">
+            Сбросить
+          </button>
+        </SettingsRow>
+      </SettingsCard>
     </div>
-  </section>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
 import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsChoice from "@/components/settings/SettingsChoice.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { BUTTON, INPUT } from "@/components/settings/classes";
 import type {
   LyricsAlign,
   LyricsAnnotationMark,
@@ -393,7 +373,6 @@ const marks: Array<{ value: LyricsAnnotationMark; label: string }> = [
   { value: "off", label: "Без метки" },
 ];
 
-// Караоке-режим одним тумблером: сам выставляет нужную подсветку.
 function setKaraoke(on: boolean) {
   ui.set("lyricsKaraokeWord", on);
   if (on) ui.set("lyricsHighlight", "karaoke");

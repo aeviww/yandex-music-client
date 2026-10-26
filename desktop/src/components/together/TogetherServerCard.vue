@@ -154,10 +154,17 @@
 
   <p v-if="reason" class="together-reason">{{ reason }}</p>
 
-  <button class="together-repo" type="button" @click="openRepo">
-    <Icon name="simple-icons:github" :size="14" />
-    <span>Исходный код сервера</span>
-  </button>
+  <div class="setting-row">
+    <div class="setting-copy">
+      <b>Исходный код сервера</b>
+      <span>Открыть репозиторий mashiro-together на GitHub.</span>
+    </div>
+
+    <button class="settings-reset-button" type="button" @click="openRepo">
+      <Icon name="simple-icons:github" :size="14" />
+      GitHub
+    </button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -253,29 +260,6 @@ async function leave() {
 </script>
 
 <style scoped>
-.together-repo {
-  display: inline-flex;
-  align-self: flex-start;
-  align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--fg-faint, inherit);
-  font: inherit;
-  font-size: 12px;
-  text-decoration: none;
-  cursor: pointer;
-  transition: color 0.15s ease;
-}
-
-.together-repo:hover {
-  color: var(--accent, inherit);
-  opacity: 1;
-  text-decoration: underline;
-}
-
 .together-controls {
   display: flex;
   flex-wrap: wrap;

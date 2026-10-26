@@ -1,206 +1,211 @@
 <template>
-  <section id="settings-behavior" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Поведение</h2>
-      <p>
-        Как приложение ведёт себя во время работы: внешние эффекты, окно,
-        воспроизведение и фильтры контента.
-      </p>
-    </div>
-
-    <div class="settings-subgroup">
-      <div class="settings-subgroup-head">
-        <h3>Визуальные эффекты</h3>
-        <p>Влияют только на внешний вид. На звук не действуют.</p>
-      </div>
-
-      <SettingToggle
-        :model-value="ui.settings.glass"
-        label="Эффект стекла на панелях"
-        description="Боковая панель, шапка страницы, панель плеера и контекстные меню становятся матовым стеклом: сквозь них размыто видно то, что под ними. Выключишь - панели станут плотными и непрозрачными, а интерфейс чуть быстрее."
-        @update:model-value="ui.set('glass', $event)"
-      />
-      <SettingSlider
-        v-if="ui.settings.glass"
-        label="Сила размытия"
-        description="0 px - панели почти прозрачные без размытия, 40 px - фон за панелью размывается полностью."
-        :model-value="ui.settings.glassBlur"
-        :min="0"
-        :max="40"
-        :step="2"
-        suffix=" px"
-        @update:model-value="ui.set('glassBlur', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.animations"
-        label="Анимации интерфейса"
-        description="Плавные переходы между страницами, появление меню и движение элементов. Без них интерфейс переключается мгновенно."
-        @update:model-value="ui.set('animations', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.thinScrollbar"
-        label="Тонкие полосы прокрутки"
-        description="Узкие скроллбары во всех списках вместо системных широких."
-        @update:model-value="ui.set('thinScrollbar', $event)"
-      />
-    </div>
-
-    <div class="settings-subgroup">
-      <div class="settings-subgroup-head">
-        <h3>Обложки и миниатюры</h3>
-        <p>Показывать ли картинки в боковой панели и в плеере.</p>
-      </div>
-
-      <SettingToggle
-        :model-value="ui.settings.showPlaylistCovers"
-        label="Обложки плейлистов в боковой панели"
-        description="Рядом с названием каждого плейлиста показывается его миниатюра."
-        @update:model-value="ui.set('showPlaylistCovers', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.showPlayerArtwork"
-        label="Обложка трека в нижней панели"
-        description="Квадрат с обложкой слева от названия трека. По клику открывается альбом."
-        @update:model-value="ui.set('showPlayerArtwork', $event)"
-      />
-    </div>
-
-    <div class="settings-subgroup">
-      <div class="settings-subgroup-head">
-        <h3>Окно и запуск</h3>
-        <p>Что происходит при закрытии окна и при следующем запуске.</p>
-      </div>
-
-      <SettingToggle
-        :model-value="ui.settings.minimizeToTray"
-        label="Закрытие сворачивает в трей"
-        description="Крестик прячет окно в системный трей, музыка продолжает играть. Полностью выйти можно через меню трея."
-        @update:model-value="ui.set('minimizeToTray', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.resumeLastSession"
-        label="Восстанавливать очередь после запуска"
-        description="При старте приложение возвращает трек, очередь и позицию воспроизведения с прошлого раза."
-        @update:model-value="ui.set('resumeLastSession', $event)"
-      />
-      <SettingToggle
-        v-if="ui.settings.resumeLastSession"
-        :model-value="ui.settings.resumeAutoplay"
-        label="Сразу продолжать воспроизведение"
-        description="Восстановленный трек заиграет автоматически с той же секунды. Если выключено - трек будет готов, но останется на паузе."
-        @update:model-value="ui.set('resumeAutoplay', $event)"
-      />
-    </div>
-
-    <div class="settings-subgroup">
-      <div class="settings-subgroup-head">
-        <h3>Воспроизведение</h3>
-        <p>Как приложение обрабатывает сам звук и переходы между треками.</p>
-      </div>
-
-      <SettingToggle
-        :model-value="ui.settings.autoSkipDisliked"
-        label="Автоскип дизлайкнутых треков"
-        description="Трек, отмеченный как «Не нравится», пропускается автоматически, когда доходит до него очередь. Сам трек остаётся в списке, но выглядит приглушённым."
-        @update:model-value="ui.set('autoSkipDisliked', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.trimSilence"
-        label="Подрезать тишину в конце трека"
-        description="Если последние секунды трека почти беззвучные, приложение не ждёт их и сразу включает следующий трек."
-        @update:model-value="ui.set('trimSilence', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.gaplessEnabled"
-        label="Gapless - без пауз между треками"
-        description="Следующий трек подгружается заранее и включается встык, без тишины между дорожками - для концертников, миксов и концепт-альбомов. Пока включён, отключает кроссфейд."
-        @update:model-value="ui.set('gaplessEnabled', $event)"
-      />
-      <SettingToggle
-        :model-value="ui.settings.normalizeVolume"
-        label="Нормализация громкости"
-        description="Выравнивает громкость между треками в стиле ReplayGain: тихие записи звучат громче, а слишком громкие - тише, чтобы не тянуться к регулятору при смене трека."
-        @update:model-value="ui.set('normalizeVolume', $event)"
-      />
-      <div class="setting-row setting-row-column">
-        <div class="setting-copy">
-          <b>Когда очередь закончилась</b
-          ><span>
-            Сыграл последний трек списка - дальше или плейлист идёт по кругу,
-            или включается волна, подобранная по этому же плейлисту.
-          </span>
-        </div>
-        <div class="settings-choice">
-          <button
-            :class="{ on: queueEnd === 'stop' }"
-            @click="setQueueEnd('stop')"
+  <SettingsSection
+    id="settings-behavior"
+    title="Поведение"
+    description="Как приложение ведёт себя во время работы: внешние эффекты, окно, воспроизведение и фильтры контента."
+    icon="mingcute:settings-5-line"
+  >
+    <div class="space-y-4">
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
           >
-            Остановиться
-          </button>
-          <button
-            :class="{ on: queueEnd === 'repeat' }"
-            @click="setQueueEnd('repeat')"
-          >
-            Повтор плейлиста
-          </button>
-          <button
-            :class="{ on: queueEnd === 'wave' }"
-            @click="setQueueEnd('wave')"
-          >
-            Моя волна по плейлисту
-          </button>
+            Визуальные эффекты
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Влияют только на внешний вид. На звук не действуют.
+          </p>
         </div>
-      </div>
-    </div>
 
-    <div class="settings-subgroup">
-      <div class="settings-subgroup-head">
-        <h3>Фильтры контента</h3>
-        <p>Подмена зацензуренных версий и отношение к AI-музыке.</p>
-      </div>
+        <SettingToggle
+          :model-value="ui.settings.glass"
+          label="Эффект стекла на панелях"
+          description="Боковая панель, шапка страницы, панель плеера и контекстные меню становятся матовым стеклом: сквозь них размыто видно то, что под ними. Выключишь - панели станут плотными и непрозрачными, а интерфейс чуть быстрее."
+          @update:model-value="ui.set('glass', $event)"
+        />
+        <SettingSlider
+          v-if="ui.settings.glass"
+          label="Сила размытия"
+          description="0 px - панели почти прозрачные без размытия, 40 px - фон за панелью размывается полностью."
+          :model-value="ui.settings.glassBlur"
+          :min="0"
+          :max="40"
+          :step="2"
+          suffix=" px"
+          @update:model-value="ui.set('glassBlur', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.animations"
+          label="Анимации интерфейса"
+          description="Плавные переходы между страницами, появление меню и движение элементов. Без них интерфейс переключается мгновенно."
+          @update:model-value="ui.set('animations', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.thinScrollbar"
+          label="Тонкие полосы прокрутки"
+          description="Узкие скроллбары во всех списках вместо системных широких."
+          @update:model-value="ui.set('thinScrollbar', $event)"
+        />
+      </SettingsCard>
 
-      <SettingToggle
-        :model-value="ui.settings.censorBypass"
-        label="Обход цензуры"
-        description="Если у трека есть незацензуренная версия в открытой базе FckCensorData, приложение играет её вместо запиканной. Работает только для треков из этой базы, остальные играют как обычно."
-        @update:model-value="ui.set('censorBypass', $event)"
-      />
-      <SettingToggle
-        v-if="ui.settings.censorBypass"
-        :model-value="ui.settings.censorBadge"
-        label="Показывать пометку о подмене"
-        description="Рядом с названием трека в плеере появляется метка «без цензуры», когда играет подменённая версия."
-        @update:model-value="ui.set('censorBadge', $event)"
-      />
-      <div class="setting-row setting-row-column">
-        <div class="setting-copy">
-          <b>Что делать с AI-треками</b
-          ><span>
-            Реакция на треки, помеченные базой Slopless как сгенерированные
-            нейросетью. «Скипать» - просто переключить дальше, «Дизлайкать и
-            скипать» - ещё и поставить дизлайк, чтобы Яндекс больше не
-            подкидывал его в волне и рекомендациях.
-          </span>
-        </div>
-        <div class="settings-choice">
-          <button
-            v-for="item in aiActions"
-            :key="item.value"
-            :class="{ on: ui.settings.aiTrackAction === item.value }"
-            @click="ui.set('aiTrackAction', item.value)"
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
           >
-            {{ item.label }}
-          </button>
+            Обложки и миниатюры
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Показывать ли картинки в боковой панели и в плеере.
+          </p>
         </div>
-      </div>
+
+        <SettingToggle
+          :model-value="ui.settings.showPlaylistCovers"
+          label="Обложки плейлистов в боковой панели"
+          description="Рядом с названием каждого плейлиста показывается его миниатюра."
+          @update:model-value="ui.set('showPlaylistCovers', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.showPlayerArtwork"
+          label="Обложка трека в нижней панели"
+          description="Квадрат с обложкой слева от названия трека. По клику открывается альбом."
+          @update:model-value="ui.set('showPlayerArtwork', $event)"
+        />
+      </SettingsCard>
+
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Окно и запуск
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Что происходит при закрытии окна и при следующем запуске.
+          </p>
+        </div>
+
+        <SettingToggle
+          :model-value="ui.settings.minimizeToTray"
+          label="Закрытие сворачивает в трей"
+          description="Крестик прячет окно в системный трей, музыка продолжает играть. Полностью выйти можно через меню трея."
+          @update:model-value="ui.set('minimizeToTray', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.resumeLastSession"
+          label="Восстанавливать очередь после запуска"
+          description="При старте приложение возвращает трек, очередь и позицию воспроизведения с прошлого раза."
+          @update:model-value="ui.set('resumeLastSession', $event)"
+        />
+        <SettingToggle
+          v-if="ui.settings.resumeLastSession"
+          :model-value="ui.settings.resumeAutoplay"
+          label="Сразу продолжать воспроизведение"
+          description="Восстановленный трек заиграет автоматически с той же секунды. Если выключено - трек будет готов, но останется на паузе."
+          @update:model-value="ui.set('resumeAutoplay', $event)"
+        />
+      </SettingsCard>
+
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Воспроизведение
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Как приложение обрабатывает сам звук и переходы между треками.
+          </p>
+        </div>
+
+        <SettingToggle
+          :model-value="ui.settings.autoSkipDisliked"
+          label="Автоскип дизлайкнутых треков"
+          description="Трек, отмеченный как «Не нравится», пропускается автоматически, когда доходит до него очередь. Сам трек остаётся в списке, но выглядит приглушённым."
+          @update:model-value="ui.set('autoSkipDisliked', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.trimSilence"
+          label="Подрезать тишину в конце трека"
+          description="Если последние секунды трека почти беззвучные, приложение не ждёт их и сразу включает следующий трек."
+          @update:model-value="ui.set('trimSilence', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.gaplessEnabled"
+          label="Gapless - без пауз между треками"
+          description="Следующий трек подгружается заранее и включается встык, без тишины между дорожками - для концертников, миксов и концепт-альбомов. Пока включён, отключает кроссфейд."
+          @update:model-value="ui.set('gaplessEnabled', $event)"
+        />
+        <SettingToggle
+          :model-value="ui.settings.normalizeVolume"
+          label="Нормализация громкости"
+          description="Выравнивает громкость между треками в стиле ReplayGain: тихие записи звучат громче, а слишком громкие - тише, чтобы не тянуться к регулятору при смене трека."
+          @update:model-value="ui.set('normalizeVolume', $event)"
+        />
+        <SettingsRow
+          column
+          label="Когда очередь закончилась"
+          description="Сыграл последний трек списка - дальше или плейлист идёт по кругу, или включается волна, подобранная по этому же плейлисту."
+        >
+          <SettingsChoice
+            :model-value="queueEnd"
+            :options="queueEndOptions"
+            @update:model-value="setQueueEnd"
+          />
+        </SettingsRow>
+      </SettingsCard>
+
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Фильтры контента
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Подмена зацензуренных версий и отношение к AI-музыке.
+          </p>
+        </div>
+
+        <SettingToggle
+          :model-value="ui.settings.censorBypass"
+          label="Обход цензуры"
+          description="Если у трека есть незацензуренная версия в открытой базе FckCensorData, приложение играет её вместо запиканной. Работает только для треков из этой базы, остальные играют как обычно."
+          @update:model-value="ui.set('censorBypass', $event)"
+        />
+        <SettingToggle
+          v-if="ui.settings.censorBypass"
+          :model-value="ui.settings.censorBadge"
+          label="Показывать пометку о подмене"
+          description="Рядом с названием трека в плеере появляется метка «без цензуры», когда играет подменённая версия."
+          @update:model-value="ui.set('censorBadge', $event)"
+        />
+        <SettingsRow
+          column
+          label="Что делать с AI-треками"
+          description="Реакция на треки, помеченные базой Slopless как сгенерированные нейросетью. «Скипать» - просто переключить дальше, «Дизлайкать и скипать» - ещё и поставить дизлайк, чтобы Яндекс больше не подкидывал его в волне и рекомендациях."
+        >
+          <SettingsChoice
+            :model-value="ui.settings.aiTrackAction"
+            :options="aiActions"
+            @update:model-value="ui.set('aiTrackAction', $event)"
+          />
+        </SettingsRow>
+      </SettingsCard>
     </div>
-  </section>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
 import { computed } from "vue";
 import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsChoice from "@/components/settings/SettingsChoice.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
 import type { AiTrackAction } from "@/stores/ui/defaults";
 import { useUiStore } from "@/stores/ui/index";
 
@@ -219,35 +224,15 @@ const queueEnd = computed<QueueEnd>(() => {
   return ui.settings.autoWaveOnQueueEnd ? "wave" : "stop";
 });
 
+const queueEndOptions: Array<{ value: QueueEnd; label: string }> = [
+  { value: "stop", label: "Остановиться" },
+  { value: "repeat", label: "Повтор плейлиста" },
+  { value: "wave", label: "Моя волна по плейлисту" },
+];
+
 function setQueueEnd(mode: QueueEnd) {
   ui.set("repeatPlaylistAlways", mode === "repeat");
   ui.set("autoWaveOnQueueEnd", mode === "wave");
   if (mode === "wave") ui.set("autoWaveSource", "playlist");
 }
 </script>
-
-<style scoped>
-.settings-subgroup {
-  margin-top: 26px;
-  padding-top: 18px;
-  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.08));
-}
-.settings-subgroup:first-of-type {
-  margin-top: 18px;
-}
-.settings-subgroup-head {
-  margin-bottom: 12px;
-}
-.settings-subgroup-head h3 {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-.settings-subgroup-head p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
-  opacity: 0.6;
-}
-</style>

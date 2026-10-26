@@ -3,63 +3,68 @@
   font-size: calc(12px * var(--text-scale, 1));
   font-variant-numeric: tabular-nums;
   text-align: right;
+  min-width: 48px;
 }
 
 .setting-switch {
   position: relative;
-  width: 36px;
-  height: 20px;
+  width: 38px;
+  height: 22px;
   flex: 0 0 auto;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--hover);
-  transition: 0.16s ease;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
+  cursor: pointer;
+  pointer-events: none;
+  transition: background 0.16s ease;
 }
 
 .setting-switch i {
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 12px;
-  height: 12px;
-  border-radius: calc(var(--radius) * 0.7);
-  background: var(--fg-dim);
-  transition: 0.16s ease;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.16s ease;
 }
 
 .setting-switch.on {
-  border-color: color-mix(in srgb, var(--accent) 72%, transparent);
   background: var(--accent);
 }
 
 .setting-switch.on i {
-  left: 19px;
-  background: #fff;
+  transform: translateX(16px);
 }
 
 .settings-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 22px;
+  padding: 14px 14px 6px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
   scroll-margin-top: 16px;
 }
 
 .settings-group-head {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .settings-group-head h2 {
   margin: 0;
   color: var(--fg);
   font-family: inherit;
-  font-size: calc(11px * var(--text-scale, 1));
+  font-size: calc(14px * var(--text-scale, 1));
   font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  text-transform: none;
 }
 
 .settings-group-head p {
-  margin: 2px 0 0;
+  margin: 3px 0 8px;
   color: var(--fg-faint);
   font-size: calc(12px * var(--text-scale, 1));
   line-height: 1.45;
@@ -68,7 +73,12 @@
 }
 
 .settings-subhead {
-  margin-top: 26px;
+  margin: 18px 0 6px;
+  color: var(--fg-faint);
+  font-size: calc(10.5px * var(--text-scale, 1));
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .setting-row {
@@ -76,13 +86,12 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  min-height: 52px;
+  min-height: 50px;
   box-sizing: border-box;
-  gap: 24px;
-  padding: 12px 10px;
+  gap: 20px;
+  padding: 9px 10px;
   border: 0;
-  border-top: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: 10px;
   margin: 0;
   background: transparent;
   color: inherit;
@@ -91,56 +100,60 @@
   transition: background 0.12s ease;
 }
 
-.setting-row:first-of-type {
+.setting-row + .setting-row {
+  border-top: 1px solid var(--line);
+}
+
+.setting-row:first-child {
   border-top: 0;
 }
 
 .setting-row:hover {
-  background: color-mix(in srgb, var(--fg) 4%, transparent);
-  border-radius: calc(var(--radius) * 0.7);
+  background: color-mix(in srgb, var(--fg) 3.5%, transparent);
 }
 
 .setting-row-column {
   align-items: stretch;
   flex-direction: column;
   gap: 12px;
-  padding: 14px 10px;
+  padding: 12px 10px;
 }
 
 .setting-copy {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
 }
 
 .setting-copy b {
   color: var(--fg);
-  font-size: calc(13.5px * var(--text-scale, 1));
+  font-size: calc(13px * var(--text-scale, 1));
   font-weight: 600;
 }
 
 .setting-copy span {
   color: var(--fg-dim);
-  font-size: calc(12px * var(--text-scale, 1));
-  line-height: 1.35;
+  font-size: calc(11.5px * var(--text-scale, 1));
+  line-height: 1.4;
 }
 
 .setting-field-row input {
-  width: min(290px, 45vw);
-  height: 34px;
+  width: min(320px, 42vw);
+  height: 32px;
   padding: 0 10px;
   border: 1px solid var(--line);
-  border-radius: calc(var(--radius) * 0.7);
+  border-radius: 9px;
   outline: 0;
   background: var(--surface-2);
   color: var(--fg);
   font: inherit;
   font-size: calc(12.5px * var(--text-scale, 1));
+  transition: border-color 0.14s ease;
 }
 
 .setting-field-row input:focus {
-  border-color: color-mix(in srgb, var(--accent) 58%, var(--line));
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
 }
 
 .setting-toggle-row {
@@ -149,24 +162,45 @@
 }
 
 .setting-toggle-row:hover {
-  background: color-mix(in srgb, var(--fg) 4%, transparent);
+  background: color-mix(in srgb, var(--fg) 3.5%, transparent);
 }
 
 .settings-reset-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   height: 30px;
-  padding: 0 11px;
+  padding: 0 12px;
   border: 1px solid var(--line);
-  border-radius: calc(var(--radius) * 0.7);
+  border-radius: 8px;
   background: transparent;
-  color: var(--fg);
+  color: var(--fg-dim);
   font: inherit;
   font-size: calc(12px * var(--text-scale, 1));
+  white-space: nowrap;
   cursor: pointer;
+  transition:
+    background 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease;
 }
 
 .settings-reset-button:hover {
-  background: var(--surface);
+  background: var(--hover);
+  border-color: color-mix(in srgb, var(--fg) 14%, transparent);
   color: var(--fg);
+}
+
+.settings-reset-button.danger {
+  border-color: color-mix(in srgb, #ff5d5d 45%, var(--line));
+  color: #ff8b8b;
+
+  &:hover {
+    background: color-mix(in srgb, #ff5d5d 14%, transparent);
+    border-color: #ff5d5d;
+    color: #ff5d5d;
+  }
 }
 
 .discord-status {
@@ -185,17 +219,14 @@
 
   &.ok {
     background: #3ddc84;
-    box-shadow: 0 0 0 4px rgba(61, 220, 132, 0.16);
   }
 
   &.waiting {
     background: #f5a623;
-    box-shadow: 0 0 0 4px rgba(245, 166, 35, 0.16);
   }
 
   &.error {
     background: #ff5d5d;
-    box-shadow: 0 0 0 4px rgba(255, 93, 93, 0.16);
   }
 }
 
@@ -207,33 +238,5 @@
   button[disabled] {
     opacity: 0.55;
     pointer-events: none;
-  }
-}
-
-.settings-reset-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  white-space: nowrap;
-  transition:
-    background 0.14s ease,
-    color 0.14s ease,
-    border-color 0.14s ease;
-}
-
-.settings-nav .settings-reset-button {
-  height: 34px;
-  width: 100%;
-}
-
-.settings-reset-button.danger {
-  border-color: color-mix(in srgb, #ff5d5d 45%, var(--line));
-  color: #ff8b8b;
-
-  &:hover {
-    background: color-mix(in srgb, #ff5d5d 14%, transparent);
-    border-color: #ff5d5d;
-    color: #ff5d5d;
   }
 }

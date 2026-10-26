@@ -6,9 +6,6 @@ import { fitBudget, findIndex, trimQueue } from "./queue";
 
 type Player = ReturnType<typeof usePlayerStore>;
 
-/**
- * @param withQueue полное состояние с очередью или лёгкий пульс без неё
- */
 export function buildState(player: Player, withQueue = true): StatePayload {
   const base: StatePayload = {
     kind: "state",
@@ -65,7 +62,6 @@ async function startTrack(
 ): Promise<void> {
   const trackId = payload.trackId!;
 
-  // прислали очередь - повторяем её целиком, тогда работает и дальше/назад
   if (payload.queue.length) {
     const index = findIndex(payload.queue, payload.index, trackId);
     if (index >= 0) {
@@ -74,13 +70,11 @@ async function startTrack(
     }
   }
 
-  // пульс без очереди: берём трек из самого сообщения
   if (payload.track && payload.track.id === trackId) {
     await player.playQueue([payload.track], 0);
     return;
   }
 
-  // старый клиент или пустое сообщение: тянем трек своим аккаунтом
   const track = await api.track(trackId);
   await player.playQueue([track], 0);
 }

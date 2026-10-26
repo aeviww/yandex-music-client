@@ -10,11 +10,6 @@ export interface ReconnectIo {
   note: (text: string) => void;
 }
 
-/**
- * Новый хост поднимает комнату не мгновенно, поэтому стучимся несколько раз.
- *
- * @param target адрес вида ip:port
- */
 export async function reconnect(
   target: string,
   io: ReconnectIo,

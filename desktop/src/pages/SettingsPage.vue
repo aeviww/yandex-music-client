@@ -1,81 +1,149 @@
 <template>
-  <div class="settings-page">
-    <aside class="settings-nav">
-      <div class="settings-nav-head">
-        <div class="settings-nav-title">Настройки</div>
-
-        <label class="settings-search">
-          <Icon name="mingcute:search-2-line" :size="14" />
-
-          <input
-            v-model="query"
-            type="text"
-            placeholder="Найти настройку"
-            spellcheck="false"
-          />
-
-          <button
-            v-if="query"
-            class="settings-search-clear"
-            type="button"
-            @click="query = ''"
+  <div
+    class="settings-overlay fixed inset-0 z-[5000] flex flex-nowrap flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)] [&_button:not(:disabled)]:cursor-pointer"
+  >
+      <header
+        class="relative flex h-[64px] flex-none flex-nowrap items-center gap-4 border-b border-[var(--line)] bg-[var(--bg)] px-5"
+      >
+        <div class="flex flex-none items-center gap-3">
+          <span
+            class="grid h-9 w-9 place-items-center rounded-lg border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)]"
           >
-            <Icon name="mingcute:close-line" :size="11" />
-          </button>
-        </label>
-      </div>
-
-      <div class="settings-nav-list">
-        <div
-          v-for="group in groups"
-          :key="group.title"
-          class="settings-nav-group"
-        >
-          <div class="settings-nav-group-title">{{ group.title }}</div>
-
-          <button
-            v-for="section in group.items"
-            :key="section.id"
-            class="settings-nav-item"
-            :class="{ on: active === section.id, hits: section.hits.length }"
-            type="button"
-            @click="select(section.id)"
-          >
-            <Icon :name="section.icon" :size="15" />
-
-            <span class="settings-nav-text">
-              <span class="settings-nav-label">{{ section.label }}</span>
-
-              <span v-if="section.hits.length" class="settings-nav-hits">
-                {{ section.hits.join(" · ") }}
-              </span>
-            </span>
-          </button>
+            <Icon name="mingcute:settings-5-line" :size="18" />
+          </span>
+          <div class="min-w-0">
+            <h1
+              class="m-0 text-[15px] font-bold leading-tight tracking-[-0.02em] text-[var(--fg)]"
+            >
+              Настройки
+            </h1>
+            <p class="mb-0 text-[11px] text-[color:var(--fg-faint)]">
+              Mashiro · {{ sections.length }} разделов
+            </p>
+          </div>
         </div>
 
-        <p v-if="!groups.length" class="settings-nav-empty">
-          Ничего не нашлось
-        </p>
+        <div class="mx-auto w-full max-w-[440px]">
+          <label
+            class="flex h-9 items-center gap-2 rounded-lg border border-[var(--line)] bg-transparent px-3 transition duration-150 focus-within:border-[color-mix(in_srgb,var(--accent)_45%,var(--line))]"
+          >
+            <Icon
+              name="mingcute:search-2-line"
+              :size="14"
+              class="text-[color:var(--fg-faint)]"
+            />
+            <input
+              v-model="query"
+              type="text"
+              placeholder="Найти настройку"
+              spellcheck="false"
+              class="min-w-0 flex-1 border-0 bg-transparent text-[12.5px] text-[var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)]"
+            />
+            <button
+              v-if="query"
+              class="grid h-5 w-5 flex-none place-items-center rounded-md border-0 bg-transparent text-[color:var(--fg-faint)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+              type="button"
+              title="Очистить"
+              @click="query = ''"
+            >
+              <Icon name="mingcute:close-line" :size="12" />
+            </button>
+          </label>
+        </div>
+
+        <button
+          type="button"
+          class="grid h-9 w-9 flex-none place-items-center rounded-lg border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)] transition duration-150 hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+          title="Закрыть настройки (Esc)"
+          aria-label="Закрыть настройки"
+          @click="close"
+        >
+          <Icon name="mingcute:close-line" :size="19" />
+        </button>
+      </header>
+
+      <div class="relative flex flex-nowrap min-h-0 flex-1">
+        <aside
+          class="flex flex-nowrap min-h-0 w-[276px] flex-none flex-col border-r border-[var(--line)] bg-[var(--bg)] px-3 py-4"
+        >
+          <nav class="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain pr-1">
+            <div v-for="group in groups" :key="group.title">
+              <div
+                class="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.09em] text-[color:var(--fg-faint)]"
+              >
+                {{ group.title }}
+              </div>
+
+              <button
+                v-for="section in group.items"
+                :key="section.id"
+                type="button"
+                class="group flex h-10 w-full items-center gap-3 rounded-lg border-0 px-3 text-left text-[13px] transition duration-150"
+                :class="
+                  active === section.id
+                    ? 'bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] font-semibold text-[var(--fg)]'
+                    : 'bg-transparent text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
+                "
+                @click="select(section.id)"
+              >
+                <Icon
+                  :name="section.icon"
+                  :size="16"
+                  class="flex-none transition-colors"
+                  :class="
+                    active === section.id
+                      ? 'text-[var(--accent)]'
+                      : 'opacity-70 group-hover:opacity-100'
+                  "
+                />
+                <span class="min-w-0 flex-1 truncate">{{
+                  section.label
+                }}</span>
+                <span
+                  v-if="section.hits.length"
+                  class="flex-none rounded-full bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] px-1.5 text-[10px] font-semibold tabular-nums text-[color:var(--fg-faint)]"
+                  :title="section.hits.join(' · ')"
+                >
+                  {{ section.hits.length }}
+                </span>
+              </button>
+            </div>
+
+            <p
+              v-if="!groups.length"
+              class="mb-0 px-3 py-4 text-[12px] text-[color:var(--fg-faint)]"
+            >
+              Ничего не нашлось
+            </p>
+          </nav>
+
+          <div class="mt-3 flex-none border-t border-[var(--line)] pt-3">
+            <button
+              type="button"
+              class="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_35%,var(--line))] bg-transparent text-[12px] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_10%,transparent)] hover:text-[#ff5d5d]"
+              @click="reset"
+            >
+              <Icon name="mingcute:delete-2-line" :size="15" />
+              Сбросить всё
+            </button>
+          </div>
+        </aside>
+
+        <main
+          ref="scrollRoot"
+          class="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain"
+        >
+          <div class="mx-auto w-full max-w-[880px] px-8 py-8 pb-24">
+            <component :is="activeComponent" :key="active" />
+          </div>
+        </main>
       </div>
-
-      <div class="settings-nav-divider" />
-
-      <button class="settings-reset-button danger" type="button" @click="reset">
-        Сбросить всё
-      </button>
-    </aside>
-
-    <div ref="scrollRoot" class="settings-scroll">
-      <div class="settings-content">
-        <component :is="activeComponent" :key="active" />
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { Notify } from "quasar";
 import { askConfirm } from "@/lib/dialogs";
 import AppearanceSection from "@/components/settings/sections/AppearanceSection.vue";
@@ -101,6 +169,8 @@ import { useUiStore } from "@/stores/ui/index";
 const ui = useUiStore();
 const equalizer = useEqualizerStore();
 const player = usePlayerStore();
+const route = useRoute();
+const router = useRouter();
 
 const scrollRoot = ref<HTMLElement | null>(null);
 const query = ref("");
@@ -239,7 +309,6 @@ const groups = computed(() => {
       .filter((section) => section.group === title)
       .map((section) => ({
         ...section,
-        // подпункты раздела, попавшие в запрос
         hits: matchItems(section.id, needle).slice(0, 2),
       }))
       .filter(
@@ -251,8 +320,6 @@ const groups = computed(() => {
       ),
   })).filter((group) => group.items.length > 0);
 });
-
-const route = useRoute();
 
 function sectionFromQuery(): string | null {
   const raw = route.query.section;
@@ -280,6 +347,24 @@ function select(id: string) {
   scrollRoot.value?.scrollTo({ top: 0, behavior: "auto" });
 }
 
+function close() {
+  const back = window.history.state?.back;
+  if (typeof back === "string" && back && !back.startsWith("/settings")) {
+    router.back();
+  } else {
+    void router.replace("/");
+  }
+}
+
+function onKeydown(event: KeyboardEvent) {
+  if (event.key !== "Escape" || event.defaultPrevented) return;
+  event.preventDefault();
+  close();
+}
+
+onMounted(() => window.addEventListener("keydown", onKeydown));
+onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown));
+
 async function reset() {
   const ok = await askConfirm({
     title: "Сбросить все настройки?",
@@ -297,3 +382,16 @@ async function reset() {
   Notify.create({ message: "Настройки сброшены" });
 }
 </script>
+
+<style scoped>
+.settings-overlay.page-enter-active,
+.settings-overlay.page-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.settings-overlay.page-enter-from,
+.settings-overlay.page-leave-to {
+  opacity: 0;
+  transform: none;
+}
+</style>

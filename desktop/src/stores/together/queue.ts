@@ -6,7 +6,6 @@ export interface QueueSlice {
   index: number;
 }
 
-/** Берём окно вокруг текущего трека, чтобы не гнать по сети тысячи треков. */
 export function trimQueue(queue: Track[], index: number): QueueSlice {
   if (queue.length <= QUEUE_LIMIT) return { queue: [...queue], index };
 
@@ -19,8 +18,6 @@ export function trimQueue(queue: Track[], index: number): QueueSlice {
   };
 }
 
-
-/** Сжимаем окно очереди, пока пакет не влезет в лимит сервера. */
 export function fitBudget(
   base: Record<string, unknown>,
   slice: QueueSlice,
@@ -53,7 +50,6 @@ export function fitBudget(
   return { queue: [], index: 0 };
 }
 
-/** Ищем трек в присланной очереди: сначала по позиции, потом по id. */
 export function findIndex(
   queue: Track[],
   index: number,

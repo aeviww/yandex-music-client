@@ -7,9 +7,12 @@ export type ThemeName =
   | "forest"
   | "plum"
   | "warm"
-  | "light"
-  | "paper"
-  | "sky"
+  | "nord"
+  | "dracula"
+  | "tokyo"
+  | "gruvbox"
+  | "onedark"
+  | "catppuccin"
   | "custom";
 
 export interface Palette {
@@ -77,34 +80,55 @@ export const themePalettes: Record<Exclude<ThemeName, "custom">, Palette> = {
     hover: "#2d2824",
     text: "#f7f2ed",
   },
-  light: {
-    background: "#f6f6f8",
-    surface: "#ffffff",
-    surface2: "#ececf0",
-    hover: "#e0e0e6",
-    text: "#16161a",
+  nord: {
+    background: "#2e3440",
+    surface: "#3b4252",
+    surface2: "#434c5e",
+    hover: "#4c566a",
+    text: "#eceff4",
   },
-  paper: {
-    background: "#faf7f2",
-    surface: "#fffdfa",
-    surface2: "#f0ebe1",
-    hover: "#e5ded1",
-    text: "#1d1a15",
+  dracula: {
+    background: "#282a36",
+    surface: "#343746",
+    surface2: "#44475a",
+    hover: "#4d5068",
+    text: "#f8f8f2",
   },
-  sky: {
-    background: "#f2f6fc",
-    surface: "#ffffff",
-    surface2: "#e7eef8",
-    hover: "#d9e4f3",
-    text: "#121a26",
+  tokyo: {
+    background: "#1a1b26",
+    surface: "#24283b",
+    surface2: "#2f3549",
+    hover: "#3b4261",
+    text: "#c0caf5",
+  },
+  gruvbox: {
+    background: "#1d2021",
+    surface: "#282828",
+    surface2: "#32302f",
+    hover: "#3c3836",
+    text: "#ebdbb2",
+  },
+  onedark: {
+    background: "#21252b",
+    surface: "#282c34",
+    surface2: "#333842",
+    hover: "#3e4451",
+    text: "#abb2bf",
+  },
+  catppuccin: {
+    background: "#1e1e2e",
+    surface: "#252538",
+    surface2: "#313244",
+    hover: "#45475a",
+    text: "#cdd6f4",
   },
 };
 
-export const lightThemes: ReadonlySet<string> = new Set([
-  "light",
-  "paper",
-  "sky",
-]);
+export const retiredThemeMap: Record<string, ThemeName> = {
+  light: "black",
+  paper: "warm",
+  sky: "midnight",
+};
 
 export function isLightColor(color: string): boolean {
   const hex = color.trim().replace("#", "");
@@ -135,9 +159,12 @@ export const themeNames: Array<{
   { value: "forest", label: "Лесная" },
   { value: "plum", label: "Сливовая" },
   { value: "warm", label: "Тёплая" },
-  { value: "light", label: "Светлая" },
-  { value: "paper", label: "Бумага" },
-  { value: "sky", label: "Небо" },
+  { value: "nord", label: "Nord" },
+  { value: "dracula", label: "Dracula" },
+  { value: "tokyo", label: "Tokyo Night" },
+  { value: "gruvbox", label: "Gruvbox" },
+  { value: "onedark", label: "One Dark" },
+  { value: "catppuccin", label: "Catppuccin" },
 ];
 
 export const accentColors = [

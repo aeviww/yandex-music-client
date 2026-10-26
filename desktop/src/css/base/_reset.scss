@@ -84,6 +84,7 @@ button,
 html,
 body {
   overscroll-behavior: none;
+  overflow: hidden;
 }
 
 .q-scrollarea__container,
@@ -94,6 +95,7 @@ body {
 .stats-scroll,
 .wave-scroll,
 .playlist-tracks-scroll,
+.libsearch-list,
 .sidebar .q-scrollarea__container,
 .rightbar .queue-scroll {
   overscroll-behavior: contain;

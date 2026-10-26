@@ -1,68 +1,124 @@
 <template>
-  <section id="settings-about" class="settings-group">
-    <div class="settings-group-head">
-      <h2>О проекте</h2>
-      <p>Автор, версия сборки, лицензия и использованные проекты.</p>
-    </div>
-
-    <div class="about-card">
-      <img class="about-avatar" :src="avatar" alt="elytrya" />
-      <div class="about-ident">
-        <div class="about-name">Mashiro</div>
-        <div class="about-sub">неофициальный десктоп-клиент Яндекс Музыки</div>
-        <div class="about-links">
-          автор:
-          <a :href="AUTHOR_URL" @click.prevent="openLink(AUTHOR_URL)"
-            >elytrya</a
-          >
+  <SettingsSection
+    id="settings-about"
+    title="О проекте"
+    description="Автор, версия сборки, лицензия и использованные проекты."
+    icon="mingcute:information-line"
+  >
+    <div class="space-y-4">
+      <div
+        class="flex flex-col gap-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5 sm:flex-row sm:items-center"
+      >
+        <img
+          class="h-16 w-16 flex-none rounded-xl object-cover"
+          :src="avatar"
+          alt="elytrya"
+        />
+        <div class="min-w-0">
+          <div class="text-[17px] font-bold tracking-[-0.02em]">Mashiro</div>
+          <div class="mt-0.5 text-[12px] text-[color:var(--fg-dim)]">
+            неофициальный десктоп-клиент Яндекс Музыки
+          </div>
+          <div class="mt-2 text-[12px] text-[color:var(--fg-dim)]">
+            автор:
+            <a
+              :href="AUTHOR_URL"
+              :class="LINK"
+              @click.prevent="openLink(AUTHOR_URL)"
+              >elytrya</a
+            >
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="about-rows">
-      <div class="about-row">
-        <span class="about-key">Версия</span>
-        <span class="about-val">b0.3</span>
-      </div>
-      <div class="about-row">
-        <span class="about-key">Лицензия</span>
-        <span class="about-val">
-          <a :href="LICENSE_URL" @click.prevent="openLink(LICENSE_URL)"
+      <SettingsCard>
+        <div class="flex gap-3 px-5 py-4 text-[13px]">
+          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
+            >Версия</span
+          >
+          <span class="flex min-w-0 flex-wrap items-center gap-2">
+            <span class="text-[14px] font-bold tracking-[-0.01em]">r1.0</span>
+            <span
+              class="rounded-full border border-[color-mix(in_srgb,var(--accent)_45%,transparent)] bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] px-2 py-0.5 text-[10.5px] font-bold uppercase leading-tight tracking-[0.04em] text-[var(--accent)]"
+            >
+              pre-release
+            </span>
+            <button
+              type="button"
+              class="rounded-md border border-[var(--line)] bg-transparent px-2 py-0.5 font-mono text-[11px] leading-snug text-[color:var(--fg-dim)] transition hover:border-[color-mix(in_srgb,var(--accent)_50%,var(--line))] hover:bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] hover:text-[var(--fg)]"
+              title="Скопировать хэш коммита"
+              @click="copyCommit"
+            >
+              {{ commit }}
+            </button>
+            <span class="text-[12px] text-[color:var(--fg-faint)]"
+              >сборка от {{ buildDate }}</span
+            >
+          </span>
+        </div>
+
+        <div class="flex gap-3 px-5 py-4 text-[13px]">
+          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
+            >Лицензия</span
+          >
+          <a
+            :href="LICENSE_URL"
+            :class="LINK"
+            class="text-[13px]"
+            @click.prevent="openLink(LICENSE_URL)"
             >GPL-3.0</a
           >
-        </span>
-      </div>
-      <div class="about-row">
-        <span class="about-key">Авторство</span>
-        <span class="about-val">
-          ООО «Яндекс» к проекту отношения не имеет
-        </span>
-      </div>
-    </div>
+        </div>
 
-    <div class="about-block">
-      <h3>Благодарности</h3>
-      <p class="about-note">
-        Проекты, без которых этот клиент не работал бы в текущем виде.
-      </p>
-      <a
-        v-for="item in credits"
-        :key="item.url"
-        class="credit"
-        :href="item.url"
-        :title="item.url"
-        @click.prevent="openLink(item.url)"
-      >
-        <span class="credit-name">{{ item.name }}</span>
-        <span class="credit-desc">{{ item.desc }}</span>
-      </a>
+        <div class="flex gap-3 px-5 py-4 text-[13px]">
+          <span class="w-[110px] flex-none text-[color:var(--fg-dim)]"
+            >Авторство</span
+          >
+          <span class="text-[13px] text-[var(--fg)]">
+            ООО «Яндекс» к проекту отношения не имеет
+          </span>
+        </div>
+      </SettingsCard>
+
+      <SettingsCard>
+        <div class="px-5 pb-2 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Благодарности
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Проекты, без которых этот клиент не работал бы в текущем виде.
+          </p>
+        </div>
+
+        <a
+          v-for="item in credits"
+          :key="item.url"
+          :href="item.url"
+          :title="item.url"
+          class="group flex flex-col gap-0.5 px-5 py-3 transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
+          @click.prevent="openLink(item.url)"
+        >
+          <span :class="LINK" class="text-[13px] font-medium">{{
+            item.name
+          }}</span>
+          <span class="text-[11.5px] text-[color:var(--fg-dim)]">{{
+            item.desc
+          }}</span>
+        </a>
+      </SettingsCard>
     </div>
-  </section>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { Notify } from "quasar";
 import { api } from "@/api/client";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { LINK } from "@/components/settings/classes";
 import { cachedImage, loadCachedImage } from "@/lib/imageCache";
 
 const AUTHOR_URL = "https://github.com/elytrya";
@@ -71,6 +127,27 @@ const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 const FALLBACK = "icons/128x128.png";
 
 const avatar = ref(cachedImage("elytrya") ?? FALLBACK);
+
+const commit = __APP_COMMIT__;
+const buildDate = formatDate(__APP_COMMIT_DATE__);
+
+function formatDate(value: string): string {
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return value;
+  return `${match[3]}.${match[2]}.${match[1]}`;
+}
+
+async function copyCommit() {
+  try {
+    await navigator.clipboard.writeText(commit);
+    Notify.create({ message: "Хэш коммита скопирован" });
+  } catch {
+    Notify.create({
+      type: "negative",
+      message: "Не удалось скопировать хэш",
+    });
+  }
+}
 
 function openLink(url: string) {
   void api.openExternal(url);
@@ -108,98 +185,3 @@ const credits = [
   },
 ];
 </script>
-
-<style scoped>
-.about-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 18px 0 20px;
-}
-.about-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex: 0 0 auto;
-}
-.about-name {
-  font-size: 16px;
-  font-weight: 600;
-}
-.about-sub {
-  font-size: 12px;
-  opacity: 0.6;
-  margin-top: 2px;
-}
-.about-links {
-  margin-top: 6px;
-  font-size: 12px;
-  opacity: 0.8;
-}
-.about-links a,
-.about-val a,
-.credit-name {
-  color: var(--accent, #fa2d48);
-  text-decoration: none;
-  cursor: pointer;
-}
-.about-links a:hover,
-.about-val a:hover,
-.credit:hover .credit-name {
-  text-decoration: underline;
-}
-.about-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.about-row {
-  display: flex;
-  gap: 12px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-.about-key {
-  flex: 0 0 110px;
-  opacity: 0.6;
-}
-.about-val {
-  flex: 1 1 auto;
-}
-.about-block {
-  margin-top: 26px;
-  padding-top: 18px;
-  border-top: 1px solid var(--line, rgba(255, 255, 255, 0.08));
-}
-.about-block h3 {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 600;
-}
-.about-note {
-  margin: 0 0 12px;
-  font-size: 12px;
-  opacity: 0.6;
-}
-.credit {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.06));
-  text-decoration: none;
-}
-.credit:last-child {
-  border-bottom: none;
-}
-.credit-name {
-  font-size: 13px;
-  font-weight: 500;
-}
-.credit-desc {
-  font-size: 12px;
-  color: var(--fg-dim);
-}
-</style>

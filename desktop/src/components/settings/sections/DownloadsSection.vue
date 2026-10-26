@@ -1,86 +1,74 @@
 <template>
-  <section id="settings-downloads" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Загрузки и качество</h2>
-      <p>Скачанные треки играются с диска и не тратят трафик.</p>
-    </div>
+  <SettingsSection
+    id="settings-downloads"
+    title="Загрузки и качество"
+    description="Скачанные треки играются с диска и не тратят трафик."
+    icon="mingcute:download-2-line"
+  >
+    <SettingsCard>
+      <SettingsRow
+        label="Папка для загрузок"
+        :description="`Пусто - папка по умолчанию: ${defaultDir || 'Музыка/Mashiro'}`"
+      >
+        <input
+          :class="INPUT"
+          :value="ui.settings.downloadDir"
+          type="text"
+          spellcheck="false"
+          :placeholder="defaultDir"
+          @change="setDir"
+        />
+      </SettingsRow>
 
-    <label class="setting-row setting-field-row">
-      <span class="setting-copy">
-        <b>Папка для загрузок</b>
-        <span
-          >Пусто - папка по умолчанию:
-          {{ defaultDir || "Музыка/Mashiro" }}</span
-        >
-      </span>
-      <input
-        :value="ui.settings.downloadDir"
-        type="text"
-        spellcheck="false"
-        :placeholder="defaultDir"
-        @change="setDir"
+      <SettingsRow label="Скачано" :description="info">
+        <div class="flex flex-wrap gap-2">
+          <button :class="BUTTON" type="button" @click="refresh">
+            Обновить
+          </button>
+          <button :class="BUTTON" type="button" @click="useDefault">
+            Папка по умолчанию
+          </button>
+        </div>
+      </SettingsRow>
+
+      <SettingToggle
+        :model-value="ui.settings.preferLocalFiles"
+        label="Сначала искать скачанный файл"
+        description="Если трек уже есть на диске - играем его, иначе берём из сети."
+        @update:model-value="ui.set('preferLocalFiles', $event)"
       />
-    </label>
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Скачано</b>
-        <span>{{ info }}</span>
-      </div>
-      <div class="discord-actions">
-        <button class="settings-reset-button" type="button" @click="refresh">
-          Обновить
-        </button>
-        <button class="settings-reset-button" type="button" @click="useDefault">
-          Папка по умолчанию
-        </button>
-      </div>
-    </div>
+      <SettingsRow
+        label="Качество воспроизведения"
+        description="Максимум, что отдаёт Яндекс для твоей подписки."
+      >
+        <SettingsChoice
+          :model-value="player.quality"
+          :options="qualities"
+          @update:model-value="player.setQuality($event)"
+        />
+      </SettingsRow>
 
-    <SettingToggle
-      :model-value="ui.settings.preferLocalFiles"
-      label="Сначала искать скачанный файл"
-      description="Если трек уже есть на диске - играем его, иначе берём из сети."
-      @update:model-value="ui.set('preferLocalFiles', $event)"
-    />
+      <SettingToggle
+        :model-value="ui.settings.crossfadeEnabled"
+        label="Плавные переходы"
+        description="Старый трек угасает, новый плавно разгорается."
+        @update:model-value="ui.set('crossfadeEnabled', $event)"
+      />
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Качество воспроизведения</b>
-        <span>Максимум, что отдаёт Яндекс для твоей подписки.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="option in qualities"
-          :key="option.value"
-          type="button"
-          :class="{ on: player.quality === option.value }"
-          @click="player.setQuality(option.value)"
-        >
-          {{ option.label }}
-        </button>
-      </div>
-    </div>
-
-    <SettingToggle
-      :model-value="ui.settings.crossfadeEnabled"
-      label="Плавные переходы"
-      description="Старый трек угасает, новый плавно разгорается."
-      @update:model-value="ui.set('crossfadeEnabled', $event)"
-    />
-
-    <SettingSlider
-      v-if="ui.settings.crossfadeEnabled"
-      :model-value="ui.settings.crossfadeSeconds"
-      label="Длительность перехода"
-      description="Сколько длится угасание и разгорание."
-      :min="0.5"
-      :max="8"
-      :step="0.5"
-      suffix=" с"
-      @update:model-value="ui.set('crossfadeSeconds', $event)"
-    />
-  </section>
+      <SettingSlider
+        v-if="ui.settings.crossfadeEnabled"
+        :model-value="ui.settings.crossfadeSeconds"
+        label="Длительность перехода"
+        description="Сколько длится угасание и разгорание."
+        :min="0.5"
+        :max="8"
+        :step="0.5"
+        suffix=" с"
+        @update:model-value="ui.set('crossfadeSeconds', $event)"
+      />
+    </SettingsCard>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
@@ -89,6 +77,11 @@ import { api } from "@/api/client";
 import type { Quality } from "@/api/types";
 import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsChoice from "@/components/settings/SettingsChoice.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { BUTTON, INPUT } from "@/components/settings/classes";
 import { usePlayerStore } from "@/stores/player/index";
 import { useUiStore } from "@/stores/ui/index";
 

@@ -5,6 +5,7 @@ import {
   DEFAULT_DISCORD_CLIENT_ID,
   defaultInterfaceSettings,
 } from "./defaults";
+import { retiredThemeMap, themePalettes } from "./themes";
 import type {
   MiniButtonId,
   MiniButtonSlots,
@@ -75,6 +76,10 @@ function load(): InterfaceSettings {
       localStorage.getItem(STORAGE_KEY) || "{}",
     ) as Partial<InterfaceSettings>;
     const merged: InterfaceSettings = { ...defaultInterfaceSettings, ...saved };
+    const themeKey = merged.theme as string;
+    if (themeKey !== "custom" && !(themeKey in themePalettes)) {
+      merged.theme = retiredThemeMap[themeKey] ?? defaultInterfaceSettings.theme;
+    }
     merged.playerButtons = {
       ...defaultPlayerButtonSlots,
       ...(saved.playerButtons || {}),
@@ -103,6 +108,7 @@ export const useUiStore = defineStore("ui", {
   state: () => ({
     settings: load(),
     snapshot: null as InterfaceSettings | null,
+    playerEditReturnPath: null as string | null,
   }),
 
   actions: {

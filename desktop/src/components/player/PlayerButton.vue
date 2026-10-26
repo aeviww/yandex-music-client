@@ -96,7 +96,7 @@
   <div
     v-else-if="id === 'queue'"
     class="icon-btn"
-    :class="{ on: panels.queueOpen }"
+    :class="{ on: panels.queueOpen, off: panels.queueLocked }"
     @click="panels.toggleQueue()"
   >
     <Icon name="mingcute:playlist-2-line" :size="18" />

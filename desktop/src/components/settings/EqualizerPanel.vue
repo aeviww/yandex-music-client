@@ -1,26 +1,63 @@
 <template>
-  <div class="eq-panel">
-    <div class="eq-head">
-      <button class="eq-power" :class="{ on: eq.enabled }" @click="eq.toggle()">
+  <div
+    class="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5"
+  >
+    <div class="flex flex-wrap items-center gap-2.5">
+      <button
+        type="button"
+        class="inline-flex h-8 items-center rounded-full border px-4 text-[11.5px] font-medium transition duration-150"
+        :class="
+          eq.enabled
+            ? 'border-transparent bg-[var(--accent)] text-white'
+            : 'border-[var(--line)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] hover:text-[var(--fg)]'
+        "
+        @click="eq.toggle()"
+      >
         {{ eq.enabled ? "Включён" : "Выключен" }}
       </button>
-      <div class="eq-presets">
+
+      <div class="flex flex-1 flex-wrap gap-1.5">
         <button
           v-for="preset in presets"
           :key="preset.id"
-          :class="{ on: eq.activePreset === preset.id }"
+          type="button"
+          class="h-7 rounded-full border px-3 text-[11px] transition duration-150"
+          :class="
+            eq.activePreset === preset.id
+              ? 'border-[color-mix(in_srgb,var(--accent)_65%,transparent)] bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-[var(--fg)]'
+              : 'border-[var(--line)] bg-transparent text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
+          "
           @click="eq.usePreset(preset.id)"
         >
           {{ preset.label }}
         </button>
       </div>
-      <button class="eq-reset" @click="eq.reset()">Сбросить</button>
+
+      <button
+        type="button"
+        class="border-0 bg-transparent text-[11px] text-[color:var(--fg-faint)] transition hover:text-[var(--fg)]"
+        @click="eq.reset()"
+      >
+        Сбросить
+      </button>
     </div>
 
-    <div class="eq-bands" :class="{ off: !eq.enabled }">
-      <div v-for="(band, index) in eq.bands" :key="band" class="eq-band">
-        <span class="eq-gain">{{ formatGain(eq.gains[index] ?? 0) }}</span>
+    <div
+      class="flex justify-between gap-1 rounded-xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_55%,var(--surface))] px-2.5 pb-1.5 pt-3.5 transition-opacity duration-150"
+      :class="eq.enabled ? '' : 'opacity-40'"
+    >
+      <div
+        v-for="(band, index) in eq.bands"
+        :key="band"
+        class="flex h-[200px] min-w-0 flex-1 flex-col items-center gap-2"
+      >
+        <span
+          class="whitespace-nowrap text-[9.5px] tabular-nums text-[color:var(--fg-dim)]"
+        >
+          {{ formatGain(eq.gains[index] ?? 0) }}
+        </span>
         <q-slider
+          class="flex-1"
           :model-value="eq.gains[index] ?? 0"
           :min="-12"
           :max="12"
@@ -30,11 +67,17 @@
           dense
           @update:model-value="eq.setBand(index, Number($event ?? 0))"
         />
-        <span class="eq-freq">{{ formatFreq(band) }}</span>
+        <span
+          class="whitespace-nowrap text-[9.5px] text-[color:var(--fg-faint)]"
+        >
+          {{ formatFreq(band) }}
+        </span>
       </div>
     </div>
 
-    <div class="eq-preamp">
+    <div
+      class="grid grid-cols-[auto_minmax(0,1fr)_46px] items-center gap-3.5 text-[11.5px] text-[color:var(--fg-dim)]"
+    >
       <span>Предусиление</span>
       <q-slider
         :model-value="eq.preamp"
@@ -44,10 +87,12 @@
         dense
         @update:model-value="eq.setPreamp(Number($event ?? 0))"
       />
-      <code>{{ formatGain(eq.preamp) }}</code>
+      <code class="text-right tabular-nums text-[var(--fg)]">{{
+        formatGain(eq.preamp)
+      }}</code>
     </div>
 
-    <div v-if="eq.unsupported" class="eq-warning">
+    <div v-if="eq.unsupported" class="text-[11px] text-[var(--accent)]">
       Эквалайзер недоступен для текущего потока. Попробуй перезапустить трек.
     </div>
   </div>

@@ -96,7 +96,6 @@ const visible = computed(() => shown.value || hover.value);
 const invite = computed(() => together.invite || `ваш-ip:${together.port}`);
 
 function copyInvite() {
-  // копируем только реальный адрес, а не подсказку в поле
   void copyText(
     together.invite,
     "Адрес скопирован",

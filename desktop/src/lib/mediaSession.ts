@@ -1,24 +1,26 @@
 import type { Track } from "@/api/types";
 
-/**
- * Нативные медиа-контролы ОС через Media Session API вебвью.
- * WebView2 пробрасывает это в SMTC (панель громкости Windows и медиа-клавиши),
- * WKWebView - в Now Playing / Control Center macOS, WebKitGTK - в MPRIS.
- * Здесь только метаданные и обработчики действий; сам звук играет обычный <audio>.
- */
-
 type MediaSessionCapableNavigator = Navigator & {
   mediaSession?: MediaSession;
 };
 
 export interface MediaSessionHandlers {
-  play: () => void;
-  pause: () => void;
-  stop: () => void;
-  next: () => void;
-  prev: () => void;
-  seekTo: (time: number) => void;
-  seekBy: (offset: number) => void;
+  play?: () => void;
+  pause?: () => void;
+  stop?: () => void;
+  next?: () => void;
+  prev?: () => void;
+  seekTo?: (time: number) => void;
+  seekBy?: (offset: number) => void;
+}
+
+export type MediaSessionOwner = "main" | "neuro";
+
+export interface MediaSessionMetadata {
+  title: string;
+  artist?: string;
+  album?: string;
+  artwork?: string | null;
 }
 
 const MANAGED_ACTIONS: MediaSessionAction[] = [
@@ -35,6 +37,15 @@ const MANAGED_ACTIONS: MediaSessionAction[] = [
 const ARTWORK_SIZES = ["100x100", "200x200", "400x400", "600x600"];
 
 let enabled = true;
+let owner: MediaSessionOwner = "main";
+
+export function setMediaSessionOwner(value: MediaSessionOwner): void {
+  owner = value;
+}
+
+export function mediaSessionOwner(): MediaSessionOwner {
+  return owner;
+}
 
 function session(): MediaSession | null {
   if (typeof navigator === "undefined") return null;
@@ -57,7 +68,6 @@ function normalizeCover(url: string | null | undefined): string | null {
   if (!url) return null;
   const out = url.trim();
   if (!out) return null;
-  // Приводим к https без сырого литерала со слешами.
   if (out.startsWith("//")) return "https:" + out;
   if (out.startsWith("http:")) return "https:" + out.slice(5);
   return out;
@@ -66,8 +76,6 @@ function normalizeCover(url: string | null | undefined): string | null {
 function artworkFor(url: string | null): MediaImage[] {
   const base = normalizeCover(url);
   if (!base) return [];
-  // Яндекс отдаёт обложки с хвостом «%%» - вместо него подставляем размер,
-  // иначе системная плашка остаётся без картинки.
   if (base.endsWith("%%")) {
     const stem = base.slice(0, -2);
     return ARTWORK_SIZES.map((size) => ({
@@ -114,25 +122,54 @@ export function bindMediaSession(handlers: MediaSessionHandlers): void {
 
   const bind = (
     action: MediaSessionAction,
-    handler: MediaSessionActionHandler,
+    handler: MediaSessionActionHandler | null,
   ) => {
     try {
       s.setActionHandler(action, handler);
     } catch {}
   };
 
-  bind("play", () => handlers.play());
-  bind("pause", () => handlers.pause());
-  bind("stop", () => handlers.stop());
-  bind("previoustrack", () => handlers.prev());
-  bind("nexttrack", () => handlers.next());
-  bind("seekbackward", (details) =>
-    handlers.seekBy(-(details.seekOffset ?? 10)),
+  bind("play", handlers.play ? () => handlers.play!() : null);
+  bind("pause", handlers.pause ? () => handlers.pause!() : null);
+  bind("stop", handlers.stop ? () => handlers.stop!() : null);
+  bind("previoustrack", handlers.prev ? () => handlers.prev!() : null);
+  bind("nexttrack", handlers.next ? () => handlers.next!() : null);
+  bind(
+    "seekbackward",
+    handlers.seekBy
+      ? (details) => handlers.seekBy!(-(details.seekOffset ?? 10))
+      : null,
   );
-  bind("seekforward", (details) => handlers.seekBy(details.seekOffset ?? 10));
-  bind("seekto", (details) => {
-    if (typeof details.seekTime === "number") handlers.seekTo(details.seekTime);
-  });
+  bind(
+    "seekforward",
+    handlers.seekBy
+      ? (details) => handlers.seekBy!(details.seekOffset ?? 10)
+      : null,
+  );
+  bind(
+    "seekto",
+    handlers.seekTo
+      ? (details) => {
+          if (typeof details.seekTime === "number")
+            handlers.seekTo!(details.seekTime);
+        }
+      : null,
+  );
+}
+
+export function updateMediaMetadataInfo(info: MediaSessionMetadata): void {
+  const s = session();
+  if (!s || !enabled) return;
+  const Ctor = metadataCtor();
+  if (!Ctor) return;
+  try {
+    s.metadata = new Ctor({
+      title: info.title || "",
+      artist: info.artist || "",
+      album: info.album || "",
+      artwork: artworkFor(info.artwork ?? null),
+    });
+  } catch {}
 }
 
 export function updateMediaMetadata(track: Track | null): void {
@@ -144,16 +181,12 @@ export function updateMediaMetadata(track: Track | null): void {
     } catch {}
     return;
   }
-  const Ctor = metadataCtor();
-  if (!Ctor) return;
-  try {
-    s.metadata = new Ctor({
-      title: track.title || "",
-      artist: track.artists?.map((artist) => artist.name).join(", ") || "",
-      album: track.album_title || "",
-      artwork: artworkFor(track.cover_url),
-    });
-  } catch {}
+  updateMediaMetadataInfo({
+    title: track.title || "",
+    artist: track.artists?.map((artist) => artist.name).join(", ") || "",
+    album: track.album_title || "",
+    artwork: track.cover_url,
+  });
 }
 
 export function updatePlaybackState(

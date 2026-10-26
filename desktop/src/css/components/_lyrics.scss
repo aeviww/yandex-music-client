@@ -605,16 +605,12 @@
   text-decoration: underline;
 }
 
-/* Метки строк с разбором Genius. Цвет строки не трогаем:
-   подсветка активной строки работает как обычно, как в Apple Music. */
 .lyric-note {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 0.72em;
   height: 0.72em;
-  /* Отрицательный правый отступ гасит ширину значка,
-     чтобы он не сдвигал и не переламывал строку. */
   margin-left: 0.18em;
   margin-right: -0.9em;
   border-radius: 50%;
@@ -763,7 +759,6 @@
   text-decoration: underline;
 }
 
-/* Полноэкранный ambient-визуализатор под текстом. */
 .lyrics-visualizer {
   position: absolute;
   z-index: 0;
@@ -776,7 +771,6 @@
   mask-image: linear-gradient(to top, #000 0%, transparent 100%);
 }
 
-/* Караоке по словам: отключаем сплошную заливку строки. */
 .lyrics-lines.hl-karaoke .lyric-line.on.kw-on {
   background: none;
   color: #fff;
@@ -798,7 +792,6 @@
   background-clip: text;
 }
 
-/* Перевод строки под оригиналом. */
 .lyric-tr {
   display: block;
   margin-top: 0.18em;
@@ -809,15 +802,8 @@
   font-style: italic;
 }
 
-/* Три точки в инструментальных паузах и во вступлении трека (как в Apple Music):
-   1) короткая задержка и плавное появление,
-   2) точки заливаются по очереди (уровень задаёт --f от 0 до 1),
-   3) вся группа «дышит» до конца паузы,
-   4) в конце точки слегка раздуваются и схлопываются. */
 .lyric-dots {
   --dots-delay: 0.35s;
-  // Масштабируем от стороны выравнивания (см. правила ниже), иначе крайняя
-  // точка вылезает за край scroll-area и обрезается.
   transform-origin: left center;
   display: inline-flex;
   align-items: center;
@@ -832,7 +818,6 @@
   width: 0.34em;
   height: 0.34em;
   border-radius: 50%;
-  // не currentColor: у активной строки в режиме karaoke color: transparent
   background: #fff;
   opacity: calc(0.28 + 0.72 * var(--f));
   transform: scale(calc(0.8 + 0.2 * var(--f)));
@@ -851,7 +836,6 @@
   animation: lyricDotsOut 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* Пауза уже прошла: точки не нужны, но высоту строки держим, чтобы не прыгал скролл. */
 .lyric-line.past .lyric-dots {
   opacity: 0;
 }

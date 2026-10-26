@@ -409,7 +409,6 @@ import { useUiStore } from "@/stores/ui/index";
 const ui = useUiStore();
 const s = computed(() => ui.settings);
 
-// Караоке-режим одним тумблером: сам выставляет нужную подсветку.
 const karaokeOn = computed(
   () => s.value.lyricsHighlight === "karaoke" && s.value.lyricsKaraokeWord,
 );

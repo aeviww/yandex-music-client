@@ -1,6 +1,6 @@
 import { Dark } from "quasar";
 import type { InterfaceSettings, LyricsFont } from "./defaults";
-import { isLightColor, lightThemes, themePalettes } from "./themes";
+import { isLightColor, themePalettes } from "./themes";
 
 const lyricsFonts: Record<LyricsFont, string> = {
   sans: "inherit",
@@ -32,7 +32,7 @@ export function applyInterfaceSettings(settings: InterfaceSettings): void {
   const background = preset?.background ?? settings.customBackground;
   const surface = preset?.surface ?? settings.customSurface;
   const surface2 = preset?.surface2 ?? settings.customSurface2;
-  const light = lightThemes.has(settings.theme) || isLightColor(background);
+  const light = isLightColor(background);
   const hover =
     preset?.hover ??
     (light
@@ -89,7 +89,6 @@ export function applyInterfaceSettings(settings: InterfaceSettings): void {
     "--player-gap": `${settings.playerGap}px`,
     "--player-pad": `${settings.playerSidePadding}px`,
     "--player-progress-width": `${settings.playerProgressWidth}%`,
-    "--player-progress-thickness": `${settings.playerProgressThickness}px`,
     "--player-meta-width": `${settings.playerMetaWidth}px`,
     "--mini-opacity": `${settings.miniOpacity / 100}`,
     "--mini-cover": `${settings.miniCoverSize}px`,

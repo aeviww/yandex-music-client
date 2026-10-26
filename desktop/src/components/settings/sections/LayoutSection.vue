@@ -1,60 +1,55 @@
 <template>
-  <section id="settings-layout" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Интерфейс</h2>
-      <p>Размеры применяются ко всему приложению, включая меню и панели.</p>
-    </div>
+  <SettingsSection
+    id="settings-layout"
+    title="Интерфейс"
+    description="Размеры применяются ко всему приложению, включая меню и панели."
+    icon="mingcute:layout-left-line"
+  >
+    <SettingsCard>
+      <SettingSlider
+        v-for="item in sliders"
+        :key="item.key"
+        :label="item.label"
+        :description="item.description"
+        :model-value="ui.settings[item.key]"
+        :min="item.min"
+        :max="item.max"
+        :step="item.step"
+        :suffix="item.suffix"
+        @update:model-value="ui.set(item.key, $event)"
+      />
 
-    <SettingSlider
-      v-for="item in sliders"
-      :key="item.key"
-      :label="item.label"
-      :description="item.description"
-      :model-value="ui.settings[item.key]"
-      :min="item.min"
-      :max="item.max"
-      :step="item.step"
-      :suffix="item.suffix"
-      @update:model-value="ui.set(item.key, $event)"
-    />
+      <SettingsRow
+        label="Плотность списков"
+        description="Высота строк с треками."
+      >
+        <SettingsChoice
+          :model-value="ui.settings.density"
+          :options="densities"
+          @update:model-value="ui.set('density', $event)"
+        />
+      </SettingsRow>
 
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Плотность списков</b><span>Высота строк с треками.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="option in densities"
-          :key="option.value"
-          :class="{ on: ui.settings.density === option.value }"
-          @click="ui.set('density', option.value)"
-        >
-          {{ option.label }}
-        </button>
-      </div>
-    </div>
-
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Форма обложек</b
-        ><span>Отдельно от общего скругления интерфейса.</span>
-      </div>
-      <div class="settings-choice">
-        <button
-          v-for="option in coverStyles"
-          :key="option.value"
-          :class="{ on: ui.settings.coverStyle === option.value }"
-          @click="ui.set('coverStyle', option.value)"
-        >
-          {{ option.label }}
-        </button>
-      </div>
-    </div>
-  </section>
+      <SettingsRow
+        label="Форма обложек"
+        description="Отдельно от общего скругления интерфейса."
+      >
+        <SettingsChoice
+          :model-value="ui.settings.coverStyle"
+          :options="coverStyles"
+          @update:model-value="ui.set('coverStyle', $event)"
+        />
+      </SettingsRow>
+    </SettingsCard>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
 import SettingSlider from "@/components/settings/SettingSlider.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsChoice from "@/components/settings/SettingsChoice.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
 import type { CoverStyle, Density } from "@/stores/ui/index";
 import { useUiStore } from "@/stores/ui/index";
 

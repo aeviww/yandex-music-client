@@ -1,96 +1,108 @@
 <template>
-  <section id="settings-discord" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Discord</h2>
-      <p>Показывает текущий трек в профиле Discord.</p>
-    </div>
-
-    <SettingToggle
-      :model-value="ui.settings.discordEnabled"
-      label="Показывать статус"
-      description="Discord должен быть запущен на этом компьютере."
-      @update:model-value="setEnabled"
-    />
-
-    <label class="setting-row setting-field-row">
-      <span class="setting-copy">
-        <b>Application ID</b>
-        <span>Оставь пустым, чтобы вернуть приложение по умолчанию.</span>
-      </span>
-      <input
-        :value="ui.settings.discordClientId"
-        type="text"
-        inputmode="numeric"
-        spellcheck="false"
-        :placeholder="DEFAULT_DISCORD_CLIENT_ID"
-        @change="setClientId"
+  <SettingsSection
+    id="settings-discord"
+    title="Discord"
+    description="Показывает текущий трек в профиле Discord."
+    icon="simple-icons:discord"
+  >
+    <SettingsCard>
+      <SettingToggle
+        :model-value="ui.settings.discordEnabled"
+        label="Показывать статус"
+        description="Discord должен быть запущен на этом компьютере."
+        @update:model-value="setEnabled"
       />
-    </label>
 
-    <label
-      v-for="field in textFields"
-      :key="field.key"
-      class="setting-row setting-field-row"
-    >
-      <span class="setting-copy">
-        <b>{{ field.label }}</b>
-        <span>{{ field.hint }}</span>
-      </span>
-      <input
-        :value="ui.settings[field.key]"
-        type="text"
-        :maxlength="field.maxLength"
-        :placeholder="field.placeholder"
-        @change="setText(field.key, $event)"
+      <SettingsRow
+        label="Application ID"
+        description="Оставь пустым, чтобы вернуть приложение по умолчанию."
+      >
+        <input
+          :class="INPUT"
+          :value="ui.settings.discordClientId"
+          type="text"
+          inputmode="numeric"
+          spellcheck="false"
+          :placeholder="DEFAULT_DISCORD_CLIENT_ID"
+          @change="setClientId"
+        />
+      </SettingsRow>
+
+      <SettingsRow
+        v-for="field in textFields"
+        :key="field.key"
+        :label="field.label"
+        :description="field.hint"
+      >
+        <input
+          :class="INPUT"
+          :value="ui.settings[field.key]"
+          type="text"
+          :maxlength="field.maxLength"
+          :placeholder="field.placeholder"
+          @change="setText(field.key, $event)"
+        />
+      </SettingsRow>
+
+      <SettingToggle
+        :model-value="ui.settings.discordShowArtwork"
+        label="Обложка трека"
+        description="Обложка альбома как большая картинка статуса."
+        @update:model-value="setFlag('discordShowArtwork', $event)"
       />
-    </label>
+      <SettingToggle
+        :model-value="ui.settings.discordShowTime"
+        label="Таймер трека"
+        description="Показывать, сколько осталось до конца трека."
+        @update:model-value="setFlag('discordShowTime', $event)"
+      />
 
-    <SettingToggle
-      :model-value="ui.settings.discordShowArtwork"
-      label="Обложка трека"
-      description="Обложка альбома как большая картинка статуса."
-      @update:model-value="setFlag('discordShowArtwork', $event)"
-    />
-    <SettingToggle
-      :model-value="ui.settings.discordShowTime"
-      label="Таймер трека"
-      description="Показывать, сколько осталось до конца трека."
-      @update:model-value="setFlag('discordShowTime', $event)"
-    />
+      <SettingsRow column>
+        <template #copy>
+          <div class="flex items-start gap-3">
+            <span
+              class="mt-1.5 h-2.5 w-2.5 flex-none rounded-full"
+              :class="statusDotClass"
+            />
+            <div class="min-w-0">
+              <div class="text-[13px] font-semibold text-[var(--fg)]">
+                {{ statusTitle }}
+              </div>
+              <p
+                class="mb-0 mt-1 text-[11.5px] leading-[1.45] text-[color:var(--fg-dim)]"
+              >
+                {{ statusText }}
+              </p>
+            </div>
+          </div>
+        </template>
 
-    <div class="setting-row setting-row-column discord-status-row">
-      <div class="discord-status">
-        <span class="discord-dot" :class="statusTone" />
-        <span class="setting-copy">
-          <b>{{ statusTitle }}</b>
-          <span>{{ statusText }}</span>
-        </span>
-      </div>
-      <div class="discord-actions">
-        <button
-          class="settings-reset-button"
-          type="button"
-          :disabled="player.presenceReconnecting"
-          @click="reconnect"
-        >
-          {{
-            player.presenceReconnecting ? "Подключаемся…" : "Переподключиться"
-          }}
-        </button>
-        <button class="settings-reset-button" type="button" @click="test">
-          Отправить статус
-        </button>
-        <button
-          class="settings-reset-button"
-          type="button"
-          :disabled="checking"
-          @click="checkId"
-        >
-          {{ checking ? "Проверяем…" : "Проверить ID" }}
-        </button>
-      </div>
-    </div>
-  </section>
+        <div class="flex flex-wrap gap-2">
+          <button
+            :class="BUTTON"
+            type="button"
+            :disabled="player.presenceReconnecting"
+            @click="reconnect"
+          >
+            {{
+              player.presenceReconnecting ? "Подключаемся…" : "Переподключиться"
+            }}
+          </button>
+          <button :class="BUTTON" type="button" @click="test">
+            Отправить статус
+          </button>
+          <button
+            :class="BUTTON"
+            type="button"
+            :disabled="checking"
+            @click="checkId"
+          >
+            {{ checking ? "Проверяем…" : "Проверить ID" }}
+          </button>
+        </div>
+      </SettingsRow>
+    </SettingsCard>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
@@ -98,6 +110,10 @@ import { computed, onMounted, ref } from "vue";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { BUTTON, INPUT } from "@/components/settings/classes";
 import { usePlayerStore } from "@/stores/player/index";
 import type { InterfaceSettings } from "@/stores/ui/index";
 import { DEFAULT_DISCORD_CLIENT_ID, useUiStore } from "@/stores/ui/index";
@@ -142,6 +158,13 @@ const statusTone = computed(() => {
   if (!ui.settings.discordEnabled) return "off";
   if (idError.value || player.presenceError) return "error";
   return player.presenceConnected ? "ok" : "waiting";
+});
+
+const statusDotClass = computed(() => {
+  if (statusTone.value === "ok") return "bg-[#3ddc84]";
+  if (statusTone.value === "waiting") return "bg-[#f5a623]";
+  if (statusTone.value === "error") return "bg-[#ff5d5d]";
+  return "bg-[color:var(--fg-faint)]";
 });
 
 const statusTitle = computed(() => {

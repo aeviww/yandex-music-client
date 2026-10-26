@@ -10,10 +10,6 @@ export interface PlayerHandlers {
   loading: (busy: boolean) => void;
 }
 
-/**
- * Следит за плеером реактивно, а не опросом раз в секунду: пауза,
- * смена трека и перемотка улетают в комнату сразу.
- */
 export function watchPlayer(
   player: Player,
   handlers: PlayerHandlers,

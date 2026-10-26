@@ -1,94 +1,125 @@
 <template>
-  <section id="settings-playlists" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Плейлисты</h2>
-      <p>Экспорт в текст или CSV и импорт обратно по названиям.</p>
-    </div>
-
-    <div class="setting-row column" style="gap: 10px; align-items: stretch">
-      <div class="row items-center wrap" style="gap: 8px">
-        <select v-model="exportKind" class="field" style="min-width: 220px">
-          <option value="all">Все плейлисты</option>
-          <option value="liked">Мне нравится</option>
-          <option
-            v-for="pl in library.playlists"
-            :key="pl.kind"
-            :value="String(pl.kind)"
+  <SettingsSection
+    id="settings-playlists"
+    title="Плейлисты"
+    description="Экспорт в текст или CSV и импорт обратно по названиям."
+    icon="mingcute:book-2-line"
+  >
+    <div class="space-y-4">
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
           >
-            {{ pl.title }}
-          </option>
-        </select>
+            Экспорт
+          </div>
+        </div>
 
-        <select v-model="format" class="field" style="min-width: 140px">
-          <option value="txt">Текст (.txt)</option>
-          <option value="csv">Таблица (.csv)</option>
-        </select>
+        <SettingsRow column>
+          <div class="flex flex-wrap items-center gap-2">
+            <select v-model="exportKind" :class="SELECT" class="min-w-[220px]">
+              <option value="all">Все плейлисты</option>
+              <option value="liked">Мне нравится</option>
+              <option
+                v-for="pl in library.playlists"
+                :key="pl.kind"
+                :value="String(pl.kind)"
+              >
+                {{ pl.title }}
+              </option>
+            </select>
 
-        <button class="btn-solid" :disabled="busy" @click="runExport">
-          {{ busy ? "Работаю…" : "Экспортировать" }}
-        </button>
-      </div>
+            <select v-model="format" :class="SELECT" class="min-w-[140px]">
+              <option value="txt">Текст (.txt)</option>
+              <option value="csv">Таблица (.csv)</option>
+            </select>
 
-      <div v-if="exportPath" class="faint t-12">Файл: {{ exportPath }}</div>
-    </div>
+            <button :class="BUTTON_ACCENT" :disabled="busy" @click="runExport">
+              {{ busy ? "Работаю…" : "Экспортировать" }}
+            </button>
+          </div>
 
-    <div class="settings-group-head" style="margin-top: 18px">
-      <h2 class="t-14">Импорт</h2>
-      <p>
-        Одна строка - один трек в виде «Исполнитель - Название». Можно вставить
-        текст или выбрать файл.
-      </p>
-    </div>
-
-    <div class="setting-row column" style="gap: 10px; align-items: stretch">
-      <div class="row items-center wrap" style="gap: 8px">
-        <button class="btn" :disabled="busy" @click="pickFile">
-          <Icon name="mingcute:upload-2-line" :size="15" />
-          <span>Выбрать файл…</span>
-        </button>
-        <span v-if="fileName" class="faint t-12 ellipsis">{{ fileName }}</span>
-        <input
-          ref="fileInput"
-          type="file"
-          accept=".txt,.csv,text/plain"
-          hidden
-          @change="onFilePicked"
-        />
-      </div>
-
-      <textarea
-        v-model="importText"
-        class="field import-area"
-        rows="6"
-        placeholder="Макан - Бомба&#10;ЕГОР КРИД - Malo"
-      />
-
-      <div class="row items-center wrap" style="gap: 8px">
-        <select v-model="targetKind" class="field" style="min-width: 220px">
-          <option value="">Куда добавить…</option>
-          <option value="__new__">➕ Новый плейлист…</option>
-          <option
-            v-for="pl in library.playlists"
-            :key="pl.kind"
-            :value="String(pl.kind)"
+          <div
+            v-if="exportPath"
+            class="break-all text-[11.5px] text-[color:var(--fg-faint)]"
           >
-            {{ pl.title }}
-          </option>
-        </select>
-        <button
-          class="btn-solid"
-          :disabled="busy || !targetKind || !importText.trim()"
-          @click="runImport"
-        >
-          {{ busy ? `Импорт ${progress}` : "Импортировать" }}
-        </button>
-      </div>
+            Файл: {{ exportPath }}
+          </div>
+        </SettingsRow>
+      </SettingsCard>
 
-      <div v-if="missed.length" class="faint t-12">
-        Не нашлось ({{ missed.length }}): {{ missed.slice(0, 8).join("; ") }}
-      </div>
+      <SettingsCard>
+        <div class="px-5 pb-3 pt-4">
+          <div
+            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
+          >
+            Импорт
+          </div>
+          <p class="mb-0 mt-1.5 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]">
+            Одна строка - один трек в виде «Исполнитель - Название». Можно
+            вставить текст или выбрать файл.
+          </p>
+        </div>
+
+        <SettingsRow column>
+          <div class="flex flex-wrap items-center gap-2">
+            <button :class="BUTTON" :disabled="busy" @click="pickFile">
+              <Icon name="mingcute:upload-2-line" :size="15" />
+              <span>Выбрать файл…</span>
+            </button>
+            <span
+              v-if="fileName"
+              class="min-w-0 truncate text-[11.5px] text-[color:var(--fg-faint)]"
+              >{{ fileName }}</span
+            >
+            <input
+              ref="fileInput"
+              type="file"
+              accept=".txt,.csv,text/plain"
+              hidden
+              @change="onFilePicked"
+            />
+          </div>
+
+          <textarea
+            v-model="importText"
+            :class="TEXTAREA"
+            rows="6"
+            placeholder="Макан - Бомба&#10;ЕГОР КРИД - Malo"
+          />
+
+          <div class="flex flex-wrap items-center gap-2">
+            <select v-model="targetKind" :class="SELECT" class="min-w-[220px]">
+              <option value="">Куда добавить…</option>
+              <option value="__new__">➕ Новый плейлист…</option>
+              <option
+                v-for="pl in library.playlists"
+                :key="pl.kind"
+                :value="String(pl.kind)"
+              >
+                {{ pl.title }}
+              </option>
+            </select>
+            <button
+              :class="BUTTON_ACCENT"
+              :disabled="busy || !targetKind || !importText.trim()"
+              @click="runImport"
+            >
+              {{ busy ? `Импорт ${progress}` : "Импортировать" }}
+            </button>
+          </div>
+
+          <div
+            v-if="missed.length"
+            class="text-[11.5px] text-[color:var(--fg-faint)]"
+          >
+            Не нашлось ({{ missed.length }}):
+            {{ missed.slice(0, 8).join("; ") }}
+          </div>
+        </SettingsRow>
+      </SettingsCard>
     </div>
-  </section>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
@@ -96,6 +127,15 @@ import { ref } from "vue";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
 import type { Track } from "@/api/types";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import {
+  BUTTON,
+  BUTTON_ACCENT,
+  SELECT,
+  TEXTAREA,
+} from "@/components/settings/classes";
 import { askText } from "@/lib/dialogs";
 import { artistNames, formatDuration } from "@/lib/format";
 import { useLibraryStore } from "@/stores/library";

@@ -146,10 +146,6 @@
   align-items: center;
   gap: 10px;
   flex-wrap: nowrap;
-
-  .q-slider__track-container {
-    --q-slider-track-size: var(--player-progress-thickness, 4px);
-  }
 }
 
 .player-time {

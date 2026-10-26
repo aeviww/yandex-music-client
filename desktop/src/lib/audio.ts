@@ -2,7 +2,6 @@ export const audio = new Audio();
 audio.preload = "auto";
 audio.crossOrigin = "anonymous";
 
-// Скрытый элемент для предзагрузки следующего трека (gapless без пауз).
 let warm: HTMLAudioElement | null = null;
 let warmUrl = "";
 
@@ -245,13 +244,10 @@ export function currentLevel(): number {
   return Math.sqrt(sum / levelBuffer.length);
 }
 
-// Нормализация громкости (ReplayGain-style): живой AGC выравнивает
-// воспринимаемую громкость между треками через мастер-гейн normGain.
 let normTimer: number | null = null;
 let normEma = 0;
 let normSamples = 0;
 
-// Сбрасываем оценку громкости при смене трека (гейн не трогаем — плавно переадаптируется).
 export function resetNormalization(): void {
   normEma = 0;
   normSamples = 0;
@@ -276,13 +272,12 @@ export function setNormalization(enabled: boolean): void {
   if (normTimer !== null) return;
   if (!build()) return;
   ensureAnalyser();
-  const TARGET = 0.16; // целевой RMS (~ -16 dBFS)
-  const FLOOR = 0.02; // ниже — тишина/интро, не трогаем
+  const TARGET = 0.16;
+  const FLOOR = 0.02;
   normTimer = window.setInterval(() => {
     if (!graph || audio.paused) return;
     const vol = audio.volume;
     if (vol < 0.02) return;
-    // Делим на громкость, чтобы AGC не боролся с регулятором громкости.
     const decoupled = currentLevel() / Math.max(0.05, vol);
     if (decoupled < FLOOR) return;
     const alpha = normSamples < 8 ? 0.25 : 0.06;

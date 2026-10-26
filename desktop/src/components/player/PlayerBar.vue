@@ -167,6 +167,7 @@
           :min="0"
           :max="Math.max(player.duration, 1)"
           :step="1"
+          :track-size="`${ui.settings.playerProgressThickness}px`"
           dense
           color="primary"
           @update:model-value="onSeekInput"
@@ -315,7 +316,6 @@ watch(
     if (action === "none") return;
     if (handledDislike.has(id)) return;
     handledDislike.add(id);
-    // Дизлайк сам переключает трек дальше, поэтому второго скипа не нужно.
     if (action === "dislike") void player.dislike();
     else void player.next(true);
   },

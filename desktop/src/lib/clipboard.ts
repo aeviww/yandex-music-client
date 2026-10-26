@@ -1,10 +1,5 @@
 import { Notify } from "quasar";
 
-/**
- * Копирует текст и сама сообщает о результате.
- *
- * @param text что кладём в буфер; пустая строка — сразу отказ
- */
 export async function copyText(
   text: string,
   done = "Скопировано",

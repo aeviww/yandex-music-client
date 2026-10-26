@@ -403,7 +403,6 @@ function onListDrop(event: DragEvent) {
   top: 0;
   left: 0;
   border-radius: 14px;
-  box-shadow: 0 12px 34px rgb(0 0 0 / 32%);
 }
 
 .mpe-note {
@@ -557,7 +556,6 @@ function onListDrop(event: DragEvent) {
   flex: 0 0 2px;
   border-radius: 2px;
   background: var(--accent);
-  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 55%, transparent);
   pointer-events: none;
 }
 </style>

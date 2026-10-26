@@ -27,7 +27,6 @@ export function savePlace(key: string, place: Place | null): void {
   } catch {}
 }
 
-/** Не даём утащить окошко за край окна. */
 export function clampPlace(place: Place, el: HTMLElement | null): Place {
   const box = el?.getBoundingClientRect();
   const width = box?.width ?? 280;

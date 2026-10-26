@@ -1,112 +1,136 @@
 <template>
-  <section id="settings-hotkeys" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Горячие клавиши</h2>
-      <p>Сочетания внутри приложения и глобальные, работающие в фоне.</p>
-    </div>
+  <SettingsSection
+    id="settings-hotkeys"
+    title="Горячие клавиши"
+    description="Сочетания внутри приложения и глобальные, работающие в фоне."
+    icon="mingcute:key-2-line"
+  >
+    <div class="space-y-4">
+      <SettingsCard>
+        <SettingToggle
+          label="Горячие клавиши в приложении"
+          description="Управление плеером с клавиатуры, пока окно активно"
+          :model-value="hotkeys.enabled"
+          @update:model-value="hotkeys.setEnabled($event)"
+        />
 
-    <SettingToggle
-      label="Горячие клавиши в приложении"
-      description="Управление плеером с клавиатуры, пока окно активно"
-      :model-value="hotkeys.enabled"
-      @update:model-value="hotkeys.setEnabled($event)"
-    />
+        <SettingToggle
+          label="Глобальные горячие клавиши"
+          description="Работают в любых приложениях, даже когда Mashiro в трее"
+          :model-value="hotkeys.globalEnabled"
+          @update:model-value="onGlobalEnabled"
+        />
 
-    <SettingToggle
-      label="Глобальные горячие клавиши"
-      description="Работают в любых приложениях, даже когда Mashiro в трее"
-      :model-value="hotkeys.globalEnabled"
-      @update:model-value="onGlobalEnabled"
-    />
+        <div
+          v-if="hotkeys.failed.length"
+          class="flex items-start gap-2 px-5 py-3 text-[11.5px] leading-relaxed text-[#f5c26b]"
+        >
+          <Icon name="mingcute:warning-line" :size="15" class="mt-0.5 flex-none" />
+          <span>
+            Система не отдала эти сочетания (их занял кто-то другой):
+            {{ hotkeys.failed.join(", ") }}
+          </span>
+        </div>
+      </SettingsCard>
 
-    <div v-if="hotkeys.failed.length" class="hk-warn">
-      Система не отдала эти сочетания (их занял кто-то другой):
-      {{ hotkeys.failed.join(", ") }}
-    </div>
-
-    <div class="hk-table">
-      <div class="hk-table-head">
-        <span class="col">Действие</span>
-        <span class="hk-table-col">В приложении</span>
-        <span class="hk-table-col">Глобально</span>
-      </div>
-
-      <div v-for="row in hotkeys.rows" :key="row.action" class="hk-table-row">
-        <span class="col hk-table-label">{{ row.label }}</span>
-
-        <div class="hk-table-col hk-cell">
-          <button
-            v-for="(key, i) in row.keys"
-            :key="`${key}-${i}`"
-            class="hk-key editable"
-            type="button"
-            @click="startCapture(row.action, i, false)"
-            @contextmenu.prevent="hotkeys.clearLocal(row.action, i)"
-          >
-            {{ capturingLabel(row.action, i, false) }}
-          </button>
-          <button
-            class="hk-key add"
-            type="button"
-            @click="startCapture(row.action, row.keys.length, false)"
-          >
-            {{ capturingLabel(row.action, row.keys.length, false) || "+" }}
-          </button>
+      <SettingsCard>
+        <div
+          class="grid grid-cols-[minmax(0,1fr)_170px_190px] items-center gap-3 bg-[color-mix(in_srgb,var(--fg)_4%,transparent)] px-4 py-2.5 text-[10.5px] font-semibold uppercase tracking-[0.06em] text-[color:var(--fg-faint)]"
+        >
+          <span>Действие</span>
+          <span>В приложении</span>
+          <span>Глобально</span>
         </div>
 
-        <div class="hk-table-col hk-cell">
-          <button
-            class="hk-key editable"
-            type="button"
-            @click="startCapture(row.action, 0, true)"
-            @contextmenu.prevent="clearGlobal(row.action)"
-          >
-            {{ globalLabel(row) }}
-          </button>
-          <div class="icon-btn xs round">
-            <Icon name="mingcute:more-2-fill" :size="14" />
-            <q-menu class="menu">
-              <div class="menu-body">
-                <div
-                  v-for="preset in MEDIA_PRESETS"
-                  :key="preset.value"
-                  class="menu-item"
-                  v-close-popup
-                  @click="hotkeys.setGlobal(row.action, preset.value)"
-                >
-                  <span>{{ preset.label }}</span>
+        <div
+          v-for="row in hotkeys.rows"
+          :key="row.action"
+          class="grid grid-cols-[minmax(0,1fr)_170px_190px] items-center gap-3 px-4 py-2.5 transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
+        >
+          <span class="min-w-0 truncate text-[13px] text-[var(--fg)]">{{
+            row.label
+          }}</span>
+
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button
+              v-for="(key, i) in row.keys"
+              :key="`${key}-${i}`"
+              type="button"
+              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
+              @click="startCapture(row.action, i, false)"
+              @contextmenu.prevent="hotkeys.clearLocal(row.action, i)"
+            >
+              {{ capturingLabel(row.action, i, false) }}
+            </button>
+            <button
+              type="button"
+              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[color:var(--fg-faint)] transition hover:border-[var(--accent)]"
+              @click="startCapture(row.action, row.keys.length, false)"
+            >
+              {{ capturingLabel(row.action, row.keys.length, false) || "+" }}
+            </button>
+          </div>
+
+          <div class="flex items-center gap-1.5">
+            <button
+              type="button"
+              class="inline-flex h-[30px] min-w-[34px] flex-1 items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
+              @click="startCapture(row.action, 0, true)"
+              @contextmenu.prevent="clearGlobal(row.action)"
+            >
+              {{ globalLabel(row) }}
+            </button>
+            <div
+              class="grid h-6 w-6 flex-none place-items-center rounded-md text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+            >
+              <Icon name="mingcute:more-2-fill" :size="14" />
+              <q-menu class="menu">
+                <div class="menu-body">
+                  <div
+                    v-for="preset in MEDIA_PRESETS"
+                    :key="preset.value"
+                    class="menu-item"
+                    v-close-popup
+                    @click="hotkeys.setGlobal(row.action, preset.value)"
+                  >
+                    <span>{{ preset.label }}</span>
+                  </div>
+                  <div
+                    class="menu-item danger"
+                    v-close-popup
+                    @click="clearGlobal(row.action)"
+                  >
+                    <span>Убрать</span>
+                  </div>
                 </div>
-                <div
-                  class="menu-item danger"
-                  v-close-popup
-                  @click="clearGlobal(row.action)"
-                >
-                  <span>Убрать</span>
-                </div>
-              </div>
-            </q-menu>
+              </q-menu>
+            </div>
           </div>
         </div>
+      </SettingsCard>
+
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 text-[11.5px] leading-relaxed text-[color:var(--fg-faint)]"
+      >
+        <p class="mb-0 max-w-[620px]">
+          Нажмите на клавишу, чтобы задать новую. Правый клик - убрать. Для
+          глобальных сочетаний используйте модификатор: Ctrl, Alt или Shift.
+        </p>
+        <button :class="BUTTON" type="button" @click="hotkeys.reset()">
+          Вернуть стандартные
+        </button>
       </div>
     </div>
-
-    <div class="hk-hint faint t-12">
-      Нажмите на клавишу, чтобы задать новую. Правый клик - убрать. Для
-      глобальных сочетаний используйте модификатор: Ctrl, Alt или Shift.
-    </div>
-
-    <div class="row q-mt-md">
-      <button class="btn" type="button" @click="hotkeys.reset()">
-        Вернуть стандартные
-      </button>
-    </div>
-  </section>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
 import { Notify } from "quasar";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { BUTTON } from "@/components/settings/classes";
 import type { HotkeyAction } from "@/lib/hotkeys/defaults";
 import {
   displayAcceleratorParts,

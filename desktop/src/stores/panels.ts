@@ -36,6 +36,7 @@ function initialMini(): boolean {
 export const usePanelsStore = defineStore("panels", {
   state: () => ({
     queueOpen: false,
+    queueLocked: false,
     hidden: false,
     mini: initialMini(),
     miniBusy: false,
@@ -43,10 +44,12 @@ export const usePanelsStore = defineStore("panels", {
 
   actions: {
     toggleQueue() {
+      if (this.queueLocked) return;
       this.queueOpen = !this.queueOpen;
     },
 
     openQueue() {
+      if (this.queueLocked) return;
       this.queueOpen = true;
     },
 

@@ -24,6 +24,7 @@ import {
 import {
   bindMediaSession,
   mediaSessionAvailable,
+  mediaSessionOwner,
   setMediaSessionEnabled,
   updateMediaMetadata,
   updatePlaybackState,
@@ -73,6 +74,13 @@ interface PrefetchEntry {
 }
 
 const prefetched = new Map<string, PrefetchEntry>();
+
+async function stopNeuroPlayback(): Promise<void> {
+  try {
+    const { neuro, stopNeuro } = await import("@/lib/neuro");
+    if (neuro.item) stopNeuro();
+  } catch {}
+}
 
 function dedupeTracks(tracks: Track[], known?: Set<string>): Track[] {
   const seen = known ?? new Set<string>();
@@ -267,7 +275,10 @@ export const usePlayerStore = defineStore("player", {
         this.duration = audio.duration || 0;
         lastProgress = this.progress;
 
-        if (Date.now() - lastMediaSync > 1000) {
+        if (
+          Date.now() - lastMediaSync > 1000 &&
+          mediaSessionOwner() === "main"
+        ) {
           lastMediaSync = Date.now();
           updatePositionState(this.duration, this.progress, this.playbackRate);
         }
@@ -278,8 +289,6 @@ export const usePlayerStore = defineStore("player", {
         }
 
         const settings = useUiStore().settings;
-        // Хвостовую тишину режем и вручную, и автоматически в gapless:
-        // иначе «встык» ломается о тихий хвост дорожки.
         const gapless = settings.gaplessEnabled;
         if (
           (settings.trimSilence || gapless) &&
@@ -319,14 +328,18 @@ export const usePlayerStore = defineStore("player", {
       audio.onplay = () => {
         this.isPlaying = true;
         resumeAudioContext();
-        updatePlaybackState(true, Boolean(this.current));
-        updatePositionState(this.duration, this.progress, this.playbackRate);
+        if (mediaSessionOwner() === "main") {
+          updatePlaybackState(true, Boolean(this.current));
+          updatePositionState(this.duration, this.progress, this.playbackRate);
+        }
         void this.syncPresence();
         void this.syncTray();
       };
       audio.onpause = () => {
         this.isPlaying = false;
-        updatePlaybackState(false, Boolean(this.current));
+        if (mediaSessionOwner() === "main") {
+          updatePlaybackState(false, Boolean(this.current));
+        }
         void this.syncPresence();
         this.persistSession();
         void this.syncTray();
@@ -381,39 +394,38 @@ export const usePlayerStore = defineStore("player", {
 
     setupMediaSession() {
       if (!mediaSessionAvailable()) return;
-      // Системные медиа-контролы всегда включены: отдельной настройки больше нет.
-      const sync = () => {
-        setMediaSessionEnabled(true);
-        bindMediaSession({
-          play: () => {
-            if (this.pendingResume) {
-              void this.loadCurrent({ startAt: this.progress, autoplay: true });
-            } else {
-              void safePlay();
-            }
-          },
-          pause: () => audio.pause(),
-          stop: () => audio.pause(),
-          next: () => void this.next(),
-          prev: () => void this.prev(),
-          seekTo: (time) => this.seek(time),
-          seekBy: (offset) =>
-            this.seek((audio.currentTime || this.progress) + offset),
-        });
-        updateMediaMetadata(this.current);
-        updatePlaybackState(this.isPlaying, Boolean(this.current));
-        updatePositionState(this.duration, this.progress, this.playbackRate);
-      };
-      sync();
+      this.refreshMediaSession();
       if (!mediaBound) {
         mediaBound = true;
-        // Метаданные и обложку переотправляем при каждой смене трека
-        // и паузе, иначе системная плашка зависает на старом треке.
         watch(
           () => [this.current?.id ?? null, this.isPlaying] as const,
-          () => sync(),
+          () => this.refreshMediaSession(),
         );
       }
+    },
+
+    refreshMediaSession() {
+      if (!mediaSessionAvailable() || mediaSessionOwner() === "neuro") return;
+      setMediaSessionEnabled(true);
+      bindMediaSession({
+        play: () => {
+          if (this.pendingResume) {
+            void this.loadCurrent({ startAt: this.progress, autoplay: true });
+          } else {
+            void stopNeuroPlayback().then(() => safePlay());
+          }
+        },
+        pause: () => audio.pause(),
+        stop: () => audio.pause(),
+        next: () => void this.next(),
+        prev: () => void this.prev(),
+        seekTo: (time) => this.seek(time),
+        seekBy: (offset) =>
+          this.seek((audio.currentTime || this.progress) + offset),
+      });
+      updateMediaMetadata(this.current);
+      updatePlaybackState(this.isPlaying, Boolean(this.current));
+      updatePositionState(this.duration, this.progress, this.playbackRate);
     },
 
     async syncPresence(force = false) {
@@ -689,6 +701,7 @@ export const usePlayerStore = defineStore("player", {
     },
 
     async performLoad(opts?: { startAt?: number; autoplay?: boolean }) {
+      await stopNeuroPlayback();
       const track = this.queue[this.index];
       if (!track) return;
       if (
@@ -868,7 +881,7 @@ export const usePlayerStore = defineStore("player", {
         if (name === "NotAllowedError") {
           this.isPlaying = false;
           resumeOnGesture(() => {
-            void this.play();
+            void stopNeuroPlayback().then(() => safePlay());
           });
           return;
         }
@@ -972,7 +985,6 @@ export const usePlayerStore = defineStore("player", {
         }),
       );
 
-      // Gapless: греем медиа-элемент следующим треком, чтобы переход был встык.
       if (ui.gaplessEnabled) {
         const upcoming = this.queue[this.index + 1];
         const entry = upcoming ? prefetched.get(upcoming.id) : undefined;
@@ -1242,14 +1254,18 @@ export const usePlayerStore = defineStore("player", {
       this.shuffle = true;
     },
 
-    toggle() {
+    async toggle() {
       if (!this.current) return;
       if (this.pendingResume) {
         void this.loadCurrent({ startAt: this.progress, autoplay: true });
         return;
       }
-      if (audio.paused) void safePlay();
-      else audio.pause();
+      if (audio.paused) {
+        await stopNeuroPlayback();
+        await safePlay();
+      } else {
+        audio.pause();
+      }
     },
 
     async next(auto = false) {

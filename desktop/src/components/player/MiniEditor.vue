@@ -174,7 +174,6 @@ function onDrop(index: number) {
   if (id) ui.moveMiniButton(id, index);
 }
 
-/* размер окна меняется сразу, чтобы результат был виден */
 function applySize() {
   void setWindowSize(ui.settings.miniWidth, ui.settings.miniHeight);
 }

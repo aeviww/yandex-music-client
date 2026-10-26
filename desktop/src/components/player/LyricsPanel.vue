@@ -539,15 +539,12 @@ onBeforeUnmount(() => {
 
 const lines = computed(() => player.lyrics?.lines || []);
 const synced = computed(() => Boolean(player.lyrics?.synced));
-// const coverUrl = computed(
-//   () => player.current?.cover_url_large || player.current?.cover_url || "",
-// );
 
 const coverUrl = computed(() => {
   const track = player.current;
   const url = track?.cover_url_large || track?.cover_url || "";
   return url.replace(/\/\d+x\d+(?=$|\?)/, "/1000x1000");
-}); // костыль, но работает
+});
 const artistLabel = computed(() =>
   player.current ? artistNames(player.current.artists) : "",
 );
@@ -607,7 +604,6 @@ function annotationFor(text: string): GeniusQuote | null {
     if (!frag) continue;
     if (frag.includes(line) || line.includes(frag)) return quote;
 
-    // Фрагмент с Genius часто из нескольких строк, а в LRCLIB они разделены.
     const parts = (quote.fragment || "")
       .split(/\r?\n/)
       .map(normText)
@@ -780,8 +776,6 @@ function lineTranslation(i: number): string {
   return trimmed;
 }
 
-// Перевод должен применяться сразу после переключения настройки,
-// а не только при запуске следующего трека.
 watch(
   () => [
     ui.settings.lyricsTranslate,
@@ -804,13 +798,9 @@ const wordKaraoke = computed(
   () => karaoke.value && ui.settings.lyricsKaraokeWord,
 );
 
-// Три точки в инструментальных паузах и во вступлении, как в Apple Music:
-// показываем только в паузах от DOTS_MIN_GAP, сначала небольшая задержка
-// (точки плавно появляются), затем заливка по очереди, а в конце точки
-// «схлопываются» прямо перед следующей строкой.
-const DOTS_MIN_GAP = 4000; // минимальная длина паузы, мс
-const DOTS_LEAD = 700; // задержка до начала заливки, мс
-const DOTS_TAIL = 450; // время на анимацию ухода в конце паузы, мс
+const DOTS_MIN_GAP = 4000;
+const DOTS_LEAD = 700;
+const DOTS_TAIL = 450;
 
 const dotsFill = ref(0);
 const dotsOut = computed(() => dotsFill.value >= 100);
@@ -821,7 +811,6 @@ function gapProgress(elapsed: number, total: number): number {
   return Math.min(100, Math.max(0, ((elapsed - DOTS_LEAD) / usable) * 100));
 }
 
-// Уровень заливки точки n (0..2) в диапазоне 0..1.
 function dotLevel(n: number): number {
   return Math.min(1, Math.max(0, (dotsFill.value / 100) * 3 - n));
 }
@@ -845,14 +834,12 @@ const introDots = computed(
     (lines.value[0]?.time_ms ?? 0) >= DOTS_MIN_GAP,
 );
 
-// Слова активной строки вместе с хвостовыми пробелами.
 const activeWords = computed<string[]>(() => {
   if (!wordKaraoke.value) return [];
   const line = lines.value[player.activeLine];
   return (line?.text || "").match(/\S+\s*/gu) ?? [];
 });
 
-// Границы заливки каждого слова (доля 0..1), вес — длина слова.
 const wordBounds = computed<Array<[number, number]>>(() => {
   const words = activeWords.value;
   const total = words.reduce((sum, w) => sum + w.length, 0) || 1;
@@ -895,7 +882,6 @@ function tick() {
     dotsFill.value = line.text ? 0 : gapProgress(now - start, end - start);
   } else {
     fill.value = 0;
-    // Вступление до первой строки.
     const first = list[0]?.time_ms ?? 0;
     dotsFill.value = first > 0 ? gapProgress(now, first) : 0;
   }
@@ -921,8 +907,6 @@ watch(
 
 onBeforeUnmount(stopTick);
 
-// В полноэкранном режиме шапка работает как заголовок окна:
-// за неё можно тащить всё окно.
 function onHeadDrag(event: MouseEvent) {
   if (!player.lyricsFullscreen) return;
   void startWindowDrag(event);

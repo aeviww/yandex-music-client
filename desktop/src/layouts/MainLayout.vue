@@ -15,7 +15,7 @@
       }"
     >
       <div
-        class="titlebar relative flex h-[52px] select-none items-center gap-2 pl-[14px]"
+        class="titlebar relative flex h-[46px] select-none items-center pl-[14px]"
         @mousedown="startWindowDrag"
         @dblclick="toggleWindowMaximize"
       >
@@ -58,12 +58,13 @@
 
         <div
           class="icon-btn sm round flex h-[38px] w-[38px] items-center justify-center !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_12%,transparent)]"
-          :class="
+          :class="[
             rightPanel
               ? '!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] !border-[color-mix(in_srgb,var(--fg)_12%,transparent)]'
-              : ''
-          "
-          @click="rightPanel = !rightPanel"
+              : '',
+            panels.queueLocked ? '!opacity-40' : '',
+          ]"
+          @click="panels.toggleQueue()"
         >
           <Icon name="mingcute:playlist-2-line" :size="17" />
           <q-tooltip>Очередь</q-tooltip>
@@ -83,7 +84,9 @@
             />
             <span v-else class="avatar-monogram">{{ accountInitial }}</span>
           </div>
-          <span class="account-name ellipsis !text-[13px] font-semibold">{{ accountName }}</span>
+          <span class="account-name ellipsis !text-[13px] font-semibold">{{
+            accountName
+          }}</span>
           <Icon name="mingcute:down-line" :size="13" class="account-chevron" />
           <q-menu class="menu" anchor="bottom right" self="top right">
             <div class="menu-body profile-menu">
@@ -164,7 +167,9 @@
           </div>
         </div>
 
-        <div class="mx-3 mt-1.5 mb-1 h-px bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]" />
+        <div
+          class="mx-3 mt-1.5 mb-1 h-px bg-[color-mix(in_srgb,var(--fg)_6%,transparent)]"
+        />
 
         <div
           class="flex items-center gap-2 px-5 pt-3 pb-2 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
@@ -197,7 +202,12 @@
                 v-if="pl.cover_url"
                 :src="pl.cover_url"
               />
-              <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
+              <Icon
+                v-else
+                name="mingcute:playlist-2-line"
+                :size="14"
+                class="faint"
+              />
             </div>
             <div class="col" style="min-width: 0">
               <div class="ellipsis t-13">{{ pl.title }}</div>
@@ -218,7 +228,11 @@
                   @click="library.togglePin(pl.kind)"
                 >
                   <Icon
-                    :name="library.isPinned(pl.kind) ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'"
+                    :name="
+                      library.isPinned(pl.kind)
+                        ? 'gravity-ui:pin-slash'
+                        : 'mingcute:pin-2-line'
+                    "
                     :size="17"
                   />
                   <span>{{
@@ -240,7 +254,11 @@
                   @click="library.toggleHidden(pl.kind)"
                 >
                   <Icon
-                    :name="library.isHidden(pl.kind) ? 'mingcute:eye-2-line' : 'mingcute:eye-close-line'"
+                    :name="
+                      library.isHidden(pl.kind)
+                        ? 'mingcute:eye-2-line'
+                        : 'mingcute:eye-close-line'
+                    "
                     :size="17"
                   />
                   <span>{{
@@ -294,7 +312,12 @@
                   v-if="pl.cover_url"
                   :src="pl.cover_url"
                 />
-                <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
+                <Icon
+                  v-else
+                  name="mingcute:playlist-2-line"
+                  :size="14"
+                  class="faint"
+                />
               </div>
               <div class="col" style="min-width: 0">
                 <div class="ellipsis t-13">{{ pl.title }}</div>
@@ -336,7 +359,10 @@
           Сейчас играет
         </div>
 
-        <div v-if="player.current" class="now-block min-w-0 flex-none px-4 pt-0.5 pb-2.5">
+        <div
+          v-if="player.current"
+          class="now-block min-w-0 flex-none px-4 pt-0.5 pb-2.5"
+        >
           <div
             class="cover"
             style="width: 100%; height: 268px; border-radius: 12px"
@@ -356,7 +382,12 @@
             <ArtistsLine :artists="player.current.artists" :limit="2" />
           </div>
         </div>
-        <div v-else class="flex-none px-4 pt-0.5 pb-2.5 text-[color:var(--fg-faint)] text-[12px]">Очередь пуста</div>
+        <div
+          v-else
+          class="flex-none px-4 pt-0.5 pb-2.5 text-[color:var(--fg-faint)] text-[12px]"
+        >
+          Очередь пуста
+        </div>
 
         <div
           class="queue-head flex-none flex items-center gap-2 px-4 pt-3 pb-1.5 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
@@ -406,7 +437,12 @@
                 v-if="item.track.cover_url"
                 :src="item.track.cover_url"
               />
-              <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
+              <Icon
+                v-else
+                name="mingcute:music-line"
+                :size="14"
+                class="faint"
+              />
             </div>
             <div class="flex-1 min-w-0">
               <div
@@ -425,7 +461,9 @@
             </div>
             <Icon
               v-if="item.index === player.index"
-              :name="player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'"
+              :name="
+                player.isPlaying ? 'mingcute:pause-fill' : 'mingcute:play-fill'
+              "
               :size="13"
               class="text-[color:var(--accent)] flex-none"
             />
@@ -571,10 +609,53 @@ const rightPanel = computed({
   },
 });
 
+const queueRestore = ref(false);
+let queueAuto = false;
+
+watch(
+  () => route.path,
+  (to, from) => {
+    const onSettings = to.startsWith("/settings");
+    const wasSettings = (from ?? "").startsWith("/settings");
+    if (onSettings === wasSettings) return;
+    queueAuto = true;
+    panels.queueLocked = onSettings;
+    if (onSettings) {
+      queueRestore.value = panels.queueOpen;
+      panels.queueOpen = false;
+    } else {
+      panels.queueOpen = queueRestore.value;
+    }
+    void nextTick(() => {
+      queueAuto = false;
+    });
+  },
+  { immediate: true },
+);
+
+watch(
+  () => panels.queueOpen,
+  (value) => {
+    if (queueAuto) return;
+    if (route.path.startsWith("/settings")) queueRestore.value = value;
+  },
+);
+
+watch(
+  () => ui.settings.playerEditMode,
+  (editing) => {
+    if (editing) return;
+    const path = ui.playerEditReturnPath;
+    if (!path) return;
+    ui.playerEditReturnPath = null;
+    if (!route.path.startsWith("/settings")) void router.push(path);
+  },
+);
+
 const lyricsVisible = computed(() => player.showLyrics && !!player.current);
 
 const lyricsBox = computed(() => ({
-  top: "52px",
+  top: "46px",
   bottom: "var(--player-height, 78px)",
   left: `${ui.settings.sidebarWidth}px`,
   right: rightPanel.value ? "300px" : "0px",

@@ -1,157 +1,132 @@
 <template>
-  <section id="settings-player" class="settings-group">
-    <div class="settings-group-head">
-      <h2>Плеер</h2>
-      <p>
-        Вид плеера настраивается прямо на самом плеере — без списков и табличек.
-      </p>
-    </div>
+  <SettingsSection
+    id="settings-player"
+    title="Плеер"
+    description="Вид плеера настраивается прямо на самом плеере — без списков и табличек."
+    icon="mingcute:play-fill"
+  >
+    <SettingsCard>
+      <SettingsRow
+        column
+        label="Режим редактирования"
+        description="Включи его — и меняй плеер живьём: всё обновляется сразу на экране."
+      >
+        <ul class="m-0 flex list-none flex-col gap-2 p-0">
+          <li
+            v-for="step in steps"
+            :key="step.icon"
+            class="flex items-center gap-2.5 text-[12.5px] leading-snug text-[color:var(--fg-dim)]"
+          >
+            <Icon
+              :name="step.icon"
+              :size="14"
+              class="flex-none text-[var(--accent)]"
+            />
+            <span>{{ step.text }}</span>
+          </li>
+        </ul>
 
-    <div class="setting-row setting-row-column editor-cta">
-      <div class="setting-copy">
-        <b>Режим редактирования</b>
-        <span>
-          Включи его — и меняй плеер живьём: всё обновляется сразу на экране.
-        </span>
-      </div>
+        <div class="mt-2 flex flex-wrap items-center gap-3">
+          <button
+            :class="BUTTON_ACCENT"
+            type="button"
+            @click="editOnPlayer"
+          >
+            <Icon name="mingcute:layout-left-line" :size="15" />
+            Редактировать на плеере
+          </button>
+          <span class="text-[12px] text-[color:var(--fg-faint)]">
+            Или просто кликни правой кнопкой мыши по пустому месту плеера.
+          </span>
+        </div>
+      </SettingsRow>
 
-      <ul class="editor-steps">
-        <li>
-          <Icon name="mingcute:dots-line" :size="14" />
-          Перетаскивай любую кнопку между левой, центральной и правой частями
-        </li>
-        <li>
-          <Icon name="mingcute:close-line" :size="14" />
-          Лишнее тяни в корзину «Скрытые кнопки», оттуда же возвращай обратно
-        </li>
-        <li>
-          <Icon name="mingcute:fullscreen-line" :size="14" />
-          Верхний край тянет высоту, боковой — ширину блока с треком
-        </li>
-        <li>
-          <Icon name="mingcute:settings-5-line" :size="14" />
-          Ползунки рядом — обложка, иконки, отступы, полоса прогресса
-        </li>
-        <li>
-          <Icon name="mingcute:check-line" :size="14" />
-          «Готово» сохраняет, «Отмена» возвращает всё как было
-        </li>
-      </ul>
+      <SettingToggle
+        label="Визуализатор"
+        description="Живой спектр звука фоном в нижней панели. Требует воспроизведения."
+        :model-value="ui.settings.playerVisualizer"
+        @update:model-value="ui.set('playerVisualizer', $event)"
+      />
 
-      <div class="editor-actions">
-        <button
-          class="btn accent"
-          type="button"
-          @click="ui.togglePlayerEdit(true)"
-        >
-          <Icon name="mingcute:layout-left-line" :size="15" />
-          Редактировать на плеере
+      <SettingToggle
+        label="Показывать тайминги"
+        description="Текущее время и длительность по краям полосы прогресса."
+        :model-value="ui.settings.playerShowTimes"
+        @update:model-value="ui.set('playerShowTimes', $event)"
+      />
+
+      <SettingsRow
+        label="Сбросить размеры плеера"
+        description="Высота, отступы и пропорции вернутся к исходным."
+      >
+        <button :class="BUTTON" type="button" @click="ui.resetPlayerLayout()">
+          Сбросить
         </button>
-        <span class="editor-hint">
-          Или просто кликни правой кнопкой мыши по пустому месту плеера.
-        </span>
-      </div>
-    </div>
+      </SettingsRow>
 
-    <SettingToggle
-      label="Визуализатор"
-      description="Живой спектр звука фоном в нижней панели. Требует воспроизведения."
-      :model-value="ui.settings.playerVisualizer"
-      @update:model-value="ui.set('playerVisualizer', $event)"
-    />
-
-    <SettingToggle
-      label="Показывать тайминги"
-      description="Текущее время и длительность по краям полосы прогресса."
-      :model-value="ui.settings.playerShowTimes"
-      @update:model-value="ui.set('playerShowTimes', $event)"
-    />
-
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Сбросить размеры плеера</b>
-        <span>Высота, отступы и пропорции вернутся к исходным.</span>
-      </div>
-      <button
-        class="settings-reset-button"
-        type="button"
-        @click="ui.resetPlayerLayout()"
+      <SettingsRow
+        label="Сбросить раскладку кнопок"
+        description="Кнопки плеера и мини-плеера вернутся на свои места."
       >
-        Сбросить
-      </button>
-    </div>
-
-    <div class="setting-row">
-      <div class="setting-copy">
-        <b>Сбросить раскладку кнопок</b>
-        <span>Кнопки плеера и мини-плеера вернутся на свои места.</span>
-      </div>
-      <button
-        class="settings-reset-button"
-        type="button"
-        @click="ui.resetPlayerButtons()"
-      >
-        Сбросить
-      </button>
-    </div>
-  </section>
+        <button :class="BUTTON" type="button" @click="ui.resetPlayerButtons()">
+          Сбросить
+        </button>
+      </SettingsRow>
+    </SettingsCard>
+  </SettingsSection>
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRouter } from "vue-router";
 import SettingToggle from "@/components/settings/SettingToggle.vue";
+import SettingsCard from "@/components/settings/SettingsCard.vue";
+import SettingsRow from "@/components/settings/SettingsRow.vue";
+import SettingsSection from "@/components/settings/SettingsSection.vue";
+import { BUTTON, BUTTON_ACCENT } from "@/components/settings/classes";
 import { useUiStore } from "@/stores/ui/index";
 
 const ui = useUiStore();
+const route = useRoute();
+const router = useRouter();
+
+function editOnPlayer() {
+  ui.playerEditReturnPath = router.resolve({
+    path: "/settings",
+    query: { ...route.query, section: "player" },
+  }).fullPath;
+  if (!ui.settings.playerEditMode) ui.togglePlayerEdit(true);
+  closeSettings();
+}
+
+function closeSettings() {
+  const back = window.history.state?.back;
+  if (typeof back === "string" && back && !back.startsWith("/settings")) {
+    router.back();
+  } else {
+    void router.replace("/");
+  }
+}
+
+const steps = [
+  {
+    icon: "mingcute:dots-line",
+    text: "Перетаскивай любую кнопку между левой, центральной и правой частями",
+  },
+  {
+    icon: "mingcute:close-line",
+    text: "Лишнее тяни в корзину «Скрытые кнопки», оттуда же возвращай обратно",
+  },
+  {
+    icon: "mingcute:fullscreen-line",
+    text: "Верхний край тянет высоту, боковой — ширину блока с треком",
+  },
+  {
+    icon: "mingcute:settings-5-line",
+    text: "Ползунки рядом — обложка, иконки, отступы, полоса прогресса",
+  },
+  {
+    icon: "mingcute:check-line",
+    text: "«Готово» сохраняет, «Отмена» возвращает всё как было",
+  },
+];
 </script>
-
-<style scoped>
-.editor-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  width: 100%;
-  margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.editor-steps li {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: var(--fg-dim);
-  font-size: 12.5px;
-  line-height: 1.4;
-}
-
-.editor-steps :deep(svg) {
-  flex: 0 0 auto;
-  color: var(--accent);
-}
-
-.editor-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px 14px;
-  width: 100%;
-  margin-top: 12px;
-}
-
-.editor-actions .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.editor-actions .btn.accent {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
-.editor-hint {
-  color: var(--fg-faint);
-  font-size: 12px;
-}
-</style>
