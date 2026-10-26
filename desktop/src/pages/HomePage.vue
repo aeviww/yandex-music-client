@@ -1,30 +1,22 @@
 <template>
   <q-page class="h-[calc(100vh-52px-var(--player-height,78px))] !min-h-0 !overflow-hidden">
     <q-scroll-area class="home-scroll">
-      <div class="min-w-0 pb-[40px]">
+      <div class="min-w-0 pb-[56px]">
         <div
           class="mx-auto w-full max-w-[1240px] px-[var(--page-padding,40px)]"
         >
-          <header
-            class="flex flex-wrap items-end justify-between gap-x-8 gap-y-5 border-b border-[var(--line)] pb-6 pt-8"
-          >
-            <div class="min-w-0">
-              <h1
-                class="m-0 text-[26px] font-semibold leading-[1.1] tracking-[-0.045em]"
-              >
+          <header class="home-header">
+            <div class="home-intro">
+              <h1 class="home-greeting">
                 {{ greeting
                 }}<template v-if="userName">, {{ userName }}</template>
               </h1>
-              <p
-                class="mb-0 mt-2 text-[12.5px] leading-relaxed text-[color:var(--fg-faint)]"
-              >
-                ваша музыка на сегодня
-              </p>
+              <p class="home-subtitle">ваша музыка на сегодня</p>
             </div>
 
-            <div class="flex flex-wrap items-center gap-2">
+            <div class="home-actions">
               <button :class="quickPrimary" type="button" @click="openWave">
-                <Icon name="mingcute:wave-line" :size="15" class="flex-none" />
+                <Icon name="mingcute:wave-line" :size="16" class="flex-none" />
                 <span>Моя волна</span>
               </button>
               <button
@@ -32,7 +24,7 @@
                 type="button"
                 @click="router.push('/playlists')"
               >
-                <Icon name="mingcute:book-2-line" :size="14" class="flex-none" />
+                <Icon name="mingcute:book-2-line" :size="15" class="flex-none" />
                 <span>Коллекция</span>
               </button>
               <button
@@ -42,7 +34,7 @@
               >
                 <Icon
                   name="mingcute:search-2-line"
-                  :size="14"
+                  :size="15"
                   class="flex-none"
                 />
                 <span>Поиск</span>
@@ -51,12 +43,8 @@
           </header>
 
           <template v-if="visiblePlaylists.length">
-            <div class="section-head">
-              <h2
-                class="m-0 text-[14px] font-semibold tracking-[-0.02em]"
-              >
-                для тебя
-              </h2>
+            <div class="section-head home-section-head">
+              <h2 class="home-section-title">для тебя</h2>
               <button
                 class="more-link"
                 type="button"
@@ -71,7 +59,7 @@
               <div
                 v-for="pl in visiblePlaylists"
                 :key="pl.kind"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="router.push(`/playlists/${pl.kind}`)"
               >
                 <div class="cover relative aspect-square w-full">
@@ -99,19 +87,15 @@
 
                   <span
                     v-if="library.isPinned(pl.kind)"
-                    class="absolute left-[8px] top-[8px] flex h-[22px] w-[22px] items-center justify-center rounded-full bg-black/55 text-[color:var(--fg)]"
+                    class="absolute left-[10px] top-[10px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-black/55 text-[color:var(--fg)]"
                     title="Закреплён в боковой панели"
                   >
                     <Icon name="mingcute:pin-2-line" :size="11" />
                   </span>
                 </div>
 
-                <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
-                >
-                  {{ pl.title }}
-                </div>
-                <div class="faint t-11 ellipsis">
+                <div class="home-card-title ellipsis">{{ pl.title }}</div>
+                <div class="home-card-meta ellipsis">
                   {{ plural(pl.track_count, "трек", "трека", "треков") }}
                 </div>
 
@@ -190,8 +174,8 @@
             </div>
           </template>
 
-          <div class="section-head">
-            <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
+          <div class="section-head home-section-head">
+            <h2 class="home-section-title">
               недавно прослушанные
             </h2>
           </div>
@@ -201,7 +185,7 @@
               <div
                 v-for="r in recent"
                 :key="r.id"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="openRecent(r)"
               >
                 <div class="cover relative aspect-square w-full">
@@ -228,25 +212,25 @@
                   </button>
                 </div>
                 <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
+                  class="home-card-title ellipsis"
                 >
                   {{ r.title }}
                 </div>
-                <div class="faint t-11 ellipsis">{{ r.subtitle }}</div>
+                <div class="home-card-meta ellipsis">{{ r.subtitle }}</div>
               </div>
             </template>
 
             <template v-else>
               <div
-                class="col-span-full py-[22px] text-[12.5px] text-[color:var(--fg-faint)]"
+                class="col-span-full py-[28px] text-[13.5px] text-[color:var(--fg-faint)]"
               >
                 тут появится то, что послушаешь
               </div>
             </template>
           </div>
 
-          <div class="section-head">
-            <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
+          <div class="section-head home-section-head">
+            <h2 class="home-section-title">
               новые релизы
             </h2>
           </div>
@@ -256,7 +240,7 @@
               <div
                 v-for="a in releases"
                 :key="a.id"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="router.push(`/album/${a.id}`)"
               >
                 <div class="cover relative aspect-square w-full">
@@ -283,11 +267,11 @@
                   </button>
                 </div>
                 <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
+                  class="home-card-title ellipsis"
                 >
                   {{ a.title }}
                 </div>
-                <div class="faint t-11 ellipsis">
+                <div class="home-card-meta ellipsis">
                   {{ a.artist || a.year || "" }}
                 </div>
               </div>
@@ -309,8 +293,8 @@
           </div>
 
           <template v-if="picks.length">
-            <div class="section-head">
-              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
+            <div class="section-head home-section-head">
+              <h2 class="home-section-title">
                 новое для тебя
               </h2>
             </div>
@@ -319,7 +303,7 @@
               <div
                 v-for="p in picks"
                 :key="`${p.kind}-${p.id}`"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="openPick(p)"
               >
                 <div
@@ -355,11 +339,11 @@
                 </div>
 
                 <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
+                  class="home-card-title ellipsis"
                 >
                   {{ p.name }}
                 </div>
-                <div class="faint t-11 ellipsis">
+                <div class="home-card-meta ellipsis">
                   {{
                     p.artists.length ? artistNames(p.artists) : p.description
                   }}
@@ -397,8 +381,8 @@
           </template>
 
           <template v-if="waves.length">
-            <div class="section-head">
-              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
+            <div class="section-head home-section-head">
+              <h2 class="home-section-title">
                 миксы для тебя
               </h2>
               <button
@@ -415,7 +399,7 @@
               <div
                 v-for="w in waves"
                 :key="w.id"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="playWave(w)"
               >
                 <div
@@ -441,11 +425,11 @@
                 </div>
 
                 <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] clamp-2"
+                  class="home-card-title clamp-2"
                 >
                   {{ w.name }}
                 </div>
-                <div class="faint t-11 ellipsis">{{ w.description }}</div>
+                <div class="home-card-meta ellipsis">{{ w.description }}</div>
 
                 <q-menu context-menu touch-position class="menu">
                   <div class="menu-body" style="min-width: 200px">
@@ -468,8 +452,8 @@
           </template>
 
           <template v-if="neuroItems.length">
-            <div class="section-head">
-              <h2 class="m-0 text-[14px] font-semibold tracking-[-0.02em]">
+            <div class="section-head home-section-head">
+              <h2 class="home-section-title">
                 нейромузыка
               </h2>
             </div>
@@ -483,7 +467,7 @@
               <div
                 v-for="n in neuroItems"
                 :key="n.id"
-                class="card group relative min-w-0"
+                class="card home-card group relative min-w-0"
                 @click="playNeuro(n)"
               >
                 <div
@@ -515,11 +499,11 @@
                   </span>
                 </div>
                 <div
-                  class="mt-[8px] text-[13px] font-semibold tracking-[-0.01em] ellipsis"
+                  class="home-card-title ellipsis"
                 >
                   {{ n.title }}
                 </div>
-                <div class="faint t-11 ellipsis">нейромузыка</div>
+                <div class="home-card-meta ellipsis">нейромузыка</div>
               </div>
             </div>
           </template>
@@ -642,16 +626,16 @@ const hiddenWaves = ["встряхнуть", "назад к привычному
 
 const strip =
   "grid grid-rows-[auto] auto-rows-[0px] gap-x-[18px] gap-y-0 overflow-hidden";
-const colsLg = "grid-cols-[repeat(auto-fill,minmax(200px,1fr))]";
-const colsMd = "grid-cols-[repeat(auto-fill,minmax(150px,1fr))]";
-const colsSm = "grid-cols-[repeat(auto-fill,minmax(132px,1fr))]";
+const colsLg = "grid-cols-[repeat(auto-fill,minmax(190px,1fr))]";
+const colsMd = "grid-cols-[repeat(auto-fill,minmax(160px,1fr))]";
+const colsSm = "grid-cols-[repeat(auto-fill,minmax(144px,1fr))]";
 const quickPrimary =
-  "flex h-9 flex-nowrap items-center gap-[8px] rounded-lg border-0 bg-[var(--fg)] px-[14px] text-[12.5px] font-semibold text-[var(--bg)] transition-opacity hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
+  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[10px] border-0 bg-[var(--accent)] px-4 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 const quickGhost =
-  "flex h-9 flex-nowrap items-center gap-[8px] rounded-lg border border-[var(--line)] bg-transparent px-[14px] text-[12.5px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
+  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[10px] border border-[var(--line)] bg-transparent px-4 text-[13px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
 
 const fab =
-  "absolute bottom-[8px] right-[8px] flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
+  "absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
 
 const visiblePlaylists = computed(() =>
   playlists.value.filter((pl) => !library.isHidden(pl.kind)),
@@ -831,3 +815,101 @@ async function playAlbum(id: string) {
   }
 }
 </script>
+
+<style scoped>
+.home-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px 36px;
+  padding: 34px 0 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.home-intro {
+  min-width: 0;
+}
+
+.home-greeting {
+  margin: 0;
+  font-size: clamp(32px, 3.8vw, 48px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.home-subtitle {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-dim);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-bottom: 3px;
+}
+
+.home-section-head {
+  align-items: baseline;
+  margin: 38px 0 14px;
+}
+
+.home-section-title {
+  margin: 0;
+  font-size: clamp(18px, 1.6vw, 21px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.home-section-head .more-link {
+  font-size: 13px;
+  color: var(--fg-dim);
+}
+
+.home-card {
+  padding: 8px;
+}
+
+.home-card .cover {
+  border-radius: 12px;
+}
+
+.home-card-title {
+  margin-top: 9px;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+}
+
+.home-card-meta {
+  margin-top: 3px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--fg-faint);
+}
+
+@media (max-width: 720px) {
+  .home-header {
+    align-items: flex-start;
+    padding: 28px 0 24px;
+  }
+
+  .home-greeting {
+    font-size: clamp(30px, 7vw, 40px);
+  }
+
+  .home-actions {
+    padding-bottom: 0;
+  }
+
+  .home-section-head {
+    margin-top: 34px;
+  }
+}
+</style>
