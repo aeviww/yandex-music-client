@@ -2,7 +2,7 @@
   <template v-for="(item, i) in visible" :key="`${item.id}-${i}`">
     <slot :item="item" :index="i" />
   </template>
-  <div ref="sentinel" class="lazy-sentinel" />
+  <div ref="sentinel" class="w-full h-[1px]" />
 </template>
 
 <script setup lang="ts">

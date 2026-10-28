@@ -1,12 +1,14 @@
 <template>
   <button
     type="button"
-    class="ed-switch"
-    :class="{ on: modelValue }"
+    class="flex w-full items-center justify-between gap-[10px] px-[8px] py-[6px] border-none rounded-[8px] text-[color:var(--fg)] cursor-pointer text-[12px] text-left transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+    :class="{
+      '[&>span:last-child]:bg-[color-mix(in_srgb,var(--accent)_55%,transparent)] [&>span>i]:translate-x-[12px] [&>span>i]:bg-[#fff] [&>span>i]:opacity-100': modelValue,
+    }"
     @click="emit('update:modelValue', !modelValue)"
   >
-    <span class="ed-switch-label">{{ label }}</span>
-    <span class="ed-switch-track"><i /></span>
+    <span class="truncate">{{ label }}</span>
+    <span class="relative w-[28px] h-[16px] flex-none rounded-full bg-[color-mix(in_srgb,var(--fg)_18%,transparent)] transition-[background] duration-[160ms] ease-[ease] [&>i]:absolute [&>i]:top-[3px] [&>i]:left-[3px] [&>i]:w-[10px] [&>i]:h-[10px] [&>i]:rounded-full [&>i]:bg-[var(--fg)] [&>i]:opacity-75 [&>i]:[transition:transform_0.16s_cubic-bezier(0.22,0.65,0.28,1),opacity_0.16s_ease]"><i /></span>
   </button>
 </template>
 
@@ -17,67 +19,3 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
 </script>
-
-<style scoped>
-.ed-switch {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 6px 8px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--fg);
-  cursor: pointer;
-  font: inherit;
-  font-size: 12px;
-  text-align: left;
-  transition: background 0.14s ease;
-}
-
-.ed-switch:hover {
-  background: var(--hover);
-}
-
-.ed-switch-label {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ed-switch-track {
-  position: relative;
-  width: 28px;
-  height: 16px;
-  flex: 0 0 auto;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--fg) 18%, transparent);
-  transition: background 0.16s ease;
-}
-
-.ed-switch-track i {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--fg);
-  opacity: 0.75;
-  transition:
-    transform 0.16s cubic-bezier(0.22, 0.65, 0.28, 1),
-    opacity 0.16s ease;
-}
-
-.ed-switch.on .ed-switch-track {
-  background: color-mix(in srgb, var(--accent) 55%, transparent);
-}
-
-.ed-switch.on .ed-switch-track i {
-  transform: translateX(12px);
-  background: #fff;
-  opacity: 1;
-}
-</style>

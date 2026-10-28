@@ -11,13 +11,13 @@
     <div class="min-w-0 flex-1">
       <div
         v-if="label"
-        class="text-[13px] font-semibold leading-snug text-[var(--fg)]"
+        class="text-[calc(13px*var(--text-scale,1))] font-semibold leading-snug text-[var(--fg)]"
       >
         {{ label }}
       </div>
       <p
         v-if="description"
-        class="mb-0 mt-1 text-[11.5px] leading-[1.45] text-[color:var(--fg-dim)]"
+        class="mb-0 mt-1 text-[calc(11.5px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-dim)]"
       >
         {{ description }}
       </p>

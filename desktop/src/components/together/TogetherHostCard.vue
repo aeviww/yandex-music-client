@@ -1,6 +1,6 @@
 <template>
-  <div class="setting-row">
-    <div class="setting-copy">
+  <div class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]">
+    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
       <b>Своя комната</b>
       <span>
         Поднимает комнату на вашем компьютере. Остальные подключаются к вашему
@@ -8,10 +8,10 @@
       </span>
     </div>
 
-    <div class="together-controls">
+    <div class="flex items-center gap-[8px]">
       <input
         v-model.number="port"
-        class="together-input port"
+        class="w-[92px] px-[10px] py-[7px] rounded-[8px] border border-[color:var(--border,rgba(255,255,255,0.12))] bg-transparent text-inherit"
         type="number"
         min="1024"
         max="65535"
@@ -20,7 +20,7 @@
 
       <button
         v-if="!together.isHost"
-        class="settings-reset-button"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
         type="button"
         :disabled="together.busy || together.active"
         @click="together.host(port)"
@@ -30,7 +30,7 @@
 
       <button
         v-else
-        class="settings-reset-button danger"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[8px] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
         type="button"
         :disabled="together.busy"
         @click="together.leave()"
@@ -40,10 +40,15 @@
     </div>
   </div>
 
-  <div v-if="together.isHost" class="together-invite">
+  <div
+    v-if="together.isHost"
+    class="flex flex-col gap-[6px] px-[14px] py-[12px] rounded-[10px] bg-[var(--surface-2,rgba(255,255,255,0.06))] [&_span]:opacity-[0.65] [&_span]:text-[12px]"
+  >
     <b>Адрес для друзей</b>
 
-    <div class="together-invite-line">
+    <div
+      class="flex items-center gap-[8px] [&_code]:flex-auto [&_code]:overflow-hidden [&_code]:text-[15px] [&_code]:truncate [&_code]:cursor-pointer [&_code:hover]:text-[color:var(--accent,inherit)]"
+    >
       <code
         :title="
           visible ? 'Нажмите, чтобы скопировать' : 'Наведите, чтобы увидеть'
@@ -55,7 +60,7 @@
       >
 
       <button
-        class="together-invite-icon"
+        class="inline-flex flex-none p-[5px] border-0 rounded-[7px] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
         type="button"
         :title="shown ? 'Скрыть адрес' : 'Показать адрес'"
         @click="shown = !shown"
@@ -64,7 +69,7 @@
       </button>
 
       <button
-        class="together-invite-icon"
+        class="inline-flex flex-none p-[5px] border-0 rounded-[7px] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
         type="button"
         title="Скопировать адрес"
         @click="copyInvite"
@@ -104,73 +109,3 @@ function copyInvite() {
 }
 </script>
 
-<style scoped>
-.together-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.together-input {
-  width: 190px;
-  padding: 7px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.12));
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
-
-.together-input.port {
-  width: 92px;
-}
-
-.together-invite {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: var(--surface-2, rgba(255, 255, 255, 0.06));
-}
-
-.together-invite-line {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.together-invite code {
-  overflow: hidden;
-  flex: 1 1 auto;
-  font-size: 15px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.together-invite code:hover {
-  color: var(--accent, inherit);
-}
-
-.together-invite-icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  padding: 5px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--fg-dim, inherit);
-  cursor: pointer;
-}
-
-.together-invite-icon:hover {
-  background: var(--hover, rgba(255, 255, 255, 0.08));
-  color: var(--fg, inherit);
-}
-
-.together-invite span {
-  opacity: 0.65;
-  font-size: 12px;
-}
-</style>

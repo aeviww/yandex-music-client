@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
+import { readCache } from "@/lib/cache";
+import { useAuthStore } from "@/stores/auth";
 import type { AlbumPage, Playlist, Track } from "@/api/types";
 
 export interface LikedAlbum {
@@ -23,12 +25,18 @@ interface LibraryState {
   playlists: Playlist[];
   pinned: number[];
   hidden: number[];
+  storageUid: number | null;
+  storageBound: boolean;
   loading: boolean;
 }
 
-const PIN_KEY = "mashiro.pinned";
-const HIDE_KEY = "mashiro.hiddenPlaylists";
+const PIN_BASE = "mashiro.pinned";
+const HIDE_BASE = "mashiro.hiddenPlaylists";
 const ALBUM_KEY = "mashiro.likedAlbums";
+
+function scopedKey(base: string, uid: number | null): string {
+  return uid === null ? base : `${base}.${uid}`;
+}
 
 function readLikedAlbums(): LikedAlbum[] {
   try {
@@ -82,8 +90,10 @@ export const useLibraryStore = defineStore("library", {
     membershipLoading: false,
     likedAlbums: readLikedAlbums(),
     playlists: [],
-    pinned: readKinds(PIN_KEY),
-    hidden: readKinds(HIDE_KEY),
+    pinned: [],
+    hidden: [],
+    storageUid: null,
+    storageBound: false,
     loading: false,
   }),
 
@@ -103,6 +113,8 @@ export const useLibraryStore = defineStore("library", {
     ownPlaylists: (s) => s.playlists,
     isPinned: (s) => (kind: number | string) => s.pinned.includes(Number(kind)),
     isHidden: (s) => (kind: number | string) => s.hidden.includes(Number(kind)),
+    pinKey: (s) => scopedKey(PIN_BASE, s.storageUid),
+    hideKey: (s) => scopedKey(HIDE_BASE, s.storageUid),
     sortedPlaylists: (s) => {
       const rank = (kind: number) => {
         const at = s.pinned.indexOf(Number(kind));
@@ -123,17 +135,63 @@ export const useLibraryStore = defineStore("library", {
   },
 
   actions: {
+    bindAccount(uid: number | null) {
+      if (this.storageBound && this.storageUid === uid) return;
+      this.storageUid = uid;
+      this.storageBound = true;
+      if (uid === null) {
+        this.pinned = [];
+        this.hidden = [];
+        return;
+      }
+
+      const pinKey = scopedKey(PIN_BASE, uid);
+      const hideKey = scopedKey(HIDE_BASE, uid);
+      const savedPinned = readKinds(pinKey);
+      const savedHidden = readKinds(hideKey);
+
+      let pinned = savedPinned;
+      if (!localStorage.getItem(pinKey)) {
+        const legacy = readKinds(PIN_BASE);
+        if (legacy.length && writeKinds(pinKey, legacy)) pinned = legacy;
+      }
+
+      let hidden = savedHidden;
+      if (!localStorage.getItem(hideKey)) {
+        const legacy = readKinds(HIDE_BASE);
+        const kinds = this.playlists.map((pl) => Number(pl.kind));
+        const hidesEverything = kinds.every((kind) => legacy.includes(kind));
+        if (legacy.length && kinds.length > 0 && !hidesEverything) {
+          if (writeKinds(hideKey, legacy)) hidden = legacy;
+        }
+      }
+
+      this.pinned = pinned;
+      this.hidden = hidden;
+    },
+
+    ensureAccount() {
+      if (this.storageBound) return;
+      const uid = Number(useAuthStore().profile?.uid);
+      this.bindAccount(Number.isFinite(uid) && uid > 0 ? uid : null);
+    },
+
     async init() {
       if (this.loading) return;
       this.loading = true;
       const [ids, disliked, playlists] = await Promise.all([
         api.likedIds().catch(() => [] as string[]),
         api.dislikedIds().catch(() => [] as string[]),
-        api.playlists().catch(() => [] as Playlist[]),
+        api.playlists().catch(() => null),
       ]);
       this.likedIds = ids;
       this.dislikedIds = disliked.map((id) => String(id));
-      this.playlists = playlists;
+      if (playlists) this.playlists = playlists;
+      else if (!this.playlists.length) {
+        this.playlists = readCache<Playlist[]>("home.playlists") ?? [];
+      }
+      const uid = Number(useAuthStore().profile?.uid);
+      this.bindAccount(Number.isFinite(uid) && uid > 0 ? uid : null);
       this.loading = false;
     },
 
@@ -184,11 +242,12 @@ export const useLibraryStore = defineStore("library", {
     },
 
     togglePin(kind: number | string) {
+      this.ensureAccount();
       const id = Number(kind);
       if (this.pinned.includes(id))
         this.pinned = this.pinned.filter((v) => v !== id);
       else this.pinned = [...this.pinned, id];
-      if (!writeKinds(PIN_KEY, this.pinned)) {
+      if (!writeKinds(this.pinKey, this.pinned)) {
         Notify.create({
           type: "negative",
           message: "Не удалось сохранить закреплённые",
@@ -203,6 +262,7 @@ export const useLibraryStore = defineStore("library", {
     },
 
     toggleHidden(kind: number | string) {
+      this.ensureAccount();
       const id = Number(kind);
       const wasHidden = this.hidden.includes(id);
       this.hidden = wasHidden
@@ -211,10 +271,10 @@ export const useLibraryStore = defineStore("library", {
 
       if (!wasHidden && this.pinned.includes(id)) {
         this.pinned = this.pinned.filter((v) => v !== id);
-        writeKinds(PIN_KEY, this.pinned);
+        writeKinds(this.pinKey, this.pinned);
       }
 
-      if (!writeKinds(HIDE_KEY, this.hidden)) {
+      if (!writeKinds(this.hideKey, this.hidden)) {
         Notify.create({
           type: "negative",
           message: "Не удалось сохранить скрытые плейлисты",
@@ -277,8 +337,8 @@ export const useLibraryStore = defineStore("library", {
         this.playlists = this.playlists.filter((p) => p.kind !== kind);
         this.pinned = this.pinned.filter((v) => v !== Number(kind));
         this.hidden = this.hidden.filter((v) => v !== Number(kind));
-        writeKinds(PIN_KEY, this.pinned);
-        writeKinds(HIDE_KEY, this.hidden);
+        writeKinds(this.pinKey, this.pinned);
+        writeKinds(this.hideKey, this.hidden);
         Notify.create({ message: "Удалил плейлист" });
         return true;
       } catch (e) {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="settings-overlay fixed inset-0 z-[5000] flex flex-nowrap flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)] [&_button:not(:disabled)]:cursor-pointer"
+    class="fixed inset-0 z-[5000] flex flex-nowrap flex-col overflow-hidden bg-[var(--bg)] text-[var(--fg)] [&_button:not(:disabled)]:cursor-pointer [&.page-enter-active]:!transition-opacity [&.page-enter-active]:!duration-150 [&.page-leave-active]:!transition-opacity [&.page-leave-active]:!duration-150 [&.page-enter-from]:opacity-0 [&.page-enter-from]:!transform-none [&.page-leave-to]:opacity-0 [&.page-leave-to]:!transform-none"
   >
       <header
         class="relative flex h-[64px] flex-none flex-nowrap items-center gap-4 border-b border-[var(--line)] bg-[var(--bg)] px-5"
@@ -12,7 +12,7 @@
             <Icon name="mingcute:settings-5-line" :size="18" />
           </span>
           <h1
-            class="m-0 text-[15px] font-bold leading-tight tracking-[-0.02em] text-[var(--fg)]"
+            class="m-0 text-[calc(15px*var(--text-scale,1))] font-bold leading-tight tracking-[-0.02em] text-[var(--fg)]"
           >
             Настройки
           </h1>
@@ -32,11 +32,11 @@
               type="text"
               placeholder="Найти настройку"
               spellcheck="false"
-              class="min-w-0 flex-1 border-0 bg-transparent text-[12.5px] text-[var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)]"
+              class="min-w-0 flex-1 border-0 bg-transparent text-[calc(12.5px*var(--text-scale,1))] text-[var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)]"
             />
             <button
               v-if="query"
-              class="grid h-5 w-5 flex-none place-items-center rounded-md border-0 bg-transparent text-[color:var(--fg-faint)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+              class="grid h-5 w-5 flex-none place-items-center rounded-md border-0 text-[color:var(--fg-faint)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
               type="button"
               title="Очистить"
               @click="query = ''"
@@ -48,7 +48,7 @@
 
         <button
           type="button"
-          class="grid h-9 w-9 flex-none place-items-center rounded-lg border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)] transition duration-150 hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+          class="grid h-9 w-9 flex-none place-items-center rounded-lg border border-[var(--line)] text-[color:var(--fg-dim)] transition duration-150 hover:bg-[var(--hover)] hover:text-[var(--fg)]"
           title="Закрыть настройки (Esc)"
           aria-label="Закрыть настройки"
           @click="close"
@@ -64,7 +64,7 @@
           <nav class="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain pr-1">
             <div v-for="group in groups" :key="group.title">
               <div
-                class="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-[0.09em] text-[color:var(--fg-faint)]"
+                class="px-3 pb-1.5 text-[calc(10px*var(--text-scale,1))] font-semibold uppercase tracking-[0.09em] text-[color:var(--fg-faint)]"
               >
                 {{ group.title }}
               </div>
@@ -73,11 +73,11 @@
                 v-for="section in group.items"
                 :key="section.id"
                 type="button"
-                class="group flex h-10 w-full items-center gap-3 rounded-lg border-0 px-3 text-left text-[13px] transition duration-150"
+                class="group flex h-10 w-full items-center gap-3 rounded-lg border-0 px-3 text-left text-[calc(13px*var(--text-scale,1))] transition duration-150"
                 :class="
                   active === section.id
                     ? 'bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] font-semibold text-[var(--fg)]'
-                    : 'bg-transparent text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
+                    : 'text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
                 "
                 @click="select(section.id)"
               >
@@ -96,7 +96,7 @@
                 }}</span>
                 <span
                   v-if="section.hits.length"
-                  class="flex-none rounded-full bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] px-1.5 text-[10px] font-semibold tabular-nums text-[color:var(--fg-faint)]"
+                  class="flex-none rounded-full bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] px-1.5 text-[calc(10px*var(--text-scale,1))] font-semibold tabular-nums text-[color:var(--fg-faint)]"
                   :title="section.hits.join(' · ')"
                 >
                   {{ section.hits.length }}
@@ -106,7 +106,7 @@
 
             <p
               v-if="!groups.length"
-              class="mb-0 px-3 py-4 text-[12px] text-[color:var(--fg-faint)]"
+              class="mb-0 px-3 py-4 text-[calc(12px*var(--text-scale,1))] text-[color:var(--fg-faint)]"
             >
               Ничего не нашлось
             </p>
@@ -115,7 +115,7 @@
           <div class="mt-3 flex-none border-t border-[var(--line)] pt-3">
             <button
               type="button"
-              class="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_35%,var(--line))] bg-transparent text-[12px] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_10%,transparent)] hover:text-[#ff5d5d]"
+              class="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_35%,var(--line))] text-[calc(12px*var(--text-scale,1))] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_10%,transparent)] hover:text-[#ff5d5d]"
               @click="reset"
             >
               <Icon name="mingcute:delete-2-line" :size="15" />
@@ -377,16 +377,3 @@ async function reset() {
   Notify.create({ message: "Настройки сброшены" });
 }
 </script>
-
-<style scoped>
-.settings-overlay.page-enter-active,
-.settings-overlay.page-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.settings-overlay.page-enter-from,
-.settings-overlay.page-leave-to {
-  opacity: 0;
-  transform: none;
-}
-</style>

@@ -1,20 +1,24 @@
 <template>
-  <div class="together-log">
-    <div class="together-log-head">
+  <div class="flex flex-col gap-[8px]">
+    <div class="flex flex-col gap-[2px] [&_span]:opacity-[0.55] [&_span]:text-[11px] [&_span]:break-all">
       <b>Журнал</b>
       <span v-if="together.logPath">{{ together.logPath }}</span>
     </div>
 
-    <pre ref="box" class="together-log-body">{{
+    <pre ref="box" class="m-0 max-h-[220px] overflow-auto px-[12px] py-[10px] rounded-[10px] bg-[var(--surface-2,rgba(255,255,255,0.06))] text-[12px] leading-[1.5] whitespace-pre-wrap break-words">{{
       together.log.join("\n") || "Пока пусто"
     }}</pre>
 
-    <div class="together-log-actions">
-      <button class="settings-reset-button" type="button" @click="copy">
+    <div class="flex gap-[8px]">
+      <button
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
+        type="button"
+        @click="copy"
+      >
         Скопировать
       </button>
       <button
-        class="settings-reset-button danger"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[8px] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
         type="button"
         @click="together.clearLog()"
       >
@@ -50,40 +54,3 @@ async function copy() {
 }
 </script>
 
-<style scoped>
-.together-log {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.together-log-head {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.together-log-head span {
-  opacity: 0.55;
-  font-size: 11px;
-  word-break: break-all;
-}
-
-.together-log-body {
-  margin: 0;
-  max-height: 220px;
-  overflow: auto;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--surface-2, rgba(255, 255, 255, 0.06));
-  font-size: 12px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.together-log-actions {
-  display: flex;
-  gap: 8px;
-}
-</style>

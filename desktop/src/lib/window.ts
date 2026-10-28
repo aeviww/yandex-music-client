@@ -20,7 +20,7 @@ function interactive(target: EventTarget | null): boolean {
   const element = target as HTMLElement | null;
   return Boolean(
     element?.closest(
-      "button, input, textarea, select, a, .icon-btn, .account, .win-controls, [data-no-drag]",
+      "button, input, textarea, select, a, .icon-btn, [data-no-drag]",
     ),
   );
 }

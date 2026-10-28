@@ -1,8 +1,8 @@
 <template>
-  <q-page class="scroll-page">
-    <q-scroll-area class="scroll-page-area">
-      <div class="scroll-page-inner">
-        <div v-if="!genius.ready" class="dim t-13">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
+    <q-scroll-area class="flex-auto min-h-0">
+      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+        <div v-if="!genius.ready" class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">
           Включи Genius и добавь токен в настройках, чтобы открывать страницы
           людей.
         </div>
@@ -12,35 +12,35 @@
         </div>
 
         <template v-else-if="person">
-          <div class="page-head artist-head">
-            <div class="cover head-cover round">
+          <div class="flex items-end gap-[26px] min-w-0 overflow-hidden max-h-[520px] [transition:max-height_0.34s_ease,opacity_0.24s_ease,transform_0.34s_ease,margin_0.34s_ease] max-[1360px]:gap-[20px] max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-[14px]">
+            <div class="cover w-[clamp(112px,_15vw,_190px)] h-[clamp(112px,_15vw,_190px)] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
               <img
                 v-if="person.image"
                 loading="lazy"
                 decoding="async"
                 :src="person.image"
               />
-              <Icon v-else name="mingcute:user-2-line" :size="56" class="faint" />
+              <Icon v-else name="mingcute:user-2-line" :size="56" class="text-[color:var(--fg-faint)]" />
             </div>
 
-            <div class="head-info">
-              <div class="head-kind">{{ roleLabel }} · все треки</div>
-              <div class="head-title">
+            <div class="flex-1 min-w-0 pb-[4px] max-[1024px]:w-full max-[1024px]:pb-0">
+              <div class="text-[12px] text-[color:var(--fg-dim)]">{{ roleLabel }} · все треки</div>
+              <div class="text-[clamp(24px,_3.4vw,_44px)] leading-[1.06] font-extrabold tracking-[-0.025em] mt-[6px] mx-0 mb-[10px] break-words max-[1024px]:mt-[4px] max-[1024px]:mx-0 max-[1024px]:mb-[8px]">
                 {{ person.name
                 }}<span
                   v-if="person.verified"
-                  class="genius-check"
+                  class="inline-flex items-center ml-[7px] text-[color:#ffd400] align-middle"
                   title="Подтверждённый аккаунт"
                 >
                   <Icon name="mingcute:check-line" :size="15" />
                 </span>
               </div>
 
-              <div class="head-meta">
+              <div class="flex items-baseline flex-wrap gap-y-0 gap-x-[6px] text-[13px] text-[color:var(--fg-dim)] min-w-0 [&>span]:whitespace-nowrap max-[760px]:text-[12px]">
                 <span>
                   {{ plural(person.songs.length, "трек", "трека", "треков") }}
                 </span>
-                <span v-if="person.followers" class="faint">
+                <span v-if="person.followers" class="text-[color:var(--fg-faint)]">
                   · {{ person.followers.toLocaleString("ru-RU") }}
                   {{
                     pluralWord(
@@ -51,55 +51,55 @@
                     )
                   }}
                 </span>
-                <span v-if="person.iq" class="faint">
+                <span v-if="person.iq" class="text-[color:var(--fg-faint)]">
                   · {{ person.iq.toLocaleString("ru-RU") }} IQ
                 </span>
               </div>
 
-              <div class="head-actions">
+              <div class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px]">
                 <button
-                  class="btn-solid"
+                  class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]"
                   type="button"
                   @click="open(person.url)"
                 >
                   <Icon name="mingcute:earth-2-line" :size="15" />
-                  <span>Открыть на Genius</span>
+                  <span class="max-[760px]:hidden">Открыть на Genius</span>
                 </button>
 
-                <button class="btn" type="button" @click="load(true)">
+                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="load(true)">
                   <Icon name="mingcute:repeat-line" :size="15" />
-                  <span>Обновить</span>
+                  <span class="max-[760px]:hidden">Обновить</span>
                 </button>
 
-                <button class="btn" type="button" @click="goBack">
+                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="goBack">
                   <Icon name="mingcute:left-line" :size="15" />
-                  <span>Назад</span>
+                  <span class="max-[760px]:hidden">Назад</span>
                 </button>
               </div>
 
-              <div class="head-chips head-chips-links">
+              <div class="flex flex-wrap mt-[10px] gap-[6px] max-[900px]:mt-[8px]">
                 <button
                   v-if="person.socials.length"
-                  class="chip chip-menu"
+                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-full border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
                   type="button"
                 >
                   <span>Ссылки и соцсети</span>
-                  <span class="chip-count">{{ person.socials.length }}</span>
+                  <span class="px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{ person.socials.length }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
-                  <q-menu class="menu" anchor="bottom left" self="top left">
-                    <div class="menu-body links-menu">
-                      <div class="menu-label">Соцсети</div>
+                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
+                    <div class="p-[4px] min-w-[236px] max-w-[260px] overflow-x-hidden overflow-y-auto max-h-[340px] select-none">
+                      <div class="pt-[8px] px-[12px] pb-[4px] text-[10px] font-semibold tracking-[0.05em] uppercase text-[color:var(--fg-dim)]">Соцсети</div>
                       <div
                         v-for="social in person.socials"
                         :key="social.url"
-                        class="menu-item"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         :title="social.url"
                         v-close-popup
                         @click="open(social.url)"
                       >
                         <Icon :name="iconFor(social.kind)" :size="16" />
-                        <span class="col ellipsis">{{
+                        <span class="col truncate">{{
                           social.handle || social.kind
                         }}</span>
                       </div>
@@ -109,24 +109,24 @@
 
                 <button
                   v-if="person.alternate_names.length"
-                  class="chip chip-menu"
+                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-full border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
                   type="button"
                 >
                   <span>Также известен как</span>
-                  <span class="chip-count">{{
+                  <span class="px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{
                     person.alternate_names.length
                   }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
-                  <q-menu class="menu" anchor="bottom left" self="top left">
-                    <div class="menu-body links-menu">
-                      <div class="menu-label">Также известен как</div>
+                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
+                    <div class="p-[4px] min-w-[236px] max-w-[260px] overflow-x-hidden overflow-y-auto max-h-[340px] select-none">
+                      <div class="pt-[8px] px-[12px] pb-[4px] text-[10px] font-semibold tracking-[0.05em] uppercase text-[color:var(--fg-dim)]">Также известен как</div>
                       <div
                         v-for="name in person.alternate_names"
                         :key="name"
-                        class="menu-item"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       >
-                        <span class="col ellipsis">{{ name }}</span>
+                        <span class="col truncate">{{ name }}</span>
                       </div>
                     </div>
                   </q-menu>
@@ -135,21 +135,21 @@
             </div>
           </div>
 
-          <p v-if="person.description" class="artist-about">
+          <p v-if="person.description" class="max-w-[760px] mt-[22px] mx-0 mb-0 overflow-hidden text-[color:var(--fg-dim)] text-[13px] leading-[1.55] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:4] max-[1180px]:max-w-full">
             {{ person.description }}
           </p>
 
-          <div class="section-head">
-            <div class="h2">Все треки</div>
-            <div class="gsongs-tools">
+          <div class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]">
+            <div class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]">Все треки</div>
+            <div class="flex items-center gap-[10px]">
               <input
                 v-model="query"
-                class="gsongs-search"
+                class="w-[210px] px-[11px] py-[6px] border border-solid border-[color:var(--line)] rounded-[9px] bg-[var(--surface)] text-[color:var(--fg)] text-[12.5px] outline-none transition-[border-color] duration-[140ms] ease-[ease] focus:border-[color:var(--fg-dim)] placeholder:text-[color:var(--fg-faint)]"
                 type="text"
                 placeholder="Найти трек"
               />
               <button
-                class="chip chip-menu"
+                class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-full border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
                 type="button"
                 @click="byTitle = !byTitle"
               >
@@ -159,32 +159,32 @@
             </div>
           </div>
 
-          <p v-if="!person.songs.length" class="dim t-13">
+          <p v-if="!person.songs.length" class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">
             Genius не отдал список треков — у продюсеров он часто пустой.
           </p>
 
-          <p v-else-if="!shown.length" class="dim t-13">
+          <p v-else-if="!shown.length" class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">
             Ничего не нашлось по запросу «{{ query }}».
           </p>
 
           <div v-else class="row q-col-gutter-md">
             <div v-for="song in shown" :key="song.id" class="col-auto">
               <div
-                class="card home-card"
+                class="relative rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] group/card"
                 style="width: 168px"
                 @click="open(song.url)"
               >
-                <div class="cover home-card-art">
+                <div class="cover relative w-full aspect-square rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
                   <img
                     v-if="song.art"
                     loading="lazy"
                     decoding="async"
                     :src="song.art"
                   />
-                  <Icon v-else name="mingcute:music-line" :size="26" class="faint" />
+                  <Icon v-else name="mingcute:music-line" :size="26" class="text-[color:var(--fg-faint)]" />
 
                   <button
-                    class="home-card-play"
+                    class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-full bg-[var(--accent)] text-[color:#fff] cursor-pointer select-none opacity-[0] translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover/card:opacity-[1] group-hover/card:translate-y-0"
                     type="button"
                     title="Открыть на Genius"
                     @click.stop="open(song.url)"
@@ -193,13 +193,15 @@
                   </button>
                 </div>
 
-                <div class="t-13 w-500 ellipsis q-mt-sm">{{ song.title }}</div>
-                <div class="faint t-11 ellipsis">{{ song.artist }}</div>
+                <div class="text-[calc(13px*var(--text-scale,1))] font-medium truncate q-mt-sm">
+                  {{ song.title }}
+                </div>
+                <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">{{ song.artist }}</div>
 
-                <q-menu context-menu touch-position class="menu">
-                  <div class="menu-body" style="min-width: 200px">
+                <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]">
+                  <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 200px">
                     <div
-                      class="menu-item"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       v-close-popup
                       @click="open(song.url)"
                     >
@@ -207,7 +209,7 @@
                       <span>Открыть разбор на Genius</span>
                     </div>
                     <div
-                      class="menu-item"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       v-close-popup
                       @click="searchInApp(song)"
                     >
@@ -221,7 +223,7 @@
           </div>
         </template>
 
-        <div v-else class="dim t-13">
+        <div v-else class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">
           {{ error || "Не удалось загрузить страницу" }}
         </div>
       </div>
@@ -310,89 +312,3 @@ function goBack() {
 
 watch(id, () => void load(), { immediate: true });
 </script>
-
-<style scoped>
-.genius-check {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 7px;
-  color: #ffd400;
-  vertical-align: middle;
-}
-
-.head-chips-links {
-  margin-top: 10px;
-}
-
-.chip-menu {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--fg);
-  font: inherit;
-  font-size: 12px;
-  text-transform: none;
-  cursor: pointer;
-  transition:
-    background 0.14s ease,
-    border-color 0.14s ease;
-}
-
-.chip-menu:hover {
-  background: var(--hover);
-  border-color: var(--fg-dim);
-}
-
-.chip-count {
-  padding: 0 5px;
-  border-radius: 7px;
-  background: var(--surface-2);
-  color: var(--fg-dim);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.links-menu {
-  min-width: 236px;
-  max-height: 340px;
-  overflow-y: auto;
-}
-
-.menu-label {
-  padding: 8px 12px 4px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
-}
-
-.gsongs-tools {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.gsongs-search {
-  width: 210px;
-  padding: 6px 11px;
-  border: 1px solid var(--line);
-  border-radius: 9px;
-  background: var(--surface);
-  color: var(--fg);
-  font: inherit;
-  font-size: 12.5px;
-  outline: none;
-  transition: border-color 0.14s ease;
-}
-
-.gsongs-search:focus {
-  border-color: var(--fg-dim);
-}
-
-.gsongs-search::placeholder {
-  color: var(--fg-faint);
-}
-</style>

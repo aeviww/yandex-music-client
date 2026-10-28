@@ -8,13 +8,13 @@
       </span>
       <div class="min-w-0 pt-0.5">
         <h2
-          class="m-0 text-[18px] font-semibold leading-tight tracking-[-0.02em] text-[var(--fg)]"
+          class="m-0 text-[calc(18px*var(--text-scale,1))] font-semibold leading-tight tracking-[-0.02em] text-[var(--fg)]"
         >
           {{ title }}
         </h2>
         <p
           v-if="description"
-          class="mb-0 mt-1 max-w-[680px] text-[12.5px] leading-relaxed text-[color:var(--fg-faint)]"
+          class="mb-0 mt-1 max-w-[680px] text-[calc(12.5px*var(--text-scale,1))] leading-relaxed text-[color:var(--fg-faint)]"
         >
           {{ description }}
         </p>

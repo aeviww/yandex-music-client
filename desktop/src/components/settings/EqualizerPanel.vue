@@ -5,7 +5,7 @@
     <div class="flex flex-wrap items-center gap-2.5">
       <button
         type="button"
-        class="inline-flex h-8 items-center rounded-full border px-4 text-[11.5px] font-medium transition duration-150"
+        class="inline-flex h-8 items-center rounded-full border px-4 text-[calc(11.5px*var(--text-scale,1))] font-medium transition duration-150"
         :class="
           eq.enabled
             ? 'border-transparent bg-[var(--accent)] text-white'
@@ -21,11 +21,11 @@
           v-for="preset in presets"
           :key="preset.id"
           type="button"
-          class="h-7 rounded-full border px-3 text-[11px] transition duration-150"
+          class="h-7 rounded-full border px-3 text-[calc(11px*var(--text-scale,1))] transition duration-150"
           :class="
             eq.activePreset === preset.id
               ? 'border-[color-mix(in_srgb,var(--accent)_65%,transparent)] bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-[var(--fg)]'
-              : 'border-[var(--line)] bg-transparent text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
+              : 'border-[var(--line)] text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[var(--fg)]'
           "
           @click="eq.usePreset(preset.id)"
         >
@@ -35,7 +35,7 @@
 
       <button
         type="button"
-        class="border-0 bg-transparent text-[11px] text-[color:var(--fg-faint)] transition hover:text-[var(--fg)]"
+        class="border-0 bg-transparent text-[calc(11px*var(--text-scale,1))] text-[color:var(--fg-faint)] transition hover:text-[var(--fg)]"
         @click="eq.reset()"
       >
         Сбросить
@@ -49,10 +49,10 @@
       <div
         v-for="(band, index) in eq.bands"
         :key="band"
-        class="flex h-[200px] min-w-0 flex-1 flex-col items-center gap-2"
+        class="flex h-[200px] min-w-0 flex-1 flex-col items-center gap-2 max-[780px]:h-[160px]"
       >
         <span
-          class="whitespace-nowrap text-[9.5px] tabular-nums text-[color:var(--fg-dim)]"
+          class="whitespace-nowrap text-[calc(9.5px*var(--text-scale,1))] tabular-nums text-[color:var(--fg-dim)]"
         >
           {{ formatGain(eq.gains[index] ?? 0) }}
         </span>
@@ -68,7 +68,7 @@
           @update:model-value="eq.setBand(index, Number($event ?? 0))"
         />
         <span
-          class="whitespace-nowrap text-[9.5px] text-[color:var(--fg-faint)]"
+          class="whitespace-nowrap text-[calc(9.5px*var(--text-scale,1))] text-[color:var(--fg-faint)] max-[780px]:[transform:rotate(-45deg)]"
         >
           {{ formatFreq(band) }}
         </span>
@@ -76,7 +76,7 @@
     </div>
 
     <div
-      class="grid grid-cols-[auto_minmax(0,1fr)_46px] items-center gap-3.5 text-[11.5px] text-[color:var(--fg-dim)]"
+      class="grid grid-cols-[auto_minmax(0,1fr)_46px] items-center gap-3.5 text-[calc(11.5px*var(--text-scale,1))] text-[color:var(--fg-dim)]"
     >
       <span>Предусиление</span>
       <q-slider
@@ -92,7 +92,10 @@
       }}</code>
     </div>
 
-    <div v-if="eq.unsupported" class="text-[11px] text-[var(--accent)]">
+    <div
+      v-if="eq.unsupported"
+      class="text-[calc(11px*var(--text-scale,1))] text-[var(--accent)]"
+    >
       Эквалайзер недоступен для текущего потока. Попробуй перезапустить трек.
     </div>
   </div>

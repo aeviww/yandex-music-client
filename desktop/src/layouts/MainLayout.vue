@@ -1,17 +1,14 @@
 <template>
   <q-layout
     view="hHh lpR fFf"
-    class="app-shell"
-    :class="{ 'queue-open': rightPanel }"
+    class="bg-[var(--bg)]"
   >
     <q-header
       v-if="!panels.hidden && !panels.mini"
       class="topbar relative z-[1] !border-b-0 !shadow-none transition-[background] duration-300"
       :class="!homeMode ? 'backdrop-blur-[18px] backdrop-saturate-[1.2]' : ''"
       :style="{
-        background: homeMode
-          ? 'transparent'
-          : 'linear-gradient(180deg, rgba(9,9,11,0.82) 0%, rgba(9,9,11,0.45) 60%, rgba(9,9,11,0) 100%)',
+        background: homeMode ? 'transparent' : 'var(--topbar-gradient)',
       }"
     >
       <div
@@ -20,7 +17,7 @@
         @dblclick="toggleWindowMaximize"
       >
         <div
-          class="brand flex items-center gap-2.5 text-[16px] font-extrabold tracking-[-0.03em] whitespace-nowrap"
+          class="flex items-center gap-2.5 text-[16px] font-extrabold tracking-[-0.03em] whitespace-nowrap"
         >
           <img
             src="/icons/favicon-128x128.png"
@@ -32,11 +29,11 @@
         </div>
 
         <div
-          class="topbar-search-wrap absolute inset-0 flex items-center justify-center pointer-events-none"
+          class="absolute inset-0 flex items-center justify-center pointer-events-none"
           data-no-drag
         >
           <div
-            class="searchbar pointer-events-auto flex h-[38px] w-[min(460px,100%)] items-center gap-2.5 !max-w-none !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] !px-[14px] transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_11%,transparent)] focus-within:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] focus-within:!border-[color-mix(in_srgb,var(--fg)_20%,transparent)]"
+            class="pointer-events-auto mb-0 flex h-[30px] w-[min(460px,100%)] items-center gap-2.5 py-0 !max-w-none !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] !px-[14px] shadow-none transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_11%,transparent)] focus-within:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] focus-within:!border-[color-mix(in_srgb,var(--fg)_20%,transparent)] focus-within:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_42%,transparent)]"
           >
             <Icon
               name="mingcute:search-2-line"
@@ -46,10 +43,10 @@
             <input
               v-model="query"
               placeholder="Найти трек, артиста или альбом"
-              class="!text-[13.5px]"
+              class="flex-1 min-w-0 border-0 bg-transparent text-[color:var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)] !text-[calc(13.5px*var(--text-scale,1))]"
               @keyup.enter="submitSearch"
             />
-            <div v-if="query" class="icon-btn xs round" @click="query = ''">
+            <div v-if="query" class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none" @click="query = ''">
               <Icon name="mingcute:close-line" :size="13" />
             </div>
           </div>
@@ -57,23 +54,10 @@
         <div class="self-stretch min-w-0 flex-1" />
 
         <div
-          class="icon-btn sm round flex h-[38px] w-[38px] items-center justify-center !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_12%,transparent)]"
-          :class="[
-            rightPanel
-              ? '!bg-[color-mix(in_srgb,var(--fg)_11%,transparent)] !border-[color-mix(in_srgb,var(--fg)_12%,transparent)]'
-              : '',
-            panels.queueLocked ? '!opacity-40' : '',
-          ]"
-          @click="panels.toggleQueue()"
+          data-no-drag
+          class="flex h-[34px] w-auto min-w-0 max-w-[172px] cursor-pointer items-center gap-2 rounded-[10px] border border-transparent bg-[var(--surface)] pl-1 pr-3 pt-[3px] pb-[3px] transition-[background] duration-150 hover:border-[color:var(--line)] hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
         >
-          <Icon name="mingcute:playlist-2-line" :size="17" />
-          <q-tooltip>Очередь</q-tooltip>
-        </div>
-
-        <div
-          class="account flex h-[38px] cursor-pointer items-center gap-2 rounded-[10px] pl-1 pr-3 transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
-        >
-          <div class="account-avatar h-[30px] w-[30px] !rounded-full">
+          <div class="cover cover-round grid w-[28px] h-[28px] flex-none place-items-center overflow-hidden !rounded-full bg-[var(--surface-2)] text-[color:var(--fg-dim)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
             <img
               v-if="avatarUrl"
               :src="avatarUrl"
@@ -82,16 +66,16 @@
               referrerpolicy="no-referrer"
               @error="avatarError = true"
             />
-            <span v-else class="avatar-monogram">{{ accountInitial }}</span>
+            <span v-else class="font-semibold leading-none uppercase select-none text-[13px]">{{ accountInitial }}</span>
           </div>
-          <span class="account-name ellipsis !text-[13px] font-semibold">{{
+          <span class="min-w-0 max-w-[98px] truncate text-[color:var(--fg)] font-semibold !text-[calc(13px*var(--text-scale,1))]">{{
             accountName
           }}</span>
-          <Icon name="mingcute:down-line" :size="13" class="account-chevron" />
-          <q-menu class="menu" anchor="bottom right" self="top right">
-            <div class="menu-body profile-menu">
-              <div class="profile-head">
-                <div class="profile-menu-avatar">
+          <Icon name="mingcute:down-line" :size="13" class="flex-none text-[color:var(--fg-faint)]" />
+          <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom right" self="top right">
+            <div class="w-[236px] p-[5px] min-w-[178px] max-w-[260px] overflow-x-hidden">
+              <div class="flex min-w-0 items-center gap-[10px] pt-[7px] px-[8px] pb-[9px]">
+                <div class="cover grid w-[36px] h-[36px] flex-none place-items-center overflow-hidden !rounded-[12px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
                   <img
                     v-if="avatarUrl"
                     :src="avatarUrl"
@@ -100,24 +84,23 @@
                     referrerpolicy="no-referrer"
                     @error="avatarError = true"
                   />
-                  <span v-else class="avatar-monogram">{{
+                  <span v-else class="font-semibold leading-none uppercase select-none text-[15px]">{{
                     accountInitial
                   }}</span>
                 </div>
-                <div class="profile-menu-id">
-                  <div class="profile-menu-name ellipsis">
+                <div class="min-w-0 flex-1">
+                  <div class="truncate text-[color:var(--fg)] font-[650] tracking-[-0.01em] leading-[1.2] text-[calc(13px*var(--text-scale,1))]">
                     {{ accountName }}
                   </div>
-                  <div class="profile-menu-sub ellipsis">{{ accountSub }}</div>
                 </div>
               </div>
 
-              <div class="menu-sep" />
+              <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
               <div
                 v-for="link in profileLinks"
                 :key="link.to"
-                class="menu-item"
+                class="flex items-center gap-[8px] h-[32px] px-[8px] py-0 rounded-[9px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                 v-close-popup
                 @click="router.push(link.to)"
               >
@@ -125,9 +108,9 @@
                 <span>{{ link.label }}</span>
               </div>
 
-              <div class="menu-sep" />
+              <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
-              <div class="menu-item danger" v-close-popup @click="doLogout">
+              <div class="flex items-center gap-[8px] h-[32px] px-[8px] py-0 rounded-[9px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="doLogout">
                 <Icon name="mingcute:exit-line" :size="17" />
                 <span>Выйти из аккаунта</span>
               </div>
@@ -146,7 +129,7 @@
       side="left"
       :width="ui.settings.sidebarWidth"
       :breakpoint="0"
-      class="sidebar !bg-[color-mix(in_srgb,var(--bg)_88%,var(--surface))] !border-r-0"
+      class="sidebar select-none !bg-[color-mix(in_srgb,var(--bg)_88%,var(--surface))] !border-r-0"
       content-class="overflow-x-hidden pt-[14px]"
     >
       <div class="column full-height">
@@ -154,7 +137,7 @@
           <div
             v-for="item in nav"
             :key="item.to"
-            class="nav flex h-[34px] cursor-pointer items-center mx-3 my-0.5 gap-3 rounded-[10px] px-3 text-[13.5px] font-medium text-[color:var(--fg-dim)] transition-[background,color] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:text-[color:var(--fg)]"
+            class="flex h-[34px] cursor-pointer items-center mx-3 my-0.5 gap-3 rounded-[10px] px-3 text-[calc(12px*var(--text-scale,1))] font-medium text-[color:var(--fg-dim)] transition-[background,color] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:text-[color:var(--fg)]"
             :class="
               route.path === item.to
                 ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] font-semibold text-[color:var(--fg)]'
@@ -184,7 +167,7 @@
           <div
             v-for="pl in sidebarPlaylists"
             :key="pl.kind"
-            class="side-item flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
+            class="flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] text-[calc(13px*var(--text-scale,1))] transition-[background] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
             :class="
               route.path === `/playlists/${pl.kind}`
                 ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)]'
@@ -193,7 +176,7 @@
             @click="router.push(`/playlists/${pl.kind}`)"
           >
             <div
-              class="cover"
+              class="cover flex items-center justify-center flex-none overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
               style="width: 30px; height: 30px; border-radius: 7px"
             >
               <img
@@ -206,24 +189,24 @@
                 v-else
                 name="mingcute:playlist-2-line"
                 :size="14"
-                class="faint"
+                class="text-[color:var(--fg-faint)]"
               />
             </div>
             <div class="col" style="min-width: 0">
-              <div class="ellipsis t-13">{{ pl.title }}</div>
+              <div class="truncate text-[calc(13px*var(--text-scale,1))]">{{ pl.title }}</div>
             </div>
             <Icon
               v-if="library.isPinned(pl.kind)"
               name="mingcute:pin-2-line"
               :size="13"
-              class="faint"
+              class="text-[color:var(--fg-faint)]"
             />
-            <span v-else class="faint t-11">{{ pl.track_count }}</span>
+            <span v-else class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))]">{{ pl.track_count }}</span>
 
-            <q-menu context-menu touch-position class="menu">
-              <div class="menu-body" style="min-width: 196px">
+            <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]">
+              <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 196px">
                 <div
-                  class="menu-item"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="library.togglePin(pl.kind)"
                 >
@@ -240,16 +223,16 @@
                   }}</span>
                 </div>
                 <div
-                  class="menu-item"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="router.push(`/playlists/${pl.kind}`)"
                 >
                   <Icon name="mingcute:playlist-2-line" :size="17" />
                   <span>Открыть плейлист</span>
                 </div>
-                <div class="menu-sep" />
+                <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
                 <div
-                  class="menu-item"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="library.toggleHidden(pl.kind)"
                 >
@@ -274,8 +257,7 @@
           <template v-if="library.hiddenPlaylists.length">
             <button
               type="button"
-              class="flex w-[calc(100%-16px)] cursor-pointer flex-none items-center mx-2 mt-2.5 mb-0.5 gap-[9px] border-0 bg-transparent rounded-[9px] px-3 py-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.05em] text-[color:var(--fg-faint)] transition-[background,color] duration-150 hover:bg-[var(--hover)] hover:text-[color:var(--fg-dim)]"
-              :class="{ open: showHidden }"
+              class="flex w-[calc(100%-16px)] cursor-pointer flex-none items-center mx-2 mt-2.5 mb-0.5 gap-[9px] border-0 rounded-[9px] px-3 py-1.5 text-left text-[11px] font-semibold uppercase tracking-[0.05em] text-[color:var(--fg-faint)] transition-[background,color] duration-150 hover:bg-[var(--hover)] hover:text-[color:var(--fg-dim)]"
               @click="showHidden = !showHidden"
             >
               <span
@@ -294,7 +276,7 @@
             <div
               v-for="pl in showHidden ? library.hiddenPlaylists : []"
               :key="`hidden-${pl.kind}`"
-              class="side-item opacity-60 flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:opacity-100"
+              class="opacity-60 flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-3 py-[5px] text-[calc(13px*var(--text-scale,1))] transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] hover:opacity-100"
               :class="
                 route.path === `/playlists/${pl.kind}`
                   ? 'bg-[color-mix(in_srgb,var(--fg)_8%,transparent)]'
@@ -303,7 +285,7 @@
               @click="router.push(`/playlists/${pl.kind}`)"
             >
               <div
-                class="cover"
+                class="cover flex items-center justify-center flex-none overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
                 style="width: 30px; height: 30px; border-radius: 7px"
               >
                 <img
@@ -316,15 +298,15 @@
                   v-else
                   name="mingcute:playlist-2-line"
                   :size="14"
-                  class="faint"
+                  class="text-[color:var(--fg-faint)]"
                 />
               </div>
               <div class="col" style="min-width: 0">
-                <div class="ellipsis t-13">{{ pl.title }}</div>
+                <div class="truncate text-[calc(13px*var(--text-scale,1))]">{{ pl.title }}</div>
               </div>
               <button
                 type="button"
-                class="icon-btn xs"
+                class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] border-0 p-0 text-[color:var(--fg-faint)] cursor-pointer appearance-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
                 title="Вернуть в коллекцию"
                 @click.stop="library.toggleHidden(pl.kind)"
               >
@@ -335,7 +317,7 @@
 
           <div
             v-if="!library.playlists.length"
-            class="faint t-12 q-px-lg q-py-sm"
+            class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))] q-px-lg q-py-sm"
           >
             Пусто
           </div>
@@ -361,10 +343,10 @@
 
         <div
           v-if="player.current"
-          class="now-block min-w-0 flex-none px-4 pt-0.5 pb-2.5"
+          class="min-w-0 flex-none px-4 pt-0.5 pb-2.5"
         >
           <div
-            class="cover"
+            class="cover flex items-center justify-center flex-none overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
             style="width: 100%; height: 268px; border-radius: 12px"
           >
             <img
@@ -373,12 +355,12 @@
               v-if="player.current.cover_url"
               :src="player.current.cover_url"
             />
-            <Icon v-else name="mingcute:music-line" :size="30" class="faint" />
+            <Icon v-else name="mingcute:music-line" :size="30" class="text-[color:var(--fg-faint)]" />
           </div>
-          <div class="q-mt-md t-15 w-600 ellipsis">
+          <div class="q-mt-md text-[calc(15px*var(--text-scale,1))] font-semibold truncate">
             {{ player.current.title }}
           </div>
-          <div class="dim t-13 clamp-2">
+          <div class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))] overflow-hidden [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]">
             <ArtistsLine :artists="player.current.artists" :limit="2" />
           </div>
         </div>
@@ -390,7 +372,7 @@
         </div>
 
         <div
-          class="queue-head flex-none flex items-center gap-2 px-4 pt-3 pb-1.5 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
+          class="flex-none flex items-center gap-2 px-4 pt-3 pb-1.5 text-[12px] font-semibold tracking-[-0.01em] text-[color:var(--fg-faint)]"
         >
           <span class="flex-1 min-w-0">Очередь</span>
           <span
@@ -402,8 +384,8 @@
           <button
             v-if="queueItems.length"
             type="button"
-            class="queue-locate"
-            :class="{ off: followCurrent }"
+            class="inline-flex items-center justify-center flex-none w-[22px] h-[22px] p-0 border-0 rounded-[6px] cursor-pointer select-none transition-[background,color,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+            :class="followCurrent ? 'text-[color:var(--fg-dim)] opacity-50' : 'text-[color:var(--accent,_#fa2d48)]'"
             title="Пролистать к текущему треку"
             @click="locateCurrent"
           >
@@ -413,22 +395,22 @@
 
         <q-scroll-area
           ref="queueScroll"
-          class="queue-scroll min-h-0 flex-1 pb-2"
+          class="w-full min-w-0 min-h-0 flex-1 pb-2"
           @scroll="onQueueScroll"
         >
           <div
             v-for="item in queueItems"
             :key="`${item.track.id}-${item.index}`"
-            class="side-item flex min-w-0 flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-2 py-1.5 transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
+            class="flex min-w-0 max-w-full flex-none cursor-pointer items-center gap-2.5 mx-2 my-px rounded-[10px] px-2 py-1.5 text-[calc(13px*var(--text-scale,1))] transition-[background,opacity] duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_7%,transparent)]"
             :class="{
-              'is-current bg-[var(--surface-2)]': item.index === player.index,
+              'bg-[var(--surface-2)]': item.index === player.index,
               'opacity-50': item.index < player.index,
             }"
             :data-queue-current="item.index === player.index ? '1' : null"
             @click="jumpTo(item.index)"
           >
             <div
-              class="cover"
+              class="cover flex items-center justify-center flex-none overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
               style="width: 30px; height: 30px; border-radius: 7px"
             >
               <img
@@ -441,12 +423,12 @@
                 v-else
                 name="mingcute:music-line"
                 :size="14"
-                class="faint"
+                class="text-[color:var(--fg-faint)]"
               />
             </div>
             <div class="flex-1 min-w-0">
               <div
-                class="ellipsis t-13"
+                class="truncate text-[calc(13px*var(--text-scale,1))]"
                 :class="
                   item.index === player.index
                     ? 'font-semibold text-[color:var(--accent)]'
@@ -455,7 +437,7 @@
               >
                 {{ item.track.title }}
               </div>
-              <div class="faint t-11 ellipsis">
+              <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">
                 <ArtistsLine :artists="item.track.artists" :limit="2" />
               </div>
             </div>
@@ -470,7 +452,7 @@
             <TrackMenu :context-menu="true" :track="item.track" />
           </div>
 
-          <div v-if="!queueItems.length" class="faint t-12 q-px-md q-py-sm">
+          <div v-if="!queueItems.length" class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))] q-px-md q-py-sm">
             Очередь пуста
           </div>
         </q-scroll-area>
@@ -492,7 +474,7 @@
       />
     </q-page-container>
 
-    <div v-if="panels.hidden" class="tray-idle">Играет в фоновом режиме</div>
+    <div v-if="panels.hidden" class="flex items-center justify-center h-screen text-[color:var(--fg-faint)] text-[13px]">Играет в фоновом режиме</div>
 
     <q-footer
       v-if="!panels.hidden && !panels.mini"
@@ -857,31 +839,3 @@ onBeforeUnmount(() => {
   unbindGlobalHotkeyEvents();
 });
 </script>
-
-<style scoped>
-.queue-locate {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--accent, #fa2d48);
-  cursor: pointer;
-  transition:
-    background 0.14s ease,
-    color 0.14s ease,
-    opacity 0.14s ease;
-}
-.queue-locate:hover {
-  background: var(--hover);
-}
-.queue-locate.off {
-  color: var(--fg-dim);
-  opacity: 0.5;
-}
-</style>

@@ -43,7 +43,7 @@
             </span>
             <button
               type="button"
-              class="rounded border border-[var(--line)] bg-transparent px-1.5 py-0.5 font-mono text-[10.5px] leading-snug text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+              class="rounded border border-[var(--line)] px-1.5 py-0.5 font-mono text-[10.5px] leading-snug text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
               title="Скопировать хэш коммита"
               @click="copyCommit"
             >

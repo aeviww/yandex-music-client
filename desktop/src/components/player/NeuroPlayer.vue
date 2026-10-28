@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="neuro.item && barHidden"
-    class="fixed z-[60] left-[max(14px,var(--neuro-left,14px))] bottom-[84px] flex max-w-[560px] min-w-0 items-center gap-3 rounded-[14px] border border-[var(--line)] bg-[var(--surface)] p-[8px] pr-[10px] shadow-[0_18px_44px_-20px_rgba(0,0,0,0.65)]"
+    class="fixed z-[60] left-[max(14px,var(--neuro-left,14px))] bottom-[84px] flex max-w-[560px] min-w-0 items-center gap-3 rounded-[14px] border border-[color:var(--line)] bg-[var(--surface)] p-[8px] pr-[10px] shadow-[0_18px_44px_-20px_rgba(0,0,0,0.65)]"
     :style="{
       '--neuro-left':
         typeof ui.settings.sidebarWidth === 'number'
@@ -27,10 +27,10 @@
     </div>
 
     <div class="min-w-0 flex-1">
-      <div class="ellipsis text-[13px] font-semibold" style="color: var(--fg)">
+      <div class="truncate text-[13px] font-semibold" style="color: var(--fg)">
         {{ neuro.stream?.title || neuro.item.title }}
       </div>
-      <div class="ellipsis text-[11.5px] text-[color:var(--fg-faint)]">
+      <div class="truncate text-[11.5px] text-[color:var(--fg-faint)]">
         {{
           neuro.stream?.subtitle ||
           neuro.stream?.title ||
@@ -40,7 +40,7 @@
     </div>
 
     <div v-if="neuro.loading" class="flex-none px-2">
-      <Icon name="mingcute:loading-3-line" :size="20" class="spin text-[color:var(--fg-faint)]" />
+      <Icon name="mingcute:loading-3-line" :size="20" class="text-[color:var(--fg-faint)]" />
     </div>
     <button
       v-else
@@ -56,7 +56,7 @@
 
     <button
       type="button"
-      class="icon-btn xs round h-[36px] w-[36px] flex-none text-[color:var(--fg-dim)] hover:bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] hover:text-[color:var(--fg)]"
+      class="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-[6px] border-0 p-0 appearance-none text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] hover:text-[color:var(--fg)]"
       title="Выключить нейромузыку"
       @click="stopNeuro"
     >

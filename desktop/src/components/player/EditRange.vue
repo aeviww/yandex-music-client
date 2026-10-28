@@ -1,11 +1,11 @@
 <template>
-  <label class="ed-range">
-    <span class="ed-range-top">
-      <span class="ed-range-label">{{ label }}</span>
-      <span class="ed-range-value">{{ modelValue }}{{ suffix }}</span>
+  <label class="block select-none">
+    <span class="flex items-baseline justify-between gap-[8px] mb-[4px]">
+      <span class="text-[11.5px] text-[color:var(--fg-dim)]">{{ label }}</span>
+      <span class="text-[11.5px] tabular-nums text-[color:var(--fg)] opacity-[0.85]">{{ modelValue }}{{ suffix }}</span>
     </span>
     <input
-      class="ed-range-input"
+      class="block w-full h-[16px] m-0 p-0 cursor-pointer bg-transparent appearance-none [&::-webkit-slider-runnable-track]:h-[3px] [&::-webkit-slider-runnable-track]:rounded-[3px] [&::-webkit-slider-runnable-track]:bg-[color-mix(in_srgb,var(--fg)_16%,transparent)] [&::-moz-range-track]:h-[3px] [&::-moz-range-track]:rounded-[3px] [&::-moz-range-track]:bg-[color-mix(in_srgb,var(--fg)_16%,transparent)] [&::-webkit-slider-thumb]:w-[12px] [&::-webkit-slider-thumb]:h-[12px] [&::-webkit-slider-thumb]:mt-[-4.5px] [&::-webkit-slider-thumb]:border-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent)] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:transition-[transform] [&::-webkit-slider-thumb]:duration-[120ms] [&::-webkit-slider-thumb]:ease-[ease] [&::-moz-range-thumb]:w-[12px] [&::-moz-range-thumb]:h-[12px] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--accent)] hover:[&::-webkit-slider-thumb]:scale-[1.18]"
       type="range"
       :min="min"
       :max="max"
@@ -38,78 +38,3 @@ function onInput(event: Event) {
   if (Number.isFinite(raw)) emit("update:modelValue", raw);
 }
 </script>
-
-<style scoped>
-.ed-range {
-  display: block;
-  user-select: none;
-}
-
-.ed-range-top {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-
-.ed-range-label {
-  font-size: 11.5px;
-  color: var(--fg-dim);
-}
-
-.ed-range-value {
-  font-size: 11.5px;
-  font-variant-numeric: tabular-nums;
-  color: var(--fg);
-  opacity: 0.85;
-}
-
-.ed-range-input {
-  display: block;
-  width: 100%;
-  height: 16px;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  background: transparent;
-  appearance: none;
-  -webkit-appearance: none;
-}
-
-.ed-range-input::-webkit-slider-runnable-track {
-  height: 3px;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--fg) 16%, transparent);
-}
-
-.ed-range-input::-moz-range-track {
-  height: 3px;
-  border-radius: 3px;
-  background: color-mix(in srgb, var(--fg) 16%, transparent);
-}
-
-.ed-range-input::-webkit-slider-thumb {
-  width: 12px;
-  height: 12px;
-  margin-top: -4.5px;
-  border: none;
-  border-radius: 50%;
-  background: var(--accent);
-  appearance: none;
-  -webkit-appearance: none;
-  transition: transform 0.12s ease;
-}
-
-.ed-range-input::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border: none;
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-.ed-range-input:hover::-webkit-slider-thumb {
-  transform: scale(1.18);
-}
-</style>

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="mini-player"
-    :class="{ 'has-viz': ui.settings.miniVisualizer, 'mini-preview': preview }"
+    class="fixed inset-0 z-[900] flex flex-col justify-between gap-[12px] px-[calc(var(--mini-pad,_10px)_+_2px)] py-[var(--mini-pad,_10px)] border border-[color:var(--line)] rounded-[16px] bg-[var(--bg)] opacity-[var(--mini-opacity,_1)] overflow-hidden select-none"
+    :class="preview ? '!absolute !z-[1] !rounded-[14px] pointer-events-none w-full max-w-[320px]' : ''"
     :style="rootStyle"
     @mousedown="onRootMouseDown"
     @contextmenu="onContext"
@@ -9,11 +9,11 @@
     <canvas
       v-if="ui.settings.miniVisualizer"
       ref="vizCanvas"
-      class="mini-visualizer"
+      class="absolute inset-0 w-full h-full z-[0] pointer-events-none opacity-[0.6]"
     />
 
-    <div class="mini-top" @dblclick="leaveMini()">
-      <div class="cover mini-cover">
+    <div class="relative z-[1] flex items-center gap-[11px]" @dblclick="leaveMini()">
+      <div class="cover relative flex items-center justify-center flex-none w-[var(--mini-cover,_38px)] h-[var(--mini-cover,_38px)] overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
         <Transition name="pb-cover">
           <img
             v-if="player.current?.cover_url"
@@ -21,17 +21,17 @@
             :src="player.current.cover_url"
             decoding="async"
           />
-          <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
+          <Icon v-else name="mingcute:music-line" :size="18" class="text-[color:var(--fg-faint)]" />
         </Transition>
       </div>
 
-      <div class="mini-meta">
+      <div data-mini-meta class="flex min-w-0 flex-auto flex-col gap-[2px]">
         <Transition name="pb-swap" mode="out-in">
-          <div :key="displayTitle" class="mini-title ellipsis">
+          <div :key="displayTitle" class="text-[color:var(--fg)] text-[calc(13px*var(--text-scale,1))] font-semibold leading-[1.25] truncate">
             {{ displayTitle }}<AiTag :show="isAiCurrent" />
           </div>
         </Transition>
-        <div class="mini-artist ellipsis" data-no-drag>
+        <div class="text-[color:var(--fg-dim)] text-[calc(11.5px*var(--text-scale,1))] leading-[1.25] truncate" data-no-drag>
           <Transition name="pb-swap" mode="out-in">
             <ArtistsLine
               v-if="player.current"
@@ -52,7 +52,7 @@
       <button
         v-if="!preview"
         type="button"
-        class="mini-btn mini-restore"
+        :class="miniRestoreClass"
         data-no-drag
         aria-label="Вернуться в обычный вид"
         @click.stop="leaveMini()"
@@ -62,12 +62,12 @@
       </button>
     </div>
 
-    <div class="mini-controls">
+    <div class="relative z-[1] flex max-w-full flex-wrap items-center justify-center gap-x-[var(--mini-gap,_4px)] gap-y-[2px]">
       <template v-for="id in miniButtons" :key="id">
         <button
           v-if="id === 'play'"
           type="button"
-          class="mini-btn mini-play"
+          :class="miniPlayClass"
           data-no-drag
           :aria-label="player.isPlaying ? 'Пауза' : 'Играть'"
           @click.stop="player.toggle()"
@@ -93,8 +93,7 @@
         <button
           v-else-if="id === 'prev'"
           type="button"
-          class="mini-btn"
-          :class="{ dim: !player.hasPrev }"
+          :class="[miniBtnClass, !player.hasPrev ? miniDimClass : '']"
           data-no-drag
           aria-label="Предыдущий трек"
           @click.stop="player.prev()"
@@ -106,7 +105,7 @@
         <button
           v-else-if="id === 'next'"
           type="button"
-          class="mini-btn"
+          :class="miniBtnClass"
           data-no-drag
           aria-label="Следующий трек"
           @click.stop="player.next(false)"
@@ -118,8 +117,7 @@
         <button
           v-else-if="id === 'shuffle'"
           type="button"
-          class="mini-btn"
-          :class="{ on: player.shuffle }"
+          :class="[miniBtnClass, player.shuffle ? miniOnClass : '']"
           data-no-drag
           aria-label="Перемешать"
           @click.stop="player.toggleShuffle()"
@@ -131,8 +129,7 @@
         <button
           v-else-if="id === 'repeat'"
           type="button"
-          class="mini-btn"
-          :class="{ on: player.repeat !== 'off' }"
+          :class="[miniBtnClass, player.repeat !== 'off' ? miniOnClass : '']"
           data-no-drag
           aria-label="Повтор"
           @click.stop="player.cycleRepeat()"
@@ -151,8 +148,7 @@
         <button
           v-else-if="id === 'like'"
           type="button"
-          class="mini-btn"
-          :class="{ on: isLiked, dim: !player.current }"
+          :class="[miniBtnClass, isLiked ? miniOnClass : '', !player.current ? miniDimClass : '']"
           data-no-drag
           aria-label="Нравится"
           @click.stop="player.current && player.like()"
@@ -167,8 +163,7 @@
         <button
           v-else-if="id === 'dislike'"
           type="button"
-          class="mini-btn"
-          :class="{ dim: !player.current }"
+          :class="[miniBtnClass, !player.current ? miniDimClass : '']"
           data-no-drag
           aria-label="Не нравится"
           @click.stop="player.current && player.dislike()"
@@ -180,8 +175,7 @@
         <button
           v-else-if="id === 'lyrics'"
           type="button"
-          class="mini-btn"
-          :class="{ on: player.showLyrics, dim: !player.current }"
+          :class="[miniBtnClass, player.showLyrics ? miniOnClass : '', !player.current ? miniDimClass : '']"
           data-no-drag
           aria-label="Текст песни"
           @click.stop="player.current && player.toggleLyrics()"
@@ -192,7 +186,7 @@
 
         <div
           v-else-if="id === 'volume'"
-          class="mini-vol"
+          class="relative inline-flex items-center justify-center"
           data-no-drag
           @mouseenter="onVolEnter"
           @mouseleave="onVolLeave"
@@ -200,20 +194,20 @@
           <Transition name="mini-vol-pop">
             <div
               v-if="volumeOpen"
-              class="mini-vol-pop"
+              class="absolute bottom-[calc(100%_+_6px)] left-[50%] z-[30] flex max-h-[calc(var(--mini-h,_100vh)_-_96px)] flex-col items-center justify-center w-[26px] px-0 py-[7px] border border-[color:rgba(255,255,255,0.09)] rounded-full bg-[#141414] -translate-x-1/2 shadow-[0_10px_26px_rgba(0,0,0,0.55)]"
               data-no-drag
               @wheel.prevent.stop="onVolWheel"
             >
               <div
                 ref="volTrack"
-                class="mini-vol-track"
+                class="group relative w-[4px] flex-initial h-[min(var(--mini-volume-height,_40px),var(--mini-h,_100vh)_-_110px)] min-h-[24px] rounded-full bg-[color-mix(in_srgb,var(--fg)_16%,transparent)] cursor-grab touch-none transition-[width] duration-[120ms] ease-[ease] hover:w-[6px] active:cursor-grabbing before:absolute before:z-[1] before:inset-[-8px_-11px] before:content-['']"
                 @pointerdown.stop="onVolPointerDown"
               >
                 <div
-                  class="mini-vol-fill"
+                  class="absolute bottom-0 left-0 w-full pointer-events-none rounded-full bg-[linear-gradient(to_top,color-mix(in_srgb,var(--accent)_70%,transparent),var(--accent))]"
                   :style="{ height: `${volumePercent}%` }"
                 >
-                  <span class="mini-vol-knob" />
+                  <span class="absolute top-0 left-1/2 w-[10px] h-[10px] pointer-events-none rounded-full bg-[var(--fg)] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_32%,transparent)] transition-[box-shadow] duration-[140ms] ease-[ease] group-hover:shadow-[0_0_0_5px_color-mix(in_srgb,var(--accent)_38%,transparent)]" />
                 </div>
               </div>
             </div>
@@ -221,8 +215,7 @@
 
           <button
             type="button"
-            class="mini-btn"
-            :class="{ on: volumeOpen }"
+            :class="[miniBtnClass, volumeOpen ? miniOnClass : '']"
             data-no-drag
             aria-label="Громкость"
             @click.stop="onVolClick"
@@ -237,18 +230,18 @@
       </template>
     </div>
 
-    <div class="mini-seek">
-      <span v-if="ui.settings.miniShowTime" class="mini-time">
+    <div class="relative z-[1] flex items-center gap-[8px]">
+      <span v-if="ui.settings.miniShowTime" class="flex-none text-[color:var(--fg-faint)] text-[calc(10.5px*var(--text-scale,1))] tabular-nums">
         {{ formatDuration(player.progress * 1000) }}
       </span>
 
-      <div class="mini-bar" data-no-drag @click.stop="seekAt">
-        <div class="mini-bar-fill" :style="{ width: `${percent}%` }">
-          <span class="mini-bar-knob" />
+      <div class="group relative h-[5px] flex-auto rounded-full bg-[var(--surface-2)] cursor-pointer" data-no-drag @click.stop="seekAt">
+        <div class="relative h-full rounded-full bg-[var(--accent)]" :style="{ width: `${percent}%` }">
+          <span class="absolute top-1/2 -right-[4px] w-[9px] h-[9px] rounded-full bg-[#fff] opacity-0 -translate-y-1/2 transition-opacity duration-[140ms] ease-[ease] group-hover:opacity-100" />
         </div>
       </div>
 
-      <span v-if="ui.settings.miniShowTime" class="mini-time">
+      <span v-if="ui.settings.miniShowTime" class="flex-none text-[color:var(--fg-faint)] text-[calc(10.5px*var(--text-scale,1))] tabular-nums">
         {{ formatDuration(player.duration * 1000) }}
       </span>
     </div>
@@ -283,6 +276,16 @@ const router = useRouter();
 
 const miniButtons = computed(() => ui.activeMiniButtons());
 
+const miniBtnBase =
+  "inline-flex items-center justify-center p-0 border-0 text-[color:var(--fg-dim)] cursor-pointer [&_svg]:flex-none";
+const miniBtnSkin =
+  "transition-[background,color,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] active:scale-[0.88]";
+const miniBtnClass = `${miniBtnBase} ${miniBtnSkin} w-[calc(var(--mini-icon,_15px)_*_2)] h-[calc(var(--mini-icon,_15px)_*_2)] flex-[0_0_calc(var(--mini-icon,15px)*2)] rounded-full bg-transparent`;
+const miniRestoreClass = `${miniBtnBase} ${miniBtnSkin} w-[28px] h-[28px] flex-[0_0_28px] rounded-[9px] bg-[color-mix(in_srgb,var(--surface-2)_75%,transparent)]`;
+const miniPlayClass = `${miniBtnBase} rounded-full w-[calc(var(--mini-icon,_15px)_*_2.5)] h-[calc(var(--mini-icon,_15px)_*_2.5)] flex-[0_0_calc(var(--mini-icon,15px)*2.5)] mx-[4px] my-0 bg-[var(--accent)] !text-[color:#fff] [transition:transform_0.18s_ease,background_0.15s_ease] hover:!bg-[color-mix(in_srgb,var(--accent)_88%,white)] hover:!text-[color:#fff] active:!scale-[0.9]`;
+const miniOnClass = "!text-[color:var(--accent)]";
+const miniDimClass = "opacity-[0.4]";
+
 function onRootMouseDown(event: MouseEvent) {
   if (props.preview) return;
   startWindowDrag(event);
@@ -296,7 +299,7 @@ async function leaveMini() {
 async function onContext(event: MouseEvent) {
   if (props.preview) return;
   const target = event.target as HTMLElement | null;
-  if (target?.closest(".mini-meta")) return;
+  if (target?.closest("[data-mini-meta]")) return;
   event.preventDefault();
   await panels.exitMini();
   await router.push({ path: "/settings", query: { section: "mini" } });
@@ -461,12 +464,3 @@ onBeforeUnmount(() => {
   if (!props.preview) delete document.documentElement.dataset.mini;
 });
 </script>
-
-<style scoped>
-.mini-player.mini-preview {
-  position: absolute;
-  z-index: 1;
-  border-radius: 14px;
-  pointer-events: none;
-}
-</style>

@@ -51,7 +51,7 @@
     </div>
     <button
       type="button"
-      class="mt-[24px] min-h-[44px] w-full cursor-pointer rounded-[8px] border border-solid border-[#5f5f5f] bg-transparent px-[16px] py-[10px] text-[14px] text-white transition-colors hover:bg-[#252525] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+      class="mt-[24px] min-h-[44px] w-full cursor-pointer rounded-[8px] border border-solid border-[#5f5f5f] px-[16px] py-[10px] text-[14px] text-white transition-colors hover:bg-[#252525] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
       @click="$emit('cancel')"
     >
       Отменить вход

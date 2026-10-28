@@ -1,18 +1,18 @@
 <template>
-  <div class="me-sheet" @contextmenu.stop.prevent @mousedown.stop>
-    <div class="me-head">
-      <span class="me-title">Вид мини-плеера</span>
-      <div class="me-head-actions">
-        <button type="button" class="me-act" @click="reset">Сброс</button>
-        <button type="button" class="me-act" @click="cancel">Отмена</button>
-        <button type="button" class="me-act accent" @click="ui.finishEdit()">
+  <div class="absolute z-40 inset-0 flex flex-col bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] backdrop-blur-[20px]" @contextmenu.stop.prevent @mousedown.stop>
+    <div class="flex items-center justify-between flex-none gap-[8px] px-[9px] py-[7px] border-b border-[var(--line)]">
+      <span class="text-[11.5px] font-[620]">Вид мини-плеера</span>
+      <div class="flex gap-[4px]">
+        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)]" @click="reset">Сброс</button>
+        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)]" @click="cancel">Отмена</button>
+        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] !border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff]" @click="ui.finishEdit()">
           Готово
         </button>
       </div>
     </div>
 
-    <div class="me-body">
-      <div class="me-group-head">Окно</div>
+    <div class="flex-1 overflow-x-hidden overflow-y-auto p-[8px_10px_12px] [&>label]:mb-[8px]">
+      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Окно</div>
       <EditRange
         label="Ширина"
         suffix=" px"
@@ -30,7 +30,7 @@
         @update:model-value="setHeight"
       />
 
-      <div class="me-group-head">Размеры</div>
+      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Размеры</div>
       <EditRange
         label="Обложка"
         suffix=" px"
@@ -81,7 +81,7 @@
         @update:model-value="ui.set('miniVolumeHeight', $event)"
       />
 
-      <div class="me-group-head">Показывать</div>
+      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Показывать</div>
       <EditSwitch
         label="Время"
         :model-value="s.miniShowTime"
@@ -98,25 +98,25 @@
         @update:model-value="ui.set('miniVolumeSlider', $event)"
       />
 
-      <div class="me-group-head">Кнопки — тяни за порядок</div>
-      <div class="me-list">
+      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Кнопки — тяни за порядок</div>
+      <div class="flex flex-col gap-[3px]">
         <div
           v-for="(id, index) in order"
           :key="id"
-          class="me-item"
-          :class="{ off: !visible(id), dragging: dragId === id }"
+          class="flex items-center gap-[6px] px-[6px] py-[4px] border border-transparent rounded-[8px] bg-[var(--surface-2)] text-[11px] cursor-grab hover:border-[color:var(--line)]"
+          :class="{ 'opacity-45': !visible(id) && dragId !== id, 'opacity-35': dragId === id }"
           draggable="true"
           @dragstart="onDragStart(id, $event)"
           @dragend="dragId = null"
           @dragover.prevent
           @drop.prevent="onDrop(index)"
         >
-          <Icon name="mingcute:dots-line" :size="11" class="faint" />
+          <Icon name="mingcute:dots-line" :size="11" class="text-[color:var(--fg-faint)]" />
           <Icon :name="iconOf(id)" :size="13" />
-          <span class="me-item-label ellipsis">{{ labelOf(id) }}</span>
+          <span class="flex-1 min-w-0 truncate">{{ labelOf(id) }}</span>
           <button
             type="button"
-            class="me-eye"
+            class="inline-flex items-center justify-center w-[20px] h-[20px] flex-none border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer enabled:hover:bg-[var(--hover)] enabled:hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-35"
             :disabled="locked.has(id)"
             :title="locked.has(id) ? 'Всегда на месте' : 'Показать или скрыть'"
             @click.stop="toggle(id)"
@@ -198,138 +198,3 @@ function cancel() {
   applySize();
 }
 </script>
-
-<style scoped>
-.me-sheet {
-  position: absolute;
-  z-index: 40;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  backdrop-filter: blur(20px);
-}
-
-.me-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex: 0 0 auto;
-  gap: 8px;
-  padding: 7px 9px;
-  border-bottom: 1px solid var(--line);
-}
-
-.me-title {
-  font-size: 11.5px;
-  font-weight: 620;
-}
-
-.me-head-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.me-act {
-  padding: 3px 8px;
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  background: transparent;
-  color: var(--fg);
-  font: inherit;
-  font-size: 10.5px;
-  cursor: pointer;
-}
-
-.me-act:hover {
-  background: var(--hover);
-}
-
-.me-act.accent {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
-.me-body {
-  flex: 1 1 auto;
-  overflow: hidden auto;
-  padding: 8px 10px 12px;
-}
-
-.me-group-head {
-  margin: 8px 0 6px;
-  color: var(--fg-faint);
-  font-size: 9.5px;
-  font-weight: 620;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.me-group-head:first-child {
-  margin-top: 0;
-}
-
-.me-body :deep(.ed-range) {
-  margin-bottom: 8px;
-}
-
-.me-list {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.me-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 6px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: var(--surface-2);
-  font-size: 11px;
-  cursor: grab;
-}
-
-.me-item:hover {
-  border-color: var(--line);
-}
-
-.me-item.off {
-  opacity: 0.45;
-}
-
-.me-item.dragging {
-  opacity: 0.35;
-}
-
-.me-item-label {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.me-eye {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--fg-dim);
-  cursor: pointer;
-}
-
-.me-eye:hover:not(:disabled) {
-  background: var(--hover);
-  color: var(--fg);
-}
-
-.me-eye:disabled {
-  cursor: default;
-  opacity: 0.35;
-}
-</style>

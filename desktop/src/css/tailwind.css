@@ -1,8 +1,377 @@
 @tailwind base;
 @tailwind components;
+
+:root {
+  --q-primary: #f2f2f2;
+  --q-secondary: #8a8a8a;
+  --q-accent: #ffffff;
+  --q-positive: #4ade80;
+  --q-negative: #f87171;
+  --q-info: #f2f2f2;
+  --q-warning: #fbbf24;
+  --q-dark: #121212;
+  --q-dark-page: #0a0a0a;
+}
+
+.q-badge,
+.q-card,
+.q-carousel .q-carousel__thumbnail,
+.q-message-text--received,
+.q-message-text--sent,
+.q-chip--square,
+.q-color-picker,
+.q-color-picker__tune-tab input,
+.q-date,
+.q-dialog__inner > div,
+.q-editor,
+.q-fab--form-square,
+.q-field--filled .q-field__control,
+.q-field--outlined .q-field__control,
+.q-field--standout .q-field__control,
+.q-menu,
+.q-skeleton,
+.q-slider__track,
+.q-slider__text-container,
+.q-stepper,
+.q-table__card,
+.q-table--grid,
+.q-time,
+.q-tooltip--style,
+.q-tree__node-header,
+.q-uploader,
+.q-uploader__file,
+.q-loading__box,
+.q-notification,
+.q-notification__badge,
+.q-notification__progress {
+  @apply rounded-[10px];
+}
+
+html,
+body,
+#q-app {
+  @apply h-full;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html[data-mode="light"] {
+  color-scheme: light;
+}
+
+input,
+select,
+textarea,
+button,
+optgroup,
+option {
+  @apply text-[color:var(--fg)];
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+
+select {
+  @apply appearance-none bg-[var(--surface)] cursor-pointer;
+  -webkit-appearance: none;
+}
+
+select option,
+select optgroup {
+  @apply bg-[#17171a] text-[color:#f5f5f7];
+}
+
+html {
+  @apply text-[calc(16px_*_var(--text-scale,_1))];
+}
+
+body {
+  @apply text-[calc(14px_*_var(--text-scale,_1))] tracking-[-0.01em] bg-[var(--bg)] text-[color:var(--fg)] select-text;
+  font-family:
+    "Inter", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  @apply select-none;
+}
+
+/*
+ * Tailwind preflight is disabled, so buttons keep the UA "buttonface" paint
+ * (opaque gray in dark color-scheme). Restore the part of preflight the UI
+ * relies on: unbranded buttons start transparent.
+ */
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  background-color: transparent;
+  background-image: none;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  @apply w-[10px] h-[10px];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#2e2e2e] rounded-[10px] border-[3px] border-transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#454545] border-[2px] border-transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+html,
+body {
+  @apply overscroll-none overflow-hidden;
+}
+
+.q-scrollarea__container {
+  @apply overscroll-contain;
+}
+
+:root {
+  --bg: #09090b;
+  --surface: #151518;
+  --surface-2: #1c1c20;
+  --hover: #242429;
+  --line: rgba(255, 255, 255, 0.085);
+  --fg: #f5f5f7;
+  --fg-dim: #a1a1a8;
+  --fg-faint: #68686f;
+  --accent: #fa2d48;
+  --shadow-strong: rgba(0, 0, 0, 0.75);
+  --shadow-soft: rgba(0, 0, 0, 0.45);
+  --radius: 12px;
+  --page-top-gap: 10px;
+  --track-height: 52px;
+  --sidebar-width: 236px;
+  --topbar-gradient: linear-gradient(
+    180deg,
+    rgba(9, 9, 11, 0.82) 0%,
+    rgba(9, 9, 11, 0.45) 60%,
+    rgba(9, 9, 11, 0) 100%
+  );
+}
+
+.q-page-container {
+  @apply overflow-x-hidden;
+}
+
+.q-page {
+  @apply min-w-0 max-w-full overflow-x-hidden;
+}
+
+/* Quasar slider / scrollarea geometry */
+.q-slider__track {
+  @apply bg-[rgba(255,_255,_255,_0.14)];
+}
+
+.q-slider__selection,
+.q-toggle__inner--truthy .q-toggle__track,
+.q-toggle__inner--truthy .q-toggle__thumb {
+  color: var(--accent) !important;
+  background: var(--accent) !important;
+}
+
+.q-slider__track-container,
+.q-slider__track,
+.q-slider__selection {
+  border-radius: var(--radius) !important;
+}
+
+.q-slider__thumb {
+  border-radius: 50% !important;
+}
+
+.q-scrollarea__thumb {
+  width: max(4px, var(--radius) * 0.4) !important;
+}
+
+/* Playlist / album selection bar */
+.select-float {
+  @apply fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[16px] bg-[color-mix(in_srgb,_var(--accent)_12%,_var(--surface))];
+  box-shadow: 0 22px 48px -20px rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(var(--glass-blur, 12px));
+  transform: translateX(-50%);
+  animation: select-float-in 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+@keyframes select-float-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .select-float {
+    @apply max-w-[calc(100vw_-_24px)] px-[12px] py-[9px];
+  }
+}
+
+/* Route transitions */
+.page-enter-active {
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.26s cubic-bezier(0.22, 0.65, 0.28, 1);
+}
+
+.page-leave-active {
+  transition:
+    opacity 0.14s ease-in,
+    transform 0.16s ease-in;
+}
+
+.page-enter-from {
+  @apply opacity-[0];
+  transform: translateY(10px);
+}
+
+.page-leave-to {
+  @apply opacity-[0];
+  transform: translateY(-6px);
+}
+
+/* Compact notifications in mini player */
+html[data-mini] .q-notifications__list {
+  @apply p-[6px];
+}
+html[data-mini] .q-notification {
+  @apply min-h-0 max-w-[calc(100vw_-_24px)] px-[10px] py-[4px] rounded-[9px] text-[11px] leading-[1.25] opacity-[0.94];
+}
+html[data-mini] .q-notification__message {
+  @apply px-0 py-[2px];
+}
+html[data-mini] .q-notification__actions {
+  @apply hidden;
+}
+
+/* Feature flags */
+html[data-cover-style="square"] .cover:not(.cover-round) {
+  border-radius: 2px !important;
+}
+
+html[data-cover-style="soft"] .cover:not(.cover-round) {
+  border-radius: calc(var(--radius) * 0.8) !important;
+}
+
+html[data-cover-style="rounded"] .cover:not(.cover-round) {
+  border-radius: calc(var(--radius) * 1.5) !important;
+}
+
+html.hide-playlist-covers .sidebar .cover {
+  @apply hidden;
+}
+
+html.hide-player-artwork .q-footer .cover {
+  @apply hidden;
+}
+
+html.thin-scrollbar ::-webkit-scrollbar {
+  @apply w-[6px] h-[6px];
+}
+
+html.thin-scrollbar ::-webkit-scrollbar-thumb {
+  @apply border-[1px] rounded-[var(--radius)];
+}
+
+.no-glass .topbar,
+.no-glass .q-menu {
+  backdrop-filter: none;
+}
+
+.no-motion *,
+.no-motion *::before,
+.no-motion *::after {
+  scroll-behavior: auto !important;
+  animation: none !important;
+  transition: none !important;
+}
+
 @tailwind utilities;
+
+/*
+ * Quasar's .flex/.column helpers set flex-wrap: wrap, which silently breaks
+ * Tailwind layouts inside fixed-height containers (items wrap into extra
+ * columns/rows). Keep Tailwind semantics: wrap only when asked explicitly.
+ */
+.flex {
+  flex-wrap: nowrap;
+}
+
+.flex-col,
+.flex-col-reverse {
+  flex-wrap: nowrap;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
 
 *::selection {
   color: #000;
   background: #fff;
+}
+
+/* Light theme: only Quasar/global surfaces need explicit overrides;
+   component colors come from the CSS variables set in the UI store. */
+html[data-mode="light"] body,
+html[data-mode="light"] .q-layout,
+html[data-mode="light"] .q-page-container {
+  @apply bg-[var(--bg)] text-[color:var(--fg)];
+}
+
+html[data-mode="light"] .q-tooltip {
+  @apply bg-[color-mix(in_srgb,_var(--fg)_88%,_transparent)] text-[color:var(--surface)];
+}
+
+html[data-mode="light"] .q-slider__track {
+  @apply bg-[rgba(0,_0,_0,_0.14)];
+}
+
+html[data-mode="light"] .q-header.topbar {
+  backdrop-filter: none;
+}
+
+html[data-mode="light"] .q-menu {
+  @apply border border-[color:var(--line)] bg-[var(--surface)] text-[color:var(--fg)];
+  box-shadow: 0 16px 40px var(--shadow-soft);
+}
+
+html[data-mode="light"] .q-field__control {
+  @apply border-[color:var(--line)] text-[color:var(--fg)];
+}
+
+html[data-mode="light"] .cover {
+  box-shadow: 0 6px 16px -10px var(--shadow-soft);
+}
+
+html[data-mode="light"] ::-webkit-scrollbar-thumb {
+  @apply bg-[rgba(0,_0,_0,_0.18)];
+}
+
+html[data-mode="light"] ::-webkit-scrollbar-thumb:hover {
+  @apply bg-[rgba(0,_0,_0,_0.28)];
 }

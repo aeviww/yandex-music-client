@@ -1,28 +1,28 @@
 <template>
-  <div class="pe-panel" @contextmenu.stop.prevent @pointerdown.stop>
-    <div class="pe-panel-head">
-      <div class="pe-panel-copy">
-        <div class="pe-panel-title">Редактор плеера</div>
-        <div class="pe-panel-sub">
+  <div class="pe-panel absolute bottom-[calc(100%_+_10px)] left-1/2 z-30 w-[min(940px,calc(100vw_-_32px))] px-[14px] pt-[12px] pb-[14px] border border-[color:var(--line)] rounded-[14px] bg-[var(--surface-2)] shadow-[var(--shadow-strong,0_22px_60px_rgba(0,0,0,0.5))] -translate-x-1/2" @contextmenu.stop.prevent @pointerdown.stop>
+    <div class="flex items-start justify-between gap-[14px] pb-[10px] border-b border-[color:var(--line)]">
+      <div>
+        <div class="text-[13px] font-[620]">Редактор плеера</div>
+        <div class="mt-[2px] text-[color:var(--fg-dim)] text-[11.5px]">
           Тяни кнопки прямо на плеере, края меняют размер. Всё видно сразу.
         </div>
       </div>
-      <div class="pe-panel-actions">
-        <button type="button" class="pe-act" @click="ui.resetPlayerLayout()">
+      <div class="flex flex-[0_0_auto] gap-[6px]">
+        <button type="button" class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.resetPlayerLayout()">
           Сбросить
         </button>
-        <button type="button" class="pe-act" @click="ui.cancelEdit()">
+        <button type="button" class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.cancelEdit()">
           Отмена
         </button>
-        <button type="button" class="pe-act accent" @click="ui.finishEdit()">
+        <button type="button" class="!border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] px-[11px] py-[5px] border rounded-[8px] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.finishEdit()">
           Готово
         </button>
       </div>
     </div>
 
-    <div class="pe-panel-body">
-      <div class="pe-col">
-        <div class="pe-col-head">Размеры</div>
+    <div class="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-x-[20px] gap-y-[10px] pt-[12px] max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))]">
+      <div class="[&>label]:mb-[9px]">
+        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Размеры</div>
         <EditRange
           label="Высота плеера"
           suffix=" px"
@@ -57,8 +57,8 @@
         />
       </div>
 
-      <div class="pe-col">
-        <div class="pe-col-head">Геометрия</div>
+      <div class="[&>label]:mb-[9px]">
+        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Геометрия</div>
         <EditRange
           label="Поля по краям"
           suffix=" px"
@@ -93,8 +93,8 @@
         />
       </div>
 
-      <div class="pe-col">
-        <div class="pe-col-head">На плеере</div>
+      <div>
+        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">На плеере</div>
         <EditSwitch
           label="Время трека"
           :model-value="s.playerShowTimes"
@@ -112,11 +112,11 @@
         />
       </div>
 
-      <div class="pe-col pe-col-wide">
-        <div class="pe-col-head">Скрытые кнопки</div>
+      <div>
+        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Скрытые кнопки</div>
         <div
-          class="pe-tray"
-          :class="{ over: trayOver }"
+          class="flex items-start flex-wrap gap-[5px] min-h-[74px] p-[8px] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] rounded-[10px] transition-[background] duration-[140ms] ease-[ease]"
+          :class="{ 'bg-[color-mix(in_srgb,var(--accent)_12%,transparent)]': trayOver }"
           @dragover.prevent="trayOver = true"
           @dragleave="trayOver = false"
           @drop.prevent="onDropHide"
@@ -124,18 +124,18 @@
           <span
             v-for="id in hidden"
             :key="id"
-            class="pe-chip"
+            class="inline-flex items-center gap-[5px] px-[9px] py-[4px] border border-[color:var(--line)] rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[11px] cursor-grab hover:text-[color:var(--fg)]"
             draggable="true"
             @dragstart="onDragStart(id, $event)"
           >
             <Icon :name="iconOf(id)" :size="13" />
             {{ labelOf(id) }}
           </span>
-          <span v-if="!hidden.length" class="pe-tray-empty">
+          <span v-if="!hidden.length" class="text-[color:var(--fg-faint)] text-[11px] leading-[1.4]">
             Перетащи сюда кнопку с плеера, чтобы убрать её
           </span>
         </div>
-        <div class="pe-tray-hint">
+        <div class="mt-[6px] text-[color:var(--fg-faint)] text-[10.5px] leading-[1.4]">
           Обратно — просто перетащи чип в нужную часть плеера.
         </div>
       </div>
@@ -192,17 +192,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown, true));
 
 <style scoped>
 .pe-panel {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  z-index: 30;
-  width: min(940px, calc(100vw - 32px));
-  padding: 12px 14px 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface-2);
-  box-shadow: var(--shadow-strong, 0 22px 60px rgba(0, 0, 0, 0.5));
-  transform: translateX(-50%);
   animation: pe-panel-in 0.16s ease;
 }
 
@@ -214,126 +203,6 @@ onBeforeUnmount(() => window.removeEventListener("keydown", onKeydown, true));
   to {
     opacity: 1;
     transform: translate(-50%, 0);
-  }
-}
-
-.pe-panel-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--line);
-}
-
-.pe-panel-title {
-  font-size: 13px;
-  font-weight: 620;
-}
-
-.pe-panel-sub {
-  margin-top: 2px;
-  color: var(--fg-dim);
-  font-size: 11.5px;
-}
-
-.pe-panel-actions {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 6px;
-}
-
-.pe-act {
-  padding: 5px 11px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: transparent;
-  color: var(--fg);
-  font: inherit;
-  font-size: 11.5px;
-  cursor: pointer;
-  transition: background 0.14s ease;
-}
-
-.pe-act:hover {
-  background: var(--hover);
-}
-
-.pe-act.accent {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
-.pe-panel-body {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px 20px;
-  padding-top: 12px;
-}
-
-.pe-col-head {
-  margin-bottom: 8px;
-  color: var(--fg-faint);
-  font-size: 10px;
-  font-weight: 620;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.pe-col :deep(.ed-range) {
-  margin-bottom: 9px;
-}
-
-.pe-tray {
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 5px;
-  min-height: 74px;
-  padding: 8px;
-  border: 1px dashed color-mix(in srgb, var(--accent) 40%, transparent);
-  border-radius: 10px;
-  transition: background 0.14s ease;
-}
-
-.pe-tray.over {
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-
-.pe-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 9px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--fg-dim);
-  font-size: 11px;
-  cursor: grab;
-}
-
-.pe-chip:hover {
-  color: var(--fg);
-}
-
-.pe-tray-empty {
-  color: var(--fg-faint);
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-.pe-tray-hint {
-  margin-top: 6px;
-  color: var(--fg-faint);
-  font-size: 10.5px;
-  line-height: 1.4;
-}
-
-@media (max-width: 1100px) {
-  .pe-panel-body {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

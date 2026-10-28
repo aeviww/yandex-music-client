@@ -1,53 +1,89 @@
 <template>
   <q-dialog v-model="model">
-    <div class="ainfo">
-      <div class="ainfo-head">
-        <div class="cover ainfo-avatar round">
+    <div
+      class="flex flex-col w-[min(520px,92vw)] max-h-[82vh] overflow-hidden border border-[color:var(--line)] rounded-[var(--radius,12px)] bg-[var(--surface)]"
+    >
+      <div class="flex items-center gap-[12px] pt-[14px] px-[14px] pb-[12px]">
+        <div
+          class="cover cover-round flex-none w-[42px] h-[42px] rounded-full overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+        >
           <img v-if="artist?.cover_url" :src="artist.cover_url" />
-          <Icon v-else name="mingcute:user-2-line" :size="22" class="faint" />
+          <Icon
+            v-else
+            name="mingcute:user-2-line"
+            :size="22"
+            class="text-[color:var(--fg-faint)]"
+          />
         </div>
         <div class="col" style="min-width: 0">
-          <div class="ainfo-name ellipsis">{{ artist?.name }}</div>
-          <div class="ainfo-sub ellipsis">{{ subtitle }}</div>
+          <div class="text-[15px] font-semibold truncate">{{ artist?.name }}</div>
+          <div class="mt-[1px] text-[12px] text-[color:var(--fg-dim)] truncate">
+            {{ subtitle }}
+          </div>
         </div>
-        <div class="icon-btn round" @click="model = false">
+        <div
+          class="flex w-[30px] h-[30px] items-center justify-center rounded-full text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+          @click="model = false"
+        >
           <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
 
-      <div class="ainfo-body">
-        <div class="ainfo-facts">
-          <div v-for="fact in facts" :key="fact.key" class="ainfo-fact">
-            <span class="ainfo-fact-label">{{ fact.label }}</span>
-            <span class="ainfo-fact-value">{{ fact.value }}</span>
-            <span v-if="fact.delta" class="ainfo-fact-delta" :class="fact.dir">
+      <div class="overflow-y-auto pt-0 px-[16px] pb-[16px]">
+        <div class="flex flex-col">
+          <div
+            v-for="fact in facts"
+            :key="fact.key"
+            class="flex items-baseline gap-[8px] py-[7px] border-t border-t-[color:var(--line)] border-solid text-[13px]"
+          >
+            <span class="flex-1 text-[color:var(--fg-dim)]">{{ fact.label }}</span>
+            <span class="tabular-nums">{{ fact.value }}</span>
+            <span
+              v-if="fact.delta"
+              class="text-[11px] tabular-nums"
+              :class="
+                fact.dir === 'up'
+                  ? 'text-[#35c26a]'
+                  : 'text-[color:var(--accent,#fa2d48)]'
+              "
+            >
               {{ fact.delta }}
             </span>
           </div>
         </div>
 
-        <div v-if="chart" class="ainfo-chart">
+        <div v-if="chart" class="mt-[14px] [&_svg]:block [&_svg]:w-full [&_svg]:h-[56px] [&_polyline]:[stroke:var(--fg-dim)] [&_polyline]:[stroke-width:1.5] [&_polyline]:[vector-effect:non-scaling-stroke]">
           <svg viewBox="0 0 300 56" preserveAspectRatio="none">
             <polyline :points="chart.line" fill="none" />
           </svg>
-          <div class="ainfo-chart-axis">
+          <div class="flex justify-between gap-[10px] text-[10px] text-[color:var(--fg-dim)]">
             <span>{{ chart.from }}</span>
-            <span>слушатели по локальным замерам</span>
+            <span>СЃР»СѓС€Р°С‚РµР»Рё РїРѕ Р»РѕРєР°Р»СЊРЅС‹Рј Р·Р°РјРµСЂР°Рј</span>
             <span>{{ chart.to }}</span>
           </div>
         </div>
 
-        <p v-if="artist?.description" class="ainfo-text">
+        <p
+          v-if="artist?.description"
+          class="mt-[16px] mx-0 mb-0 text-[13px] leading-[1.6] whitespace-pre-line"
+        >
           {{ artist.description }}
         </p>
 
-        <div v-if="artist?.genres?.length" class="ainfo-chips">
-          <span v-for="genre in artist.genres" :key="genre" class="chip">
+        <div v-if="artist?.genres?.length" class="flex flex-wrap gap-[6px] mt-[14px]">
+          <span
+            v-for="genre in artist.genres"
+            :key="genre"
+            class="h-[30px] px-[14px] py-0 inline-flex items-center rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+          >
             {{ genre }}
           </span>
         </div>
 
-        <div v-if="links.length" class="ainfo-links">
+        <div
+          v-if="links.length"
+          class="flex flex-wrap gap-y-[6px] gap-x-[14px] mt-[14px] [&_a]:text-[color:var(--fg-dim)] [&_a]:text-[12px] [&_a]:no-underline [&_a]:cursor-pointer [&_a]:border-b [&_a]:border-b-transparent hover:[&_a]:text-[color:var(--fg)] hover:[&_a]:border-b-[color:var(--line)]"
+        >
           <a
             v-for="link in links"
             :key="link.href"
@@ -59,18 +95,20 @@
         </div>
       </div>
 
-      <div class="ainfo-foot">
-        <span class="ainfo-meta">
+      <div
+        class="flex items-center justify-between gap-[10px] pt-[10px] px-[16px] pb-[12px] border-t border-t-[color:var(--line)] border-solid"
+      >
+        <span class="text-[11px] text-[color:var(--fg-dim)]">
           id {{ artist?.id
-          }}<template v-if="updatedAt"> · обновлено {{ updatedAt }}</template>
+          }}<template v-if="updatedAt"> В· РѕР±РЅРѕРІР»РµРЅРѕ {{ updatedAt }}</template>
         </span>
         <button
           v-if="history.length"
-          class="ainfo-plain"
+          class="p-0 border-0 bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
           type="button"
           @click="resetHistory"
         >
-          Очистить замеры
+          РћС‡РёСЃС‚РёС‚СЊ Р·Р°РјРµСЂС‹
         </button>
       </div>
     </div>
@@ -114,7 +152,7 @@ watch(
 
 const subtitle = computed(() => {
   const genres = props.artist?.genres ?? [];
-  return genres.length ? genres.slice(0, 3).join(" · ") : "Артист";
+  return genres.length ? genres.slice(0, 3).join(" В· ") : "РђСЂС‚РёСЃС‚";
 });
 
 const count = (value: number) => value.toLocaleString("ru-RU");
@@ -124,10 +162,10 @@ const day = (ts: number) =>
 
 const facts = computed(() => {
   const defs = [
-    { key: "listeners", label: "Слушателей в месяц" },
-    { key: "likes", label: "Лайков" },
-    { key: "tracks", label: "Треков" },
-    { key: "albums", label: "Альбомов" },
+    { key: "listeners", label: "РЎР»СѓС€Р°С‚РµР»РµР№ РІ РјРµСЃСЏС†" },
+    { key: "likes", label: "Р›Р°Р№РєРѕРІ" },
+    { key: "tracks", label: "РўСЂРµРєРѕРІ" },
+    { key: "albums", label: "РђР»СЊР±РѕРјРѕРІ" },
   ] as const;
 
   return defs.map((def) => {
@@ -136,9 +174,9 @@ const facts = computed(() => {
     return {
       key: def.key,
       label: def.label,
-      value: stat.value === null ? "—" : count(stat.value),
+      value: stat.value === null ? "вЂ”" : count(stat.value),
       delta:
-        diff === 0 ? "" : `${diff > 0 ? "+" : "−"}${count(Math.abs(diff))}`,
+        diff === 0 ? "" : `${diff > 0 ? "+" : "в€’"}${count(Math.abs(diff))}`,
       dir: diff > 0 ? "up" : "down",
     };
   });
@@ -181,141 +219,3 @@ function resetHistory() {
   history.value = [];
 }
 </script>
-
-<style scoped>
-.ainfo {
-  display: flex;
-  flex-direction: column;
-  width: min(520px, 92vw);
-  max-height: 82vh;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius, 12px);
-  background: var(--surface);
-}
-.ainfo-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 14px 12px;
-}
-.ainfo-avatar {
-  flex: 0 0 auto;
-  width: 42px;
-  height: 42px;
-}
-.ainfo-name {
-  font-size: 15px;
-  font-weight: 600;
-}
-.ainfo-sub {
-  margin-top: 1px;
-  font-size: 12px;
-  color: var(--fg-dim);
-}
-.ainfo-body {
-  overflow-y: auto;
-  padding: 0 16px 16px;
-}
-.ainfo-facts {
-  display: flex;
-  flex-direction: column;
-}
-.ainfo-fact {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 7px 0;
-  border-top: 1px solid var(--line);
-  font-size: 13px;
-}
-.ainfo-fact-label {
-  flex: 1;
-  color: var(--fg-dim);
-}
-.ainfo-fact-value {
-  font-variant-numeric: tabular-nums;
-}
-.ainfo-fact-delta {
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.ainfo-fact-delta.up {
-  color: #35c26a;
-}
-.ainfo-fact-delta.down {
-  color: var(--accent, #fa2d48);
-}
-.ainfo-chart {
-  margin-top: 14px;
-}
-.ainfo-chart svg {
-  display: block;
-  width: 100%;
-  height: 56px;
-}
-.ainfo-chart polyline {
-  stroke: var(--fg-dim);
-  stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
-}
-.ainfo-chart-axis {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 10px;
-  color: var(--fg-dim);
-}
-.ainfo-text {
-  margin: 16px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-.ainfo-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
-}
-.ainfo-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  margin-top: 14px;
-}
-.ainfo-links a {
-  color: var(--fg-dim);
-  font-size: 12px;
-  text-decoration: none;
-  cursor: pointer;
-  border-bottom: 1px solid transparent;
-}
-.ainfo-links a:hover {
-  color: var(--fg);
-  border-bottom-color: var(--line);
-}
-.ainfo-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 16px 12px;
-  border-top: 1px solid var(--line);
-}
-.ainfo-meta {
-  font-size: 11px;
-  color: var(--fg-dim);
-}
-.ainfo-plain {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--fg-dim);
-  font-size: 11px;
-  cursor: pointer;
-}
-.ainfo-plain:hover {
-  color: var(--fg);
-}
-</style>

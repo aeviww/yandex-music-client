@@ -1,26 +1,28 @@
 <template>
   <button
     type="button"
-    class="flex w-full items-center justify-between gap-6 border-0 bg-transparent px-5 py-4 text-left transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
+    class="flex w-full items-center justify-between gap-6 border-0 px-5 py-4 text-left transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
     role="switch"
     :aria-checked="modelValue"
     @click="emit('update:modelValue', !modelValue)"
   >
     <span class="min-w-0">
-      <span class="block text-[13px] font-semibold leading-snug text-[var(--fg)]">
+      <span
+        class="block text-[calc(13px*var(--text-scale,1))] font-semibold leading-snug text-[var(--fg)]"
+      >
         {{ label }}
       </span>
       <span
-        class="mt-1 block text-[11.5px] leading-[1.45] text-[color:var(--fg-dim)]"
+        class="mt-1 block text-[calc(11.5px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-dim)]"
       >
         {{ description }}
       </span>
     </span>
     <span
-      class="relative h-[22px] w-[38px] flex-none rounded-full transition-colors duration-150"
+      class="relative h-[22px] w-[38px] flex-none rounded-full transition-colors duration-150 border-0 cursor-pointer pointer-events-none"
       :class="
         modelValue
-          ? 'bg-[var(--accent)]'
+          ? '!bg-[var(--accent)]'
           : 'bg-[color-mix(in_srgb,var(--fg)_16%,transparent)]'
       "
     >

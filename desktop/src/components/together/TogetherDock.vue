@@ -2,35 +2,71 @@
   <div
     v-if="together.active && ui.settings.togetherShowDock"
     ref="root"
-    class="together-dock"
-    :class="{ open, dragging, mini: panels.mini }"
+    class="fixed z-[2800] overflow-hidden border border-[color:var(--line)] bg-[var(--surface)] select-none"
+    :class="{
+      'bottom-[8px] left-[8px] w-auto rounded-[10px]': panels.mini,
+      'bottom-[96px] left-[16px] rounded-[var(--radius)]': !panels.mini,
+      'w-[320px]': open && !panels.mini,
+      'w-[268px]': !open && !panels.mini,
+      'max-w-[224px]': panels.mini && open,
+      'max-w-[172px]': panels.mini && !open,
+      'shadow-[0_24px_60px_var(--shadow-strong)] opacity-[0.96]': dragging,
+      'shadow-[0_18px_40px_var(--shadow-soft)]': !dragging,
+    }"
     :style="style"
   >
     <div
-      class="together-dock-head"
+      class="flex w-full items-center text-[color:var(--fg)] touch-none hover:bg-[var(--hover)]"
+      :class="[
+        panels.mini
+          ? 'gap-[6px] px-[8px] py-[5px] text-[11px]'
+          : 'gap-[8px] px-[12px] py-[10px] text-[13px]',
+        dragging ? 'cursor-grabbing' : 'cursor-grab',
+      ]"
       @pointerdown="onDown"
       @pointermove="onMove"
       @pointerup="onUp"
       @pointercancel="onCancel"
     >
-      <Icon class="together-dock-grip" name="mingcute:dots-line" :size="12" />
+      <Icon
+        :class="panels.mini ? 'hidden' : 'flex-none text-[color:var(--fg-faint)]'"
+        name="mingcute:dots-line"
+        :size="12"
+      />
 
-      <span class="together-dock-dot" :class="{ wait: waiting }" />
+      <span
+        class="flex-none rounded-full"
+        :class="[
+          panels.mini ? 'w-[6px] h-[6px]' : 'w-[8px] h-[8px]',
+          waiting ? 'bg-[var(--accent)]' : 'bg-[#3ecf6b]',
+        ]"
+      />
 
-      <span class="together-dock-title">
+      <span class="flex-auto text-left truncate">
         {{ together.isHost ? "Хостите" : `Слушаете: ${together.hostNick}` }}
       </span>
 
-      <span class="together-dock-count">{{ together.peers.length }}</span>
+      <span
+        class="rounded-full bg-[var(--surface-2)] text-[color:var(--fg-dim)]"
+        :class="
+          panels.mini
+            ? 'px-[5px] py-0 text-[10px]'
+            : 'px-[7px] py-[1px] text-[11px]'
+        "
+        >{{ together.peers.length }}</span
+      >
       <Icon :name="open ? 'mingcute:minimize-line' : 'mingcute:fullscreen-line'" :size="12" />
     </div>
 
-    <div v-if="open" class="together-dock-body">
-      <div v-if="showCode" class="together-dock-row">
-        <span class="together-dock-label">{{ codeLabel }}</span>
+    <div
+      v-if="open"
+      class="flex flex-col gap-[10px] px-[12px] pt-[4px] pb-[12px] border-t border-[color:var(--line)]"
+    >
+      <div v-if="showCode" class="flex items-center gap-[8px] pt-[8px] text-[12px]">
+        <span class="flex-none text-[color:var(--fg-faint)]">{{ codeLabel }}</span>
 
         <code
-          class="together-dock-code"
+          class="flex-auto overflow-hidden text-[color:var(--fg)] truncate cursor-pointer hover:text-[color:var(--accent)]"
           :title="
             visible ? 'Нажмите, чтобы скопировать' : 'Наведите, чтобы увидеть'
           "
@@ -41,7 +77,7 @@
         >
 
         <button
-          class="together-dock-icon"
+          class="inline-flex p-[3px] border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           type="button"
           :title="shown ? 'Скрыть' : 'Показать'"
           @click="shown = !shown"
@@ -50,7 +86,7 @@
         </button>
 
         <button
-          class="together-dock-icon"
+          class="inline-flex p-[3px] border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           type="button"
           title="Скопировать"
           @click="copyInvite"
@@ -59,14 +95,14 @@
         </button>
       </div>
 
-      <div v-if="together.isRelay" class="together-dock-row">
-        <span class="together-dock-label">Пинг</span>
-        <span class="together-dock-value">{{ pingLabel }}</span>
+      <div v-if="together.isRelay" class="flex items-center gap-[8px] pt-[8px] text-[12px]">
+        <span class="flex-none text-[color:var(--fg-faint)]">Пинг</span>
+        <span class="flex-auto overflow-hidden text-[color:var(--fg-dim)] truncate">{{ pingLabel }}</span>
       </div>
 
-      <div class="together-dock-row">
-        <span class="together-dock-label">Сейчас</span>
-        <span class="together-dock-value">{{ nowPlaying }}</span>
+      <div class="flex items-center gap-[8px] pt-[8px] text-[12px]">
+        <span class="flex-none text-[color:var(--fg-faint)]">Сейчас</span>
+        <span class="flex-auto overflow-hidden text-[color:var(--fg-dim)] truncate">{{ nowPlaying }}</span>
       </div>
 
       <TogetherPeers
@@ -77,19 +113,31 @@
         @handoff="together.handoff"
       />
 
-      <p v-if="together.waitingNicks.length" class="together-dock-wait">
+      <p
+        v-if="together.waitingNicks.length"
+        class="m-0 text-[color:var(--accent)] text-[12px]"
+      >
         Ждём загрузку: {{ together.waitingNicks.join(", ") }}
       </p>
 
-      <p v-else-if="!together.isHost" class="together-dock-hint">
+      <p
+        v-else-if="!together.isHost"
+        class="m-0 text-[color:var(--fg-faint)] text-[12px]"
+      >
         Хостит {{ together.hostNick }}, плеер повторяет за ним
       </p>
 
-      <div class="together-dock-actions">
-        <button type="button" @click="openSettings">Настройки</button>
+      <div class="flex gap-[8px]">
+        <button
+          class="flex-1 px-[8px] py-[7px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.7)] bg-[var(--surface-2)] text-[color:var(--fg)] text-[12px] cursor-pointer hover:bg-[var(--hover)]"
+          type="button"
+          @click="openSettings"
+        >
+          Настройки
+        </button>
         <button
           type="button"
-          class="danger"
+          class="flex-1 px-[8px] py-[7px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.7)] bg-[var(--surface-2)] text-[color:var(--accent)] text-[12px] cursor-pointer hover:bg-[var(--hover)]"
           :disabled="together.busy"
           @click="together.leave()"
         >
@@ -226,207 +274,3 @@ function openSettings() {
 }
 </script>
 
-<style scoped>
-.together-dock {
-  position: fixed;
-  z-index: 2800;
-  bottom: 96px;
-  left: 16px;
-  width: 268px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: 0 18px 40px var(--shadow-soft);
-  user-select: none;
-}
-
-.together-dock.open {
-  width: 320px;
-}
-
-.together-dock.dragging {
-  box-shadow: 0 24px 60px var(--shadow-strong);
-  opacity: 0.96;
-}
-
-.together-dock-head {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  color: var(--fg);
-  font-size: 13px;
-  cursor: grab;
-  touch-action: none;
-}
-
-.together-dock.dragging .together-dock-head {
-  cursor: grabbing;
-}
-
-.together-dock-head:hover {
-  background: var(--hover);
-}
-
-.together-dock-grip {
-  flex: 0 0 auto;
-  color: var(--fg-faint);
-}
-
-.together-dock-dot {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 auto;
-  border-radius: 50%;
-  background: #3ecf6b;
-}
-
-.together-dock-dot.wait {
-  background: var(--accent);
-}
-
-.together-dock-title {
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.together-dock-count {
-  padding: 1px 7px;
-  border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--fg-dim);
-  font-size: 11px;
-}
-
-.together-dock-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 4px 12px 12px;
-  border-top: 1px solid var(--line);
-}
-
-.together-dock-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-top: 8px;
-  font-size: 12px;
-}
-
-.together-dock-label {
-  flex: 0 0 auto;
-  color: var(--fg-faint);
-}
-
-.together-dock-code {
-  flex: 1 1 auto;
-  overflow: hidden;
-  color: var(--fg);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.together-dock-code:hover {
-  color: var(--accent);
-}
-
-.together-dock-value {
-  flex: 1 1 auto;
-  overflow: hidden;
-  color: var(--fg-dim);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.together-dock-icon {
-  display: inline-flex;
-  padding: 3px;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--fg-dim);
-  cursor: pointer;
-}
-
-.together-dock-icon:hover {
-  background: var(--hover);
-  color: var(--fg);
-}
-
-.together-dock-wait {
-  margin: 0;
-  color: var(--accent);
-  font-size: 12px;
-}
-
-.together-dock-hint {
-  margin: 0;
-  color: var(--fg-faint);
-  font-size: 12px;
-}
-
-.together-dock-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.together-dock-actions button {
-  flex: 1 1 0;
-  padding: 7px 8px;
-  border: 1px solid var(--line);
-  border-radius: calc(var(--radius) * 0.7);
-  background: var(--surface-2);
-  color: var(--fg);
-  font: inherit;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.together-dock-actions button:hover {
-  background: var(--hover);
-}
-
-.together-dock-actions button.danger {
-  color: var(--accent);
-}
-
-.together-dock.mini {
-  bottom: 8px;
-  left: 8px;
-  width: auto;
-  max-width: 172px;
-  border-radius: 10px;
-}
-
-.together-dock.mini.open {
-  width: auto;
-  max-width: 224px;
-}
-
-.together-dock.mini .together-dock-head {
-  gap: 6px;
-  padding: 5px 8px;
-  font-size: 11px;
-}
-
-.together-dock.mini .together-dock-grip {
-  display: none;
-}
-
-.together-dock.mini .together-dock-dot {
-  width: 6px;
-  height: 6px;
-}
-
-.together-dock.mini .together-dock-count {
-  padding: 0 5px;
-  font-size: 10px;
-}
-</style>

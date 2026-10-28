@@ -20,7 +20,7 @@ export default defineConfig(() => {
   return {
     boot: ["native", "auth", "icons"],
 
-    css: ["app.scss", "tailwind.css"],
+    css: ["tailwind.css"],
 
     extras: ["roboto-font", "material-icons"],
 

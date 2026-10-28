@@ -1,28 +1,48 @@
 <template>
   <q-dialog v-model="open">
-    <div class="text-card">
-      <div class="text-card-head">
+    <div
+      class="flex flex-col w-[min(640px,92vw)] pt-[18px] pr-[6px] pb-[14px] pl-[22px] border border-[color:var(--line)] rounded-[calc(var(--radius)+6px)] bg-[var(--surface)]"
+    >
+      <div class="flex items-start gap-[12px] pr-[16px]">
         <div class="col" style="min-width: 0">
-          <div class="text-card-title ellipsis">{{ title }}</div>
-          <div class="text-card-sub ellipsis">{{ subtitle }}</div>
+          <div class="text-[19px] font-bold truncate">{{ title }}</div>
+          <div class="mt-[2px] text-[color:var(--fg-dim)] text-[13px] truncate">
+            {{ subtitle }}
+          </div>
         </div>
-        <div v-if="genius.ready" class="text-card-source">
+        <div
+          v-if="genius.ready"
+          class="flex gap-[2px] mr-[4px] p-[2px] border border-[color:var(--line)] rounded-full"
+        >
           <button
             type="button"
-            :class="{ on: source === 'yandex' }"
+            class="px-[10px] py-[3px] border-0 rounded-full bg-transparent text-[11px] cursor-pointer"
+            :class="
+              source === 'yandex'
+                ? 'bg-[var(--line)] text-[color:var(--fg)]'
+                : 'text-[color:var(--fg-dim)]'
+            "
             @click="source = 'yandex'"
           >
-            Яндекс
+            РЇРЅРґРµРєСЃ
           </button>
           <button
             type="button"
-            :class="{ on: source === 'genius' }"
+            class="px-[10px] py-[3px] border-0 rounded-full bg-transparent text-[11px] cursor-pointer"
+            :class="
+              source === 'genius'
+                ? 'bg-[var(--line)] text-[color:var(--fg)]'
+                : 'text-[color:var(--fg-dim)]'
+            "
             @click="source = 'genius'"
           >
             Genius
           </button>
         </div>
-        <div class="icon-btn round" @click="open = false">
+        <div
+          class="flex w-[30px] h-[30px] items-center justify-center rounded-full text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+          @click="open = false"
+        >
           <Icon name="mingcute:close-line" :size="16" />
         </div>
       </div>
@@ -34,35 +54,63 @@
       />
 
       <template v-else>
-        <div v-if="blocks.length" class="text-card-body">
-          <div class="text-card-inner">
-            <p v-for="(block, i) in blocks" :key="i" class="text-card-block">
+        <div
+          v-if="blocks.length"
+          class="min-h-[160px] max-h-[58vh] mt-[14px] overflow-y-auto overscroll-contain"
+        >
+          <div class="pr-[18px]">
+            <p
+              v-for="(block, i) in blocks"
+              :key="i"
+              class="mt-0 mx-0 mb-[18px] text-[color:var(--fg)] text-[16px] leading-[1.55] whitespace-pre-wrap"
+            >
               <template v-for="(line, j) in block" :key="j">
                 {{ line }}<br v-if="j < block.length - 1" />
               </template>
             </p>
           </div>
-          <div v-if="loading" class="text-card-note">
+          <div
+            v-if="loading"
+            class="flex items-center gap-[8px] pt-[8px] pr-[16px] pb-0 pl-0 text-[color:var(--fg-faint)] text-[12px]"
+          >
             <q-spinner size="12px" color="grey-6" />
-            <span>Обновляю текст…</span>
+            <span>РћР±РЅРѕРІР»СЏСЋ С‚РµРєСЃС‚вЂ¦</span>
           </div>
         </div>
 
-        <div v-else-if="loading" class="text-card-empty">
+        <div
+          v-else-if="loading"
+          class="flex flex-col items-start gap-[14px] px-[16px] py-[34px] text-[color:var(--fg-dim)] text-[14px] text-center"
+        >
           <q-spinner size="20px" color="grey-6" />
-          <span>Ищу текст…</span>
+          <span>РС‰Сѓ С‚РµРєСЃС‚вЂ¦</span>
         </div>
 
-        <div v-else class="text-card-empty">
-          <span>{{ error || "Текста для этого трека нет" }}</span>
-          <div class="btn" @click="retry">Попробовать снова</div>
-          <div v-if="genius.ready" class="btn" @click="source = 'genius'">
-            Посмотреть на Genius
+        <div
+          v-else
+          class="flex flex-col items-start gap-[14px] px-[16px] py-[34px] text-[color:var(--fg-dim)] text-[14px] text-center"
+        >
+          <span>{{ error || "РўРµРєСЃС‚Р° РґР»СЏ СЌС‚РѕРіРѕ С‚СЂРµРєР° РЅРµС‚" }}</span>
+          <div
+            class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            @click="retry"
+          >
+            РџРѕРїСЂРѕР±РѕРІР°С‚СЊ СЃРЅРѕРІР°
+          </div>
+          <div
+            v-if="genius.ready"
+            class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            @click="source = 'genius'"
+          >
+            РџРѕСЃРјРѕС‚СЂРµС‚СЊ РЅР° Genius
           </div>
         </div>
 
-        <div v-if="writers" class="text-card-foot ellipsis">
-          Авторы: {{ writers }}
+        <div
+          v-if="writers"
+          class="pt-[10px] pr-[18px] pb-0 pl-0 mt-[8px] text-[color:var(--fg-faint)] text-[12px] truncate border-t border-t-[color:var(--line)] border-solid"
+        >
+          РђРІС‚РѕСЂС‹: {{ writers }}
         </div>
       </template>
     </div>
@@ -94,7 +142,7 @@ const open = computed({
 });
 
 const track = computed(() => trackLyricsDialog.track);
-const title = computed(() => track.value?.title || "Текст песни");
+const title = computed(() => track.value?.title || "РўРµРєСЃС‚ РїРµСЃРЅРё");
 const subtitle = computed(() =>
   track.value ? artistNames(track.value.artists) : "",
 );
@@ -134,13 +182,13 @@ async function load(id: string, force = false) {
       lyrics.value = fresh;
       writeCache(key, fresh);
     } else if (!cachedOk) {
-      error.value = "Текста для этого трека нет";
+      error.value = "РўРµРєСЃС‚Р° РґР»СЏ СЌС‚РѕРіРѕ С‚СЂРµРєР° РЅРµС‚";
     }
   } catch (e) {
     if (trackLyricsDialog.track?.id !== id) return;
     if (!cachedOk) {
       const message = e instanceof Error ? e.message : String(e);
-      error.value = message || "Не удалось загрузить текст";
+      error.value = message || "РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С‚РµРєСЃС‚";
     }
   } finally {
     if (trackLyricsDialog.track?.id === id) {
@@ -172,27 +220,3 @@ watch(
   { immediate: true },
 );
 </script>
-
-<style scoped>
-.text-card-source {
-  display: flex;
-  gap: 2px;
-  margin-right: 4px;
-  padding: 2px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-}
-.text-card-source button {
-  padding: 3px 10px;
-  border: 0;
-  border-radius: 999px;
-  background: none;
-  color: var(--fg-dim);
-  font-size: 11px;
-  cursor: pointer;
-}
-.text-card-source button.on {
-  background: var(--line);
-  color: var(--fg);
-}
-</style>

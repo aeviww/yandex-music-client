@@ -1,50 +1,87 @@
 <template>
-  <div class="gp">
-    <div v-if="!genius.ready" class="gp-note">
+  <div class="flex flex-col gap-[12px] min-h-[120px] pt-[14px] px-[16px] pb-[16px] overflow-y-auto">
+    <div
+      v-if="!genius.ready"
+      class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+    >
       <span>
-        Genius выключен. Открой Настройки → Genius и вставь Client Access Token.
+        Genius РІС‹РєР»СЋС‡РµРЅ. РћС‚РєСЂРѕР№ РќР°СЃС‚СЂРѕР№РєРё в†’ Genius Рё РІСЃС‚Р°РІСЊ Client Access Token.
       </span>
-      <div class="btn" @click="openUrl('https://genius.com/api-clients')">
-        Получить токен
+      <div
+        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+        @click="openUrl('https://genius.com/api-clients')"
+      >
+        РџРѕР»СѓС‡РёС‚СЊ С‚РѕРєРµРЅ
       </div>
     </div>
 
-    <div v-else-if="personOpen" class="gp-person">
-      <button class="gp-back" type="button" @click="genius.closePerson()">
+    <div v-else-if="personOpen" class="flex flex-col gap-[12px]">
+      <button
+        class="flex items-center gap-[4px] p-0 border-0 bg-transparent text-left text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+        type="button"
+        @click="genius.closePerson()"
+      >
         <Icon name="mingcute:left-line" :size="14" />
-        <span>Назад к треку</span>
+        <span>РќР°Р·Р°Рґ Рє С‚СЂРµРєСѓ</span>
       </button>
 
-      <div v-if="genius.personLoading" class="gp-note">
+      <div
+        v-if="genius.personLoading"
+        class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+      >
         <q-spinner size="16px" color="grey-6" />
-        <span>Открываю страницу…</span>
+        <span>РћС‚РєСЂС‹РІР°СЋ СЃС‚СЂР°РЅРёС†СѓвЂ¦</span>
       </div>
 
-      <div v-else-if="genius.personError" class="gp-note">
+      <div
+        v-else-if="genius.personError"
+        class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+      >
         <span>{{ genius.personError }}</span>
       </div>
 
       <template v-else-if="genius.person">
-        <div class="gp-head">
-          <div class="cover gp-art round">
+        <div class="flex items-center gap-[10px]">
+          <div
+            class="cover cover-round flex-none w-[44px] h-[44px] rounded-full overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          >
             <img v-if="genius.person.image" :src="genius.person.image" />
-            <Icon v-else name="mingcute:user-2-line" :size="18" class="faint" />
+            <Icon
+              v-else
+              name="mingcute:user-2-line"
+              :size="18"
+              class="text-[color:var(--fg-faint)]"
+            />
           </div>
           <div class="col" style="min-width: 0">
-            <div class="gp-title ellipsis">{{ genius.person.name }}</div>
-            <div class="gp-meta ellipsis">{{ personMeta }}</div>
+            <div class="text-[14px] font-semibold truncate">
+              {{ genius.person.name }}
+            </div>
+            <div class="mt-[2px] text-[11px] text-[color:var(--fg-dim)] truncate">
+              {{ personMeta }}
+            </div>
           </div>
         </div>
 
-        <p v-if="genius.person.description" class="gp-text">
+        <p
+          v-if="genius.person.description"
+          class="mt-[4px] mx-0 mb-0 text-[13px] leading-[1.6] whitespace-pre-line"
+        >
           {{ genius.person.description }}
         </p>
 
-        <div class="gp-links">
-          <a @click.prevent="openUrl(genius.person.url)">Открыть на Genius</a>
+        <div
+          class="flex flex-wrap gap-y-[6px] gap-x-[14px] text-[12px]"
+        >
+          <a
+            class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
+            @click.prevent="openUrl(genius.person.url)"
+            >РћС‚РєСЂС‹С‚СЊ РЅР° Genius</a
+          >
           <a
             v-for="social in genius.person.socials"
             :key="social.url"
+            class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
             @click.prevent="openUrl(social.url)"
           >
             {{ social.kind }}: {{ social.handle }}
@@ -53,92 +90,158 @@
       </template>
     </div>
 
-    <div v-else-if="picking" class="gp-person">
-      <button class="gp-back" type="button" @click="picking = false">
+    <div v-else-if="picking" class="flex flex-col gap-[12px]">
+      <button
+        class="flex items-center gap-[4px] p-0 border-0 bg-transparent text-left text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+        type="button"
+        @click="picking = false"
+      >
         <Icon name="mingcute:left-line" :size="14" />
-        <span>Назад</span>
+        <span>РќР°Р·Р°Рґ</span>
       </button>
 
-      <form class="gp-search" @submit.prevent="runSearch">
-        <input v-model="query" type="text" placeholder="артист и название" />
-        <button class="btn" type="submit">Найти</button>
+      <form class="flex gap-[8px]" @submit.prevent="runSearch">
+        <input
+          v-model="query"
+          type="text"
+          placeholder="Р°СЂС‚РёСЃС‚ Рё РЅР°Р·РІР°РЅРёРµ"
+          class="flex-1 min-w-0 px-[10px] py-[6px] border border-[color:var(--line)] rounded-[8px] bg-transparent text-inherit text-[13px]"
+        />
+        <button
+          class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          type="submit"
+        >
+          РќР°Р№С‚Рё
+        </button>
       </form>
 
-      <div v-if="genius.hitsLoading" class="gp-note">
+      <div
+        v-if="genius.hitsLoading"
+        class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+      >
         <q-spinner size="16px" color="grey-6" />
-        <span>Ищу…</span>
+        <span>РС‰СѓвЂ¦</span>
       </div>
 
       <button
         v-for="hit in genius.hits"
         :key="hit.id"
-        class="gp-hit"
+        class="flex items-center gap-[10px] p-[6px] border-0 rounded-[8px] text-inherit text-[13px] text-left cursor-pointer hover:bg-[var(--line)]"
         type="button"
         @click="choose(hit)"
       >
-        <div class="cover gp-hit-art">
+        <div
+          class="cover flex-none w-[32px] h-[32px] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+        >
           <img v-if="hit.art" :src="hit.art" />
         </div>
-        <span class="ellipsis">{{ hit.full_title || hit.title }}</span>
+        <span class="truncate">{{ hit.full_title || hit.title }}</span>
       </button>
     </div>
 
-    <div v-else-if="genius.loading" class="gp-note">
+    <div
+      v-else-if="genius.loading"
+      class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+    >
       <q-spinner size="16px" color="grey-6" />
-      <span>Смотрю Genius…</span>
+      <span>РЎРјРѕС‚СЂСЋ GeniusвЂ¦</span>
     </div>
 
-    <div v-else-if="!song" class="gp-note">
-      <span>{{ genius.error || "На Genius ничего не нашлось" }}</span>
-      <div class="btn" @click="startPicking">Найти вручную</div>
+    <div
+      v-else-if="!song"
+      class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
+    >
+      <span>{{ genius.error || "РќР° Genius РЅРёС‡РµРіРѕ РЅРµ РЅР°С€Р»РѕСЃСЊ" }}</span>
+      <div
+        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+        @click="startPicking"
+      >
+        РќР°Р№С‚Рё РІСЂСѓС‡РЅСѓСЋ
+      </div>
     </div>
 
     <template v-else>
-      <div class="gp-head">
-        <div class="cover gp-art">
+      <div class="flex items-center gap-[10px]">
+        <div
+          class="cover flex-none w-[44px] h-[44px] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+        >
           <img v-if="song.art" :src="song.art" />
-          <Icon v-else name="mingcute:music-line" :size="18" class="faint" />
+          <Icon
+            v-else
+            name="mingcute:music-line"
+            :size="18"
+            class="text-[color:var(--fg-faint)]"
+          />
         </div>
         <div class="col" style="min-width: 0">
-          <div class="gp-title ellipsis">
+          <div class="text-[14px] font-semibold truncate">
             {{ song.full_title || song.title }}
           </div>
-          <div class="gp-meta ellipsis">{{ songMeta }}</div>
+          <div class="mt-[2px] text-[11px] text-[color:var(--fg-dim)] truncate">
+            {{ songMeta }}
+          </div>
         </div>
-        <div class="gp-head-actions">
-          <button class="gp-plain" type="button" @click="openUrl(song.url)">
-            На Genius
+        <div class="flex flex-col gap-[4px] ml-auto">
+          <button
+            class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+            type="button"
+            @click="openUrl(song.url)"
+          >
+            РќР° Genius
           </button>
-          <button class="gp-plain" type="button" @click="refresh">
-            Обновить
+          <button
+            class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+            type="button"
+            @click="refresh"
+          >
+            РћР±РЅРѕРІРёС‚СЊ
           </button>
-          <button class="gp-plain" type="button" @click="startPicking">
-            Не тот трек
+          <button
+            class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+            type="button"
+            @click="startPicking"
+          >
+            РќРµ С‚РѕС‚ С‚СЂРµРє
           </button>
         </div>
       </div>
 
-      <div class="gp-tabs">
+      <div class="flex gap-[14px] border-b border-b-[color:var(--line)] border-solid">
         <button
           v-for="item in tabs"
           :key="item.value"
           type="button"
-          :class="{ on: tab === item.value }"
+          class="pt-0 px-0 pb-[7px] border-x-0 border-t-0 border-b-2 border-solid bg-transparent text-[12px] cursor-pointer"
+          :class="
+            tab === item.value
+              ? 'text-[color:var(--fg)] border-b-[color:currentColor]'
+              : 'text-[color:var(--fg-dim)] border-b-transparent'
+          "
           @click="tab = item.value"
         >
           {{ item.label }}
         </button>
       </div>
 
-      <div v-if="tab === 'lyrics'" class="gp-body">
-        <p v-if="!song.lyrics.length" class="gp-dim">
-          {{ song.lyrics_error || "Genius не отдал текст для этой страницы." }}
+      <div v-if="tab === 'lyrics'" class="flex flex-col gap-[12px]">
+        <p
+          v-if="!song.lyrics.length"
+          class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
+        >
+          {{ song.lyrics_error || "Genius РЅРµ РѕС‚РґР°Р» С‚РµРєСЃС‚ РґР»СЏ СЌС‚РѕР№ СЃС‚СЂР°РЅРёС†С‹." }}
         </p>
-        <div v-for="(section, i) in lyricSections" :key="i" class="gp-section">
-          <div v-if="section.heading" class="gp-section-head">
+        <div
+          v-for="(section, i) in lyricSections"
+          :key="i"
+          class="flex flex-col gap-[4px]"
+        >
+          <div
+            v-if="section.heading"
+            class="self-start px-[8px] py-[2px] rounded-full bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] text-[color:var(--accent)] text-[10.5px] font-[650] tracking-[0.04em] uppercase"
+          >
             {{ section.heading }}
           </div>
-          <p v-if="section.lines.length" class="gp-block">
+          <p v-if="section.lines.length" class="m-0 text-[13px] leading-[1.7]">
             <template v-for="(line, j) in section.lines" :key="j">
               {{ line }}<br v-if="j < section.lines.length - 1" />
             </template>
@@ -146,114 +249,165 @@
         </div>
       </div>
 
-      <div v-else-if="tab === 'quotes'" class="gp-body">
-        <div v-if="!quotes.length" class="gp-dim">
+      <div v-else-if="tab === 'quotes'" class="flex flex-col gap-[12px]">
+        <div
+          v-if="!quotes.length"
+          class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
+        >
           <p>
-            {{ song.quotes_error || "К этому треку ещё не написали разборов." }}
+            {{ song.quotes_error || "Рљ СЌС‚РѕРјСѓ С‚СЂРµРєСѓ РµС‰С‘ РЅРµ РЅР°РїРёСЃР°Р»Рё СЂР°Р·Р±РѕСЂРѕРІ." }}
           </p>
-          <p v-if="song.annotation_count" class="gp-dim-inline">
-            Genius насчитал разборов на этом треке:
+          <p v-if="song.annotation_count" class="text-[color:var(--fg-dim)] text-[11px]">
+            Genius РЅР°СЃС‡РёС‚Р°Р» СЂР°Р·Р±РѕСЂРѕРІ РЅР° СЌС‚РѕРј С‚СЂРµРєРµ:
             {{ song.annotation_count }}
           </p>
-          <button class="gp-plain" type="button" @click="refresh">
-            Загрузить заново
+          <button
+            class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+            type="button"
+            @click="refresh"
+          >
+            Р—Р°РіСЂСѓР·РёС‚СЊ Р·Р°РЅРѕРІРѕ
           </button>
         </div>
-        <p v-else-if="song.quotes_source !== 'api'" class="gp-dim-inline">
-          Разборы собраны в обход API-токена — источник:
+        <p
+          v-else-if="song.quotes_source !== 'api'"
+          class="text-[color:var(--fg-dim)] text-[11px]"
+        >
+          Р Р°Р·Р±РѕСЂС‹ СЃРѕР±СЂР°РЅС‹ РІ РѕР±С…РѕРґ API-С‚РѕРєРµРЅР° вЂ” РёСЃС‚РѕС‡РЅРёРє:
           {{ song.quotes_source }}.
         </p>
-        <div v-for="(quote, i) in quotes" :key="i" class="gp-quote">
-          <div class="gp-quote-line">{{ quote.fragment }}</div>
-          <p class="gp-quote-text">{{ quote.text }}</p>
+        <div
+          v-for="(quote, i) in quotes"
+          :key="i"
+          class="pl-[10px] border-l-2 border-l-[color:var(--line)] border-solid"
+        >
+          <div class="text-[13px] italic whitespace-pre-line">
+            {{ quote.fragment }}
+          </div>
+          <p class="mt-[5px] mx-0 mb-[4px] text-[13px] leading-[1.6] whitespace-pre-line">
+            {{ quote.text }}
+          </p>
 
-          <div class="gp-quote-authors">
+          <div class="flex flex-wrap gap-[5px] mb-[5px]">
             <button
               v-for="author in quote.authors"
               :key="author.url || author.name"
-              class="gp-author"
+              class="inline-flex max-w-[220px] items-center gap-[5px] pt-[2px] pr-[8px] pb-[2px] pl-[3px] border border-[color:var(--line)] rounded-full bg-transparent text-inherit text-[11px] cursor-pointer hover:border-[color:var(--fg-dim)] [&_img]:w-[16px] [&_img]:h-[16px] [&_img]:rounded-full [&_img]:object-cover [&_b]:text-[color:var(--accent)] [&_b]:text-[10px] [&_i]:text-[color:var(--fg-dim)] [&_i]:text-[10px] [&_i]:not-italic [&_i]:tabular-nums"
               type="button"
               @click="openUrl(author.url)"
             >
               <img v-if="author.image" :src="author.image" />
-              <span class="ellipsis">{{ author.name }}</span>
-              <b v-if="author.verified" title="Подтверждённый аккаунт">✓</b>
+              <span class="truncate">{{ author.name }}</span>
+              <b v-if="author.verified" title="РџРѕРґС‚РІРµСЂР¶РґС‘РЅРЅС‹Р№ Р°РєРєР°СѓРЅС‚">вњ“</b>
               <i v-if="author.iq">{{ shortNumber(author.iq) }} IQ</i>
             </button>
-            <span v-if="!quote.authors.length" class="gp-dim-inline">
-              Сообщество Genius
+            <span
+              v-if="!quote.authors.length"
+              class="text-[color:var(--fg-dim)] text-[11px]"
+            >
+              РЎРѕРѕР±С‰РµСЃС‚РІРѕ Genius
             </span>
           </div>
 
-          <div class="gp-quote-foot">
+          <div class="flex gap-[10px] text-[11px] text-[color:var(--fg-dim)]">
             <span>{{ quoteMeta(quote) }}</span>
-            <a v-if="quote.url" @click.prevent="openUrl(quote.url)">
-              на Genius
+            <a
+              v-if="quote.url"
+              class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
+              @click.prevent="openUrl(quote.url)"
+            >
+              РЅР° Genius
             </a>
           </div>
         </div>
       </div>
 
-      <div v-else class="gp-body">
-        <p v-if="!groups.length" class="gp-dim">Участники записи не указаны.</p>
-        <div v-for="group in groups" :key="group.role" class="gp-group">
-          <div class="gp-group-role">{{ group.role }}</div>
-          <div class="gp-people">
+      <div v-else class="flex flex-col gap-[12px]">
+        <p
+          v-if="!groups.length"
+          class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
+        >
+          РЈС‡Р°СЃС‚РЅРёРєРё Р·Р°РїРёСЃРё РЅРµ СѓРєР°Р·Р°РЅС‹.
+        </p>
+        <div v-for="group in groups" :key="group.role">
+          <div class="mb-[6px] text-[11px] text-[color:var(--fg-dim)]">
+            {{ group.role }}
+          </div>
+          <div class="flex flex-wrap gap-[6px]">
             <button
               v-for="person in group.people"
               :key="`${group.role}-${person.name}`"
-              class="gp-person-chip"
+              class="flex items-center gap-[6px] max-w-[220px] pt-[4px] pr-[9px] pb-[4px] pl-[4px] border border-[color:var(--line)] rounded-full bg-transparent text-inherit text-[12px] cursor-pointer hover:border-[color:var(--fg-dim)] [&_img]:w-[20px] [&_img]:h-[20px] [&_img]:rounded-full [&_img]:object-cover"
               type="button"
               @click="openPerson(person)"
             >
               <img v-if="person.image" :src="person.image" />
-              <span class="ellipsis">{{ person.name }}</span>
+              <span class="truncate">{{ person.name }}</span>
             </button>
           </div>
         </div>
 
-        <div v-if="infoRows.length" class="gp-info">
-          <div v-for="row in infoRows" :key="row.label" class="gp-info-row">
-            <span class="gp-info-label">{{ row.label }}</span>
-            <span class="gp-info-value">{{ row.value }}</span>
+        <div
+          v-if="infoRows.length"
+          class="flex flex-col gap-[4px] pt-[10px] px-[12px] pb-[10px] border border-[color:var(--line)] rounded-[10px]"
+        >
+          <div
+            v-for="row in infoRows"
+            :key="row.label"
+            class="flex items-baseline justify-between gap-[12px] text-[12px]"
+          >
+            <span class="flex-none text-[color:var(--fg-dim)]">{{ row.label }}</span>
+            <span class="overflow-hidden text-right truncate">{{ row.value }}</span>
           </div>
         </div>
 
-        <div v-if="tags.length" class="gp-tags">
-          <span v-for="tag in tags" :key="tag" class="gp-tag">{{ tag }}</span>
+        <div v-if="tags.length" class="flex flex-wrap gap-[5px]">
+          <span
+            v-for="tag in tags"
+            :key="tag"
+            class="px-[8px] py-[2px] border border-[color:var(--line)] rounded-full text-[color:var(--fg-dim)] text-[11px]"
+            >{{ tag }}</span
+          >
         </div>
 
-        <div v-if="media.length" class="gp-links">
+        <div
+          v-if="media.length"
+          class="flex flex-wrap gap-y-[6px] gap-x-[14px] text-[12px]"
+        >
           <a
             v-for="item in media"
             :key="item.url"
+            class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
             @click.prevent="openUrl(item.url)"
           >
             {{ mediaLabel(item) }}
           </a>
         </div>
 
-        <div
-          v-for="relation in relations"
-          :key="relation.kind"
-          class="gp-group"
-        >
-          <div class="gp-group-role">{{ relation.kind }}</div>
-          <div class="gp-people">
+        <div v-for="relation in relations" :key="relation.kind">
+          <div class="mb-[6px] text-[11px] text-[color:var(--fg-dim)]">
+            {{ relation.kind }}
+          </div>
+          <div class="flex flex-wrap gap-[6px]">
             <button
               v-for="item in relation.songs"
               :key="item.id"
-              class="gp-person-chip"
+              class="flex items-center gap-[6px] max-w-[220px] pt-[4px] pr-[9px] pb-[4px] pl-[4px] border border-[color:var(--line)] rounded-full bg-transparent text-inherit text-[12px] cursor-pointer hover:border-[color:var(--fg-dim)] [&_img]:w-[20px] [&_img]:h-[20px] [&_img]:rounded-full [&_img]:object-cover"
               type="button"
               @click="openUrl(item.url)"
             >
               <img v-if="item.art" :src="item.art" />
-              <span class="ellipsis">{{ item.full_title || item.title }}</span>
+              <span class="truncate">{{ item.full_title || item.title }}</span>
             </button>
           </div>
         </div>
 
-        <p v-if="song.description" class="gp-text">{{ song.description }}</p>
+        <p
+          v-if="song.description"
+          class="mt-[4px] mx-0 mb-0 text-[13px] leading-[1.6] whitespace-pre-line"
+        >
+          {{ song.description }}
+        </p>
       </div>
     </template>
   </div>
@@ -295,15 +449,15 @@ const personOpen = computed(
 
 const tabs = computed(() => {
   const list: Array<{ value: Tab; label: string }> = [
-    { value: "lyrics", label: "Текст" },
+    { value: "lyrics", label: "РўРµРєСЃС‚" },
   ];
   if (genius.showQuotes) {
     list.push({
       value: "quotes",
-      label: `Цитаты и разборы (${quotes.value.length})`,
+      label: `Р¦РёС‚Р°С‚С‹ Рё СЂР°Р·Р±РѕСЂС‹ (${quotes.value.length})`,
     });
   }
-  list.push({ value: "credits", label: "Над треком работали" });
+  list.push({ value: "credits", label: "РќР°Рґ С‚СЂРµРєРѕРј СЂР°Р±РѕС‚Р°Р»Рё" });
   return list;
 });
 
@@ -372,47 +526,47 @@ const infoRows = computed(() => {
   const album = value.album_info;
   if (album?.name) {
     rows.push({
-      label: "Альбом",
-      value: album.artist ? `${album.name} — ${album.artist}` : album.name,
+      label: "РђР»СЊР±РѕРј",
+      value: album.artist ? `${album.name} вЂ” ${album.artist}` : album.name,
     });
     if (album.release_date) {
-      rows.push({ label: "Релиз альбома", value: album.release_date });
+      rows.push({ label: "Р РµР»РёР· Р°Р»СЊР±РѕРјР°", value: album.release_date });
     }
   } else if (value.album) {
-    rows.push({ label: "Альбом", value: value.album });
+    rows.push({ label: "РђР»СЊР±РѕРј", value: value.album });
   }
 
   if (value.release_date)
-    rows.push({ label: "Релиз", value: value.release_date });
+    rows.push({ label: "Р РµР»РёР·", value: value.release_date });
   if (value.recording_location) {
-    rows.push({ label: "Записано", value: value.recording_location });
+    rows.push({ label: "Р—Р°РїРёСЃР°РЅРѕ", value: value.recording_location });
   }
   if (value.language) {
-    rows.push({ label: "Язык", value: value.language.toUpperCase() });
+    rows.push({ label: "РЇР·С‹Рє", value: value.language.toUpperCase() });
   }
   if (value.pageviews) {
-    rows.push({ label: "Просмотры", value: ruNumber(value.pageviews) });
+    rows.push({ label: "РџСЂРѕСЃРјРѕС‚СЂС‹", value: ruNumber(value.pageviews) });
   }
   if (value.contributors) {
-    rows.push({ label: "Участников", value: ruNumber(value.contributors) });
+    rows.push({ label: "РЈС‡Р°СЃС‚РЅРёРєРѕРІ", value: ruNumber(value.contributors) });
   }
   if (value.annotation_count) {
-    rows.push({ label: "Аннотаций", value: ruNumber(value.annotation_count) });
+    rows.push({ label: "РђРЅРЅРѕС‚Р°С†РёР№", value: ruNumber(value.annotation_count) });
   }
   if (value.concurrents) {
-    rows.push({ label: "Читают сейчас", value: ruNumber(value.concurrents) });
+    rows.push({ label: "Р§РёС‚Р°СЋС‚ СЃРµР№С‡Р°СЃ", value: ruNumber(value.concurrents) });
   }
   if (value.apple_music_id) {
     rows.push({ label: "Apple Music ID", value: value.apple_music_id });
   }
-  if (value.hot) rows.push({ label: "Статус", value: "В тренде на Genius" });
+  if (value.hot) rows.push({ label: "РЎС‚Р°С‚СѓСЃ", value: "Р’ С‚СЂРµРЅРґРµ РЅР° Genius" });
 
   return rows;
 });
 
 const producerNames = computed(() =>
   (song.value?.credits || [])
-    .filter((person) => person.role === "Продюсер")
+    .filter((person) => person.role === "РџСЂРѕРґСЋСЃРµСЂ")
     .map((person) => person.name)
     .slice(0, 3)
     .join(", "),
@@ -424,9 +578,9 @@ const songMeta = computed(() => {
   const parts: string[] = [];
   if (value.album) parts.push(value.album);
   if (value.release_date) parts.push(value.release_date);
-  if (value.pageviews) parts.push(`${ruNumber(value.pageviews)} просмотров`);
-  if (producerNames.value) parts.push(`прод: ${producerNames.value}`);
-  return parts.join(" · ");
+  if (value.pageviews) parts.push(`${ruNumber(value.pageviews)} РїСЂРѕСЃРјРѕС‚СЂРѕРІ`);
+  if (producerNames.value) parts.push(`РїСЂРѕРґ: ${producerNames.value}`);
+  return parts.join(" В· ");
 });
 
 const personMeta = computed(() => {
@@ -435,13 +589,13 @@ const personMeta = computed(() => {
   const parts: string[] = [];
   if (person.followers) {
     parts.push(
-      `${person.followers.toLocaleString("ru-RU")} подписчиков на Genius`,
+      `${person.followers.toLocaleString("ru-RU")} РїРѕРґРїРёСЃС‡РёРєРѕРІ РЅР° Genius`,
     );
   }
   if (person.alternate_names.length) {
     parts.push(person.alternate_names.slice(0, 3).join(", "));
   }
-  return parts.join(" · ");
+  return parts.join(" В· ");
 });
 
 function ruNumber(value: number): string {
@@ -456,19 +610,19 @@ function shortNumber(value: number): string {
 
 function quoteMeta(quote: GeniusQuote): string {
   const parts: string[] = [];
-  if (quote.votes) parts.push(`${quote.votes} голосов`);
-  if (quote.comments) parts.push(`${quote.comments} комментариев`);
-  if (quote.verified) parts.push("подтверждено");
-  if (quote.pinned) parts.push("закреплено");
-  return parts.join(" · ");
+  if (quote.votes) parts.push(`${quote.votes} РіРѕР»РѕСЃРѕРІ`);
+  if (quote.comments) parts.push(`${quote.comments} РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ`);
+  if (quote.verified) parts.push("РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ");
+  if (quote.pinned) parts.push("Р·Р°РєСЂРµРїР»РµРЅРѕ");
+  return parts.join(" В· ");
 }
 
 function mediaLabel(item: GeniusMedia): string {
   const provider = item.provider
     ? item.provider.charAt(0).toUpperCase() + item.provider.slice(1)
-    : "Ссылка";
-  if (item.kind === "video") return `${provider} · видео`;
-  if (item.kind === "audio") return `${provider} · аудио`;
+    : "РЎСЃС‹Р»РєР°";
+  if (item.kind === "video") return `${provider} В· РІРёРґРµРѕ`;
+  if (item.kind === "audio") return `${provider} В· Р°СѓРґРёРѕ`;
   return provider;
 }
 
@@ -518,311 +672,3 @@ watch(
   { immediate: true },
 );
 </script>
-
-<style scoped>
-.gp {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 120px;
-  padding: 14px 16px 16px;
-  overflow-y: auto;
-}
-.gp-note {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 18px 0;
-  color: var(--fg-dim);
-  font-size: 13px;
-}
-.gp-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.gp-art {
-  flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-}
-.gp-title {
-  font-size: 14px;
-  font-weight: 600;
-}
-.gp-meta {
-  margin-top: 2px;
-  font-size: 11px;
-  color: var(--fg-dim);
-}
-.gp-head-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-left: auto;
-}
-.gp-plain,
-.gp-back {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--fg-dim);
-  font-size: 11px;
-  text-align: right;
-  cursor: pointer;
-}
-.gp-plain:hover,
-.gp-back:hover {
-  color: var(--fg);
-}
-.gp-back {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  text-align: left;
-}
-.gp-tabs {
-  display: flex;
-  gap: 14px;
-  border-bottom: 1px solid var(--line);
-}
-.gp-tabs button {
-  padding: 0 0 7px;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  background: none;
-  color: var(--fg-dim);
-  font-size: 12px;
-  cursor: pointer;
-}
-.gp-tabs button.on {
-  color: var(--fg);
-  border-bottom-color: currentColor;
-}
-.gp-body {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.gp-section {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.gp-section-head {
-  align-self: flex-start;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--accent) 16%, transparent);
-  color: var(--accent);
-  font-size: 10.5px;
-  font-weight: 650;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.gp-block {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.7;
-}
-.gp-quote-authors {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 5px;
-}
-.gp-author {
-  display: inline-flex;
-  max-width: 220px;
-  align-items: center;
-  gap: 5px;
-  padding: 2px 8px 2px 3px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: none;
-  color: inherit;
-  font-size: 11px;
-  cursor: pointer;
-}
-.gp-author:hover {
-  border-color: var(--fg-dim);
-}
-.gp-author img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.gp-author b {
-  color: var(--accent);
-  font-size: 10px;
-}
-.gp-author i {
-  color: var(--fg-dim);
-  font-size: 10px;
-  font-style: normal;
-  font-variant-numeric: tabular-nums;
-}
-.gp-dim-inline {
-  color: var(--fg-dim);
-  font-size: 11px;
-}
-.gp-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-}
-.gp-info-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 12px;
-}
-.gp-info-label {
-  flex: 0 0 auto;
-  color: var(--fg-dim);
-}
-.gp-info-value {
-  overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.gp-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.gp-tag {
-  padding: 2px 8px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--fg-dim);
-  font-size: 11px;
-}
-.gp-text {
-  margin: 4px 0 0;
-  font-size: 13px;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-.gp-dim {
-  margin: 4px 0 0;
-  color: var(--fg-dim);
-  font-size: 13px;
-}
-.gp-quote {
-  padding-left: 10px;
-  border-left: 2px solid var(--line);
-}
-.gp-quote-line {
-  font-size: 13px;
-  font-style: italic;
-  white-space: pre-line;
-}
-.gp-quote-text {
-  margin: 5px 0 4px;
-  font-size: 13px;
-  line-height: 1.6;
-  white-space: pre-line;
-}
-.gp-quote-foot {
-  display: flex;
-  gap: 10px;
-  font-size: 11px;
-  color: var(--fg-dim);
-}
-.gp-quote-foot a,
-.gp-links a {
-  color: var(--fg-dim);
-  cursor: pointer;
-  text-decoration: none;
-  border-bottom: 1px solid var(--line);
-}
-.gp-quote-foot a:hover,
-.gp-links a:hover {
-  color: var(--fg);
-}
-.gp-group-role {
-  margin-bottom: 6px;
-  font-size: 11px;
-  color: var(--fg-dim);
-}
-.gp-people {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.gp-person-chip {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  max-width: 220px;
-  padding: 4px 9px 4px 4px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: none;
-  color: inherit;
-  font-size: 12px;
-  cursor: pointer;
-}
-.gp-person-chip:hover {
-  border-color: var(--fg-dim);
-}
-.gp-person-chip img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-.gp-person {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.gp-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  font-size: 12px;
-}
-.gp-search {
-  display: flex;
-  gap: 8px;
-}
-.gp-search input {
-  flex: 1;
-  min-width: 0;
-  padding: 6px 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: none;
-  color: inherit;
-  font-size: 13px;
-}
-.gp-hit {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px;
-  border: 0;
-  border-radius: 8px;
-  background: none;
-  color: inherit;
-  font-size: 13px;
-  text-align: left;
-  cursor: pointer;
-}
-.gp-hit:hover {
-  background: var(--line);
-}
-.gp-hit-art {
-  flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
-}
-</style>

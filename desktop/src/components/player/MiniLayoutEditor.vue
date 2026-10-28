@@ -1,9 +1,9 @@
 <template>
-  <div class="mpe">
-    <div class="mpe-preview">
-      <div class="mpe-preview-head">
-        <span class="mpe-preview-title">Предпросмотр</span>
-        <span class="mpe-preview-size">
+  <div class="grid w-full grid-cols-[minmax(280px,1fr)_minmax(260px,1fr)] gap-[18px] items-start max-[980px]:grid-cols-1">
+    <div class="sticky top-0 flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
+      <div class="flex items-baseline justify-between gap-[10px]">
+        <span class="text-[12.5px] font-[640]">Предпросмотр</span>
+        <span class="text-[color:var(--fg-faint)] text-[11.5px] tabular-nums">
           {{ s.miniWidth }} × {{ s.miniHeight }} px
           <template v-if="scale < 0.999">
             · масштаб {{ Math.round(scale * 100) }}%
@@ -11,34 +11,34 @@
         </span>
       </div>
 
-      <div ref="stageWrap" class="mpe-stage-wrap">
-        <div class="mpe-stage" :style="stageStyle">
-          <div class="mpe-frame" :style="frameStyle">
+      <div ref="stageWrap" class="flex justify-center w-full p-[14px] rounded-[calc(var(--radius)*0.8)] bg-[repeating-conic-gradient(color-mix(in_srgb,var(--fg)_5%,transparent)_0%_25%,transparent_0%_50%)] bg-[length:18px_18px] bg-center">
+        <div class="relative overflow-hidden transition-[width,height] duration-[120ms] ease-[ease]" :style="stageStyle">
+          <div class="absolute top-0 left-0 rounded-[14px]" :style="frameStyle">
             <MiniPlayer preview />
           </div>
         </div>
       </div>
 
-      <p class="mpe-note">
+      <p class="m-0 text-[color:var(--fg-faint)] text-[11.5px] leading-[1.45]">
         Это настоящий мини-плеер с текущим треком — кнопки в предпросмотре не
         нажимаются, чтобы ничего не задеть случайно.
       </p>
 
-      <div class="mpe-preview-actions">
-        <button class="btn accent" type="button" @click="openMini">
+      <div class="flex flex-wrap gap-[8px]">
+        <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] transition-[background,border-color,color] duration-[120ms] ease-[ease] select-none !border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="openMini">
           <Icon name="mingcute:miniplayer-fill" :size="15" />
           {{ panels.mini ? "Мини-плеер открыт" : "Открыть мини-плеер" }}
         </button>
-        <button class="settings-reset-button" type="button" @click="reset">
+        <button class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,var(--fg)_14%,transparent)] hover:text-[color:var(--fg)]" type="button" @click="reset">
           Сбросить вид
         </button>
       </div>
     </div>
 
-    <div class="mpe-controls">
-      <div class="mpe-group">
-        <div class="mpe-group-head">Размер окна</div>
-        <div class="mpe-grid">
+    <div class="flex flex-col gap-[16px] min-w-0">
+      <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Размер окна</div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-[18px] gap-y-[12px]">
           <EditRange
             label="Ширина"
             suffix=" px"
@@ -58,9 +58,9 @@
         </div>
       </div>
 
-      <div class="mpe-group">
-        <div class="mpe-group-head">Размеры и отступы</div>
-        <div class="mpe-grid">
+      <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Размеры и отступы</div>
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-[18px] gap-y-[12px]">
           <EditRange
             label="Обложка"
             suffix=" px"
@@ -113,9 +113,9 @@
         </div>
       </div>
 
-      <div class="mpe-group">
-        <div class="mpe-group-head">Показывать</div>
-        <div class="mpe-switches">
+      <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Показывать</div>
+        <div class="flex flex-col gap-[2px]">
           <EditSwitch
             label="Время трека"
             :model-value="s.miniShowTime"
@@ -134,37 +134,37 @@
         </div>
       </div>
 
-      <div class="mpe-group">
-        <div class="mpe-group-head">
+      <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">
           Кнопки
-          <span class="mpe-group-hint">перетаскивай, чтобы менять порядок</span>
+          <span class="font-medium tracking-normal normal-case">перетаскивай, чтобы менять порядок</span>
         </div>
 
         <div
           ref="listRoot"
-          class="mpe-list"
+          class="flex flex-col gap-[4px] min-h-[40px]"
           @dragover.prevent="onListOver"
           @dragleave="onListLeave"
           @drop.prevent="onListDrop"
         >
           <template v-for="(id, index) in order" :key="id">
-            <i v-if="caretAt(index)" class="mpe-caret" />
+            <i v-if="caretAt(index)" class="h-[2px] flex-[0_0_2px] rounded-[2px] bg-[var(--accent)] pointer-events-none" />
             <div
-              class="mpe-item"
-              :class="{ off: !visible(id), dragging: dragId === id }"
+              class="mpe-item flex items-center gap-[9px] px-[10px] py-[8px] border border-transparent rounded-[10px] bg-[var(--surface-2)] text-[12.5px] cursor-grab transition-[border-color,opacity] duration-[140ms] ease-[ease] hover:border-[color:var(--line)]"
+              :class="{ 'opacity-45': !visible(id) && dragId !== id, 'opacity-30': dragId === id }"
               draggable="true"
               @dragstart="onDragStart(id, $event)"
               @dragend="endDrag"
             >
-              <Icon name="mingcute:dots-line" :size="13" class="faint mpe-item-grip" />
+              <Icon name="mingcute:dots-line" :size="13" class="text-[color:var(--fg-faint)] cursor-grab" />
               <Icon :name="iconOf(id)" :size="15" />
-              <span class="mpe-item-label ellipsis">{{ labelOf(id) }}</span>
-              <span v-if="locked.has(id)" class="mpe-item-lock">всегда</span>
+              <span class="flex-1 min-w-0 truncate">{{ labelOf(id) }}</span>
+              <span v-if="locked.has(id)" class="text-[color:var(--fg-faint)] text-[10.5px]">всегда</span>
               <button
                 v-else
                 type="button"
-                class="mpe-eye"
-                :class="{ on: visible(id) }"
+                class="inline-flex w-[24px] h-[24px] flex-none items-center justify-center border-0 rounded-[7px] text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                :class="{ 'text-[color:var(--accent)] hover:!text-[color:var(--accent)]': visible(id) }"
                 :title="visible(id) ? 'Скрыть кнопку' : 'Показать кнопку'"
                 @click.stop="toggle(id)"
               >
@@ -172,7 +172,7 @@
               </button>
             </div>
           </template>
-          <i v-if="caretAt(order.length)" class="mpe-caret" />
+          <i v-if="caretAt(order.length)" class="h-[2px] flex-[0_0_2px] rounded-[2px] bg-[var(--accent)] pointer-events-none" />
         </div>
       </div>
     </div>
@@ -321,7 +321,8 @@ function onListLeave(event: DragEvent) {
 
 function onListDrop(event: DragEvent) {
   const dropped = event.dataTransfer?.getData("text/plain") as
-    MiniButtonId | undefined;
+    | MiniButtonId
+    | undefined;
   const id = dragId.value ?? (dropped || null);
   const slot = slotAt(event.clientY);
   endDrag();
@@ -331,231 +332,3 @@ function onListDrop(event: DragEvent) {
   ui.moveMiniButton(id, from >= 0 && from < slot ? slot - 1 : slot);
 }
 </script>
-
-<style scoped>
-.mpe {
-  display: grid;
-  width: 100%;
-  grid-template-columns: minmax(280px, 1fr) minmax(260px, 1fr);
-  gap: 18px;
-  align-items: start;
-}
-
-@media (max-width: 980px) {
-  .mpe {
-    grid-template-columns: 1fr;
-  }
-}
-
-.mpe-preview {
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: calc(var(--radius) * 0.9);
-  background: var(--surface);
-}
-
-.mpe-preview-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.mpe-preview-title {
-  font-size: 12.5px;
-  font-weight: 640;
-}
-
-.mpe-preview-size {
-  color: var(--fg-faint);
-  font-size: 11.5px;
-  font-variant-numeric: tabular-nums;
-}
-
-.mpe-stage-wrap {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 14px;
-  border-radius: calc(var(--radius) * 0.8);
-  background: repeating-conic-gradient(
-      color-mix(in srgb, var(--fg) 5%, transparent) 0% 25%,
-      transparent 0% 50%
-    )
-    50% / 18px 18px;
-}
-
-.mpe-stage {
-  position: relative;
-  overflow: hidden;
-  transition:
-    width 0.12s ease,
-    height 0.12s ease;
-}
-
-.mpe-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 14px;
-}
-
-.mpe-note {
-  margin: 0;
-  color: var(--fg-faint);
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-
-.mpe-preview-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.mpe-preview-actions .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.mpe-preview-actions .btn.accent {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
-.mpe-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-}
-
-.mpe-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: calc(var(--radius) * 0.9);
-  background: var(--surface);
-}
-
-.mpe-group-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 8px;
-  color: var(--fg-faint);
-  font-size: 10px;
-  font-weight: 650;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.mpe-group-hint {
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-}
-
-.mpe-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px 18px;
-}
-
-.mpe-switches {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mpe-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-height: 40px;
-}
-
-.mpe-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 10px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  background: var(--surface-2);
-  font-size: 12.5px;
-  cursor: grab;
-  transition:
-    border-color 0.14s ease,
-    opacity 0.14s ease;
-}
-
-.mpe-item:hover {
-  border-color: var(--line);
-}
-
-.mpe-item.off {
-  opacity: 0.45;
-}
-
-.mpe-item.dragging {
-  opacity: 0.3;
-}
-
-.mpe-item-grip {
-  cursor: grab;
-}
-
-.mpe-item-label {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.mpe-item-lock {
-  color: var(--fg-faint);
-  font-size: 10.5px;
-}
-
-.mpe-eye {
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--fg-dim);
-  cursor: pointer;
-  transition:
-    background 0.14s ease,
-    color 0.14s ease;
-}
-
-.mpe-eye:hover {
-  background: var(--hover);
-  color: var(--fg);
-}
-
-.mpe-eye.on {
-  color: var(--accent);
-}
-
-.mpe-caret {
-  height: 2px;
-  flex: 0 0 2px;
-  border-radius: 2px;
-  background: var(--accent);
-  pointer-events: none;
-}
-</style>

@@ -1,22 +1,22 @@
 <template>
-  <q-page class="scroll-page">
-    <q-scroll-area class="scroll-page-area">
-      <div class="scroll-page-inner">
-        <div class="section-head">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
+    <q-scroll-area class="flex-auto min-h-0">
+      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+        <div class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]">
           <div>
-            <button class="more-link" type="button" @click="back">
+            <button class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]" type="button" @click="back">
               <Icon name="mingcute:left-line" :size="14" />
               <span>{{ name || "Артист" }}</span>
             </button>
-            <div class="h1 q-mt-sm">Все треки</div>
-            <div class="faint t-12 q-mt-xs">
+            <div class="q-mt-sm text-[calc(30px*var(--text-scale,1))] font-semibold tracking-[-0.03em] leading-[1.15]">Все треки</div>
+            <div class="q-mt-xs text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
               {{ plural(tracks.length, "трек", "трека", "треков") }}
             </div>
           </div>
 
-          <div class="head-actions">
+          <div class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap">
             <button
-              class="btn-solid"
+              class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[8px] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="!tracks.length"
               @click="playFrom(0)"
@@ -26,7 +26,7 @@
             </button>
 
             <button
-              class="btn"
+              class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="!tracks.length"
               @click="shufflePlay"
@@ -36,7 +36,7 @@
             </button>
 
             <button
-              class="btn"
+              class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="!tracks.length"
               @click="enqueueAll"
@@ -51,10 +51,10 @@
           <q-spinner size="26px" color="primary" />
         </div>
 
-        <div v-else-if="error" class="dim t-13">{{ error }}</div>
+        <div v-else-if="error" class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">{{ error }}</div>
 
         <template v-else>
-          <div class="head-row">
+          <div class="flex items-center gap-[14px] h-[32px] px-[12px] py-0 text-[11px] font-semibold tracking-[0.06em] uppercase text-[color:var(--fg-faint)] border-b border-[var(--line)]">
             <div style="width: 20px; text-align: center">#</div>
             <div style="width: 38px" />
             <div class="col">Название</div>

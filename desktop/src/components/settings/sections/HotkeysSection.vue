@@ -84,19 +84,23 @@
               class="grid h-6 w-6 flex-none place-items-center rounded-md text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
             >
               <Icon name="mingcute:more-2-fill" :size="14" />
-              <q-menu class="menu">
-                <div class="menu-body">
+              <q-menu
+                class="!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+              >
+                <div
+                  class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                >
                   <div
                     v-for="preset in MEDIA_PRESETS"
                     :key="preset.value"
-                    class="menu-item"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="hotkeys.setGlobal(row.action, preset.value)"
                   >
                     <span>{{ preset.label }}</span>
                   </div>
                   <div
-                    class="menu-item danger"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:!text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:!text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="clearGlobal(row.action)"
                   >

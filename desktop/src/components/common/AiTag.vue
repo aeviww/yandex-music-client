@@ -1,5 +1,8 @@
 <template>
-  <span v-if="show" class="ai-tag">
+  <span
+    v-if="show"
+    class="inline-flex items-center ml-[6px] px-[5px] py-0 border border-solid border-[#ef4444] rounded-[4px] bg-[rgba(239,68,68,0.12)] text-[#ef4444] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] align-middle flex-none cursor-default"
+  >
     AI
     <q-tooltip>Помечено как AI-музыка (данные Slopless)</q-tooltip>
   </span>
@@ -8,23 +11,3 @@
 <script setup lang="ts">
 defineProps<{ show?: boolean }>();
 </script>
-
-<style scoped>
-.ai-tag {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 6px;
-  padding: 0 5px;
-  border: 1px solid rgb(239 68 68);
-  border-radius: 4px;
-  background: rgba(239, 68, 68, 0.12);
-  color: rgb(239, 68, 68);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  vertical-align: middle;
-  flex: 0 0 auto;
-  cursor: default;
-}
-</style>

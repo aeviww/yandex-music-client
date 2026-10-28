@@ -1,9 +1,13 @@
 <template>
   <Teleport to="body">
     <transition name="viewer-fade">
-      <div v-if="open" class="viewer" @click.self="close">
+      <div
+        v-if="open"
+        class="fixed inset-0 z-[4000] flex items-center justify-center bg-[rgba(0,0,0,0.82)] backdrop-blur-[8px]"
+        @click.self="close"
+      >
         <button
-          class="viewer-close"
+          class="absolute top-[18px] right-[20px] w-[40px] h-[40px] rounded-full border-0 bg-[rgba(255,255,255,0.12)] text-[color:#fff] cursor-pointer flex items-center justify-center hover:bg-[rgba(255,255,255,0.22)]"
           type="button"
           title="Закрыть"
           @click="close"
@@ -13,7 +17,7 @@
 
         <button
           v-if="images.length > 1"
-          class="viewer-nav prev"
+          class="absolute top-1/2 -translate-y-1/2 left-[24px] w-[46px] h-[46px] rounded-full border-0 bg-[rgba(255,255,255,0.12)] text-[color:#fff] cursor-pointer flex items-center justify-center hover:bg-[rgba(255,255,255,0.22)]"
           type="button"
           title="Предыдущее"
           @click.stop="prev"
@@ -21,14 +25,24 @@
           <Icon name="mingcute:left-line" :size="24" />
         </button>
 
-        <div class="viewer-stage" @click.self="close">
-          <img :src="images[cur]" :alt="title" class="viewer-img" />
-          <div class="viewer-bar">
-            <span v-if="images.length > 1" class="viewer-count">
+        <div
+          class="flex flex-col items-center gap-[14px] max-w-[82vw] max-h-[84vh]"
+          @click.self="close"
+        >
+          <img
+            :src="images[cur]"
+            :alt="title"
+            class="max-w-[82vw] max-h-[72vh] rounded-[12px] object-contain shadow-[0_24px_60px_rgba(0,0,0,0.55)] select-none"
+          />
+          <div class="flex items-center gap-[14px]">
+            <span
+              v-if="images.length > 1"
+              class="text-[13px] text-[rgba(255,255,255,0.75)]"
+            >
               {{ cur + 1 }} / {{ images.length }}
             </span>
             <button
-              class="btn viewer-download"
+              class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:#fff] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:#fff] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="saving"
               @click.stop="download"
@@ -41,7 +55,7 @@
 
         <button
           v-if="images.length > 1"
-          class="viewer-nav next"
+          class="absolute top-1/2 -translate-y-1/2 right-[24px] w-[46px] h-[46px] rounded-full border-0 bg-[rgba(255,255,255,0.12)] text-[color:#fff] cursor-pointer flex items-center justify-center hover:bg-[rgba(255,255,255,0.22)]"
           type="button"
           title="Следующее"
           @click.stop="next"
@@ -49,12 +63,16 @@
           <Icon name="mingcute:right-line" :size="24" />
         </button>
 
-        <div v-if="images.length > 1" class="viewer-thumbs" @click.stop>
+        <div
+          v-if="images.length > 1"
+          class="absolute bottom-[18px] left-1/2 -translate-x-1/2 flex gap-[8px] max-w-[80vw] overflow-x-auto p-[6px]"
+          @click.stop
+        >
           <button
             v-for="(img, i) in images"
             :key="i"
-            class="viewer-thumb"
-            :class="{ active: i === cur }"
+            class="w-[52px] h-[52px] rounded-[8px] overflow-hidden border-2 border-solid border-transparent p-0 cursor-pointer bg-transparent flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover"
+            :class="{ 'border-[#fff]': i === cur }"
             type="button"
             @click="cur = i"
           >
@@ -144,116 +162,6 @@ onUnmounted(() => window.removeEventListener("keydown", onKey));
 </script>
 
 <style scoped>
-.viewer {
-  position: fixed;
-  inset: 0;
-  z-index: 4000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(8px);
-}
-.viewer-stage {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  max-width: 82vw;
-  max-height: 84vh;
-}
-.viewer-img {
-  max-width: 82vw;
-  max-height: 72vh;
-  border-radius: 12px;
-  object-fit: contain;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-  user-select: none;
-}
-.viewer-bar {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.viewer-count {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.75);
-}
-.viewer-download {
-  color: #fff;
-}
-.viewer-close {
-  position: absolute;
-  top: 18px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.viewer-close:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-.viewer-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.viewer-nav:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-.viewer-nav.prev {
-  left: 24px;
-}
-.viewer-nav.next {
-  right: 24px;
-}
-.viewer-thumbs {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 8px;
-  max-width: 80vw;
-  overflow-x: auto;
-  padding: 6px;
-}
-.viewer-thumb {
-  width: 52px;
-  height: 52px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  padding: 0;
-  cursor: pointer;
-  background: none;
-  flex: 0 0 auto;
-}
-.viewer-thumb.active {
-  border-color: #fff;
-}
-.viewer-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .viewer-fade-enter-active,
 .viewer-fade-leave-active {
   transition: opacity 0.18s ease;

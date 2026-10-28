@@ -1,23 +1,23 @@
 <template>
-  <q-page class="playlist-page">
-    <div class="playlist-page-header" :class="{ collapsed: headerCollapsed }">
-      <div class="page-head">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 pt-[var(--page-top-gap)] px-[32px] pb-0 !overflow-hidden">
+    <div class="flex-none pb-[18px] overflow-hidden max-h-[460px] [transition:max-height_0.34s_ease,opacity_0.24s_ease,padding_0.34s_ease,transform_0.34s_ease]" :class="{ '!max-h-0 !pb-0 opacity-[0] pointer-events-none translate-y-[-8px]': headerCollapsed }">
+      <div class="flex items-end gap-[26px] min-w-0 max-[1360px]:gap-[20px] max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-[14px]">
         <div
-          class="cover head-cover playlist-cover"
+          class="cover group relative cursor-pointer w-[clamp(112px,15vw,190px)] h-[clamp(112px,15vw,190px)] rounded-[12px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
           :title="tracks.length ? 'Слушать плейлист' : ''"
           @click="playFrom(0)"
         >
           <img loading="lazy" decoding="async" v-if="cover" :src="cover" />
-          <Icon v-else name="mingcute:playlist-2-line" :size="42" class="faint" />
-          <div v-if="tracks.length" class="playlist-cover-play">
+          <Icon v-else name="mingcute:playlist-2-line" :size="42" class="text-[color:var(--fg-faint)]" />
+          <div v-if="tracks.length" class="absolute right-[10px] bottom-[10px] flex w-[44px] h-[44px] items-center justify-center rounded-full bg-[var(--accent)] text-[color:#fff] opacity-[0] cursor-pointer translate-y-[6px] [transition:opacity_0.14s_ease,transform_0.3s_cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.85] group-hover:opacity-[1] group-hover:translate-y-0">
             <Icon name="mingcute:play-fill" :size="20" />
           </div>
         </div>
 
-        <div class="head-info">
-          <div class="head-kind">
+        <div class="flex-1 min-w-0 pb-[4px] max-[1024px]:w-full max-[1024px]:pb-0">
+          <div class="text-[12px] text-[color:var(--fg-dim)]">
             Плейлист
-            <span v-if="isPinned" class="head-pin-mark">
+            <span v-if="isPinned" class="inline-flex items-center ml-[8px] text-[color:var(--fg-faint)] gap-[4px]">
               <Icon name="mingcute:pin-2-line" :size="12" />
               закреплён
             </span>
@@ -27,7 +27,7 @@
             v-if="editing"
             ref="titleInput"
             v-model="draftTitle"
-            class="head-title head-title-input"
+            class="block w-full max-w-[640px] p-0 border-0 rounded-none m-0 bg-transparent text-inherit text-[44px] font-extrabold leading-[1.06] tracking-[-0.025em] outline-none border-b-2 border-b-[color:var(--line)] shadow-none break-words focus:border-b-[color:var(--accent)] max-[1024px]:mt-[4px] max-[1024px]:mx-0 max-[1024px]:mb-[8px]"
             type="text"
             spellcheck="false"
             maxlength="120"
@@ -37,23 +37,23 @@
           />
           <button
             v-else
-            class="head-title head-title-edit"
+            class="group inline-flex max-w-full items-center p-0 border-0 bg-transparent text-inherit cursor-text text-[44px] font-extrabold leading-[1.06] gap-[10px] tracking-[-0.025em] text-left border-b-2 border-b-transparent break-words mt-[6px] mx-0 mb-[10px] max-[1024px]:mt-[4px] max-[1024px]:mx-0 max-[1024px]:mb-[8px] hover:[&_span]:underline hover:[&_span]:underline-offset-[4px] hover:[&_span]:decoration-2"
             type="button"
             title="Нажми, чтобы переименовать"
             @click="beginEdit"
           >
             <span>{{ title }}</span>
-            <Icon class="head-title-pen" name="mingcute:pencil-line" :size="20" />
+            <Icon class="flex-none text-[color:var(--fg-faint)] opacity-[0] transition-opacity duration-[120ms] ease-[ease] group-hover:opacity-[1]" name="mingcute:pencil-line" :size="20" />
           </button>
 
-          <div class="head-meta">
+          <div class="flex items-baseline flex-wrap gap-y-[0] gap-x-[6px] text-[13px] text-[color:var(--fg-dim)] min-w-0 max-[760px]:text-[12px] [&>span]:whitespace-nowrap">
             {{ plural(tracks.length, "трек", "трека", "треков") }}
-            <span v-if="totalLabel" class="faint"> · {{ totalLabel }}</span>
+            <span v-if="totalLabel" class="text-[color:var(--fg-faint)]"> · {{ totalLabel }}</span>
           </div>
 
-          <div class="head-actions">
+          <div class="flex items-center gap-[8px] flex-wrap mt-[22px] max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px]">
             <button
-              class="btn-solid"
+              class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-white"
               type="button"
               :disabled="!tracks.length"
               @click="playFrom(0)"
@@ -63,7 +63,7 @@
             </button>
 
             <button
-              class="btn"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="!tracks.length"
               @click="shufflePlay"
@@ -74,7 +74,7 @@
 
             <button
               v-if="downloading"
-              class="btn danger-btn"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--accent)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--accent)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
               type="button"
               title="Отменить загрузку плейлиста"
               @click="cancelDownload"
@@ -86,9 +86,13 @@
 
             <button
               v-else
-              class="btn"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
               type="button"
-              :class="{ on: fullyDownloaded }"
+              :class="
+                fullyDownloaded
+                  ? 'on border-[color:var(--accent)] text-[color:var(--fg)] hover:border-[color:var(--accent)] hover:text-[color:var(--fg)]'
+                  : 'border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]'
+              "
               :disabled="!tracks.length || fullyDownloaded"
               :title="
                 fullyDownloaded
@@ -102,9 +106,13 @@
             </button>
 
             <button
-              class="btn"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
               type="button"
-              :class="{ on: isPinned }"
+              :class="
+                isPinned
+                  ? 'on border-[color:var(--accent)] text-[color:var(--fg)] hover:border-[color:var(--accent)] hover:text-[color:var(--fg)]'
+                  : 'border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]'
+              "
               :title="
                 isPinned
                   ? 'Открепить от боковой панели'
@@ -116,29 +124,29 @@
               <span>{{ isPinned ? "Открепить" : "Закрепить" }}</span>
             </button>
 
-            <button class="icon-btn" type="button" title="Ещё">
+            <button class="flex w-[30px] h-[30px] items-center justify-center rounded-[8px] p-0 border-0 appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default" type="button" title="Ещё">
               <Icon name="mingcute:more-2-fill" :size="18" />
-              <q-menu class="menu" anchor="bottom left" self="top left">
-                <div class="menu-body" style="min-width: 232px">
-                  <div class="menu-item" v-close-popup @click="beginEdit">
+              <q-menu class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]" anchor="bottom left" self="top left">
+                <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 232px">
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="beginEdit">
                     <Icon name="mingcute:pencil-line" :size="17" />
                     <span>Переименовать</span>
                   </div>
 
                   <div
-                    class="menu-item"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="enqueueAll"
-                    :class="{ disabled: !tracks.length }"
+                    :class="{ 'opacity-[0.4] pointer-events-none': !tracks.length }"
                   >
                     <Icon name="mingcute:add-circle-line" :size="17" />
                     <span>Добавить всё в очередь</span>
                   </div>
 
                   <div
-                    class="menu-item"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
-                    :class="{ disabled: !tracks.length || fullyDownloaded }"
+                    :class="{ 'opacity-[0.4] pointer-events-none': !tracks.length || fullyDownloaded }"
                     @click="downloadAll"
                   >
                     <Icon name="mingcute:download-2-line" :size="17" />
@@ -149,7 +157,7 @@
 
                   <div
                     v-if="downloading"
-                    class="menu-item danger"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
                     v-close-popup
                     @click="cancelDownload"
                   >
@@ -157,20 +165,20 @@
                     <span>Отменить загрузку</span>
                   </div>
 
-                  <div class="menu-item" v-close-popup @click="playRecommended">
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="playRecommended">
                     <Icon name="mingcute:wave-line" :size="17" />
                     <span>Похожее на плейлист</span>
                   </div>
 
-                  <div class="menu-sep" />
+                  <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
-                  <div class="menu-item" v-close-popup @click="setPublic(true)">
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="setPublic(true)">
                     <Icon name="mingcute:share-2-line" :size="17" />
                     <span>Сделать публичным</span>
                   </div>
 
                   <div
-                    class="menu-item"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="setPublic(false)"
                   >
@@ -178,15 +186,15 @@
                     <span>Сделать личным</span>
                   </div>
 
-                  <div class="menu-sep" />
+                  <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
-                  <div class="menu-item" v-close-popup @click="clearTracks">
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="clearTracks">
                     <Icon name="mingcute:filter-line" :size="17" />
                     <span>Очистить плейлист</span>
                   </div>
 
                   <div
-                    class="menu-item danger"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
                     v-close-popup
                     @click="removePlaylist"
                   >
@@ -201,15 +209,17 @@
       </div>
     </div>
 
-    <div v-if="loading" class="playlist-loading">
+    <div v-if="loading" class="flex items-center justify-center flex-auto">
       <q-spinner size="24px" color="primary" />
     </div>
 
-    <div v-else class="playlist-tracks-scroll">
+    <div v-else class="flex flex-auto flex-col min-h-0 overflow-hidden">
       <div v-if="selectedIds.length" class="select-float">
         <button
-          class="track-check-box"
-          :class="{ on: allVisibleSelected }"
+          class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid border-[color:var(--line)] rounded-[5px] bg-[var(--surface-2)] text-[color:#fff] [transition:background_0.12s_ease,border-color_0.12s_ease]"
+          :class="{
+            'border-[color:var(--accent)] bg-[var(--accent)]': allVisibleSelected,
+          }"
           type="button"
           title="Выбрать все"
           @click="toggleSelectAllRows"
@@ -217,13 +227,13 @@
           <Icon v-if="allVisibleSelected" name="mingcute:check-line" :size="13" />
         </button>
 
-        <div class="select-bar-count t-12 w-600">
+        <div class="text-[color:var(--fg)] whitespace-nowrap text-[calc(12px*var(--text-scale,1))] font-semibold">
           {{ plural(selectedIds.length, "трек", "трека", "треков") }}
         </div>
 
-        <div class="select-bar-actions">
+        <div class="flex items-center gap-[8px] flex-wrap ml-auto">
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length"
             @click="playRowSelection"
@@ -233,7 +243,7 @@
           </button>
 
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length"
             @click="enqueueRowSelection"
@@ -242,38 +252,38 @@
             <span>В очередь</span>
           </button>
 
-          <button class="btn" type="button" :disabled="!selectedIds.length">
+          <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" :disabled="!selectedIds.length">
             <Icon name="mingcute:classify-add-line" :size="14" />
             <span>В плейлист</span>
-            <q-menu class="menu" anchor="bottom start" self="top start">
-              <div class="menu-body">
-                <div v-if="!otherPlaylists.length" class="menu-item disabled">
+            <q-menu class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]" anchor="bottom start" self="top start">
+              <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none">
+                <div v-if="!otherPlaylists.length" class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none">
                   <span>Нет других плейлистов</span>
                 </div>
                 <div
                   v-for="playlist in otherPlaylists"
                   :key="playlist.kind"
-                  class="menu-item"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="addRowSelectionTo(playlist.kind)"
                 >
-                  <div class="cover menu-cover">
+                  <div class="cover w-[26px] h-[26px] rounded-[6px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
                     <img
                       v-if="playlist.cover_url"
                       :src="playlist.cover_url"
                       loading="lazy"
                       decoding="async"
                     />
-                    <Icon v-else name="mingcute:playlist-2-line" :size="14" class="faint" />
+                    <Icon v-else name="mingcute:playlist-2-line" :size="14" class="text-[color:var(--fg-faint)]" />
                   </div>
-                  <span class="ellipsis">{{ playlist.title }}</span>
+                  <span class="truncate">{{ playlist.title }}</span>
                 </div>
               </div>
             </q-menu>
           </button>
 
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length || downloading"
             @click="downloadRowSelection"
@@ -284,7 +294,7 @@
 
           <button
             v-if="canReorder"
-            class="btn danger-btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
             type="button"
             :disabled="!selectedIds.length"
             @click="removeRowSelection"
@@ -294,7 +304,7 @@
           </button>
 
           <button
-            class="icon-btn sm"
+            class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[7px]"
             type="button"
             title="Снять выделение"
             @click="clearRowSelection"
@@ -304,90 +314,98 @@
         </div>
       </div>
 
-      <div v-if="tracks.length" class="playlist-toolbar">
-        <div class="field playlist-filter">
-          <Icon name="mingcute:search-2-line" :size="15" class="faint" />
-          <input
-            v-model="filter"
-            type="text"
-            spellcheck="false"
-            placeholder="Найти в плейлисте"
-          />
-          <button
-            v-if="filter"
-            class="icon-btn xs"
-            type="button"
-            title="Сбросить"
-            @click="filter = ''"
-          >
-            <Icon name="mingcute:close-line" :size="13" />
-          </button>
-        </div>
+      <div
+        ref="toolsRef"
+        class="flex-none min-h-0 will-change-transform"
+        :style="toolsStyle"
+      >
+        <div v-if="tracks.length" class="flex items-center pt-0 px-[2px] pb-[12px] gap-[8px] max-[760px]:flex-wrap max-[760px]:gap-[8px]">
+          <div class="w-[240px] !h-[34px] flex-none flex items-center gap-[8px] px-[12px] rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer">
+            <Icon name="mingcute:search-2-line" :size="15" class="text-[color:var(--fg-faint)]" />
+            <input
+              v-model="filter"
+              type="text"
+              spellcheck="false"
+              placeholder="Найти в плейлисте"
+            />
+            <button
+              v-if="filter"
+              class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[22px] h-[22px] flex-none rounded-[6px]"
+              type="button"
+              title="Сбросить"
+              @click="filter = ''"
+            >
+              <Icon name="mingcute:close-line" :size="13" />
+            </button>
+          </div>
 
-        <button class="btn" type="button" title="Сортировка">
-          <Icon name="mingcute:filter-line" :size="15" />
-          <span>{{ sortLabel }}</span>
-          <Icon name="mingcute:down-line" :size="13" />
-          <q-menu class="menu" anchor="bottom left" self="top left">
-            <div class="menu-body" style="min-width: 220px">
-              <div
-                v-for="option in sortOptions"
-                :key="option.id"
-                class="menu-item"
-                v-close-popup
-                @click="sortMode = option.id"
-              >
-                <Icon
-                  :name="sortMode === option.id ? 'mingcute:check-line' : 'mingcute:pencil-line'"
-                  :size="16"
-                />
-                <span>{{ option.label }}</span>
+          <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" title="Сортировка">
+            <Icon name="mingcute:filter-line" :size="15" />
+            <span>{{ sortLabel }}</span>
+            <Icon name="mingcute:down-line" :size="13" />
+            <q-menu class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]" anchor="bottom left" self="top left">
+              <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 220px">
+                <div
+                  v-for="option in sortOptions"
+                  :key="option.id"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                  v-close-popup
+                  @click="sortMode = option.id"
+                >
+                  <Icon
+                    :name="sortMode === option.id ? 'mingcute:check-line' : 'mingcute:pencil-line'"
+                    :size="16"
+                  />
+                  <span>{{ option.label }}</span>
+                </div>
               </div>
-            </div>
-          </q-menu>
-        </button>
+            </q-menu>
+          </button>
 
-        <button
-          class="btn"
-          type="button"
-          :title="
-            sortDir === 'asc'
-              ? 'Сейчас по возрастанию - нажми для убывания'
-              : 'Сейчас по убыванию - нажми для возрастания'
-          "
-          @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'"
-        >
-          <span class="t-13 w-600">{{ sortDir === "asc" ? "↑" : "↓" }}</span>
-          <span>{{
-            sortDir === "asc" ? "По возрастанию" : "По убыванию"
-          }}</span>
-        </button>
+          <button
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            type="button"
+            :title="
+              sortDir === 'asc'
+                ? 'Сейчас по возрастанию - нажми для убывания'
+                : 'Сейчас по убыванию - нажми для возрастания'
+            "
+            @click="sortDir = sortDir === 'asc' ? 'desc' : 'asc'"
+          >
+            <span class="text-[calc(13px*var(--text-scale,1))] font-semibold">{{ sortDir === "asc" ? "↑" : "↓" }}</span>
+            <span>{{
+              sortDir === "asc" ? "По возрастанию" : "По убыванию"
+            }}</span>
+          </button>
 
-        <div class="col" />
+          <div class="col" />
 
-        <div v-if="filter" class="faint t-12">
-          {{ plural(rows.length, "совпадение", "совпадения", "совпадений") }}
+          <div v-if="filter" class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
+            {{ plural(rows.length, "совпадение", "совпадения", "совпадений") }}
+          </div>
+          <div v-else-if="canReorder" class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
+            Перетаскивай треки, чтобы менять порядок
+          </div>
         </div>
-        <div v-else-if="canReorder" class="faint t-12">
-          Перетаскивай треки, чтобы менять порядок
-        </div>
-      </div>
 
-      <div class="head-row">
-        <div style="width: 26px" />
-        <div style="width: 20px; text-align: center">#</div>
-        <div style="width: 38px" />
-        <div class="col">Название</div>
-        <div class="gt-sm" style="width: 190px">Альбом</div>
-        <div style="width: 84px" />
-        <div style="width: 40px; text-align: right">Время</div>
+        <div class="flex items-center gap-[14px] h-[32px] px-[12px] py-0 text-[11px] font-semibold tracking-[0.06em] uppercase text-[color:var(--fg-faint)] border-b border-[var(--line)]">
+          <div style="width: 26px" />
+          <div class="w-[16px] flex-none" />
+          <div style="width: 20px; text-align: center">#</div>
+          <div style="width: 38px" />
+          <div class="col">Название</div>
+          <div class="gt-sm" style="width: 190px">Альбом</div>
+          <div style="width: 84px" />
+          <div style="width: 40px; text-align: right">Время</div>
+        </div>
       </div>
 
       <q-virtual-scroll
         v-if="rows.length"
         ref="virtualRef"
         v-slot="{ item }"
-        class="track-virtual"
+        class="flex-auto min-h-0 overflow-x-hidden pb-[18px] [&_.q-virtual-scroll__content]:min-w-0"
+        data-track-scroll
         :items="rows"
         :virtual-scroll-item-size="52"
         :virtual-scroll-slice-size="20"
@@ -410,21 +428,21 @@
         />
       </q-virtual-scroll>
 
-      <div v-else-if="filter" class="playlist-empty">
-        <Icon name="mingcute:search-2-line" :size="22" class="faint" />
-        <div class="t-13">По запросу «{{ filter }}» ничего нет</div>
-        <button class="btn" type="button" @click="filter = ''">
+      <div v-else-if="filter" class="flex flex-col items-center justify-center px-0 py-[54px] text-[color:var(--fg-dim)] gap-[10px] text-center">
+        <Icon name="mingcute:search-2-line" :size="22" class="text-[color:var(--fg-faint)]" />
+        <div class="text-[calc(13px*var(--text-scale,1))]">По запросу «{{ filter }}» ничего нет</div>
+        <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="filter = ''">
           Сбросить поиск
         </button>
       </div>
 
-      <div v-else class="playlist-empty">
-        <Icon name="mingcute:playlist-2-line" :size="22" class="faint" />
-        <div class="t-13">Плейлист пуст</div>
-        <div class="faint t-12">
+      <div v-else class="flex flex-col items-center justify-center px-0 py-[54px] text-[color:var(--fg-dim)] gap-[10px] text-center">
+        <Icon name="mingcute:playlist-2-line" :size="22" class="text-[color:var(--fg-faint)]" />
+        <div class="text-[calc(13px*var(--text-scale,1))]">Плейлист пуст</div>
+        <div class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
           Добавляй треки через меню трека - «Добавить в плейлист»
         </div>
-        <button class="btn" type="button" @click="playRecommended">
+        <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="playRecommended">
           <Icon name="mingcute:wave-line" :size="15" />
           <span>Подобрать похожее</span>
         </button>
@@ -432,16 +450,16 @@
     </div>
 
     <q-dialog v-model="pickerOpen">
-      <div class="app-modal picker-modal">
-        <div class="picker-head">
+      <div class="flex w-[620px] max-w-[94vw] flex-col p-[22px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[var(--surface)] gap-[14px]">
+        <div class="flex items-start justify-between gap-[12px]">
           <div>
-            <div class="app-modal-title">Выбор треков</div>
-            <div class="app-modal-text">
+            <div class="text-[color:var(--fg)] text-[16px] font-semibold tracking-[-0.01em]">Выбор треков</div>
+            <div class="text-[color:var(--fg-dim)] text-[13px] leading-[1.5]">
               Отметь треки и примени действие сразу ко всем.
             </div>
           </div>
           <button
-            class="icon-btn sm"
+            class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[7px]"
             type="button"
             title="Закрыть"
             @click="pickerOpen = false"
@@ -450,9 +468,9 @@
           </button>
         </div>
 
-        <div class="picker-toolbar">
-          <div class="field picker-search">
-            <Icon name="mingcute:search-2-line" :size="15" class="faint" />
+        <div class="flex items-center gap-[12px]">
+          <div class="w-full !h-[34px] flex-auto flex items-center gap-[8px] px-[12px] rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer">
+            <Icon name="mingcute:search-2-line" :size="15" class="text-[color:var(--fg-faint)]" />
             <input
               v-model="pickerFilter"
               type="text"
@@ -460,11 +478,15 @@
               placeholder="Найти трек"
             />
           </div>
-          <button class="more-link" type="button" @click="selectAllVisible">
+          <button
+            class="inline-flex items-center gap-[4px] whitespace-nowrap border-0 bg-transparent p-0 text-[12px] text-[color:var(--fg-faint)] cursor-pointer appearance-none font-[inherit] transition-[color] duration-[0.12s] ease-[ease] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
+            type="button"
+            @click="selectAllVisible"
+          >
             Выбрать все
           </button>
           <button
-            class="more-link"
+            class="inline-flex items-center gap-[4px] whitespace-nowrap border-0 bg-transparent p-0 text-[12px] text-[color:var(--fg-faint)] cursor-pointer appearance-none font-[inherit] transition-[color] duration-[0.12s] ease-[ease] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
             type="button"
             :disabled="!selected.length"
             @click="clearSelection"
@@ -473,18 +495,24 @@
           </button>
         </div>
 
-        <div class="picker-list">
+        <div class="flex max-h-[46vh] flex-col gap-[2px] overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-[color:var(--line)] bg-[var(--bg)] p-[4px]">
           <button
             v-for="row in pickerRows"
             :key="`${row.track.id}-${row.index}`"
-            class="picker-row"
-            :class="{ on: selected.includes(row.index) }"
+            class="flex w-full items-center gap-[10px] rounded-[8px] border-0 px-[8px] py-[6px] text-left text-inherit font-[inherit] cursor-pointer hover:bg-[var(--hover)]"
+            :class="
+              selected.includes(row.index) ? 'bg-[var(--surface-2)]' : ''
+            "
             type="button"
             @click="toggleSelect(row.index, $event)"
           >
             <span
-              class="track-check-box"
-              :class="{ on: selected.includes(row.index) }"
+              class="flex h-[16px] w-[16px] flex-none items-center justify-center rounded-[5px] border bg-[var(--surface-2)] text-[color:#fff] transition-[background,border-color] duration-[0.12s] ease-[ease]"
+              :class="
+                selected.includes(row.index)
+                  ? 'border-[color:var(--accent)] bg-[var(--accent)]'
+                  : 'border-[color:var(--line)]'
+              "
             >
               <Icon
                 v-if="selected.includes(row.index)"
@@ -493,40 +521,40 @@
               />
             </span>
 
-            <div class="cover picker-cover">
+            <div class="cover w-[34px] h-[34px] flex-none rounded-[6px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
               <img
                 v-if="row.track.cover_url"
                 loading="lazy"
                 decoding="async"
                 :src="row.track.cover_url"
               />
-              <Icon v-else name="mingcute:music-line" :size="14" class="faint" />
+              <Icon v-else name="mingcute:music-line" :size="14" class="text-[color:var(--fg-faint)]" />
             </div>
 
-            <span class="picker-meta">
-              <span class="ellipsis t-13">{{ row.track.title }}</span>
-              <span class="faint t-11 ellipsis">
+            <span class="flex min-w-0 flex-auto flex-col gap-[1px]">
+              <span class="truncate text-[calc(13px*var(--text-scale,1))]">{{ row.track.title }}</span>
+              <span class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">
                 {{ artistNames(row.track.artists) }}
               </span>
             </span>
 
-            <span class="faint t-11">
+            <span class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))]">
               {{ formatDuration(row.track.duration_ms) }}
             </span>
           </button>
 
-          <div v-if="!pickerRows.length" class="picker-empty faint t-12">
+          <div v-if="!pickerRows.length" class="px-0 py-[26px] text-center text-[color:var(--fg-faint)]">
             Ничего не нашлось
           </div>
         </div>
 
-        <div class="picker-actions">
-          <span class="faint t-12">Выбрано: {{ selected.length }}</span>
+        <div class="flex items-center gap-[8px] flex-wrap">
+          <span class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">Выбрано: {{ selected.length }}</span>
 
-          <div class="col" />
+          <div class="flex-auto" />
 
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length"
             @click="playSelected"
@@ -536,7 +564,7 @@
           </button>
 
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length"
             @click="enqueueSelected"
@@ -545,31 +573,31 @@
             <span>В очередь</span>
           </button>
 
-          <button class="btn" type="button" :disabled="!selected.length">
+          <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" :disabled="!selected.length">
             <Icon name="mingcute:classify-add-line" :size="15" />
             <span>В плейлист</span>
-            <q-menu class="menu" anchor="top right" self="bottom right">
-              <div class="menu-body" style="min-width: 220px">
-                <div class="menu-head">Добавить в плейлист</div>
+            <q-menu class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]" anchor="top right" self="bottom right">
+              <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 220px">
+                <div class="pt-[8px] px-[10px] pb-[10px] mb-[4px] min-w-0 border-b border-solid border-[color:var(--line)]">Добавить в плейлист</div>
                 <div
                   v-for="item in otherPlaylists"
                   :key="item.kind"
-                  class="menu-item"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="addSelectedTo(item.kind)"
                 >
                   <Icon name="mingcute:playlist-2-line" :size="16" />
-                  <span class="ellipsis">{{ item.title }}</span>
+                  <span class="truncate">{{ item.title }}</span>
                 </div>
-                <div v-if="!otherPlaylists.length" class="menu-item disabled">
-                  <span class="faint">Нет других плейлистов</span>
+                <div v-if="!otherPlaylists.length" class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none">
+                  <span class="text-[color:var(--fg-faint)]">Нет других плейлистов</span>
                 </div>
               </div>
             </q-menu>
           </button>
 
           <button
-            class="btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length || downloading"
             @click="downloadSelected"
@@ -579,7 +607,7 @@
           </button>
 
           <button
-            class="btn danger-btn"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
             type="button"
             :disabled="!selected.length"
             @click="removeSelected"
@@ -645,9 +673,21 @@ const cancelRequested = ref(false);
 const localIds = ref<Set<string>>(new Set());
 const selectedIds = ref<string[]>([]);
 const headerCollapsed = ref(false);
+const HERO_COLLAPSE_AT = 24;
 const virtualRef = ref<{
   scrollTo: (index: number, edge?: string) => void;
 } | null>(null);
+const toolsRef = ref<HTMLElement | null>(null);
+const toolsOffset = ref(0);
+
+const toolsStyle = computed(() => {
+  const offset = toolsOffset.value;
+  if (!offset) return undefined;
+  return {
+    transform: `translateY(-${offset}px)`,
+    marginBottom: `-${offset}px`,
+  };
+});
 
 const sortOptions: Array<{ id: SortMode; label: string }> = [
   { id: "custom", label: "Как в плейлисте" },
@@ -1202,14 +1242,12 @@ function trackPointer(event: PointerEvent) {
   if (dragFrom.value === null) return;
   event.preventDefault();
   const element = document.elementFromPoint(event.clientX, event.clientY);
-  const row = element?.closest<HTMLElement>(".row-track[data-track-index]");
+  const row = element?.closest<HTMLElement>("[data-track-index]");
   const index = Number(row?.dataset.trackIndex);
   if (Number.isInteger(index) && index >= 0 && index < tracks.value.length) {
     dragOver.value = index;
   }
-  const area = document.querySelector<HTMLElement>(
-    ".playlist-tracks-scroll .q-scrollarea__container",
-  );
+  const area = document.querySelector<HTMLElement>("[data-track-scroll]");
   if (!area) return;
   const bounds = area.getBoundingClientRect();
   if (event.clientY < bounds.top + 48) area.scrollTop -= 18;
@@ -1247,7 +1285,10 @@ function clearReorder() {
 function onTracksScroll(event: Event) {
   const target = event.target as HTMLElement | null;
   if (!target) return;
-  headerCollapsed.value = target.scrollTop > 24;
+  const top = target.scrollTop;
+  headerCollapsed.value = top > HERO_COLLAPSE_AT;
+  const height = toolsRef.value?.offsetHeight ?? 0;
+  toolsOffset.value = Math.min(Math.max(top - HERO_COLLAPSE_AT, 0), height);
 }
 
 function jumpToTrack(id: string) {

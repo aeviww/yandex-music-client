@@ -1,5 +1,5 @@
 <template>
-  <div v-if="id === 'play'" class="play play-sm" @click="onPlayToggle">
+  <div v-if="id === 'play'" :class="playClass" @click="onPlayToggle">
     <Transition name="ic-pop" mode="out-in">
       <q-spinner
         v-if="neuroWait || player.loading"
@@ -13,8 +13,7 @@
 
   <div
     v-else-if="id === 'shuffle'"
-    class="icon-btn"
-    :class="{ on: player.shuffle, off: !!neuro.item }"
+    :class="[iconBtnClass, player.shuffle ? onClass : '', neuro.item ? offClass : '']"
     @click="guard(() => player.toggleShuffle())"
   >
     <Icon name="mingcute:shuffle-line" :size="18" />
@@ -23,8 +22,7 @@
 
   <div
     v-else-if="id === 'prev'"
-    class="icon-btn"
-    :class="{ off: !player.hasPrev || !!neuro.item }"
+    :class="[iconBtnClass, !player.hasPrev || neuro.item ? offClass : '']"
     @click="guard(() => player.prev())"
   >
     <Icon name="mingcute:skip-previous-fill" :size="19" />
@@ -33,8 +31,7 @@
 
   <div
     v-else-if="id === 'next'"
-    class="icon-btn"
-    :class="{ off: !!neuro.item }"
+    :class="[iconBtnClass, neuro.item ? offClass : '']"
     @click="guard(() => player.next(false))"
   >
     <Icon name="mingcute:fast-forward-fill" :size="19" />
@@ -43,8 +40,7 @@
 
   <div
     v-else-if="id === 'repeat'"
-    class="icon-btn"
-    :class="{ on: player.repeat !== 'off', off: !!neuro.item }"
+    :class="[iconBtnClass, player.repeat !== 'off' ? onClass : '', neuro.item ? offClass : '']"
     @click="guard(() => player.cycleRepeat())"
   >
     <Icon
@@ -60,8 +56,7 @@
 
   <div
     v-else-if="id === 'like'"
-    class="icon-btn"
-    :class="{ on: isLiked, off: !player.current || !!neuro.item }"
+    :class="[iconBtnClass, isLiked ? onClass : '', !player.current || neuro.item ? offClass : '']"
     @click="guard(() => player.like())"
   >
     <Icon
@@ -75,8 +70,7 @@
 
   <div
     v-else-if="id === 'dislike'"
-    class="icon-btn"
-    :class="{ off: !player.current || !!neuro.item }"
+    :class="[iconBtnClass, !player.current || neuro.item ? offClass : '']"
     @click="guard(() => player.dislike())"
   >
     <Icon name="mingcute:heart-crack-line" :size="18" />
@@ -85,8 +79,7 @@
 
   <div
     v-else-if="id === 'lyrics'"
-    class="icon-btn"
-    :class="{ on: player.showLyrics, off: !player.current || !!neuro.item }"
+    :class="[iconBtnClass, player.showLyrics ? onClass : '', !player.current || neuro.item ? offClass : '']"
     @click="guard(() => player.toggleLyrics())"
   >
     <Icon name="maki:karaoke" :size="18" />
@@ -95,44 +88,42 @@
 
   <div
     v-else-if="id === 'queue'"
-    class="icon-btn"
-    :class="{ on: panels.queueOpen, off: panels.queueLocked }"
+    :class="[iconBtnClass, panels.queueOpen ? onClass : '', panels.queueLocked ? offClass : '']"
     @click="panels.toggleQueue()"
   >
     <Icon name="mingcute:playlist-2-line" :size="18" />
     <q-tooltip>Очередь треков</q-tooltip>
   </div>
 
-  <div v-else-if="id === 'mini'" class="icon-btn" @click="panels.enterMini()">
+  <div v-else-if="id === 'mini'" :class="iconBtnClass" @click="panels.enterMini()">
     <Icon name="mingcute:miniplayer-fill" :size="18" />
     <q-tooltip>Мини-плеер поверх окон</q-tooltip>
   </div>
 
   <div
     v-else-if="id === 'sleep'"
-    class="icon-btn"
-    :class="{ on: sleep.active }"
+    :class="[iconBtnClass, sleep.active ? onClass : '']"
   >
     <Icon name="mingcute:time-line" :size="18" />
     <q-tooltip>Таймер сна: {{ sleep.label }}</q-tooltip>
-    <q-menu class="panel menu" anchor="top middle" self="bottom middle">
-      <div class="menu-body" style="min-width: 178px">
-        <div class="sleep-head">Таймер сна</div>
+    <q-menu :class="menuClass" anchor="top middle" self="bottom middle">
+      <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 178px">
+        <div class="pt-[6px] px-[10px] pb-[2px] text-[11px] uppercase tracking-[0.05em] text-[color:var(--fg-faint)]">Таймер сна</div>
         <div
           v-for="m in sleepPresets"
           :key="m"
-          class="opt"
+          :class="optClass"
           v-close-popup
           @click="sleep.start(m)"
         >
           <span>Через {{ m }} мин</span>
         </div>
-        <div class="opt" v-close-popup @click="sleep.startUntilTrackEnd()">
+        <div :class="optClass" v-close-popup @click="sleep.startUntilTrackEnd()">
           <span>До конца трека</span>
         </div>
         <div
           v-if="sleep.active"
-          class="opt danger"
+          :class="optClass"
           v-close-popup
           @click="sleep.cancel()"
         >
@@ -144,18 +135,16 @@
 
   <div
     v-else-if="id === 'speed'"
-    class="icon-btn"
-    :class="{ on: player.playbackRate !== 1 }"
+    :class="[iconBtnClass, player.playbackRate !== 1 ? onClass : '']"
   >
     <Icon name="mingcute:dashboard-line" :size="18" />
     <q-tooltip>Скорость</q-tooltip>
-    <q-menu class="panel menu" anchor="top middle" self="bottom middle">
-      <div class="menu-body" style="min-width: 132px">
+    <q-menu :class="menuClass" anchor="top middle" self="bottom middle">
+      <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 132px">
         <div
           v-for="r in rates"
           :key="r"
-          class="opt"
-          :class="{ on: player.playbackRate === r }"
+          :class="[optClass, player.playbackRate === r ? optOnClass : '']"
           v-close-popup
           @click="player.setPlaybackRate(r)"
         >
@@ -170,16 +159,15 @@
     </q-menu>
   </div>
 
-  <div v-else-if="id === 'quality'" class="icon-btn">
+  <div v-else-if="id === 'quality'" :class="iconBtnClass">
     <Icon name="mingcute:barcode-line" :size="18" />
     <q-tooltip>{{ player.qualityLabel || "Качество" }}</q-tooltip>
-    <q-menu class="panel menu" anchor="top middle" self="bottom middle">
-      <div class="menu-body" style="min-width: 172px">
+    <q-menu :class="menuClass" anchor="top middle" self="bottom middle">
+      <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 172px">
         <div
           v-for="q in qualities"
           :key="q.value"
-          class="opt"
-          :class="{ on: player.quality === q.value }"
+          :class="[optClass, player.quality === q.value ? optOnClass : '']"
           v-close-popup
           @click="player.setQuality(q.value)"
         >
@@ -194,8 +182,8 @@
     </q-menu>
   </div>
 
-  <div v-else-if="id === 'volume'" class="player-volume">
-    <div class="icon-btn" @click="onMuteClick">
+  <div v-else-if="id === 'volume'" class="flex items-center gap-[4px]">
+    <div :class="iconBtnClass" @click="onMuteClick">
       <Icon
         :name="
           player.muted ? 'mingcute:volume-off-line' : 'mingcute:volume-line'
@@ -207,7 +195,7 @@
       }}</q-tooltip>
     </div>
     <q-slider
-      class="player-volume-slider"
+      class="w-[74px] flex-none max-[1120px]:w-[54px]"
       :model-value="player.muted ? 0 : player.volume"
       :min="0"
       :max="1"
@@ -241,6 +229,18 @@ const player = usePlayerStore();
 const library = useLibraryStore();
 const panels = usePanelsStore();
 const sleep = useSleepStore();
+
+const playClass =
+  "flex w-[32px] h-[32px] flex-none items-center justify-center rounded-full bg-[var(--accent)] text-[color:#fff] cursor-pointer [transition:opacity_0.12s_ease,box-shadow_0.2s_ease,transform_0.32s_cubic-bezier(0.34,1.56,0.64,1)] hover:opacity-[0.9] hover:scale-[1.06] active:scale-[0.84] active:duration-[90ms] active:ease-out";
+const iconBtnClass =
+  "flex w-[30px] h-[30px] items-center justify-center rounded-[8px] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]";
+const onClass = "!text-[color:var(--accent)]";
+const offClass = "opacity-[0.25] pointer-events-none";
+const menuClass =
+  "!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]";
+const optClass =
+  "flex items-center justify-between gap-[12px] px-[9px] py-[7px] rounded-[7px] text-[13px] cursor-pointer transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
+const optOnClass = "bg-[var(--hover)] !text-[color:var(--accent)]";
 
 const neuroWait = computed(() => Boolean(neuro.item && !neuro.stream));
 
