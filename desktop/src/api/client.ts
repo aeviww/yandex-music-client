@@ -66,11 +66,19 @@ export const api = {
   me: () => call<Profile>("auth_me"),
   logout: () => call<void>("auth_logout"),
 
-  wave: (opts?: { station?: string; sessionId?: string; queue?: string[] }) => {
+  wave: (opts?: {
+    station?: string;
+    sessionId?: string;
+    queue?: string[];
+    seeds?: string[];
+    trackToStartFrom?: string;
+  }) => {
     const args: Record<string, unknown> = {};
     if (opts?.station) args.station = opts.station;
     if (opts?.sessionId) args.session = opts.sessionId;
     if (opts?.queue?.length) args.queue = opts.queue;
+    if (opts?.seeds?.length) args.seeds = opts.seeds;
+    if (opts?.trackToStartFrom) args.track_to_start_from = opts.trackToStartFrom;
     return call<WaveResponse>("get_wave", args);
   },
 

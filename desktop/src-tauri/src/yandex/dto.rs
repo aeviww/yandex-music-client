@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Clone)]
 pub struct ArtistDto {
@@ -166,10 +166,14 @@ pub struct WaveResponse {
     pub tracks: Vec<TrackDto>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StationOptionDto {
     pub value: String,
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub serialized_seed: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unspecified: Option<bool>,
 }
 
 #[derive(Serialize)]
