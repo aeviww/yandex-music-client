@@ -9,6 +9,8 @@ use crate::yandex::{StationDto, StationInfoDto, WaveResponse, WheelItemDto, Yand
 pub struct FeedbackPayload {
     #[serde(default = "default_station")]
     station_id: String,
+    #[serde(default)]
+    session_id: Option<String>,
     #[serde(rename = "type")]
     kind: String,
     #[serde(default)]
@@ -17,6 +19,8 @@ pub struct FeedbackPayload {
     batch_id: Option<String>,
     #[serde(default)]
     total_played_seconds: Option<f64>,
+    #[serde(default)]
+    timestamp: Option<String>,
 }
 
 fn default_station() -> String {
@@ -57,22 +61,50 @@ pub async fn wave_feedback(
     let session = state.session()?;
     let client = Yandex::new(&session.token);
     let ok = match payload.kind.as_str() {
-        "like" => match payload.track_id.as_deref() {
-            Some(id) => client.like(session.uid, id, false).await?,
-            None => false,
-        },
-        "dislike" => match payload.track_id.as_deref() {
-            Some(id) => client.like(session.uid, id, true).await?,
-            None => false,
-        },
+        "like" => {
+            if let Some(id) = payload.track_id.as_deref() {
+                let _ = client.like(session.uid, id, false).await;
+            }
+            client
+                .feedback(
+                    &payload.station_id,
+                    payload.session_id.as_deref(),
+                    "like",
+                    payload.track_id.as_deref(),
+                    payload.batch_id.as_deref(),
+                    payload.total_played_seconds,
+                    payload.timestamp.as_deref(),
+                )
+                .await
+                .unwrap_or(true)
+        }
+        "dislike" => {
+            if let Some(id) = payload.track_id.as_deref() {
+                let _ = client.like(session.uid, id, true).await;
+            }
+            client
+                .feedback(
+                    &payload.station_id,
+                    payload.session_id.as_deref(),
+                    "dislike",
+                    payload.track_id.as_deref(),
+                    payload.batch_id.as_deref(),
+                    payload.total_played_seconds,
+                    payload.timestamp.as_deref(),
+                )
+                .await
+                .unwrap_or(true)
+        }
         other => {
             client
                 .feedback(
                     &payload.station_id,
+                    payload.session_id.as_deref(),
                     other,
                     payload.track_id.as_deref(),
                     payload.batch_id.as_deref(),
                     payload.total_played_seconds,
+                    payload.timestamp.as_deref(),
                 )
                 .await?
         }

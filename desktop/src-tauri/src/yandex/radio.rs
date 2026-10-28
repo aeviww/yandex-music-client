@@ -193,11 +193,15 @@ impl Yandex {
         let settings = value
             .get("settings2")
             .or_else(|| value.get("settings"))
+            .or_else(|| station_obj.get("settings2"))
+            .or_else(|| station_obj.get("settings"))
             .cloned()
             .unwrap_or(serde_json::Value::Null);
         let restrictions = station_obj
             .get("restrictions2")
             .or_else(|| station_obj.get("restrictions"))
+            .or_else(|| value.get("restrictions2"))
+            .or_else(|| value.get("restrictions"))
             .cloned()
             .unwrap_or(serde_json::Value::Null);
 
@@ -257,30 +261,81 @@ impl Yandex {
     pub async fn feedback(
         &self,
         station: &str,
+        session_id: Option<&str>,
         kind: &str,
         track_id: Option<&str>,
         batch_id: Option<&str>,
         total: Option<f64>,
+        timestamp: Option<&str>,
     ) -> Result<bool, String> {
-        let mut url = format!("{BASE}/rotor/station/{station}/feedback");
+        let (url, is_session) = match session_id {
+            Some(sid) if !sid.trim().is_empty() => (
+                format!("{BASE}/rotor/session/{sid}/feedback"),
+                true,
+            ),
+            _ => (
+                format!("{BASE}/rotor/station/{station}/feedback"),
+                false,
+            ),
+        };
+
+        let mut final_url = url;
         if let Some(b) = batch_id {
-            url.push_str(&format!("?batch-id={b}"));
+            if !b.trim().is_empty() {
+                final_url.push_str(&format!("?batch-id={b}"));
+            }
         }
-        let mut body = serde_json::json!({ "type": kind, "from": "mashiro" });
+
+        let ts = timestamp
+            .map(|s| s.to_string())
+            .unwrap_or_else(|| {
+                let now = std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap_or_default();
+                format_iso_timestamp(now.as_secs())
+            });
+
+        let mut body = serde_json::json!({
+            "type": kind,
+            "timestamp": ts,
+            "from": "mashiro"
+        });
         if let Some(t) = track_id {
             body["trackId"] = serde_json::json!(t);
+        }
+        if let Some(b) = batch_id {
+            body["batchId"] = serde_json::json!(b);
         }
         if let Some(s) = total {
             body["totalPlayedSeconds"] = serde_json::json!(s);
         }
+
         let resp = self
             .http
-            .post(url)
+            .post(&final_url)
             .header("Authorization", self.auth())
+            .header("X-Yandex-Music-Client", MUSIC_CLIENT)
             .json(&body)
             .send()
             .await
             .map_err(|e| e.to_string())?;
+
+        // If session feedback failed, and station is not a contextual seed (e.g. user:onyourwave), attempt fallback
+        if !resp.status().is_success() && is_session && !station.contains(':') && !station.is_empty() {
+            let mut fallback_url = format!("{BASE}/rotor/station/{station}/feedback");
+            if let Some(b) = batch_id {
+                fallback_url.push_str(&format!("?batch-id={b}"));
+            }
+            let _ = self
+                .http
+                .post(fallback_url)
+                .header("Authorization", self.auth())
+                .header("X-Yandex-Music-Client", MUSIC_CLIENT)
+                .json(&body)
+                .send()
+                .await;
+        }
+
         Ok(resp.status().is_success())
     }
 
@@ -355,4 +410,25 @@ fn enum_options(restrictions: &serde_json::Value, key: &str) -> Vec<StationOptio
                 .collect()
         })
         .unwrap_or_default()
+}
+
+fn format_iso_timestamp(epoch_secs: u64) -> String {
+    let days = epoch_secs / 86400;
+    let rem_secs = epoch_secs % 86400;
+    let hours = rem_secs / 3600;
+    let minutes = (rem_secs % 3600) / 60;
+    let seconds = rem_secs % 60;
+
+    let z = days as i64 + 719468;
+    let era = if z >= 0 { z } else { z - 146096 } / 146097;
+    let doe = (z - era * 146097) as u64;
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    let y = yoe as i64 + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = if m <= 2 { y + 1 } else { y };
+
+    format!("{y:04}-{m:02}-{d:02}T{hours:02}:{minutes:02}:{seconds:02}Z")
 }

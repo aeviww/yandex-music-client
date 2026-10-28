@@ -586,15 +586,21 @@ export const usePlayerStore = defineStore("player", {
     remember(tracks: Track[]) {
       for (const t of tracks) this.seenIds.push(t.id);
       try {
-        const hist = readCache<string[]>(WAVE_HISTORY_KEY) ?? [];
-        const set = new Set(hist);
-        for (const t of tracks) {
-          if (!set.has(t.id)) {
-            set.add(t.id);
-            hist.push(t.id);
+        const isPersonal =
+          !this.stationId ||
+          this.stationId === DEFAULT_STATION ||
+          this.stationId === "personal:collection";
+        if (isPersonal) {
+          const hist = readCache<string[]>(WAVE_HISTORY_KEY) ?? [];
+          const set = new Set(hist);
+          for (const t of tracks) {
+            if (!set.has(t.id)) {
+              set.add(t.id);
+              hist.push(t.id);
+            }
           }
+          writeCache(WAVE_HISTORY_KEY, hist.slice(-WAVE_HISTORY_LIMIT));
         }
-        writeCache(WAVE_HISTORY_KEY, hist.slice(-WAVE_HISTORY_LIMIT));
       } catch {}
       if (this.seenIds.length > SEEN_LIMIT) {
         this.seenIds = this.seenIds.slice(-SEEN_LIMIT);
@@ -607,12 +613,11 @@ export const usePlayerStore = defineStore("player", {
       const station = stationId ?? this.stationId ?? DEFAULT_STATION;
       if (station !== this.stationId) this.seenIds = [];
       try {
-        await api
-          .sendFeedback({ type: "radioStarted", station_id: station })
-          .catch(() => undefined);
-        radioStarted = true;
-
-        const history = readCache<string[]>(WAVE_HISTORY_KEY) ?? [];
+        const isPersonal =
+          station === DEFAULT_STATION || station === "personal:collection";
+        const history = isPersonal
+          ? readCache<string[]>(WAVE_HISTORY_KEY) ?? []
+          : [];
 
         const recent = new Set<string>([...history, ...this.seenIds]);
         const fresh: Track[] = [];
@@ -664,6 +669,17 @@ export const usePlayerStore = defineStore("player", {
         this.remember(tracks);
         this.index = 0;
         this.isWave = true;
+        radioStarted = true;
+
+        void api
+          .sendFeedback({
+            type: "radioStarted",
+            station_id: station,
+            session_id: sessionId,
+            batch_id: batchId,
+          })
+          .catch(() => undefined);
+
         writeCache(`wave.last.${station}`, tracks.slice(0, 30));
         await this.loadCurrent();
       } catch (e) {
@@ -878,6 +894,7 @@ export const usePlayerStore = defineStore("player", {
           void api.sendFeedback({
             type: "trackStarted",
             track_id: track.id,
+            session_id: this.waveSessionId,
             batch_id: this.waveBatchId,
             station_id: this.stationId ?? undefined,
           });
@@ -1310,9 +1327,12 @@ export const usePlayerStore = defineStore("player", {
           .sendFeedback({
             type: auto ? "trackFinished" : "skip",
             track_id: this.current.id,
+            session_id: this.waveSessionId,
             batch_id: this.waveBatchId,
             station_id: this.stationId ?? undefined,
-            total_played_seconds: this.progress,
+            total_played_seconds: auto
+              ? this.duration || this.progress
+              : this.progress,
           })
           .catch(() => undefined);
       }
@@ -1350,7 +1370,12 @@ export const usePlayerStore = defineStore("player", {
       this.stationId = station;
       radioStarted = true;
       await api
-        .sendFeedback({ type: "radioStarted", station_id: station })
+        .sendFeedback({
+          type: "radioStarted",
+          station_id: station,
+          session_id: this.waveSessionId,
+          batch_id: this.waveBatchId,
+        })
         .catch(() => undefined);
     },
 
@@ -1604,12 +1629,42 @@ export const usePlayerStore = defineStore("player", {
     },
 
     async waveByTrack(track: Track) {
-      await this.startWave(`track:${track.id}`, `Волна по «${track.title}»`);
+      await this.startWave(`track:${track.id}`, `Волна: «${track.title}»`);
+      Notify.create({ message: `Запущена волна по треку «${track.title}»` });
+    },
+
+    async waveByArtist(artist: { id: string; name: string }) {
+      await this.startWave(`artist:${artist.id}`, `Волна: ${artist.name}`);
+      Notify.create({ message: `Запущена волна по артисту «${artist.name}»` });
+    },
+
+    async waveByAlbum(album: { id: string; title: string }) {
+      await this.startWave(`album:${album.id}`, `Волна: «${album.title}»`);
+      Notify.create({ message: `Запущена волна по альбому «${album.title}»` });
+    },
+
+    async waveByPlaylist(playlist: { kind: number; title: string; owner_uid?: number | null }) {
+      const uid = playlist.owner_uid ?? 0;
+      const seed = uid > 0 ? `playlist:${uid}:${playlist.kind}` : `playlist:${playlist.kind}`;
+      await this.startWave(seed, `Волна: «${playlist.title}»`);
+      Notify.create({ message: `Запущена волна по плейлисту «${playlist.title}»` });
     },
 
     async like() {
       if (!this.current) return;
-      await useLibraryStore().toggleLike(this.current);
+      const track = this.current;
+      await useLibraryStore().toggleLike(track);
+      if (this.isWave) {
+        void api
+          .sendFeedback({
+            type: "like",
+            track_id: track.id,
+            session_id: this.waveSessionId,
+            batch_id: this.waveBatchId,
+            station_id: this.stationId ?? undefined,
+          })
+          .catch(() => undefined);
+      }
     },
 
     async dislike() {
@@ -1621,6 +1676,8 @@ export const usePlayerStore = defineStore("player", {
           .sendFeedback({
             type: "dislike",
             track_id: track.id,
+            session_id: this.waveSessionId,
+            batch_id: this.waveBatchId,
             station_id: this.stationId ?? undefined,
           })
           .catch(() => undefined);
