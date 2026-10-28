@@ -9,7 +9,7 @@
       v-model="address"
       class="together-input wide"
       type="text"
-      placeholder="mashiro.onecorporation.cfd"
+      placeholder="relay.aevi.lol"
       :disabled="connected"
     />
   </div>
@@ -177,7 +177,7 @@ import {
 import { useTogetherStore } from "@/stores/together/index";
 import { SERVER_KEY } from "@/stores/together/protocol";
 
-const DEFAULT_SERVER = "mashiro.onecorporation.cfd";
+const DEFAULT_SERVER = "relay.aevi.lol";
 const REPO_URL = "https://github.com/elytrya/mashiro-together";
 
 function openRepo() {
