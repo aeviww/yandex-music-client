@@ -568,7 +568,8 @@ function enqueuePopular() {
 }
 
 function playArtistWave() {
-  void player.startWave(`artist:${props.id}`, artist.value?.name);
+  if (!artist.value) return;
+  void player.waveByArtist({ id: props.id, name: artist.value.name });
   void router.push("/wave");
 }
 

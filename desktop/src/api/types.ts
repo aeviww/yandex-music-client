@@ -218,10 +218,12 @@ export type FeedbackType =
 
 export interface FeedbackPayload {
   station_id?: string;
+  session_id?: string | null;
   type: FeedbackType;
   track_id?: string | null;
   batch_id?: string | null;
   total_played_seconds?: number | null;
+  timestamp?: string | null;
 }
 
 export interface PresenceStatus {

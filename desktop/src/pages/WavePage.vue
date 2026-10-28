@@ -246,6 +246,14 @@ const applying = ref(false);
 
 type SettingKey = "moodEnergy" | "diversity" | "language";
 
+function withOption(
+  options: Array<{ value: string; name: string }>,
+  extra: { value: string; name: string },
+) {
+  if (options.some((o) => o.value === extra.value)) return options;
+  return [...options, extra];
+}
+
 const settingsGroups = computed(() => {
   const data = info.value;
   if (!data) return [];
@@ -271,7 +279,10 @@ const settingsGroups = computed(() => {
       key: "language",
       label: "Язык",
       current: data.language,
-      options: data.languages,
+      options: withOption(data.languages, {
+        value: "without-words",
+        name: "Без слов",
+      }),
     },
   ];
   return groups.filter((group) => group.options.length > 1);
@@ -308,9 +319,30 @@ async function applySetting(key: SettingKey, value: string) {
 const stations = computed(() => {
   const wheel = items.value.filter((item) => item?.kind === "wave");
   const list = wheel.length ? wheel : FALLBACK_STATIONS;
-  return list.some((item) => stationIdOf(item) === DEFAULT_STATION)
+  const base = list.some((item) => stationIdOf(item) === DEFAULT_STATION)
     ? list
     : [FALLBACK_STATIONS[0] as WheelItem, ...list];
+
+  const currentSt = player.stationId;
+  if (
+    currentSt &&
+    currentSt !== DEFAULT_STATION &&
+    !base.some((item) => stationIdOf(item) === currentSt)
+  ) {
+    const contextualChip: WheelItem = {
+      id: currentSt,
+      kind: "wave",
+      name: player.stationName || "Контекстная волна",
+      description: null,
+      cover_url: null,
+      color: null,
+      station: currentSt,
+      artists: [],
+    };
+    return [contextualChip, ...base];
+  }
+
+  return base;
 });
 
 const hasCurrent = computed(() => Boolean(player.current));
