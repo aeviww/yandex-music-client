@@ -1,6 +1,6 @@
 <template>
-  <q-page class="!overflow-hidden">
-    <div class="w-full h-full overscroll-contain overflow-x-hidden overflow-y-auto">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
+    <div class="flex-auto min-h-0 overscroll-contain overflow-x-hidden overflow-y-auto">
       <div class="flex max-w-[860px] flex-col mx-auto my-0 gap-[26px] pt-[var(--page-top-gap)] px-[var(--page-padding)] pb-[56px] max-[1024px]:pt-[18px]">
         <header class="flex items-center gap-[18px] min-w-0 max-[720px]:items-start max-[720px]:gap-[14px] [&_h1]:overflow-hidden [&_h1]:mt-[6px] [&_h1]:mx-0 [&_h1]:mb-0 [&_h1]:text-[30px] [&_h1]:font-bold [&_h1]:tracking-[-0.03em] [&_h1]:leading-[1.1] [&_h1]:text-ellipsis [&_h1]:whitespace-nowrap max-[720px]:[&_h1]:text-[23px]">
           <div class="cover relative grid overflow-hidden w-[132px] h-[132px] flex-none rounded-[16px] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover max-[720px]:w-[96px] max-[720px]:h-[96px]">
@@ -300,13 +300,17 @@ async function applySetting(key: SettingKey, value: string) {
   if (applying.value) return;
   applying.value = true;
   try {
+    const station = player.stationId ?? DEFAULT_STATION;
     await api.setStationSettings({
-      station: player.stationId ?? DEFAULT_STATION,
+      station,
       [key]: value,
     });
+    // Сбрасываем id активной радиосессии, чтобы ротор инициировал новую сессию с обновленными настройками
+    player.waveSessionId = null;
+    player.seenIds = [];
     await loadInfo();
     await player.startWave(
-      player.stationId ?? DEFAULT_STATION,
+      station,
       player.stationName || undefined,
     );
   } catch {

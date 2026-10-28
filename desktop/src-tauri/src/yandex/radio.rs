@@ -247,12 +247,43 @@ impl Yandex {
             .post(format!("{BASE}/rotor/station/{station}/settings3"))
             .header("Authorization", self.auth())
             .header("X-Yandex-Music-Client", MUSIC_CLIENT)
-            .json(&serde_json::Value::Object(body))
+            .json(&serde_json::Value::Object(body.clone()))
             .send()
             .await
             .map_err(|e| e.to_string())?;
 
         if !response.status().is_success() {
+            // Fallback for stations that use settings2 or settings endpoint
+            let fallback_url = format!("{BASE}/rotor/station/{station}/settings2");
+            if let Ok(res2) = self
+                .http
+                .post(fallback_url)
+                .header("Authorization", self.auth())
+                .header("X-Yandex-Music-Client", MUSIC_CLIENT)
+                .json(&serde_json::Value::Object(body.clone()))
+                .send()
+                .await
+            {
+                if res2.status().is_success() {
+                    return Ok(true);
+                }
+            }
+
+            let fallback_url_legacy = format!("{BASE}/rotor/station/{station}/settings");
+            if let Ok(res3) = self
+                .http
+                .post(fallback_url_legacy)
+                .header("Authorization", self.auth())
+                .header("X-Yandex-Music-Client", MUSIC_CLIENT)
+                .json(&serde_json::Value::Object(body))
+                .send()
+                .await
+            {
+                if res3.status().is_success() {
+                    return Ok(true);
+                }
+            }
+
             return Err(format!("station settings failed: {}", response.status()));
         }
         Ok(true)
