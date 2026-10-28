@@ -261,24 +261,24 @@ const settingsGroups = computed(() => {
     key: SettingKey;
     label: string;
     current: string | null;
-    options: Array<{ value: string; name: string }>;
+    options: Array<{ value: string; name: string; serialized_seed?: string; unspecified?: boolean }>;
   }> = [
     {
       key: "moodEnergy",
       label: "Настроение",
-      current: data.mood_energy,
+      current: player.waveSettings.moodEnergy ?? data.mood_energy,
       options: data.moods,
     },
     {
       key: "diversity",
       label: "Разнообразие",
-      current: data.diversity,
+      current: player.waveSettings.diversity ?? data.diversity,
       options: data.diversities,
     },
     {
       key: "language",
       label: "Язык",
-      current: data.language,
+      current: player.waveSettings.language ?? data.language,
       options: withOption(data.languages, {
         value: "without-words",
         name: "Без слов",
@@ -290,7 +290,19 @@ const settingsGroups = computed(() => {
 
 async function loadInfo() {
   try {
-    info.value = await api.stationInfo(player.stationId ?? DEFAULT_STATION);
+    const data = await api.stationInfo(player.stationId ?? DEFAULT_STATION);
+    info.value = data;
+    if (data) {
+      if (data.mood_energy && !player.waveSettings.moodEnergy) {
+        player.waveSettings.moodEnergy = data.mood_energy;
+      }
+      if (data.diversity && !player.waveSettings.diversity) {
+        player.waveSettings.diversity = data.diversity;
+      }
+      if (data.language && !player.waveSettings.language) {
+        player.waveSettings.language = data.language;
+      }
+    }
   } catch {
     info.value = null;
   }
@@ -301,18 +313,54 @@ async function applySetting(key: SettingKey, value: string) {
   applying.value = true;
   try {
     const station = player.stationId ?? DEFAULT_STATION;
-    await api.setStationSettings({
+    const currentData = info.value;
+
+    const meVal =
+      key === "moodEnergy"
+        ? value
+        : (player.waveSettings.moodEnergy ?? currentData?.mood_energy ?? "all");
+    const divVal =
+      key === "diversity"
+        ? value
+        : (player.waveSettings.diversity ?? currentData?.diversity ?? "default");
+    const langVal =
+      key === "language"
+        ? value
+        : (player.waveSettings.language ?? currentData?.language ?? "any");
+
+    // Optimistically update
+    if (info.value) {
+      if (key === "moodEnergy") info.value.mood_energy = value;
+      else if (key === "diversity") info.value.diversity = value;
+      else if (key === "language") info.value.language = value;
+    }
+
+    const seeds: string[] = [station];
+    const findSeed = (groupKey: SettingKey, val: string) => {
+      const group = settingsGroups.value.find((g) => g.key === groupKey);
+      const opt = group?.options.find((o) => o.value === val);
+      if (opt?.unspecified) return null;
+      if (opt?.serialized_seed) return opt.serialized_seed;
+      if (groupKey === "moodEnergy" && val !== "all") return `settingMoodEnergy:${val}`;
+      if (groupKey === "diversity" && val !== "default") return `settingDiversity:${val}`;
+      if (groupKey === "language" && val !== "any") return `settingLanguage:${val}`;
+      return null;
+    };
+
+    const s1 = findSeed("moodEnergy", meVal);
+    if (s1) seeds.push(s1);
+    const s2 = findSeed("diversity", divVal);
+    if (s2) seeds.push(s2);
+    const s3 = findSeed("language", langVal);
+    if (s3) seeds.push(s3);
+
+    await player.updateWaveFilters({
       station,
-      [key]: value,
+      moodEnergy: meVal,
+      diversity: divVal,
+      language: langVal,
+      seeds,
     });
-    // Сбрасываем id активной радиосессии, чтобы ротор инициировал новую сессию с обновленными настройками
-    player.waveSessionId = null;
-    player.seenIds = [];
-    await loadInfo();
-    await player.startWave(
-      station,
-      player.stationName || undefined,
-    );
   } catch {
     Notify.create({ message: "Не удалось обновить настройки волны" });
   } finally {
@@ -548,6 +596,13 @@ let chipsResize: ResizeObserver | null = null;
 watch(stations, () => {
   void nextTick(updateEdges);
 });
+
+watch(
+  () => player.stationId,
+  () => {
+    void loadInfo();
+  },
+);
 
 onMounted(() => {
   void loadInfo();

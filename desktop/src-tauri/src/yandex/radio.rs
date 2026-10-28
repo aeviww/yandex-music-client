@@ -14,16 +14,43 @@ impl Yandex {
         station: &str,
         session_id: Option<&str>,
         queue: &[String],
+        seeds: Option<&[String]>,
+        track_to_start_from: Option<&str>,
     ) -> Result<WaveResponse, String> {
         let (path, body) = match session_id {
             Some(sid) => (
                 format!("/rotor/session/{sid}/tracks"),
                 serde_json::json!({ "queue": queue }),
             ),
-            None => (
-                "/rotor/session/new".to_string(),
-                serde_json::json!({ "seeds": [station], "includeTracksInResponse": true }),
-            ),
+            None => {
+                let mut seeds_vec: Vec<String> = Vec::new();
+                if let Some(custom_seeds) = seeds {
+                    for s in custom_seeds {
+                        let trimmed = s.trim();
+                        if !trimmed.is_empty() && !seeds_vec.contains(&trimmed.to_string()) {
+                            seeds_vec.push(trimmed.to_string());
+                        }
+                    }
+                }
+                if !seeds_vec.iter().any(|s| s == station) {
+                    seeds_vec.insert(0, station.to_string());
+                }
+
+                let mut payload = serde_json::json!({
+                    "seeds": seeds_vec,
+                    "includeTracksInResponse": true,
+                });
+                if !queue.is_empty() {
+                    payload["queue"] = serde_json::json!(queue);
+                }
+                if let Some(track_from) = track_to_start_from {
+                    let trimmed = track_from.trim();
+                    if !trimmed.is_empty() {
+                        payload["trackToStartFrom"] = serde_json::json!(trimmed);
+                    }
+                }
+                ("/rotor/session/new".to_string(), payload)
+            }
         };
         let result = self.post_value(&path, body).await?;
         let parsed: YRotorSession =
@@ -228,26 +255,19 @@ impl Yandex {
         mood_energy: Option<&str>,
         diversity: Option<&str>,
     ) -> Result<bool, String> {
-        let mut body = serde_json::Map::new();
-        if let Some(v) = language {
-            body.insert("language".into(), serde_json::Value::String(v.to_string()));
-        }
-        if let Some(v) = mood_energy {
-            body.insert("moodEnergy".into(), serde_json::Value::String(v.to_string()));
-        }
-        if let Some(v) = diversity {
-            body.insert("diversity".into(), serde_json::Value::String(v.to_string()));
-        }
-        if body.is_empty() {
-            return Ok(false);
-        }
+        let body = serde_json::json!({
+            "moodEnergy": mood_energy.unwrap_or("all"),
+            "diversity": diversity.unwrap_or("default"),
+            "language": language.unwrap_or("any"),
+            "type": "rotor",
+        });
 
         let response = self
             .http
             .post(format!("{BASE}/rotor/station/{station}/settings3"))
             .header("Authorization", self.auth())
             .header("X-Yandex-Music-Client", MUSIC_CLIENT)
-            .json(&serde_json::Value::Object(body.clone()))
+            .json(&body)
             .send()
             .await
             .map_err(|e| e.to_string())?;
@@ -260,7 +280,7 @@ impl Yandex {
                 .post(fallback_url)
                 .header("Authorization", self.auth())
                 .header("X-Yandex-Music-Client", MUSIC_CLIENT)
-                .json(&serde_json::Value::Object(body.clone()))
+                .json(&body)
                 .send()
                 .await
             {
@@ -275,7 +295,7 @@ impl Yandex {
                 .post(fallback_url_legacy)
                 .header("Authorization", self.auth())
                 .header("X-Yandex-Music-Client", MUSIC_CLIENT)
-                .json(&serde_json::Value::Object(body))
+                .json(&body)
                 .send()
                 .await
             {
@@ -326,20 +346,43 @@ impl Yandex {
                 format_iso_timestamp(now.as_secs())
             });
 
-        let mut body = serde_json::json!({
-            "type": kind,
-            "timestamp": ts,
-            "from": "mashiro"
-        });
-        if let Some(t) = track_id {
-            body["trackId"] = serde_json::json!(t);
-        }
-        if let Some(b) = batch_id {
-            body["batchId"] = serde_json::json!(b);
-        }
-        if let Some(s) = total {
-            body["totalPlayedSeconds"] = serde_json::json!(s);
-        }
+        let body = if is_session {
+            let mut event = serde_json::json!({
+                "type": kind,
+                "timestamp": ts,
+            });
+            if let Some(t) = track_id {
+                event["trackId"] = serde_json::json!(t);
+            }
+            if let Some(s) = total {
+                event["totalPlayedSeconds"] = serde_json::json!(s);
+            }
+
+            let mut session_body = serde_json::json!({
+                "event": event,
+                "from": "mashiro",
+            });
+            if let Some(b) = batch_id {
+                session_body["batchId"] = serde_json::json!(b);
+            }
+            session_body
+        } else {
+            let mut flat_body = serde_json::json!({
+                "type": kind,
+                "timestamp": ts,
+                "from": "mashiro",
+            });
+            if let Some(t) = track_id {
+                flat_body["trackId"] = serde_json::json!(t);
+            }
+            if let Some(b) = batch_id {
+                flat_body["batchId"] = serde_json::json!(b);
+            }
+            if let Some(s) = total {
+                flat_body["totalPlayedSeconds"] = serde_json::json!(s);
+            }
+            flat_body
+        };
 
         let resp = self
             .http
@@ -433,9 +476,39 @@ fn enum_options(restrictions: &serde_json::Value, key: &str) -> Vec<StationOptio
                         .and_then(|v| v.as_str())
                         .unwrap_or(value)
                         .to_string();
+                    let serialized_seed = item
+                        .get("serializedSeed")
+                        .or_else(|| item.get("serialized_seed"))
+                        .and_then(|v| v.as_str())
+                        .map(|s| s.to_string())
+                        .or_else(|| {
+                            match key {
+                                "moodEnergy" => Some(format!("settingMoodEnergy:{value}")),
+                                "diversity" => Some(format!("settingDiversity:{value}")),
+                                "language" => Some(format!("settingLanguage:{value}")),
+                                _ => None,
+                            }
+                        });
+                    let unspecified = item
+                        .get("unspecified")
+                        .and_then(|v| v.as_bool())
+                        .or_else(|| {
+                            if value == "all"
+                                || value == "any"
+                                || value == "default"
+                                || name == "Любое"
+                                || name == "Любой"
+                            {
+                                Some(true)
+                            } else {
+                                Some(false)
+                            }
+                        });
                     Some(StationOptionDto {
                         value: value.to_string(),
                         name,
+                        serialized_seed,
+                        unspecified,
                     })
                 })
                 .collect()

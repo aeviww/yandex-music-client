@@ -128,6 +128,12 @@ interface PlayerState {
   loading: boolean;
   waveBatchId: string | null;
   waveSessionId: string | null;
+  waveSettings: {
+    moodEnergy: string | null;
+    diversity: string | null;
+    language: string | null;
+  };
+  waveSeeds: string[];
   isWave: boolean;
   stationId: string | null;
   stationName: string | null;
@@ -199,6 +205,12 @@ export const usePlayerStore = defineStore("player", {
       loading: false,
       waveBatchId: null,
       waveSessionId: null,
+      waveSettings: {
+        moodEnergy: null,
+        diversity: null,
+        language: null,
+      },
+      waveSeeds: [],
       isWave: false,
       stationId: null,
       stationName: null,
@@ -607,11 +619,21 @@ export const usePlayerStore = defineStore("player", {
       }
     },
 
-    async startWave(stationId?: string, stationName?: string) {
+    async startWave(
+      stationId?: string,
+      stationName?: string,
+      opts?: { seeds?: string[] },
+    ) {
       this.loading = true;
       this.waveError = null;
       const station = stationId ?? this.stationId ?? DEFAULT_STATION;
-      if (station !== this.stationId) this.seenIds = [];
+      if (station !== this.stationId) {
+        this.seenIds = [];
+        this.waveSeeds = [];
+      }
+      if (opts?.seeds?.length) {
+        this.waveSeeds = opts.seeds;
+      }
       try {
         const isPersonal =
           station === DEFAULT_STATION || station === "personal:collection";
@@ -628,7 +650,12 @@ export const usePlayerStore = defineStore("player", {
 
         for (let attempt = 0; attempt < 6 && fresh.length < 8; attempt++) {
           const res = await api.wave(
-            sessionId ? { station, sessionId, queue: delivered } : { station },
+            sessionId
+              ? { station, sessionId, queue: delivered }
+              : {
+                  station,
+                  seeds: this.waveSeeds.length ? this.waveSeeds : undefined,
+                },
           );
           if (res.radio_session_id) sessionId = res.radio_session_id;
           if (!res.tracks.length) break;
@@ -690,6 +717,104 @@ export const usePlayerStore = defineStore("player", {
       } finally {
         this.loading = false;
       }
+    },
+
+    async updateWaveFilters(payload: {
+      station?: string;
+      moodEnergy?: string | null;
+      diversity?: string | null;
+      language?: string | null;
+      seeds?: string[];
+    }) {
+      const station = payload.station ?? this.stationId ?? DEFAULT_STATION;
+      if (payload.moodEnergy !== undefined) {
+        this.waveSettings.moodEnergy = payload.moodEnergy;
+      }
+      if (payload.diversity !== undefined) {
+        this.waveSettings.diversity = payload.diversity;
+      }
+      if (payload.language !== undefined) {
+        this.waveSettings.language = payload.language;
+      }
+
+      // 1. Save settings to server so user profile preferences update
+      try {
+        await api.setStationSettings({
+          station,
+          moodEnergy: this.waveSettings.moodEnergy ?? "all",
+          diversity: this.waveSettings.diversity ?? "default",
+          language: this.waveSettings.language ?? "any",
+        });
+      } catch (err) {
+        log.warn("setStationSettings failed", err);
+      }
+
+      // 2. Build explicit seeds
+      const seeds: string[] = [station];
+      if (payload.seeds?.length) {
+        for (const s of payload.seeds) {
+          if (!seeds.includes(s)) seeds.push(s);
+        }
+      } else {
+        const me = this.waveSettings.moodEnergy;
+        if (me && me !== "all") seeds.push(`settingMoodEnergy:${me}`);
+        const div = this.waveSettings.diversity;
+        if (div && div !== "default") seeds.push(`settingDiversity:${div}`);
+        const lang = this.waveSettings.language;
+        if (lang && lang !== "any") seeds.push(`settingLanguage:${lang}`);
+      }
+      this.waveSeeds = seeds;
+
+      // 3. If currently playing, perform seamless queue transition!
+      if (this.current && (this.isPlaying || this.queue.length > 0)) {
+        this.loading = true;
+        try {
+          const currentId = this.current.id;
+          const res = await api.wave({
+            station,
+            seeds,
+            queue: this.seenIds.slice(-25),
+            trackToStartFrom: currentId,
+          });
+
+          if (res.radio_session_id) this.waveSessionId = res.radio_session_id;
+          if (res.batch_id) this.waveBatchId = res.batch_id;
+
+          const playingId = this.current?.id;
+          const fresh = dedupeTracks(res.tracks).filter((t) => t.id !== playingId);
+
+          if (fresh.length > 0) {
+            const currentIndex = Math.max(0, this.index);
+            const historyPart = this.queue.slice(0, currentIndex + 1);
+            this.queue = [...historyPart, ...fresh];
+            this.sourceQueue = [...this.queue];
+            this.remember(fresh);
+            this.isWave = true;
+            this.stationId = station;
+            radioStarted = true;
+
+            void api
+              .sendFeedback({
+                type: "radioStarted",
+                station_id: station,
+                session_id: this.waveSessionId,
+                batch_id: this.waveBatchId,
+              })
+              .catch(() => undefined);
+
+            writeCache(`wave.last.${station}`, this.queue.slice(0, 30));
+          }
+        } catch (e) {
+          log.warn("updateWaveFilters seamless fetch failed", e);
+          Notify.create({ type: "negative", message: "Не удалось переключить волну" });
+        } finally {
+          this.loading = false;
+        }
+        return;
+      }
+
+      // If nothing was playing, start wave fresh with the new seeds
+      await this.startWave(station, undefined, { seeds });
     },
 
     async playQueue(
@@ -1402,7 +1527,7 @@ export const usePlayerStore = defineStore("player", {
         const res = await api.wave(
           this.waveSessionId
             ? { station, sessionId: this.waveSessionId, queue: this.queue.map((t) => t.id) }
-            : { station },
+            : { station, seeds: this.waveSeeds.length ? this.waveSeeds : undefined },
         );
         if (res.radio_session_id) this.waveSessionId = res.radio_session_id;
         if (res.batch_id) this.waveBatchId = res.batch_id;
@@ -1535,7 +1660,10 @@ export const usePlayerStore = defineStore("player", {
                   sessionId: this.waveSessionId,
                   queue: this.queue.map((t) => t.id),
                 }
-              : { station },
+              : {
+                  station,
+                  seeds: this.waveSeeds.length ? this.waveSeeds : undefined,
+                },
           );
           if (res.radio_session_id) this.waveSessionId = res.radio_session_id;
           if (res.batch_id) this.waveBatchId = res.batch_id;

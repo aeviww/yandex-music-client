@@ -32,12 +32,20 @@ pub async fn get_wave(
     queue: Option<Vec<String>>,
     session: Option<String>,
     station: Option<String>,
+    seeds: Option<Vec<String>>,
+    track_to_start_from: Option<String>,
     state: State<'_, AppState>,
 ) -> Result<WaveResponse, String> {
     let sess = state.session()?;
     let station = station.unwrap_or_else(|| DEFAULT_STATION.to_string());
     Yandex::new(&sess.token)
-        .wave_session(&station, session.as_deref(), &queue.unwrap_or_default())
+        .wave_session(
+            &station,
+            session.as_deref(),
+            &queue.unwrap_or_default(),
+            seeds.as_deref(),
+            track_to_start_from.as_deref(),
+        )
         .await
 }
 
