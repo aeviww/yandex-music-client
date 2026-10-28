@@ -1,7 +1,10 @@
 <template>
   <div
     class="relative grid h-[var(--player-height,_76px)] items-center gap-[16px] max-[1360px]:gap-[12px] max-[1120px]:!gap-[10px] px-[var(--player-pad,_18px)] py-0 grid-cols-[minmax(0,var(--player-meta-width,260px))_minmax(320px,1.35fr)_auto] max-[760px]:grid-cols-[minmax(0,1fr)_auto]"
-    :class="{ 'outline-dashed outline-1 outline-[color:color-mix(in_srgb,var(--accent)_60%,transparent)] [outline-offset:-2px]': editMode }"
+    :class="{
+      'outline-dashed outline-1 outline-[color:color-mix(in_srgb,var(--accent)_60%,transparent)] [outline-offset:-2px]':
+        editMode,
+    }"
     @contextmenu.prevent="toggleEdit"
   >
     <template v-if="editMode">
@@ -30,7 +33,9 @@
         @click="onCoverClick"
         @contextmenu.prevent="openAlbum"
       >
-        <div class="absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.55)] text-[color:#fff] opacity-0 transition-opacity duration-[140ms] ease-[ease] group-hover:opacity-100">
+        <div
+          class="absolute inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.55)] text-[color:#fff] opacity-0 transition-opacity duration-[140ms] ease-[ease] group-hover:opacity-100"
+        >
           <Icon name="mingcute:fullscreen-line" :size="16" />
         </div>
         <Transition name="pb-cover">
@@ -41,44 +46,64 @@
             decoding="async"
             :src="coverSrc"
           />
-          <Icon v-else name="mingcute:music-line" :size="18" class="text-[color:var(--fg-faint)]" />
+          <Icon
+            v-else
+            name="mingcute:music-line"
+            :size="18"
+            class="text-[color:var(--fg-faint)]"
+          />
         </Transition>
       </div>
 
       <div class="flex min-w-0 flex-auto flex-col">
         <div class="flex min-w-0 items-center gap-[6px]">
-          <Transition name="pb-swap" mode="out-in">
+          <div class="group/title flex min-w-0 items-center">
+            <Transition name="pb-swap" mode="out-in">
+              <span
+                :key="displayTitle"
+                class="min-w-0 truncate text-[calc(13px*var(--text-scale,1))] font-semibold"
+                :class="{
+                  'cursor-pointer hover:underline hover:underline-offset-2':
+                    !neuroActive && Boolean(trackTarget),
+                }"
+                :title="neuroActive ? neuroSub : trackTargetHint"
+                @click="openTrackSource"
+              >
+                {{ displayTitle }}
+              </span>
+            </Transition>
             <span
-              :key="displayTitle"
-              class="min-w-0 flex-initial truncate text-[calc(13px*var(--text-scale,1))] font-semibold"
-              :class="{ 'cursor-pointer hover:underline hover:underline-offset-2': !neuroActive && Boolean(trackTarget) }"
-              :title="neuroActive ? neuroSub : trackTargetHint"
-              @click="openTrackSource"
+              class="flex min-w-0 flex-[0_1_auto] items-center max-w-0 overflow-hidden opacity-0 -translate-x-[4px] transition-[max-width,opacity,transform] duration-[180ms] ease-[ease] group-hover/title:max-w-[260px] group-hover/title:opacity-100 group-hover/title:translate-x-0 motion-reduce:transition-none"
             >
-              {{ displayTitle }}
+              <span
+                v-if="neuroActive"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+                >нейромузыка</span
+              >
+              <span v-else class="inline-flex flex-none ml-[6px]">
+                <AiTag :show="isAiCurrent" />
+              </span>
+              <span
+                v-if="!neuroActive && showCensorBadge"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+              >
+                {{ replacementLabel }}
+                <q-tooltip>
+                  Играет заменённая версия: {{ replacementLabel }}
+                </q-tooltip>
+              </span>
+              <span
+                v-else-if="!neuroActive && showOriginalBadge"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--line)] rounded-[4px] bg-[rgba(255,255,255,0.06)] text-[color:var(--fg-dim)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+              >
+                с цензурой
+                <q-tooltip>
+                  Играет версия с Яндекс Музыки. Версию без цензуры можно
+                  вернуть в меню трека.
+                </q-tooltip>
+              </span>
             </span>
-          </Transition>
-          <span v-if="neuroActive" class="inline-flex items-center ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle flex-[0_0_auto] cursor-default">нейромузыка</span>
-          <AiTag v-else :show="isAiCurrent" />
-          <span
-            v-if="!neuroActive && showCensorBadge"
-            class="inline-flex items-center ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle flex-[0_0_auto] cursor-default"
-          >
-            {{ replacementLabel }}
-            <q-tooltip>
-              Играет заменённая версия: {{ replacementLabel }}
-            </q-tooltip>
-          </span>
-          <span
-            v-else-if="!neuroActive && showOriginalBadge"
-            class="inline-flex items-center ml-[6px] px-[5px] py-0 border border-[color:var(--line)] rounded-[4px] bg-[rgba(255,255,255,0.06)] text-[color:var(--fg-dim)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle flex-[0_0_auto] cursor-default"
-          >
-            с цензурой
-            <q-tooltip>
-              Играет версия с Яндекс Музыки. Версию без цензуры можно вернуть в
-              меню трека.
-            </q-tooltip>
-          </span>
+          </div>
           <button
             v-if="!neuroActive && player.current"
             type="button"
@@ -90,7 +115,9 @@
             <TrackMenu :track="player.current" />
           </button>
         </div>
-        <div class="text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] truncate">
+        <div
+          class="text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] truncate"
+        >
           <Transition name="pb-swap" mode="out-in">
             <span v-if="neuroActive" :key="neuroSub">{{ neuroSub }}</span>
             <ArtistsLine
@@ -113,10 +140,16 @@
         @drop.prevent="onZoneDrop('left', $event)"
       >
         <template v-for="(id, index) in leftButtons" :key="id">
-          <i v-if="caretAt('left', index)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+          <i
+            v-if="caretAt('left', index)"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          />
           <span
             class="pe-item inline-flex items-center"
-            :class="{ [editItemClass]: editMode, 'opacity-[0.4]': dragId === id }"
+            :class="{
+              [editItemClass]: editMode,
+              'opacity-[0.4]': dragId === id,
+            }"
             :draggable="editMode"
             @dragstart="startDrag(id, $event)"
             @dragend="endDrag()"
@@ -124,16 +157,22 @@
             <PlayerButton :id="id" />
           </span>
         </template>
-        <i v-if="caretAt('left', leftButtons.length)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+        <i
+          v-if="caretAt('left', leftButtons.length)"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+        />
       </div>
     </div>
 
-    <div class="relative z-[1] flex min-w-0 flex-col items-center justify-center gap-[4px]">
+    <div
+      class="relative z-[1] flex min-w-0 flex-col items-center justify-center gap-[4px]"
+    >
       <div
         class="flex items-center gap-[calc(var(--player-gap,_6px)_+_4px)] [&_svg]:w-[var(--player-icon,_18px)] [&_svg]:h-[var(--player-icon,_18px)]"
         :class="{
           [editZoneClass]: editMode,
-          'px-[10px] py-[3px] !rounded-full bg-[color-mix(in_srgb,var(--bg)_42%,transparent)] backdrop-blur-[5px]': ui.settings.playerVisualizer,
+          'px-[10px] py-[3px] !rounded-full bg-[color-mix(in_srgb,var(--bg)_42%,transparent)] backdrop-blur-[5px]':
+            ui.settings.playerVisualizer,
         }"
         :data-zone-label="editMode ? 'Центр' : null"
         @dragover.prevent="onZoneOver('center', $event)"
@@ -141,10 +180,16 @@
         @drop.prevent="onZoneDrop('center', $event)"
       >
         <template v-for="(id, index) in centerButtons" :key="id">
-          <i v-if="caretAt('center', index)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+          <i
+            v-if="caretAt('center', index)"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          />
           <span
             class="pe-item inline-flex items-center"
-            :class="{ [editItemClass]: editMode, 'opacity-[0.4]': dragId === id }"
+            :class="{
+              [editItemClass]: editMode,
+              'opacity-[0.4]': dragId === id,
+            }"
             :draggable="editMode"
             @dragstart="startDrag(id, $event)"
             @dragend="endDrag()"
@@ -152,14 +197,29 @@
             <PlayerButton :id="id" />
           </span>
         </template>
-        <i v-if="caretAt('center', centerButtons.length)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+        <i
+          v-if="caretAt('center', centerButtons.length)"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+        />
       </div>
 
-      <div v-if="neuroActive" class="flex w-[var(--player-progress-width,_100%)] items-center gap-[10px] flex-nowrap">
-        <div class="flex flex-1 items-center justify-center gap-[10px] text-[color:var(--fg-faint)] text-[11px] tracking-[0.05em] lowercase"><span>прямой эфир</span></div>
+      <div
+        v-if="neuroActive"
+        class="flex w-[var(--player-progress-width,_100%)] items-center gap-[10px] flex-nowrap"
+      >
+        <div
+          class="flex flex-1 items-center justify-center gap-[10px] text-[color:var(--fg-faint)] text-[11px] tracking-[0.05em] lowercase"
+        >
+          <span>прямой эфир</span>
+        </div>
       </div>
-      <div v-else class="flex w-[var(--player-progress-width,_100%)] items-center gap-[10px] flex-nowrap">
-        <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] w-[36px] flex-none tabular-nums first:text-right max-[900px]:hidden">
+      <div
+        v-else
+        class="flex w-[var(--player-progress-width,_100%)] items-center gap-[10px] flex-nowrap"
+      >
+        <div
+          class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] w-[36px] flex-none tabular-nums first:text-right max-[900px]:hidden"
+        >
           {{ formatDuration(seekValue * 1000) }}
         </div>
         <q-slider
@@ -174,7 +234,9 @@
           @update:model-value="onSeekInput"
           @change="onSeekCommit"
         />
-        <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] w-[36px] flex-none tabular-nums first:text-right max-[900px]:hidden">
+        <div
+          class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] w-[36px] flex-none tabular-nums first:text-right max-[900px]:hidden"
+        >
           {{ formatDuration(player.duration * 1000) }}
         </div>
       </div>
@@ -189,7 +251,10 @@
       @drop.prevent="onZoneDrop('right', $event)"
     >
       <template v-for="(id, index) in rightButtons" :key="id">
-        <i v-if="caretAt('right', index)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+        <i
+          v-if="caretAt('right', index)"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+        />
         <span
           class="pe-item inline-flex items-center"
           :class="{ [editItemClass]: editMode, 'opacity-[0.4]': dragId === id }"
@@ -200,7 +265,10 @@
           <PlayerButton :id="id" />
         </span>
       </template>
-      <i v-if="caretAt('right', rightButtons.length)" class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none" />
+      <i
+        v-if="caretAt('right', rightButtons.length)"
+        class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+      />
     </div>
   </div>
 </template>
@@ -232,10 +300,7 @@ useVisualizer(vizCanvas, () => ui.settings.playerVisualizer, { bars: 72 });
 
 const neuroActive = computed(() => Boolean(neuro.item));
 const neuroSub = computed(
-  () =>
-    neuro.stream?.subtitle ||
-    neuro.stream?.title ||
-    "нейромузыка Яндекса",
+  () => neuro.stream?.subtitle || neuro.stream?.title || "нейромузыка Яндекса",
 );
 const coverSrc = computed(() =>
   neuroActive.value

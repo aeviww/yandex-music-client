@@ -1,18 +1,38 @@
 <template>
-  <div class="absolute z-40 inset-0 flex flex-col bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] backdrop-blur-[20px]" @contextmenu.stop.prevent @mousedown.stop>
-    <div class="flex items-center justify-between flex-none gap-[8px] px-[9px] py-[7px] border-b border-[var(--line)]">
-      <span class="text-[11.5px] font-[620]">Вид мини-плеера</span>
-      <div class="flex gap-[4px]">
-        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)]" @click="reset">Сброс</button>
-        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)]" @click="cancel">Отмена</button>
-        <button type="button" class="px-[8px] py-[3px] border border-[var(--line)] rounded-[7px] text-[color:var(--fg)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] !border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff]" @click="ui.finishEdit()">
-          Готово
-        </button>
-      </div>
+  <div
+    class="absolute z-40 inset-0 flex flex-col bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] backdrop-blur-[20px]"
+    @contextmenu.stop.prevent
+    @mousedown.stop
+  >
+    <div
+      class="flex items-center justify-end flex-none gap-[2px] px-[8px] py-[6px]"
+    >
+      <button
+        type="button"
+        class="px-[8px] py-[3px] rounded-[7px] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+        @click="reset"
+      >
+        Сброс
+      </button>
+      <button
+        type="button"
+        class="px-[8px] py-[3px] rounded-[7px] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+        @click="cancel"
+      >
+        Отмена
+      </button>
+      <button
+        type="button"
+        class="ml-[4px] px-[10px] py-[3px] rounded-[7px] bg-[var(--accent)] text-[color:#fff] text-[10.5px] cursor-pointer hover:opacity-90"
+        @click="ui.finishEdit()"
+      >
+        Готово
+      </button>
     </div>
 
-    <div class="flex-1 overflow-x-hidden overflow-y-auto p-[8px_10px_12px] [&>label]:mb-[8px]">
-      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Окно</div>
+    <div
+      class="flex-1 overflow-x-hidden overflow-y-auto px-[10px] pt-[2px] pb-[12px] [&>label]:mb-[8px] [&>hr]:my-[8px] [&>hr]:border-0 [&>hr]:border-t [&>hr]:border-[var(--line)]"
+    >
       <EditRange
         label="Ширина"
         suffix=" px"
@@ -30,7 +50,7 @@
         @update:model-value="setHeight"
       />
 
-      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Размеры</div>
+      <hr />
       <EditRange
         label="Обложка"
         suffix=" px"
@@ -73,7 +93,7 @@
       />
       <EditRange
         v-if="s.miniVolumeSlider"
-        label="Дорожка громкости"
+        label="Громкость"
         suffix=" px"
         :min="24"
         :max="96"
@@ -81,7 +101,7 @@
         @update:model-value="ui.set('miniVolumeHeight', $event)"
       />
 
-      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Показывать</div>
+      <hr />
       <EditSwitch
         label="Время"
         :model-value="s.miniShowTime"
@@ -93,35 +113,46 @@
         @update:model-value="ui.set('miniVisualizer', $event)"
       />
       <EditSwitch
-        label="Ползунок громкости"
+        label="Громкость"
         :model-value="s.miniVolumeSlider"
         @update:model-value="ui.set('miniVolumeSlider', $event)"
       />
 
-      <div class="mt-[8px] mb-[6px] text-[color:var(--fg-faint)] text-[9.5px] font-[620] tracking-[0.08em] uppercase first:mt-0">Кнопки — тяни за порядок</div>
-      <div class="flex flex-col gap-[3px]">
+      <hr />
+      <div class="flex flex-col gap-[2px]">
         <div
           v-for="(id, index) in order"
           :key="id"
-          class="flex items-center gap-[6px] px-[6px] py-[4px] border border-transparent rounded-[8px] bg-[var(--surface-2)] text-[11px] cursor-grab hover:border-[color:var(--line)]"
-          :class="{ 'opacity-45': !visible(id) && dragId !== id, 'opacity-35': dragId === id }"
+          class="flex items-center gap-[6px] px-[6px] py-[4px] rounded-[8px] text-[11px] cursor-grab hover:bg-[var(--surface-2)]"
+          :class="{
+            'opacity-45': !visible(id) && dragId !== id,
+            'opacity-35': dragId === id,
+          }"
           draggable="true"
           @dragstart="onDragStart(id, $event)"
           @dragend="dragId = null"
           @dragover.prevent
           @drop.prevent="onDrop(index)"
         >
-          <Icon name="mingcute:dots-line" :size="11" class="text-[color:var(--fg-faint)]" />
+          <Icon
+            name="mingcute:dots-line"
+            :size="11"
+            class="text-[color:var(--fg-faint)]"
+          />
           <Icon :name="iconOf(id)" :size="13" />
           <span class="flex-1 min-w-0 truncate">{{ labelOf(id) }}</span>
           <button
             type="button"
             class="inline-flex items-center justify-center w-[20px] h-[20px] flex-none border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer enabled:hover:bg-[var(--hover)] enabled:hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-35"
             :disabled="locked.has(id)"
-            :title="locked.has(id) ? 'Всегда на месте' : 'Показать или скрыть'"
             @click.stop="toggle(id)"
           >
-            <Icon :name="visible(id) ? 'mingcute:check-line' : 'mingcute:close-line'" :size="12" />
+            <Icon
+              :name="
+                visible(id) ? 'mingcute:check-line' : 'mingcute:close-line'
+              "
+              :size="12"
+            />
           </button>
         </div>
       </div>
@@ -150,7 +181,10 @@ function labelOf(id: MiniButtonId): string {
 }
 
 function iconOf(id: MiniButtonId): string {
-  return miniButtonCatalog.find((item) => item.id === id)?.icon ?? "mingcute:dots-line";
+  return (
+    miniButtonCatalog.find((item) => item.id === id)?.icon ??
+    "mingcute:dots-line"
+  );
 }
 
 function visible(id: MiniButtonId): boolean {

@@ -1,28 +1,51 @@
 <template>
-  <div class="pe-panel absolute bottom-[calc(100%_+_10px)] left-1/2 z-30 w-[min(940px,calc(100vw_-_32px))] px-[14px] pt-[12px] pb-[14px] border border-[color:var(--line)] rounded-[14px] bg-[var(--surface-2)] shadow-[var(--shadow-strong,0_22px_60px_rgba(0,0,0,0.5))] -translate-x-1/2" @contextmenu.stop.prevent @pointerdown.stop>
-    <div class="flex items-start justify-between gap-[14px] pb-[10px] border-b border-[color:var(--line)]">
-      <div>
-        <div class="text-[13px] font-[620]">Редактор плеера</div>
-        <div class="mt-[2px] text-[color:var(--fg-dim)] text-[11.5px]">
-          Тяни кнопки прямо на плеере, края меняют размер. Всё видно сразу.
-        </div>
-      </div>
+  <div
+    class="pe-panel absolute bottom-[calc(100%_+_10px)] left-1/2 z-30 w-[min(940px,calc(100vw_-_32px))] px-[14px] pt-[12px] pb-[14px] border border-[color:var(--line)] rounded-[14px] bg-[var(--surface-2)] shadow-[var(--shadow-strong,0_22px_60px_rgba(0,0,0,0.5))] -translate-x-1/2"
+    @contextmenu.stop.prevent
+    @pointerdown.stop
+  >
+    <div
+      class="flex items-center justify-between gap-[14px] pb-[10px] border-b border-[color:var(--line)]"
+    >
+      <h2
+        class="m-0 text-[color:var(--fg)] text-[13px] font-[620] leading-[1.2]"
+      >
+        Редактор плеера
+      </h2>
       <div class="flex flex-[0_0_auto] gap-[6px]">
-        <button type="button" class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.resetPlayerLayout()">
+        <button
+          type="button"
+          class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          @click="ui.resetPlayerLayout()"
+        >
           Сбросить
         </button>
-        <button type="button" class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.cancelEdit()">
+        <button
+          type="button"
+          class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          @click="ui.cancelEdit()"
+        >
           Отмена
         </button>
-        <button type="button" class="!border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] px-[11px] py-[5px] border rounded-[8px] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]" @click="ui.finishEdit()">
+        <button
+          type="button"
+          class="!border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] px-[11px] py-[5px] border rounded-[8px] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          @click="ui.finishEdit()"
+        >
           Готово
         </button>
       </div>
     </div>
 
-    <div class="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-x-[20px] gap-y-[10px] pt-[12px] max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))]">
+    <div
+      class="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-x-[20px] gap-y-[10px] pt-[12px] max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))]"
+    >
       <div class="[&>label]:mb-[9px]">
-        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Размеры</div>
+        <div
+          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
+        >
+          Размеры
+        </div>
         <EditRange
           label="Высота плеера"
           suffix=" px"
@@ -58,7 +81,11 @@
       </div>
 
       <div class="[&>label]:mb-[9px]">
-        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Геометрия</div>
+        <div
+          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
+        >
+          Геометрия
+        </div>
         <EditRange
           label="Поля по краям"
           suffix=" px"
@@ -94,7 +121,11 @@
       </div>
 
       <div>
-        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">На плеере</div>
+        <div
+          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
+        >
+          На плеере
+        </div>
         <EditSwitch
           label="Время трека"
           :model-value="s.playerShowTimes"
@@ -113,10 +144,16 @@
       </div>
 
       <div>
-        <div class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase">Скрытые кнопки</div>
+        <div
+          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
+        >
+          Скрытые кнопки
+        </div>
         <div
           class="flex items-start flex-wrap gap-[5px] min-h-[74px] p-[8px] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] rounded-[10px] transition-[background] duration-[140ms] ease-[ease]"
-          :class="{ 'bg-[color-mix(in_srgb,var(--accent)_12%,transparent)]': trayOver }"
+          :class="{
+            'bg-[color-mix(in_srgb,var(--accent)_12%,transparent)]': trayOver,
+          }"
           @dragover.prevent="trayOver = true"
           @dragleave="trayOver = false"
           @drop.prevent="onDropHide"
@@ -131,12 +168,12 @@
             <Icon :name="iconOf(id)" :size="13" />
             {{ labelOf(id) }}
           </span>
-          <span v-if="!hidden.length" class="text-[color:var(--fg-faint)] text-[11px] leading-[1.4]">
+          <span
+            v-if="!hidden.length"
+            class="text-[color:var(--fg-faint)] text-[11px] leading-[1.4]"
+          >
             Перетащи сюда кнопку с плеера, чтобы убрать её
           </span>
-        </div>
-        <div class="mt-[6px] text-[color:var(--fg-faint)] text-[10.5px] leading-[1.4]">
-          Обратно — просто перетащи чип в нужную часть плеера.
         </div>
       </div>
     </div>
@@ -164,7 +201,10 @@ function labelOf(id: PlayerButtonId): string {
 }
 
 function iconOf(id: PlayerButtonId): string {
-  return playerButtonCatalog.find((item) => item.id === id)?.icon ?? "mingcute:dots-line";
+  return (
+    playerButtonCatalog.find((item) => item.id === id)?.icon ??
+    "mingcute:dots-line"
+  );
 }
 
 function onDragStart(id: PlayerButtonId, event: DragEvent) {
