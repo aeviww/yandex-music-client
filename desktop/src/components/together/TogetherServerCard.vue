@@ -1,15 +1,22 @@
 <template>
-  <div class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]">
-    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
+  <div
+    class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]"
+  >
+    <div
+      class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]"
+    >
       <b>Сервер</b>
-      <span>Общий сервер по умолчанию. Можно указать свой адрес или 127.0.0.1:7332.</span>
+      <span
+        >Общий сервер по умолчанию. Можно указать свой адрес или
+        127.0.0.1:7332.</span
+      >
     </div>
 
     <input
       v-model="address"
       class="w-[280px] max-w-full px-[10px] py-[7px] rounded-[8px] border border-[color:var(--border,rgba(255,255,255,0.12))] bg-transparent text-inherit"
       type="text"
-      placeholder="mashiro.onecorporation.cfd"
+      placeholder="relay.aevi.lol"
       :disabled="connected"
     />
   </div>
@@ -18,7 +25,9 @@
     v-if="!connected"
     class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] border-t border-[color:var(--line)] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]"
   >
-    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
+    <div
+      class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]"
+    >
       <b>Создать комнату</b>
       <span>Дадим код из шести слов - перешлите его друзьям.</span>
     </div>
@@ -37,7 +46,9 @@
     v-if="!connected"
     class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] border-t border-[color:var(--line)] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]"
   >
-    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
+    <div
+      class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]"
+    >
       <b>Войти по коду</b>
       <span>Вставьте код, который прислал друг.</span>
     </div>
@@ -93,7 +104,9 @@
     class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]"
     :class="{ 'border-t border-[color:var(--line)]': !roomCode }"
   >
-    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
+    <div
+      class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]"
+    >
       <b>Вы в комнате</b>
       <span>{{ peopleLabel }}</span>
     </div>
@@ -121,7 +134,10 @@
     class="flex flex-col gap-[6px] px-[14px] py-[12px] rounded-[10px] bg-[var(--surface-2,rgba(255,255,255,0.06))] [&_span]:text-[12px] [&_span]:opacity-[0.65]"
   >
     <b>Ключ-аккаунт</b>
-    <span>Создаётся автоматически и хранится на этом устройстве. Скопируйте ключ, только чтобы войти под тем же именем на другом устройстве.</span>
+    <span
+      >Создаётся автоматически и хранится на этом устройстве. Скопируйте ключ,
+      только чтобы войти под тем же именем на другом устройстве.</span
+    >
 
     <div class="flex flex-wrap items-center gap-[8px]">
       <span class="text-[13px] opacity-[0.7]">{{
@@ -181,7 +197,9 @@
   <div
     class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]"
   >
-    <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
+    <div
+      class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]"
+    >
       <b>Исходный код сервера</b>
       <span>Открыть репозиторий mashiro-together на GitHub.</span>
     </div>
@@ -201,7 +219,13 @@
 import { computed, onMounted, ref } from "vue";
 import { copyText } from "@/lib/clipboard";
 import { api } from "@/api/client";
-import { seedExists, seedForget, seedNew, seedSet, seedShow } from "@/api/relay";
+import {
+  seedExists,
+  seedForget,
+  seedNew,
+  seedSet,
+  seedShow,
+} from "@/api/relay";
 import {
   createRoom,
   joinRoom,
@@ -213,7 +237,7 @@ import {
 import { useTogetherStore } from "@/stores/together/index";
 import { SERVER_KEY } from "@/stores/together/protocol";
 
-const DEFAULT_SERVER = "mashiro.onecorporation.cfd";
+const DEFAULT_SERVER = "relay.aevi.lol";
 const REPO_URL = "https://github.com/elytrya/mashiro-together";
 
 function openRepo() {
