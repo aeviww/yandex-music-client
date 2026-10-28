@@ -72,17 +72,21 @@
                 {{ displayTitle }}
               </span>
             </Transition>
+
             <span
               class="flex min-w-0 flex-[0_1_auto] items-center max-w-0 overflow-hidden opacity-0 -translate-x-[4px] transition-[max-width,opacity,transform] duration-[180ms] ease-[ease] group-hover/title:max-w-[260px] group-hover/title:opacity-100 group-hover/title:translate-x-0 motion-reduce:transition-none"
             >
               <span
                 v-if="neuroActive"
                 class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
-                >нейромузыка</span
               >
+                нейромузыка
+              </span>
+
               <span v-else class="inline-flex flex-none ml-[6px]">
                 <AiTag :show="isAiCurrent" />
               </span>
+
               <span
                 v-if="!neuroActive && showCensorBadge"
                 class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
@@ -92,6 +96,7 @@
                   Играет заменённая версия: {{ replacementLabel }}
                 </q-tooltip>
               </span>
+
               <span
                 v-else-if="!neuroActive && showOriginalBadge"
                 class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--line)] rounded-[4px] bg-[rgba(255,255,255,0.06)] text-[color:var(--fg-dim)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
