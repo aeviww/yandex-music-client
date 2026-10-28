@@ -1,17 +1,27 @@
 <template>
-  <q-page class="h-[calc(100vh-52px-var(--player-height,78px))] !min-h-0 !overflow-hidden">
+  <q-page
+    class="h-[calc(100vh-52px-var(--player-height,78px))] !min-h-0 !overflow-hidden"
+  >
     <q-scroll-area class="h-full w-full overscroll-contain">
       <div class="min-w-0 pb-[56px]">
         <div
           class="mx-auto w-full max-w-[1240px] px-[var(--page-padding,40px)]"
         >
-          <header class="flex flex-wrap items-end justify-between gap-y-[20px] gap-x-[36px] border-b border-[var(--line)] pt-[10px] px-0 pb-[28px] max-[720px]:items-start max-[720px]:pb-[24px]">
+          <header
+            class="flex flex-wrap items-end justify-between gap-y-[20px] gap-x-[36px] border-b border-[var(--line)] pt-[10px] px-0 pb-[28px] max-[720px]:items-start max-[720px]:pb-[24px]"
+          >
             <div class="min-w-0">
-              <h1 class="m-0 text-[clamp(32px,_3.8vw,_48px)] font-semibold leading-[1.05] tracking-[-0.05em] max-[720px]:text-[clamp(30px,_7vw,_40px)]">
+              <h1
+                class="m-0 text-[clamp(32px,_3.8vw,_48px)] font-semibold leading-[1.05] tracking-[-0.05em] max-[720px]:text-[clamp(30px,_7vw,_40px)]"
+              >
                 {{ greeting
                 }}<template v-if="userName">, {{ userName }}</template>
               </h1>
-              <p class="mt-[10px] mx-0 mb-0 text-[14px] leading-[1.5] text-[color:var(--fg-dim)]">ваша музыка на сегодня</p>
+              <p
+                class="mt-[10px] mx-0 mb-0 text-[14px] leading-[1.5] text-[color:var(--fg-dim)]"
+              >
+                ваша музыка на сегодня
+              </p>
             </div>
 
             <div class="flex flex-wrap gap-[10px] pb-[3px] max-[720px]:pb-0">
@@ -24,7 +34,11 @@
                 type="button"
                 @click="router.push('/playlists')"
               >
-                <Icon name="mingcute:book-2-line" :size="15" class="flex-none" />
+                <Icon
+                  name="mingcute:book-2-line"
+                  :size="15"
+                  class="flex-none"
+                />
                 <span>Коллекция</span>
               </button>
               <button
@@ -43,8 +57,14 @@
           </header>
 
           <template v-if="visiblePlaylists.length">
-            <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-              <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">для тебя</h2>
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
+                для тебя
+              </h2>
               <button
                 class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
                 type="button"
@@ -62,7 +82,9 @@
                 class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="router.push(`/playlists/${pl.kind}`)"
               >
-                <div class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block">
+                <div
+                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                >
                   <img
                     v-if="pl.cover_url"
                     loading="lazy"
@@ -94,13 +116,26 @@
                   </span>
                 </div>
 
-                <div class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate">{{ pl.title }}</div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">
+                <div
+                  class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
+                >
+                  {{ pl.title }}
+                </div>
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
                   {{ plural(pl.track_count, "трек", "трека", "треков") }}
                 </div>
 
-                <q-menu context-menu touch-position class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]">
-                  <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 216px">
+                <q-menu
+                  context-menu
+                  touch-position
+                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                >
+                  <div
+                    class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                    style="min-width: 216px"
+                  >
                     <div
                       class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
@@ -137,7 +172,11 @@
 
                     <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
-                    <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis" v-close-popup @click="rename(pl)">
+                    <div
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      v-close-popup
+                      @click="rename(pl)"
+                    >
                       <Icon name="mingcute:pencil-line" :size="17" />
                       <span>Переименовать</span>
                     </div>
@@ -174,8 +213,12 @@
             </div>
           </template>
 
-          <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-            <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">
+          <div
+            class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+          >
+            <h2
+              class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+            >
               недавно прослушанные
             </h2>
           </div>
@@ -188,7 +231,9 @@
                 class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="openRecent(r)"
               >
-                <div class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block">
+                <div
+                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                >
                   <img
                     v-if="r.cover_url"
                     loading="lazy"
@@ -216,7 +261,11 @@
                 >
                   {{ r.title }}
                 </div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">{{ r.subtitle }}</div>
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
+                  {{ r.subtitle }}
+                </div>
               </div>
             </template>
 
@@ -229,8 +278,12 @@
             </template>
           </div>
 
-          <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-            <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">
+          <div
+            class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+          >
+            <h2
+              class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+            >
               новые релизы
             </h2>
           </div>
@@ -243,7 +296,9 @@
                 class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="router.push(`/album/${a.id}`)"
               >
-                <div class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block">
+                <div
+                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                >
                   <img
                     v-if="a.cover_url"
                     loading="lazy"
@@ -271,7 +326,9 @@
                 >
                   {{ a.title }}
                 </div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
                   {{ a.artist || a.year || "" }}
                 </div>
               </div>
@@ -293,8 +350,12 @@
           </div>
 
           <template v-if="picks.length">
-            <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-              <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
                 новое для тебя
               </h2>
             </div>
@@ -308,7 +369,9 @@
               >
                 <div
                   class="cover relative aspect-square w-full overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
-                  :class="p.kind === 'artist' ? 'rounded-full' : 'rounded-[12px]'"
+                  :class="
+                    p.kind === 'artist' ? 'rounded-full' : 'rounded-[12px]'
+                  "
                   :style="p.color ? { background: p.color } : {}"
                 >
                   <img
@@ -343,19 +406,36 @@
                 >
                   {{ p.name }}
                 </div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
                   {{
                     p.artists.length ? artistNames(p.artists) : p.description
                   }}
                 </div>
 
-                <q-menu context-menu touch-position class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]">
-                  <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 212px">
-                    <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis" v-close-popup @click="playPick(p)">
+                <q-menu
+                  context-menu
+                  touch-position
+                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                >
+                  <div
+                    class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                    style="min-width: 212px"
+                  >
+                    <div
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      v-close-popup
+                      @click="playPick(p)"
+                    >
                       <Icon name="mingcute:play-fill" :size="17" />
                       <span>Слушать</span>
                     </div>
-                    <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis" v-close-popup @click="openPick(p)">
+                    <div
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      v-close-popup
+                      @click="openPick(p)"
+                    >
                       <Icon
                         :name="
                           p.kind === 'artist'
@@ -370,7 +450,11 @@
                           : "Открыть альбом"
                       }}</span>
                     </div>
-                    <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis" v-close-popup @click="waveFrom(p)">
+                    <div
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      v-close-popup
+                      @click="waveFrom(p)"
+                    >
                       <Icon name="mingcute:wave-line" :size="17" />
                       <span>Волна по этому</span>
                     </div>
@@ -381,8 +465,12 @@
           </template>
 
           <template v-if="waves.length">
-            <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-              <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
                 миксы для тебя
               </h2>
               <button
@@ -429,11 +517,26 @@
                 >
                   {{ w.name }}
                 </div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">{{ w.description }}</div>
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
+                  {{ w.description }}
+                </div>
 
-                <q-menu context-menu touch-position class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]">
-                  <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 200px">
-                    <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis" v-close-popup @click="playWave(w)">
+                <q-menu
+                  context-menu
+                  touch-position
+                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                >
+                  <div
+                    class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                    style="min-width: 200px"
+                  >
+                    <div
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      v-close-popup
+                      @click="playWave(w)"
+                    >
                       <Icon name="mingcute:play-fill" :size="17" />
                       <span>Запустить волну</span>
                     </div>
@@ -452,14 +555,16 @@
           </template>
 
           <template v-if="neuroItems.length">
-            <div class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]">
-              <h2 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
                 нейромузыка
               </h2>
             </div>
-            <p
-              class="mb-0 mt-[-6px] text-[12px] text-[color:var(--fg-faint)]"
-            >
+            <p class="mb-0 mt-[-6px] text-[12px] text-[color:var(--fg-faint)]">
               отвлечёт от шума и сфокусирует на важном
             </p>
 
@@ -491,7 +596,7 @@
                     <Icon
                       :name="
                         neuro.item?.id === n.id && neuro.playing
-                          ? 'mingcute:sound-fill'
+                          ? 'mingcute:pause-fill'
                           : 'mingcute:play-fill'
                       "
                       :size="15"
@@ -503,7 +608,11 @@
                 >
                   {{ n.title }}
                 </div>
-                <div class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate">нейромузыка</div>
+                <div
+                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                >
+                  нейромузыка
+                </div>
               </div>
             </div>
           </template>
@@ -794,8 +903,7 @@ function playNeuro(item: NeuroItem) {
 const AUTHOR_URL = "https://github.com/aeviww";
 const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 
-const commit =
-  typeof __APP_COMMIT__ === "string" ? __APP_COMMIT__ : "local";
+const commit = typeof __APP_COMMIT__ === "string" ? __APP_COMMIT__ : "local";
 const commitTitle = `сборка от коммита ${__APP_COMMIT__} · ${__APP_COMMIT_DATE__}`;
 
 function openAboutLink(url: string) {
@@ -815,4 +923,3 @@ async function playAlbum(id: string) {
   }
 }
 </script>
-
