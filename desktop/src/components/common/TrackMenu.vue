@@ -28,11 +28,20 @@
       </div>
 
       <div
+        v-if="track.artists && track.artists.length > 0 && track.artists[0]?.id"
+        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+        v-close-popup
+        @click="playArtistWave"
+      >
+        <Icon name="mingcute:wave-line" :size="18" />
+        <span>Волна по артисту ({{ track.artists[0]?.name }})</span>
+      </div>
+
+      <div
         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
         v-close-popup
         @click="playSimilar"
-      >
-        <Icon name="mingcute:route-line" :size="18" />
+      >        <Icon name="mingcute:route-line" :size="18" />
         <span>Похожие треки</span>
       </div>
 
@@ -455,6 +464,12 @@ const rows = computed(() => {
     list.push({ label: "Длительность", value: formatDuration(d.duration_ms) });
   return list;
 });
+
+function playArtistWave() {
+  const artist = props.track.artists?.[0];
+  if (!artist?.id) return;
+  void player.waveByArtist({ id: artist.id, name: artist.name });
+}
 
 async function playSimilar() {
   try {

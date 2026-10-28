@@ -173,7 +173,12 @@ export const api = {
   }) => call<{ ok: boolean }>("set_station_settings", { payload }),
 
   sendFeedback: (payload: FeedbackPayload) =>
-    call<{ ok: boolean }>("wave_feedback", { payload }),
+    call<{ ok: boolean }>("wave_feedback", {
+      payload: {
+        timestamp: payload.timestamp ?? new Date().toISOString(),
+        ...payload,
+      },
+    }),
 
   searchSuggest: (text: string) => call<string[]>("search_suggest", { text }),
 

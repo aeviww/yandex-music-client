@@ -236,6 +236,10 @@
                     @click="playRecommended"
                   >
                     <Icon name="mingcute:wave-line" :size="17" />
+                    <span>Моя волна по плейлисту</span>
+                  </div>
+
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="playRecommended">                    <Icon name="mingcute:wave-line" :size="17" />
                     <span>Похожее на плейлист</span>
                   </div>
 
@@ -1337,6 +1341,16 @@ async function downloadSelected() {
   const list = selectedTracks.value;
   pickerOpen.value = false;
   await downloadList(list);
+}
+
+function playPlaylistWave() {
+  const pl = library.playlists.find((p) => String(p.kind) === String(props.kind));
+  void player.waveByPlaylist({
+    kind: Number(props.kind),
+    title: title.value,
+    owner_uid: pl?.owner_uid ?? null,
+  });
+  void router.push("/wave");
 }
 
 async function playRecommended() {

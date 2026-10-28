@@ -461,7 +461,8 @@ function enqueueAll() {
 }
 
 function playAlbumWave() {
-  void player.startWave(`album:${props.id}`, album.value?.title);
+  if (!album.value) return;
+  void player.waveByAlbum({ id: props.id, title: album.value.title });
   void router.push("/wave");
 }
 
