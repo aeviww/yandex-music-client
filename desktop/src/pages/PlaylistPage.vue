@@ -170,6 +170,15 @@
             </button>
 
             <button
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+              type="button"
+              @click="playPlaylistWave"
+            >
+              <Icon name="mingcute:wave-line" :size="15" />
+              <span>Волна</span>
+            </button>
+
+            <button
               class="flex w-[30px] h-[30px] items-center justify-center rounded-[8px] p-0 border-0 appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default"
               type="button"
               title="Ещё"

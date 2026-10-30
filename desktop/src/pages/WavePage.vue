@@ -1,6 +1,6 @@
 <template>
-  <q-page class="!overflow-hidden">
-    <div class="w-full h-full overscroll-contain overflow-x-hidden overflow-y-auto">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
+    <div class="flex-auto min-h-0 overscroll-contain overflow-x-hidden overflow-y-auto">
       <div class="flex max-w-[860px] flex-col mx-auto my-0 gap-[26px] pt-[var(--page-top-gap)] px-[var(--page-padding)] pb-[56px] max-[1024px]:pt-[18px]">
         <header class="flex items-center gap-[18px] min-w-0 max-[720px]:items-start max-[720px]:gap-[14px] [&_h1]:overflow-hidden [&_h1]:mt-[6px] [&_h1]:mx-0 [&_h1]:mb-0 [&_h1]:text-[30px] [&_h1]:font-bold [&_h1]:tracking-[-0.03em] [&_h1]:leading-[1.1] [&_h1]:text-ellipsis [&_h1]:whitespace-nowrap max-[720px]:[&_h1]:text-[23px]">
           <div class="cover relative grid overflow-hidden w-[132px] h-[132px] flex-none rounded-[16px] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover max-[720px]:w-[96px] max-[720px]:h-[96px]">
@@ -261,24 +261,24 @@ const settingsGroups = computed(() => {
     key: SettingKey;
     label: string;
     current: string | null;
-    options: Array<{ value: string; name: string }>;
+    options: Array<{ value: string; name: string; serialized_seed?: string; unspecified?: boolean }>;
   }> = [
     {
       key: "moodEnergy",
       label: "Настроение",
-      current: data.mood_energy,
+      current: player.waveSettings.moodEnergy ?? data.mood_energy,
       options: data.moods,
     },
     {
       key: "diversity",
       label: "Разнообразие",
-      current: data.diversity,
+      current: player.waveSettings.diversity ?? data.diversity,
       options: data.diversities,
     },
     {
       key: "language",
       label: "Язык",
-      current: data.language,
+      current: player.waveSettings.language ?? data.language,
       options: withOption(data.languages, {
         value: "without-words",
         name: "Без слов",
@@ -290,7 +290,19 @@ const settingsGroups = computed(() => {
 
 async function loadInfo() {
   try {
-    info.value = await api.stationInfo(player.stationId ?? DEFAULT_STATION);
+    const data = await api.stationInfo(player.stationId ?? DEFAULT_STATION);
+    info.value = data;
+    if (data) {
+      if (data.mood_energy && !player.waveSettings.moodEnergy) {
+        player.waveSettings.moodEnergy = data.mood_energy;
+      }
+      if (data.diversity && !player.waveSettings.diversity) {
+        player.waveSettings.diversity = data.diversity;
+      }
+      if (data.language && !player.waveSettings.language) {
+        player.waveSettings.language = data.language;
+      }
+    }
   } catch {
     info.value = null;
   }
@@ -300,15 +312,55 @@ async function applySetting(key: SettingKey, value: string) {
   if (applying.value) return;
   applying.value = true;
   try {
-    await api.setStationSettings({
-      station: player.stationId ?? DEFAULT_STATION,
-      [key]: value,
+    const station = player.stationId ?? DEFAULT_STATION;
+    const currentData = info.value;
+
+    const meVal =
+      key === "moodEnergy"
+        ? value
+        : (player.waveSettings.moodEnergy ?? currentData?.mood_energy ?? "all");
+    const divVal =
+      key === "diversity"
+        ? value
+        : (player.waveSettings.diversity ?? currentData?.diversity ?? "default");
+    const langVal =
+      key === "language"
+        ? value
+        : (player.waveSettings.language ?? currentData?.language ?? "any");
+
+    // Optimistically update
+    if (info.value) {
+      if (key === "moodEnergy") info.value.mood_energy = value;
+      else if (key === "diversity") info.value.diversity = value;
+      else if (key === "language") info.value.language = value;
+    }
+
+    const seeds: string[] = [station];
+    const findSeed = (groupKey: SettingKey, val: string) => {
+      const group = settingsGroups.value.find((g) => g.key === groupKey);
+      const opt = group?.options.find((o) => o.value === val);
+      if (opt?.unspecified) return null;
+      if (opt?.serialized_seed) return opt.serialized_seed;
+      if (groupKey === "moodEnergy" && val !== "all") return `settingMoodEnergy:${val}`;
+      if (groupKey === "diversity" && val !== "default") return `settingDiversity:${val}`;
+      if (groupKey === "language" && val !== "any") return `settingLanguage:${val}`;
+      return null;
+    };
+
+    const s1 = findSeed("moodEnergy", meVal);
+    if (s1) seeds.push(s1);
+    const s2 = findSeed("diversity", divVal);
+    if (s2) seeds.push(s2);
+    const s3 = findSeed("language", langVal);
+    if (s3) seeds.push(s3);
+
+    await player.updateWaveFilters({
+      station,
+      moodEnergy: meVal,
+      diversity: divVal,
+      language: langVal,
+      seeds,
     });
-    await loadInfo();
-    await player.startWave(
-      player.stationId ?? DEFAULT_STATION,
-      player.stationName || undefined,
-    );
   } catch {
     Notify.create({ message: "Не удалось обновить настройки волны" });
   } finally {
@@ -544,6 +596,13 @@ let chipsResize: ResizeObserver | null = null;
 watch(stations, () => {
   void nextTick(updateEdges);
 });
+
+watch(
+  () => player.stationId,
+  () => {
+    void loadInfo();
+  },
+);
 
 onMounted(() => {
   void loadInfo();

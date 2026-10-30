@@ -103,6 +103,8 @@ export interface Station {
 export interface StationOption {
   value: string;
   name: string;
+  serialized_seed?: string;
+  unspecified?: boolean;
 }
 
 export interface StationInfo {
