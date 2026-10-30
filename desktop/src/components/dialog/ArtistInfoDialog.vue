@@ -1,7 +1,7 @@
 <template>
   <q-dialog v-model="model">
     <div
-      class="flex flex-col w-[min(520px,92vw)] max-h-[82vh] overflow-hidden border border-[color:var(--line)] rounded-[var(--radius,12px)] bg-[var(--surface)]"
+      class="flex flex-col w-[min(520px,92vw)] max-h-[82vh] overflow-hidden rounded-[var(--radius,12px)] bg-[var(--surface)] outline-none [&_*]:outline-none"
     >
       <div class="flex items-center gap-[12px] pt-[14px] px-[14px] pb-[12px]">
         <div
@@ -15,14 +15,18 @@
             class="text-[color:var(--fg-faint)]"
           />
         </div>
+
         <div class="col" style="min-width: 0">
-          <div class="text-[15px] font-semibold truncate">{{ artist?.name }}</div>
+          <div class="text-[15px] font-semibold truncate">
+            {{ artist?.name }}
+          </div>
           <div class="mt-[1px] text-[12px] text-[color:var(--fg-dim)] truncate">
             {{ subtitle }}
           </div>
         </div>
+
         <div
-          class="flex w-[30px] h-[30px] items-center justify-center rounded-full text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+          class="flex w-[30px] h-[30px] items-center justify-center rounded-full text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 outline-none appearance-none"
           @click="model = false"
         >
           <Icon name="mingcute:close-line" :size="16" />
@@ -34,9 +38,11 @@
           <div
             v-for="fact in facts"
             :key="fact.key"
-            class="flex items-baseline gap-[8px] py-[7px] border-t border-t-[color:var(--line)] border-solid text-[13px]"
+            class="flex items-baseline gap-[8px] py-[7px] text-[13px]"
           >
-            <span class="flex-1 text-[color:var(--fg-dim)]">{{ fact.label }}</span>
+            <span class="flex-1 text-[color:var(--fg-dim)]">
+              {{ fact.label }}
+            </span>
             <span class="tabular-nums">{{ fact.value }}</span>
             <span
               v-if="fact.delta"
@@ -52,13 +58,18 @@
           </div>
         </div>
 
-        <div v-if="chart" class="mt-[14px] [&_svg]:block [&_svg]:w-full [&_svg]:h-[56px] [&_polyline]:[stroke:var(--fg-dim)] [&_polyline]:[stroke-width:1.5] [&_polyline]:[vector-effect:non-scaling-stroke]">
+        <div
+          v-if="chart"
+          class="mt-[14px] [&_svg]:block [&_svg]:w-full [&_svg]:h-[56px] [&_polyline]:[stroke:var(--fg-dim)] [&_polyline]:[stroke-width:1.5] [&_polyline]:[vector-effect:non-scaling-stroke]"
+        >
           <svg viewBox="0 0 300 56" preserveAspectRatio="none">
             <polyline :points="chart.line" fill="none" />
           </svg>
-          <div class="flex justify-between gap-[10px] text-[10px] text-[color:var(--fg-dim)]">
+          <div
+            class="flex justify-between gap-[10px] text-[10px] text-[color:var(--fg-dim)]"
+          >
             <span>{{ chart.from }}</span>
-            <span>СЃР»СѓС€Р°С‚РµР»Рё РїРѕ Р»РѕРєР°Р»СЊРЅС‹Рј Р·Р°РјРµСЂР°Рј</span>
+            <span>слушатели по локальным замерам</span>
             <span>{{ chart.to }}</span>
           </div>
         </div>
@@ -70,7 +81,10 @@
           {{ artist.description }}
         </p>
 
-        <div v-if="artist?.genres?.length" class="flex flex-wrap gap-[6px] mt-[14px]">
+        <div
+          v-if="artist?.genres?.length"
+          class="flex flex-wrap gap-[6px] mt-[14px]"
+        >
           <span
             v-for="genre in artist.genres"
             :key="genre"
@@ -82,7 +96,7 @@
 
         <div
           v-if="links.length"
-          class="flex flex-wrap gap-y-[6px] gap-x-[14px] mt-[14px] [&_a]:text-[color:var(--fg-dim)] [&_a]:text-[12px] [&_a]:no-underline [&_a]:cursor-pointer [&_a]:border-b [&_a]:border-b-transparent hover:[&_a]:text-[color:var(--fg)] hover:[&_a]:border-b-[color:var(--line)]"
+          class="flex flex-wrap gap-y-[6px] gap-x-[14px] mt-[14px] [&_a]:text-[color:var(--fg-dim)] [&_a]:text-[12px] [&_a]:no-underline [&_a]:cursor-pointer hover:[&_a]:text-[color:var(--fg)]"
         >
           <a
             v-for="link in links"
@@ -96,19 +110,19 @@
       </div>
 
       <div
-        class="flex items-center justify-between gap-[10px] pt-[10px] px-[16px] pb-[12px] border-t border-t-[color:var(--line)] border-solid"
+        class="flex items-center justify-between gap-[10px] pt-[10px] px-[16px] pb-[12px]"
       >
         <span class="text-[11px] text-[color:var(--fg-dim)]">
           id {{ artist?.id
-          }}<template v-if="updatedAt"> В· РѕР±РЅРѕРІР»РµРЅРѕ {{ updatedAt }}</template>
+          }}<template v-if="updatedAt"> · обновлено {{ updatedAt }}</template>
         </span>
         <button
           v-if="history.length"
-          class="p-0 border-0 bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
+          class="p-0 border-0 outline-none bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
           type="button"
           @click="resetHistory"
         >
-          РћС‡РёСЃС‚РёС‚СЊ Р·Р°РјРµСЂС‹
+          очистить замеры
         </button>
       </div>
     </div>
@@ -152,7 +166,7 @@ watch(
 
 const subtitle = computed(() => {
   const genres = props.artist?.genres ?? [];
-  return genres.length ? genres.slice(0, 3).join(" В· ") : "РђСЂС‚РёСЃС‚";
+  return genres.length ? genres.slice(0, 3).join(" · ") : "Артист";
 });
 
 const count = (value: number) => value.toLocaleString("ru-RU");
@@ -162,10 +176,10 @@ const day = (ts: number) =>
 
 const facts = computed(() => {
   const defs = [
-    { key: "listeners", label: "РЎР»СѓС€Р°С‚РµР»РµР№ РІ РјРµСЃСЏС†" },
-    { key: "likes", label: "Р›Р°Р№РєРѕРІ" },
-    { key: "tracks", label: "РўСЂРµРєРѕРІ" },
-    { key: "albums", label: "РђР»СЊР±РѕРјРѕРІ" },
+    { key: "listeners", label: "слушателей в месяц" },
+    { key: "likes", label: "лайков" },
+    { key: "tracks", label: "треков" },
+    { key: "albums", label: "альбомов" },
   ] as const;
 
   return defs.map((def) => {
@@ -174,9 +188,9 @@ const facts = computed(() => {
     return {
       key: def.key,
       label: def.label,
-      value: stat.value === null ? "вЂ”" : count(stat.value),
+      value: stat.value === null ? "—" : count(stat.value),
       delta:
-        diff === 0 ? "" : `${diff > 0 ? "+" : "в€’"}${count(Math.abs(diff))}`,
+        diff === 0 ? "" : `${diff > 0 ? "+" : "−"}${count(Math.abs(diff))}`,
       dir: diff > 0 ? "up" : "down",
     };
   });
