@@ -1,7 +1,7 @@
 <template>
   <q-dialog v-model="open">
     <div
-      class="flex flex-col w-[min(640px,92vw)] pt-[18px] pr-[6px] pb-[14px] pl-[22px] border border-[color:var(--line)] rounded-[calc(var(--radius)+6px)] bg-[var(--surface)]"
+      class="flex flex-col w-[min(640px,92vw)] pt-[18px] pr-[6px] pb-[14px] pl-[22px] rounded-[calc(var(--radius)+6px)] bg-[var(--surface)]"
     >
       <div class="flex items-start gap-[12px] pr-[16px]">
         <div class="col" style="min-width: 0">
@@ -24,7 +24,7 @@
             "
             @click="source = 'yandex'"
           >
-            РЇРЅРґРµРєСЃ
+            Яндекс
           </button>
           <button
             type="button"
@@ -74,7 +74,7 @@
             class="flex items-center gap-[8px] pt-[8px] pr-[16px] pb-0 pl-0 text-[color:var(--fg-faint)] text-[12px]"
           >
             <q-spinner size="12px" color="grey-6" />
-            <span>РћР±РЅРѕРІР»СЏСЋ С‚РµРєСЃС‚вЂ¦</span>
+            <span>Обновляю текст…</span>
           </div>
         </div>
 
@@ -83,34 +83,34 @@
           class="flex flex-col items-start gap-[14px] px-[16px] py-[34px] text-[color:var(--fg-dim)] text-[14px] text-center"
         >
           <q-spinner size="20px" color="grey-6" />
-          <span>РС‰Сѓ С‚РµРєСЃС‚вЂ¦</span>
+          <span>Ищу текст…</span>
         </div>
 
         <div
           v-else
           class="flex flex-col items-start gap-[14px] px-[16px] py-[34px] text-[color:var(--fg-dim)] text-[14px] text-center"
         >
-          <span>{{ error || "РўРµРєСЃС‚Р° РґР»СЏ СЌС‚РѕРіРѕ С‚СЂРµРєР° РЅРµС‚" }}</span>
+          <span>{{ error || "Текста для этого трека нет" }}</span>
           <div
             class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             @click="retry"
           >
-            РџРѕРїСЂРѕР±РѕРІР°С‚СЊ СЃРЅРѕРІР°
+            Попробовать снова
           </div>
           <div
             v-if="genius.ready"
             class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             @click="source = 'genius'"
           >
-            РџРѕСЃРјРѕС‚СЂРµС‚СЊ РЅР° Genius
+            Посмотреть на Genius
           </div>
         </div>
 
         <div
           v-if="writers"
-          class="pt-[10px] pr-[18px] pb-0 pl-0 mt-[8px] text-[color:var(--fg-faint)] text-[12px] truncate border-t border-t-[color:var(--line)] border-solid"
+          class="pt-[10px] pr-[18px] pb-0 pl-0 mt-[8px] text-[color:var(--fg-faint)] text-[12px] truncate"
         >
-          РђРІС‚РѕСЂС‹: {{ writers }}
+          Авторы: {{ writers }}
         </div>
       </template>
     </div>
@@ -142,7 +142,7 @@ const open = computed({
 });
 
 const track = computed(() => trackLyricsDialog.track);
-const title = computed(() => track.value?.title || "РўРµРєСЃС‚ РїРµСЃРЅРё");
+const title = computed(() => track.value?.title || "Текст песни");
 const subtitle = computed(() =>
   track.value ? artistNames(track.value.artists) : "",
 );
@@ -182,13 +182,13 @@ async function load(id: string, force = false) {
       lyrics.value = fresh;
       writeCache(key, fresh);
     } else if (!cachedOk) {
-      error.value = "РўРµРєСЃС‚Р° РґР»СЏ СЌС‚РѕРіРѕ С‚СЂРµРєР° РЅРµС‚";
+      error.value = "Текста для этого трека нет";
     }
   } catch (e) {
     if (trackLyricsDialog.track?.id !== id) return;
     if (!cachedOk) {
       const message = e instanceof Error ? e.message : String(e);
-      error.value = message || "РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ С‚РµРєСЃС‚";
+      error.value = message || "Не удалось загрузить текст";
     }
   } finally {
     if (trackLyricsDialog.track?.id === id) {
