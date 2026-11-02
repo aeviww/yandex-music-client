@@ -44,6 +44,18 @@ export default defineConfig(() => {
           __APP_COMMIT__: JSON.stringify(commit.hash),
           __APP_COMMIT_DATE__: JSON.stringify(commit.date),
         };
+        cfg.plugins = cfg.plugins ?? [];
+        cfg.plugins.push({
+          name: "app-version-endpoint",
+          configureServer(server) {
+            server.middlewares.use("/__app-version", (_req, res) => {
+              const info = gitInfo();
+              res.setHeader("Content-Type", "application/json; charset=utf-8");
+              res.setHeader("Cache-Control", "no-store");
+              res.end(JSON.stringify(info));
+            });
+          },
+        });
       },
     },
 

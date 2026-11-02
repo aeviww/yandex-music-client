@@ -10,7 +10,6 @@
       "
       aria-haspopup="listbox"
       :aria-expanded="open"
-      @click="open = !open"
     >
       <span class="min-w-0 flex-1 truncate">{{ current?.label ?? '' }}</span>
       <Icon
@@ -19,43 +18,45 @@
         class="flex-none text-[color:var(--fg-faint)] transition-transform duration-150"
         :class="open ? 'rotate-180' : ''"
       />
-    </button>
 
-    <q-menu
-      v-model="open"
-      anchor="bottom start"
-      self="top start"
-      :offset="[0, 4]"
-      class="filter-select-menu min-w-[180px] max-w-[260px] rounded-[10px] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[0_18px_44px_rgba(0,0,0,0.45)]"
-    >
-      <div
-        class="max-h-[280px] min-w-[180px] overflow-y-auto overscroll-contain p-[4px]"
-        role="listbox"
+      <q-menu
+        anchor="bottom start"
+        self="top start"
+        :offset="[0, 4]"
+        class="overflow-hidden rounded-[10px] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[0_18px_44px_rgba(0,0,0,0.45)]"
+        @show="open = true"
+        @hide="open = false"
       >
-        <button
-          v-for="option in options"
-          :key="option.value"
-          type="button"
-          class="flex h-[28px] w-full items-center gap-[8px] rounded-[7px] border-0 bg-transparent px-[8px] text-left text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] cursor-pointer transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
-          :class="
-            option.value === modelValue
-              ? 'bg-[var(--hover)] text-[color:var(--fg)]'
-              : ''
-          "
-          role="option"
-          :aria-selected="option.value === modelValue"
-          @click="pick(option.value)"
+        <div
+          class="max-h-[280px] min-w-[180px] overflow-y-auto overscroll-contain p-[4px]"
+          role="listbox"
         >
-          <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
-          <Icon
-            v-if="option.value === modelValue"
-            name="mingcute:check-line"
-            :size="13"
-            class="flex-none text-[color:var(--accent)]"
-          />
-        </button>
-      </div>
-    </q-menu>
+          <button
+            v-for="option in options"
+            :key="option.value"
+            type="button"
+            class="flex h-[28px] w-full items-center gap-[8px] rounded-[7px] border-0 bg-transparent px-[8px] text-left text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] cursor-pointer transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+            :class="
+              option.value === modelValue
+                ? 'bg-[var(--hover)] text-[color:var(--fg)]'
+                : ''
+            "
+            role="option"
+            :aria-selected="option.value === modelValue"
+            v-close-popup
+            @click="pick(option.value)"
+          >
+            <span class="min-w-0 flex-1 truncate">{{ option.label }}</span>
+            <Icon
+              v-if="option.value === modelValue"
+              name="mingcute:check-line"
+              :size="13"
+              class="flex-none text-[color:var(--accent)]"
+            />
+          </button>
+        </div>
+      </q-menu>
+    </button>
   </div>
 </template>
 
@@ -79,6 +80,5 @@ const current = computed(() =>
 
 function pick(value: string) {
   modelValue.value = value;
-  open.value = false;
 }
 </script>

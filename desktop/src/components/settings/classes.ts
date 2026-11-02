@@ -18,6 +18,3 @@ export const BUTTON_ACCENT_OUTLINE =
 
 export const BUTTON_DANGER =
   "inline-flex h-8 flex-none items-center justify-center gap-1.5 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_40%,var(--line))] px-3 text-[12px] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_12%,transparent)] hover:text-[#ff5d5d] disabled:pointer-events-none disabled:opacity-50";
-
-export const LINK =
-  "text-[var(--accent)] no-underline transition-opacity duration-150 hover:opacity-75";

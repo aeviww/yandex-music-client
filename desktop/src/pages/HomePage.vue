@@ -668,6 +668,7 @@ import type {
 import { artistNames, plural } from "@/lib/format";
 import { askConfirm, askText } from "@/lib/dialogs";
 import { readCache, swr, writeCache } from "@/lib/cache";
+import { appVersion, loadVersion } from "@/lib/version";
 import { neuro, startNeuro } from "@/lib/neuro";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
@@ -855,6 +856,7 @@ async function removePlaylist(pl: Playlist) {
 }
 
 onMounted(() => {
+  void loadVersion();
   playlists.value = readCache<Playlist[]>("home.playlists") ?? [];
   wheel.value = readCache<WheelItem[]>("home.wheel") ?? [];
   releases.value = readCache<AlbumBrief[]>("home.newReleases.v2") ?? [];
@@ -903,8 +905,10 @@ function playNeuro(item: NeuroItem) {
 const AUTHOR_URL = "https://github.com/aeviww";
 const LICENSE_URL = "https://www.gnu.org/licenses/gpl-3.0.html";
 
-const commit = typeof __APP_COMMIT__ === "string" ? __APP_COMMIT__ : "local";
-const commitTitle = `сборка от коммита ${__APP_COMMIT__} · ${__APP_COMMIT_DATE__}`;
+const commit = computed(() => appVersion.value.hash);
+const commitTitle = computed(
+  () => `сборка от коммита ${appVersion.value.hash} · ${appVersion.value.date}`,
+);
 
 function openAboutLink(url: string) {
   void api.openExternal(url);
