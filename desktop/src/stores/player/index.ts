@@ -182,6 +182,40 @@ let lastRecover = 0;
 let radioStarted = false;
 let previewAdvancing = false;
 let previewFading = false;
+let gaplessSwitching = false;
+let previewFadeTimer: number | null = null;
+let previewAdvanceTimer: number | null = null;
+
+interface PreviewSnapshot {
+  queue: Track[];
+  sourceQueue: Track[];
+  index: number;
+  progress: number;
+  isWave: boolean;
+  stationId: string | null;
+  stationName: string | null;
+  waveBatchId: string | null;
+  waveSessionId: string | null;
+  shuffle: boolean;
+  repeat: PlayerState["repeat"];
+  waveSettings: PlayerState["waveSettings"];
+  waveSeeds: PlayerState["waveSeeds"];
+  seenIds: string[];
+  wasPlaying: boolean;
+}
+
+let previewSnapshot: PreviewSnapshot | null = null;
+
+function clearPreviewTimers(): void {
+  if (previewFadeTimer !== null) {
+    window.clearTimeout(previewFadeTimer);
+    previewFadeTimer = null;
+  }
+  if (previewAdvanceTimer !== null) {
+    window.clearTimeout(previewAdvanceTimer);
+    previewAdvanceTimer = null;
+  }
+}
 
 export const usePlayerStore = defineStore("player", {
   state: (): PlayerState => {
@@ -331,19 +365,24 @@ export const usePlayerStore = defineStore("player", {
         const gapless = settings.gaplessEnabled;
         if (
           (settings.trimSilence || gapless) &&
+          !this.previewMode &&
+          !this.loading &&
+          !gaplessSwitching &&
+          this.hasNext &&
           this.duration > 20 &&
           !audio.paused
         ) {
           const left = this.duration - this.progress;
-          const minLeft = gapless ? 0.2 : 1.5;
-          const quietLevel = gapless ? 0.007 : 0.004;
-          const hold = gapless ? 380 : 1100;
-          if (left > minLeft && left < 25) {
+          const windowLeft = gapless ? 4.5 : 5;
+          const minLeft = gapless ? 0.25 : 1.5;
+          const quietLevel = gapless ? 0.0055 : 0.004;
+          const hold = gapless ? 260 : 1000;
+          if (left > minLeft && left < windowLeft) {
             if (currentLevel() < quietLevel) {
               if (quietSince === 0) quietSince = Date.now();
               else if (Date.now() - quietSince > hold) {
                 quietSince = 0;
-                if (!useTogetherStore().isGuest) void this.next(true);
+                if (!useTogetherStore().isGuest) void this.gaplessNext();
               }
             } else {
               quietSince = 0;
@@ -361,6 +400,7 @@ export const usePlayerStore = defineStore("player", {
       };
       audio.onended = () => {
         if (this.previewMode) {
+          clearPreviewTimers();
           void this.advancePreview();
           return;
         }
@@ -855,49 +895,82 @@ export const usePlayerStore = defineStore("player", {
         preview?: boolean;
       },
     ) {
+      const preview = opts?.preview ?? false;
+      if (preview && !this.previewMode && this.current) {
+        previewSnapshot = {
+          queue: [...this.queue],
+          sourceQueue: [...this.sourceQueue],
+          index: this.index,
+          progress: this.progress,
+          isWave: this.isWave,
+          stationId: this.stationId,
+          stationName: this.stationName,
+          waveBatchId: this.waveBatchId,
+          waveSessionId: this.waveSessionId,
+          shuffle: this.shuffle,
+          repeat: this.repeat,
+          waveSettings: { ...this.waveSettings },
+          waveSeeds: [...this.waveSeeds],
+          seenIds: [...this.seenIds],
+          wasPlaying: this.isPlaying,
+        };
+      } else if (!preview) {
+        previewSnapshot = null;
+        clearPreviewTimers();
+      }
       this.sourceQueue = [...tracks];
       this.queue = [...tracks];
       this.shuffle = false;
       this.index = startIndex;
       this.isWave = opts?.wave ?? false;
       this.waveBatchId = opts?.batchId ?? null;
-      this.previewMode = opts?.preview ?? false;
+      this.previewMode = preview;
       previewAdvancing = false;
       previewFading = false;
+      gaplessSwitching = false;
       radioStarted = false;
       await this.loadCurrent();
+    },
+
+    schedulePreview(limit: number) {
+      clearPreviewTimers();
+      const seconds = Math.max(0.5, limit);
+      const fadeAt = Math.max(0, seconds - PREVIEW_FADE_OUT_MS / 1000) * 1000;
+      previewFadeTimer = window.setTimeout(() => {
+        previewFadeTimer = null;
+        if (!this.previewMode || this.loading || previewFading) return;
+        previewFading = true;
+        void fadeOut(PREVIEW_FADE_OUT_MS);
+      }, fadeAt);
+      previewAdvanceTimer = window.setTimeout(() => {
+        previewAdvanceTimer = null;
+        if (!this.previewMode) return;
+        this.progress = seconds;
+        lastProgress = seconds;
+        void this.advancePreview();
+      }, seconds * 1000 + 40);
     },
 
     async advancePreview() {
       if (!this.previewMode || previewAdvancing || this.loading) return;
       previewAdvancing = true;
+      clearPreviewTimers();
       try {
         if (this.index < this.queue.length - 1) {
           this.index += 1;
           await this.loadCurrent();
           return;
         }
-        audio.pause();
-        try {
-          audio.currentTime = 0;
-        } catch {}
-        this.isPlaying = false;
-        this.progress = 0;
-        this.duration =
-          this.current?.preview_duration_ms &&
-          this.current.preview_duration_ms > 0
-            ? this.current.preview_duration_ms / 1000
-            : 15;
-        previewFading = false;
-        cancelFade(this.muted ? 0 : this.volume);
-        void this.syncTray();
+        this.stopPreview();
       } finally {
         previewAdvancing = false;
       }
     },
 
-    stopPreview() {
+    stopPreview(opts?: { restore?: boolean }) {
       if (!this.previewMode) return;
+      clearPreviewTimers();
+      nextSourceToken();
       audio.pause();
       try {
         audio.currentTime = 0;
@@ -915,6 +988,27 @@ export const usePlayerStore = defineStore("player", {
       this.progress = 0;
       this.duration = 0;
       this.lyrics = null;
+      const snapshot = previewSnapshot;
+      previewSnapshot = null;
+      if (opts?.restore !== false && snapshot && snapshot.queue.length) {
+        this.queue = snapshot.queue;
+        this.sourceQueue = snapshot.sourceQueue;
+        this.index = snapshot.index;
+        this.isWave = snapshot.isWave;
+        this.stationId = snapshot.stationId;
+        this.stationName = snapshot.stationName;
+        this.waveBatchId = snapshot.waveBatchId;
+        this.waveSessionId = snapshot.waveSessionId;
+        this.shuffle = snapshot.shuffle;
+        this.repeat = snapshot.repeat;
+        this.waveSettings = snapshot.waveSettings;
+        this.waveSeeds = snapshot.waveSeeds;
+        this.seenIds = snapshot.seenIds;
+        void this.loadCurrent({
+          startAt: snapshot.progress,
+          autoplay: snapshot.wasPlaying,
+        });
+      }
       void this.syncTray();
       void this.syncPresence(true);
     },
@@ -979,17 +1073,24 @@ export const usePlayerStore = defineStore("player", {
       const rapid = Date.now() - lastLoadAt < 900;
       lastLoadAt = Date.now();
       if (ui.normalizeVolume) resetNormalization();
-      if (preview) previewFading = false;
+      const previewWasFaded = preview && previewFading;
+      if (preview) {
+        previewFading = false;
+        clearPreviewTimers();
+      }
       const fadeMs = preview
         ? PREVIEW_FADE_IN_MS
-        : ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
-          ? Math.round(Math.max(0, ui.crossfadeSeconds) * 1000)
-          : 0;
+        : gaplessSwitching
+          ? 90
+          : ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
+            ? Math.round(Math.max(0, ui.crossfadeSeconds) * 1000)
+            : 0;
       stallAt = startAt;
       stallSince = 0;
       recoverStep = 0;
       try {
-        if (fadeMs > 0) await fadeOut(Math.min(fadeMs, 1200));
+        if (fadeMs > 0 && !previewWasFaded)
+          await fadeOut(Math.min(fadeMs, 1200));
 
         let source: string | null = null;
         this.playingLocal = false;
@@ -1115,6 +1216,13 @@ export const usePlayerStore = defineStore("player", {
           await safePlay(token);
           if (fadeMs > 0 && isCurrentToken(token)) {
             void fadeIn(target, Math.min(fadeMs, 2500));
+          }
+          if (preview && isCurrentToken(token)) {
+            const mediaLimit =
+              Number.isFinite(audio.duration) && audio.duration > 1
+                ? audio.duration
+                : previewDuration;
+            this.schedulePreview(Math.min(previewDuration, mediaLimit));
           }
         } else {
           audio.load();
@@ -1546,6 +1654,16 @@ export const usePlayerStore = defineStore("player", {
         await safePlay();
       } else {
         audio.pause();
+      }
+    },
+
+    async gaplessNext() {
+      if (gaplessSwitching || this.loading) return;
+      gaplessSwitching = true;
+      try {
+        await this.next(true);
+      } finally {
+        gaplessSwitching = false;
       }
     },
 

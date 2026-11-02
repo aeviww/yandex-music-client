@@ -111,6 +111,7 @@ interface Graph {
   preamp: GainNode;
   filters: BiquadFilterNode[];
   normGain: GainNode;
+  limiter: DynamicsCompressorNode;
   routed: boolean;
 }
 
@@ -141,7 +142,14 @@ function build(): Graph | null {
     const preamp = context.createGain();
     const normGain = context.createGain();
     normGain.gain.value = 1;
-    normGain.connect(context.destination);
+    const limiter = context.createDynamicsCompressor();
+    limiter.threshold.value = -1.5;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.25;
+    normGain.connect(limiter);
+    limiter.connect(context.destination);
     const filters = EQ_BANDS.map((frequency, index) => {
       const filter = context.createBiquadFilter();
       filter.type =
@@ -163,7 +171,15 @@ function build(): Graph | null {
     }
     node.connect(normGain);
 
-    graph = { context, source, preamp, filters, normGain, routed: false };
+    graph = {
+      context,
+      source,
+      preamp,
+      filters,
+      normGain,
+      limiter,
+      routed: false,
+    };
     source.connect(normGain);
     void context.resume().catch(() => undefined);
     return graph;
@@ -201,7 +217,7 @@ export function resumeAudioContext(): void {
 }
 
 let analyser: AnalyserNode | null = null;
-let levelBuffer: Float32Array | null = null;
+let metricsBuffer: Float32Array<ArrayBuffer> | null = null;
 
 export function ensureAnalyser(): boolean {
   const current = build();
@@ -211,14 +227,14 @@ export function ensureAnalyser(): boolean {
   }
   if (!analyser) {
     analyser = current.context.createAnalyser();
-    analyser.fftSize = 1024;
-    levelBuffer = new Float32Array(analyser.fftSize);
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.5;
     current.source.connect(analyser);
   }
   return true;
 }
 
-let freqBuffer: Uint8Array | null = null;
+let freqBuffer: Uint8Array<ArrayBuffer> | null = null;
 
 export function frequencyData(): Uint8Array | null {
   if (!ensureAnalyser()) return null;
@@ -230,27 +246,48 @@ export function frequencyData(): Uint8Array | null {
   return freqBuffer;
 }
 
-export function currentLevel(): number {
-  if (!analyser || !levelBuffer) {
-    if (!ensureAnalyser()) return 1;
+export interface AudioMetrics {
+  rms: number;
+  peak: number;
+}
+
+export function currentMetrics(): AudioMetrics {
+  if (!ensureAnalyser() || !analyser) return { rms: 0, peak: 0 };
+  if (!metricsBuffer || metricsBuffer.length !== analyser.fftSize) {
+    metricsBuffer = new Float32Array(analyser.fftSize);
   }
-  if (!analyser || !levelBuffer) return 1;
-  analyser.getFloatTimeDomainData(levelBuffer);
+  analyser.getFloatTimeDomainData(metricsBuffer);
   let sum = 0;
-  for (let i = 0; i < levelBuffer.length; i++) {
-    const v = levelBuffer[i] ?? 0;
-    sum += v * v;
+  let peak = 0;
+  for (let i = 0; i < metricsBuffer.length; i++) {
+    const value = metricsBuffer[i] ?? 0;
+    sum += value * value;
+    const abs = Math.abs(value);
+    if (abs > peak) peak = abs;
   }
-  return Math.sqrt(sum / levelBuffer.length);
+  return { rms: Math.sqrt(sum / metricsBuffer.length), peak };
+}
+
+export function currentLevel(): number {
+  if (!analyser && !ensureAnalyser()) return 1;
+  return currentMetrics().rms;
 }
 
 let normTimer: number | null = null;
 let normEma = 0;
 let normSamples = 0;
+let normApplied = 1;
+
+const NORM_TARGET = 0.15;
+const NORM_MIN_GAIN = 0.45;
+const NORM_MAX_GAIN = 2.2;
+const NORM_PEAK_CEILING = 0.92;
+const NORM_SILENCE = 0.0035;
 
 export function resetNormalization(): void {
   normEma = 0;
   normSamples = 0;
+  normApplied = 1;
 }
 
 export function setNormalization(enabled: boolean): void {
@@ -261,10 +298,11 @@ export function setNormalization(enabled: boolean): void {
     }
     normEma = 0;
     normSamples = 0;
+    normApplied = 1;
     if (graph) {
       try {
         graph.normGain.gain.cancelScheduledValues(graph.context.currentTime);
-        graph.normGain.gain.setTargetAtTime(1, graph.context.currentTime, 0.25);
+        graph.normGain.gain.setTargetAtTime(1, graph.context.currentTime, 0.2);
       } catch {}
     }
     return;
@@ -272,28 +310,36 @@ export function setNormalization(enabled: boolean): void {
   if (normTimer !== null) return;
   if (!build()) return;
   ensureAnalyser();
-  const TARGET = 0.16;
-  const FLOOR = 0.02;
   normTimer = window.setInterval(() => {
     if (!graph || audio.paused) return;
     const vol = audio.volume;
     if (vol < 0.02) return;
-    const decoupled = currentLevel() / Math.max(0.05, vol);
-    if (decoupled < FLOOR) return;
-    const alpha = normSamples < 8 ? 0.25 : 0.06;
+    const { rms, peak } = currentMetrics();
+    const decoupled = rms / Math.max(0.05, vol);
+    if (decoupled < NORM_SILENCE && peak < NORM_SILENCE * 4) return;
+    const alpha = decoupled > normEma ? 0.22 : 0.06;
     normEma =
       normEma === 0 ? decoupled : normEma + alpha * (decoupled - normEma);
     normSamples += 1;
-    if (normSamples < 4) return;
-    const desired = Math.max(0.4, Math.min(2.0, TARGET / normEma));
+    if (normSamples < 3) return;
+
+    const loudnessGain = NORM_TARGET / Math.max(normEma, 0.001);
+    const peakGain = peak > 0.0001 ? NORM_PEAK_CEILING / peak : NORM_MAX_GAIN;
+    const desired = Math.max(
+      NORM_MIN_GAIN,
+      Math.min(NORM_MAX_GAIN, Math.min(loudnessGain, peakGain)),
+    );
+    if (Math.abs(desired - normApplied) < 0.015) return;
+    const timeConstant = desired > normApplied ? 0.2 : 0.8;
+    normApplied = desired;
     try {
       graph.normGain.gain.setTargetAtTime(
         desired,
         graph.context.currentTime,
-        0.6,
+        timeConstant,
       );
     } catch {}
-  }, 250);
+  }, 150);
 }
 
 let gestureArmed = false;

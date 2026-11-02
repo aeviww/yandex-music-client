@@ -729,13 +729,13 @@
             </div>
 
             <span class="flex min-w-0 flex-auto flex-col gap-[1px]">
-              <span class="truncate text-[calc(13px*var(--text-scale,1))]">{{
-                row.track.title
-              }}</span>
+              <span class="truncate text-[calc(13px*var(--text-scale,1))]">
+                <TrackTitle :track="row.track" />
+              </span>
               <span
                 class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate"
               >
-                {{ artistNames(row.track.artists) }}
+                <ArtistsLine :artists="row.track.artists" :limit="2" />
               </span>
             </span>
 
@@ -861,7 +861,9 @@ import {
 } from "vue";
 import { Notify } from "quasar";
 import { useRoute, useRouter } from "vue-router";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import TrackRow from "@/components/common/TrackRow.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import TrailerButton from "@/components/common/TrailerButton.vue";
 import { api } from "@/api/client";
 import type { Playlist, Track } from "@/api/types";
@@ -887,6 +889,9 @@ const loading = ref(false);
 const filter = ref("");
 const dragFrom = ref<number | null>(null);
 const dragOver = ref<number | null>(null);
+let ghostEl: HTMLElement | null = null;
+let ghostShiftX = 0;
+let ghostShiftY = 0;
 const editing = ref(false);
 const draftTitle = ref("");
 const titleInput = ref<HTMLInputElement | null>(null);
@@ -1480,14 +1485,56 @@ function startReorder(index: number, event: PointerEvent) {
   dragFrom.value = index;
   dragOver.value = index;
   document.body.classList.add("track-reordering");
+  createGhost(index, event);
   window.addEventListener("pointermove", trackPointer, { passive: false });
   window.addEventListener("pointerup", finishReorder, { once: true });
   window.addEventListener("pointercancel", cancelReorder, { once: true });
 }
 
+function createGhost(index: number, event: PointerEvent) {
+  removeGhost();
+  const row = document.querySelector<HTMLElement>(
+    `[data-track-index="${index}"]`,
+  );
+  if (!row) return;
+  const rect = row.getBoundingClientRect();
+  const ghost = row.cloneNode(true) as HTMLElement;
+  ghost.removeAttribute("data-track-index");
+  ghost.style.cssText = [
+    "position:fixed",
+    `left:${rect.left}px`,
+    `top:${rect.top}px`,
+    `width:${rect.width}px`,
+    `height:${rect.height}px`,
+    "z-index:9999",
+    "pointer-events:none",
+    "margin:0",
+    "border-radius:12px",
+    "background:var(--surface)",
+    "box-shadow:0 24px 52px -18px rgba(0,0,0,0.8)",
+    "opacity:0.94",
+  ].join(";");
+  document.body.appendChild(ghost);
+  ghostEl = ghost;
+  ghostShiftX = event.clientX - rect.left;
+  ghostShiftY = event.clientY - rect.top;
+}
+
+function moveGhost(event: PointerEvent) {
+  if (!ghostEl) return;
+  ghostEl.style.left = `${event.clientX - ghostShiftX}px`;
+  ghostEl.style.top = `${event.clientY - ghostShiftY}px`;
+}
+
+function removeGhost() {
+  ghostEl?.remove();
+  ghostEl = null;
+}
+
 function trackPointer(event: PointerEvent) {
   if (dragFrom.value === null) return;
   event.preventDefault();
+  moveGhost(event);
   const element = document.elementFromPoint(event.clientX, event.clientY);
   const row = element?.closest<HTMLElement>("[data-track-index]");
   const index = Number(row?.dataset.trackIndex);
@@ -1523,6 +1570,7 @@ function cancelReorder() {
 function clearReorder() {
   dragFrom.value = null;
   dragOver.value = null;
+  removeGhost();
   document.body.classList.remove("track-reordering");
   window.removeEventListener("pointermove", trackPointer);
   window.removeEventListener("pointerup", finishReorder);

@@ -28,7 +28,7 @@
       <div data-mini-meta class="flex min-w-0 flex-auto flex-col gap-[2px]">
         <Transition name="pb-swap" mode="out-in">
           <div :key="displayTitle" class="text-[color:var(--fg)] text-[calc(13px*var(--text-scale,1))] font-semibold leading-[1.25] truncate">
-            {{ displayTitle }}<AiTag :show="isAiCurrent" />
+            <TrackTitle v-if="player.current" :track="player.current" /><template v-else>{{ displayTitle }}</template><AiTag :show="isAiCurrent" />
           </div>
         </Transition>
         <div class="text-[color:var(--fg-dim)] text-[calc(11.5px*var(--text-scale,1))] leading-[1.25] truncate" data-no-drag>
@@ -254,6 +254,7 @@ import { useRouter } from "vue-router";
 import AiTag from "@/components/common/AiTag.vue";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import { useVisualizer } from "@/composables/useVisualizer";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";

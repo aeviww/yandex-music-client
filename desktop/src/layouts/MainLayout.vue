@@ -358,7 +358,7 @@
             <Icon v-else name="mingcute:music-line" :size="30" class="text-[color:var(--fg-faint)]" />
           </div>
           <div class="q-mt-md text-[calc(15px*var(--text-scale,1))] font-semibold truncate">
-            {{ player.current.title }}
+            <TrackTitle :track="player.current" />
           </div>
           <div class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))] overflow-hidden [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical]">
             <ArtistsLine :artists="player.current.artists" :limit="2" />
@@ -435,7 +435,7 @@
                     : ''
                 "
               >
-                {{ item.track.title }}
+                <TrackTitle :track="item.track" />
               </div>
               <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">
                 <ArtistsLine :artists="item.track.artists" :limit="2" />
@@ -508,6 +508,7 @@ import {
 import { useRoute, useRouter } from "vue-router";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import FullscreenPlayer from "@/components/player/FullscreenPlayer.vue";
 import LyricsPanel from "@/components/player/LyricsPanel.vue";
 import MiniPlayer from "@/components/player/MiniPlayer.vue";

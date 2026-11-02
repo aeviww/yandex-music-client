@@ -106,12 +106,12 @@
 
             <div class="flex-1 min-w-0">
               <div class="text-[13.5px] font-medium leading-[1.25] truncate">
-                {{ track.title }}
+                <TrackTitle :track="track" />
               </div>
               <div
                 class="mt-[1px] text-[12px] leading-[1.25] text-[color:var(--fg-dim)] truncate"
               >
-                {{ artistNames(track.artists) }}
+                <ArtistsLine :artists="track.artists" :limit="2" />
               </div>
             </div>
 
@@ -133,6 +133,8 @@
             >
               {{ formatDuration(track.preview_duration_ms ?? track.duration_ms) }}
             </div>
+
+            <TrackMenu :context-menu="true" :track="track" />
           </div>
         </div>
       </div>
@@ -156,8 +158,11 @@
 import { computed, ref, watch } from "vue";
 import { api } from "@/api/client";
 import type { Trailer } from "@/api/types";
+import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import { trailerDialog } from "@/lib/dialogs";
-import { artistNames, formatDuration } from "@/lib/format";
+import { formatDuration } from "@/lib/format";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
 
@@ -241,7 +246,7 @@ function playAt(index: number) {
 
 function playFull() {
   const action = trailerDialog.playFull;
-  player.stopPreview();
+  player.stopPreview({ restore: false });
   trailerDialog.open = false;
   if (action) void action();
 }

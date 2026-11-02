@@ -174,7 +174,7 @@
               <span
                 class="overflow-hidden text-[13px] font-[540] text-ellipsis whitespace-nowrap"
                 :class="item.index === player.index ? '!text-[color:var(--accent)] font-[640]' : 'text-[color:var(--fg)]'"
-              >{{ item.track.title }}</span>
+              ><TrackTitle :track="item.track" /></span>
               <span class="overflow-hidden text-[color:var(--fg-faint)] text-[11.5px] text-ellipsis whitespace-nowrap">
                 <ArtistsLine :artists="item.track.artists" :limit="2" />
               </span>
@@ -211,6 +211,7 @@ import { Notify } from "quasar";
 import type { StationInfo, Track, WheelItem } from "@/api/types";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import { readCache, swr } from "@/lib/cache";
 import { usePlayerStore } from "@/stores/player/index";
 

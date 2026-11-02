@@ -103,7 +103,7 @@
               <Icon v-else name="mingcute:music-line" :size="15" class="text-[color:var(--fg-faint)]" />
             </div>
             <div class="col" style="min-width: 0" @click="playAll(i)">
-              <div class="truncate text-[calc(13px*var(--text-scale,1))]">{{ item.title }}</div>
+              <div class="truncate text-[calc(13px*var(--text-scale,1))]"><TrackTitle :track="item" /></div>
               <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">
                 <ArtistsLine :artists="item.artists" :limit="2" />
               </div>
@@ -138,6 +138,7 @@
               <Icon name="mingcute:more-2-fill" :size="17" />
               <TrackMenu :track="item" />
             </div>
+            <TrackMenu :context-menu="true" :track="item" />
           </div>
         </template>
       </LazyTracks>
@@ -154,6 +155,7 @@ import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import FilterSelect from "@/components/common/FilterSelect.vue";
 import LazyTracks from "@/components/common/LazyTracks.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import { api } from "@/api/client";
 import type { Track } from "@/api/types";
 import { readCache, writeCache } from "@/lib/cache";

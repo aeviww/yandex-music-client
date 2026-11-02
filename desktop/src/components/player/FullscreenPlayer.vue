@@ -134,7 +134,7 @@
 
           <Transition name="fs-swap" mode="out-in">
             <div :key="player.current.id" class="max-w-[min(90vw,620px)] text-center">
-              <div class="truncate text-[26px] font-[650] tracking-[-0.01em]">{{ player.current.title }}</div>
+              <div class="truncate text-[26px] font-[650] tracking-[-0.01em]"><TrackTitle :track="player.current" /></div>
               <div class="truncate mt-[6px] text-[14px] text-[color:rgba(255,255,255,0.62)]">
                 <ArtistsLine :artists="player.current.artists" :limit="3" />
               </div>
@@ -193,7 +193,7 @@
                   />
                 </div>
                 <div class="col" style="min-width: 0">
-                  <div class="truncate text-[calc(13px*var(--text-scale,1))]">{{ item.track.title }}</div>
+                  <div class="truncate text-[calc(13px*var(--text-scale,1))]"><TrackTitle :track="item.track" /></div>
                   <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">
                     <ArtistsLine :artists="item.track.artists" :limit="2" />
                   </div>
@@ -207,6 +207,7 @@
                   "
                   :size="13"
                 />
+                <TrackMenu :context-menu="true" :track="item.track" />
               </div>
               <div v-if="!queueWindow.length" class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))] q-pa-md">
                 Очередь пуста
@@ -224,6 +225,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import { formatDuration } from "@/lib/format";
 import {
   isNativeFullscreen,

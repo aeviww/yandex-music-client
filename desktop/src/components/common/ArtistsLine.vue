@@ -1,19 +1,20 @@
 <template>
   <span class="min-w-0">
-    <span v-for="(a, i) in shown" :key="a.id || a.name">
-      <span
-        class="cursor-pointer hover:text-[color:var(--accent)] hover:underline"
-        @click.stop="open(a.id)"
-        >{{ a.name }}</span
-      >
-      <span v-if="i < shown.length - 1">, </span>
-    </span>
     <span
-      v-if="hidden > 0"
-      class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors duration-[120ms] ease-[ease] hover:text-[color:var(--fg)]"
+      v-if="artists.length === 1"
+      class="cursor-pointer hover:text-[color:var(--accent)] hover:underline"
+      @click.stop="open(artists[0]?.id)"
+      >{{ artists[0]?.name }}</span
+    >
+    <span
+      v-else-if="artists.length > 1"
+      class="cursor-pointer hover:text-[color:var(--accent)] hover:underline"
       @click.stop
     >
-      &nbsp;ещё {{ hidden }}
+      {{ shownNames }}
+      <span v-if="hidden > 0" class="text-[color:var(--fg-faint)]"
+        >&nbsp;ещё {{ hidden }}</span
+      >
       <q-menu
         class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
         anchor="bottom start"
@@ -29,7 +30,7 @@
             :key="a.id || a.name"
             class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
             v-close-popup
-            @click="open(a.id)"
+            @click.stop="open(a.id)"
           >
             <div
               class="cover cover-round w-[26px] h-[26px] rounded-full flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:block [&_img]:w-full [&_img]:h-full [&_img]:object-cover"
@@ -70,8 +71,13 @@ const props = withDefaults(
 
 const router = useRouter();
 
-const artists = computed(() => props.artists);
 const shown = computed(() => props.artists.slice(0, props.limit));
+const shownNames = computed(() =>
+  shown.value
+    .map((artist) => artist.name)
+    .filter(Boolean)
+    .join(", "),
+);
 const hidden = computed(() => Math.max(0, props.artists.length - props.limit));
 
 const avatars = ref<Record<string, string | null>>({});

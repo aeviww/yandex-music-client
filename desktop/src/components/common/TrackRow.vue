@@ -20,10 +20,11 @@
   >
     <div
       v-if="reorderable"
-      class="w-[26px] flex items-center justify-center text-transparent cursor-grab flex-none touch-none active:cursor-grabbing group-hover:text-[color:var(--fg-faint)]"
+      class="w-[26px] flex items-center justify-center flex-none touch-none cursor-grab text-[color:var(--fg-faint)] opacity-[0.7] transition-[color,opacity] duration-[120ms] hover:text-[color:var(--fg)] hover:opacity-[1] active:cursor-grabbing"
+      title="Перетащить трек"
       @pointerdown.stop.prevent="emit('reorderStart', index, $event)"
     >
-      <Icon name="mingcute:dots-line" :size="16" />
+      <Icon name="mingcute:dots-line" :size="17" />
     </div>
 
     <button
@@ -41,15 +42,17 @@
       <Icon v-if="selected" name="mingcute:check-line" :size="13" />
     </button>
 
-    <div style="width: 20px; text-align: center; flex: 0 0 auto">
+    <div
+      class="relative flex h-[20px] w-[20px] flex-none items-center justify-center"
+    >
       <div
         v-if="showIndex"
-        class="text-[color:var(--fg-faint)] text-[calc(13px*var(--text-scale,1))] group-hover:hidden"
+        class="text-[color:var(--fg-faint)] text-[calc(13px*var(--text-scale,1))] transition-opacity duration-150 group-hover:opacity-0"
       >
         {{ index + 1 }}
       </div>
       <div
-        class="hidden cursor-pointer text-[color:var(--fg)] transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.78] group-hover:flex"
+        class="absolute inset-0 flex cursor-pointer items-center justify-center text-[color:var(--fg)] opacity-0 transition-[opacity,transform] duration-150 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:opacity-100 active:scale-[0.78]"
         @click.stop="onPlayClick"
       >
         <Icon
@@ -80,10 +83,10 @@
 
     <div class="col" style="min-width: 0">
       <div class="flex items-center gap-[6px] min-w-0">
-        <span
+        <TrackTitle
+          :track="track"
           class="truncate text-[calc(13px*var(--text-scale,1))] font-medium"
-          >{{ displayTitle }}</span
-        >
+        />
         <AiTag :show="isAi" />
 
         <Icon
@@ -195,6 +198,7 @@ import { useRouter } from "vue-router";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
 import AiTag from "@/components/common/AiTag.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
+import TrackTitle from "@/components/common/TrackTitle.vue";
 import type { Track } from "@/api/types";
 import { formatDuration } from "@/lib/format";
 import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";
@@ -255,7 +259,6 @@ const library = useLibraryStore();
 
 const primaryArtistId = computed(() => props.track.artists?.[0]?.id ?? null);
 const isAi = computed(() => isAiArtist(primaryArtistId.value));
-const displayTitle = computed(() => props.track.title);
 watch(
   primaryArtistId,
   (id) => {

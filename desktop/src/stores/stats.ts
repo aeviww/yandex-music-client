@@ -24,6 +24,8 @@ export interface RankRow {
   cover: string | null;
   plays: number;
   seconds: number;
+  artistId: string;
+  albumId: string | null;
 }
 
 function startOfDay(value: number | Date): number {
@@ -126,6 +128,8 @@ export const useStatsStore = defineStore("stats", {
               cover: e.cover,
               plays: counts(e.seconds),
               seconds: e.seconds,
+              artistId: e.artistId,
+              albumId: e.albumId,
             });
           }
         }
@@ -155,6 +159,8 @@ export const useStatsStore = defineStore("stats", {
               cover: e.cover,
               plays: counts(e.seconds),
               seconds: e.seconds,
+              artistId: e.artistId,
+              albumId: null,
             });
           }
         }

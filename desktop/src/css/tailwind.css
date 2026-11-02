@@ -228,6 +228,13 @@ body {
   }
 }
 
+/* Reordering tracks: keep grabbing cursor and disable text selection */
+body.track-reordering,
+body.track-reordering * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
 /* Route transitions */
 .page-enter-active {
   transition:
