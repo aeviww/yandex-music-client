@@ -31,7 +31,7 @@ export function sourceOrder(mode: LyricsSource): LyricsOrigin[] {
     case "yandex":
       return ["yandex"];
     default:
-      return ["lrclib", "genius"];
+      return ["lrclib", "yandex", "genius"];
   }
 }
 

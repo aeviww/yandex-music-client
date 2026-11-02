@@ -174,7 +174,8 @@
       </div>
       <div class="max-w-[380px] text-[color:rgba(255,255,255,0.46)] text-[12.5px] leading-[1.5]">
         Можно поискать в другом источнике: LRCLIB даёт строки с таймингами,
-        Genius - полный текст с авторами.
+        Яндекс - официальный текст с таймингами или без, Genius - полный текст с
+        авторами.
       </div>
       <div class="flex flex-wrap justify-center gap-[6px] mt-[8px]">
         <button
@@ -183,6 +184,13 @@
           @click="choose('lrclib', true)"
         >
           Искать в LRCLIB
+        </button>
+        <button
+          type="button"
+          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-full bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
+          @click="choose('yandex', true)"
+        >
+          Искать в Яндексе
         </button>
         <button
           type="button"
@@ -588,7 +596,7 @@ import { useUiStore } from "@/stores/ui/index";
 
 type Credit = { id: number; name: string; role: string; image: string };
 
-type SourcePick = "auto" | "lrclib" | "genius";
+type SourcePick = "auto" | "lrclib" | "genius" | "yandex";
 
 const player = usePlayerStore();
 const router = useRouter();
@@ -815,6 +823,7 @@ function partLabel(text: string): string {
 const sources: Array<{ id: SourcePick; label: string }> = [
   { id: "auto", label: "Авто" },
   { id: "lrclib", label: "LRCLIB" },
+  { id: "yandex", label: "Яндекс" },
   { id: "genius", label: "Genius" },
 ];
 
@@ -824,8 +833,9 @@ const pick = computed<SourcePick>(
 
 const searchingIn = computed(() => {
   if (pick.value === "lrclib") return "LRCLIB";
+  if (pick.value === "yandex") return "Яндексе";
   if (pick.value === "genius") return "Genius";
-  return "LRCLIB и Genius";
+  return "LRCLIB, Яндексе и Genius";
 });
 
 const originTag = computed(() => {

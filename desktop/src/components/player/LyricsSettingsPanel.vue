@@ -400,8 +400,8 @@
         </button>
       </div>
       <div class="mt-[2px] text-[color:rgba(255,255,255,0.34)] text-[10.5px] leading-[1.45]">
-        Авто: сначала LRCLIB (синхрон), потом Genius. Разборы с Genius
-        подтягиваются к синхронному тексту LRCLIB. Кнопки вверху меняют источник
+        Авто: сначала LRCLIB (синхрон), потом Яндекс, затем Genius. Разборы с
+        Genius подтягиваются к синхронному тексту. Кнопки вверху меняют источник
         только для текущего трека.
       </div>
     </div>
@@ -670,6 +670,7 @@ const marks: Array<{ id: LyricsAnnotationMark; label: string }> = [
 const lyricsSources: Array<{ id: LyricsSource; label: string }> = [
   { id: "auto", label: "Авто" },
   { id: "lrclib", label: "LRCLIB" },
+  { id: "yandex", label: "Яндекс" },
   { id: "genius", label: "Genius" },
 ];
 
