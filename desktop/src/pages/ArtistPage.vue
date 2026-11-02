@@ -1,5 +1,7 @@
 <template>
-  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
+  <q-page
+    class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden"
+  >
     <q-scroll-area class="flex-auto min-h-0" @scroll="onScroll">
       <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
         <div v-if="loading" class="flex flex-center" style="height: 300px">
@@ -25,7 +27,12 @@
                 decoding="async"
                 :src="artist.cover_url"
               />
-              <Icon v-else name="mingcute:user-2-line" :size="56" class="text-[color:var(--fg-faint)]" />
+              <Icon
+                v-else
+                name="mingcute:user-2-line"
+                :size="56"
+                class="text-[color:var(--fg-faint)]"
+              />
               <div v-if="coverImages.length" class="cover-zoom">
                 <Icon name="mingcute:square-line" :size="22" />
               </div>
@@ -34,13 +41,19 @@
               </div>
             </div>
 
-            <div class="flex-1 min-w-0 pb-[4px] max-[1024px]:w-full max-[1024px]:pb-0">
+            <div
+              class="flex-1 min-w-0 pb-[4px] max-[1024px]:w-full max-[1024px]:pb-0"
+            >
               <div class="text-[12px] text-[color:var(--fg-dim)]">Артист</div>
-              <div class="text-[clamp(24px,_3.4vw,_44px)] leading-[1.06] font-extrabold tracking-[-0.025em] mt-[6px] mx-0 mb-[10px] break-words max-[1024px]:mt-[4px] max-[1024px]:mx-0 max-[1024px]:mb-[8px]">
+              <div
+                class="text-[clamp(24px,_3.4vw,_44px)] leading-[1.06] font-extrabold tracking-[-0.025em] mt-[6px] mx-0 mb-[10px] break-words max-[1024px]:mt-[4px] max-[1024px]:mx-0 max-[1024px]:mb-[8px]"
+              >
                 {{ artist.name }}<AiTag :show="isAiArtistPage" />
               </div>
 
-              <div class="flex items-baseline flex-wrap gap-y-0 gap-x-[6px] text-[13px] text-[color:var(--fg-dim)] min-w-0 max-[760px]:text-[12px] [&>span]:whitespace-nowrap">
+              <div
+                class="flex items-baseline flex-wrap gap-y-0 gap-x-[6px] text-[13px] text-[color:var(--fg-dim)] min-w-0 max-[760px]:text-[12px] [&>span]:whitespace-nowrap"
+              >
                 <span v-if="artist.listeners">
                   {{ formatCount(artist.listeners) }}
                   {{
@@ -57,10 +70,16 @@
                   · {{ formatCount(artist.likes) }}
                   {{ pluralWord(artist.likes, "лайк", "лайка", "лайков") }}
                 </span>
-                <span v-if="artist.tracks_count" class="text-[color:var(--fg-faint)]">
+                <span
+                  v-if="artist.tracks_count"
+                  class="text-[color:var(--fg-faint)]"
+                >
                   · {{ plural(artist.tracks_count, "трек", "трека", "треков") }}
                 </span>
-                <span v-if="artist.albums_count" class="text-[color:var(--fg-faint)]">
+                <span
+                  v-if="artist.albums_count"
+                  class="text-[color:var(--fg-faint)]"
+                >
                   ·
                   {{
                     plural(artist.albums_count, "альбом", "альбома", "альбомов")
@@ -68,7 +87,9 @@
                 </span>
               </div>
 
-              <div class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap">
+              <div
+                class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap"
+              >
                 <button
                   class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[8px] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
@@ -89,7 +110,11 @@
                   <span>Перемешать</span>
                 </button>
 
-                <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="playArtistWave">
+                <button
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  type="button"
+                  @click="playArtistWave"
+                >
                   <Icon name="mingcute:wave-line" :size="15" />
                   <span>Волна по артисту</span>
                 </button>
@@ -103,10 +128,21 @@
                   :play-full="() => playPopular(0)"
                 />
 
-                <button class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[8px]" type="button" title="Ещё">
+                <button
+                  class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[8px]"
+                  type="button"
+                  title="Ещё"
+                >
                   <Icon name="mingcute:more-2-fill" :size="18" />
-                  <q-menu class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]" anchor="bottom left" self="top left">
-                    <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 224px">
+                  <q-menu
+                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    anchor="bottom left"
+                    self="top left"
+                  >
+                    <div
+                      class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                      style="min-width: 224px"
+                    >
                       <div
                         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         :class="{ disabled: !popular.length }"
@@ -142,7 +178,9 @@
                 </button>
               </div>
 
-              <div class="flex flex-wrap mt-[10px] gap-[6px] max-[900px]:mt-[8px]">
+              <div
+                class="flex flex-wrap mt-[10px] gap-[6px] max-[900px]:mt-[8px]"
+              >
                 <button
                   v-if="normalizedLinks.length"
                   class="chip-menu inline-flex items-center h-[30px] px-[14px] py-0 rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
@@ -152,8 +190,14 @@
                   <span class="chip-count">{{ normalizedLinks.length }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
-                  <q-menu class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]" anchor="bottom left" self="top left">
-                    <div class="links-menu p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden">
+                  <q-menu
+                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    anchor="bottom left"
+                    self="top left"
+                  >
+                    <div
+                      class="links-menu p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                    >
                       <template v-if="officialLinks.length">
                         <div class="menu-label">Официальные</div>
                         <div
@@ -206,15 +250,27 @@
           </p>
 
           <template v-if="popular.length">
-            <div class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]">
-              <div class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]">Популярное</div>
-              <button class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]" type="button" @click="openAllTracks">
+            <div
+              class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]"
+            >
+              <div
+                class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]"
+              >
+                Популярное
+              </div>
+              <button
+                class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
+                type="button"
+                @click="openAllTracks"
+              >
                 <span>Все треки</span>
                 <Icon name="mingcute:right-line" :size="15" />
               </button>
             </div>
 
-            <div class="flex items-center gap-[14px] h-[32px] px-[12px] py-0 text-[11px] font-semibold tracking-[0.06em] uppercase text-[color:var(--fg-faint)] border-b border-[var(--line)]">
+            <div
+              class="flex items-center gap-[14px] h-[32px] px-[12px] py-0 text-[11px] font-semibold tracking-[0.06em] uppercase text-[color:var(--fg-faint)] border-b border-[var(--line)]"
+            >
               <div style="width: 20px; text-align: center">#</div>
               <div style="width: 38px" />
               <div class="col">Название</div>
@@ -231,15 +287,32 @@
           </template>
 
           <template v-if="artist.albums.length">
-            <div class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]">
-              <div class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]">Альбомы</div>
+            <div
+              class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]"
+            >
+              <div
+                class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]"
+              >
+                Альбомы
+              </div>
               <div class="flex items-center gap-[8px] ml-auto">
-                <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" title="Сортировка">
+                <button
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  type="button"
+                  title="Сортировка"
+                >
                   <Icon name="mingcute:filter-line" :size="14" />
                   <span>{{ albumSortLabel }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
-                  <q-menu class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]" anchor="bottom right" self="top right">
-                    <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 190px">
+                  <q-menu
+                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    anchor="bottom right"
+                    self="top right"
+                  >
+                    <div
+                      class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                      style="min-width: 190px"
+                    >
                       <div
                         v-for="opt in albumSortOptions"
                         :key="opt.id"
@@ -248,7 +321,11 @@
                         @click="albumSort = opt.id"
                       >
                         <Icon
-                          :name="albumSort === opt.id ? 'mingcute:check-line' : 'mingcute:pencil-line'"
+                          :name="
+                            albumSort === opt.id
+                              ? 'mingcute:check-line'
+                              : 'mingcute:pencil-line'
+                          "
                           :size="16"
                         />
                         <span>{{ opt.label }}</span>
@@ -262,9 +339,10 @@
                   :title="albumDir === 'asc' ? 'По возрастанию' : 'По убыванию'"
                   @click="albumDir = albumDir === 'asc' ? 'desc' : 'asc'"
                 >
-                  <span class="text-[calc(13px*var(--text-scale,1))] font-semibold">{{
-                    albumDir === "asc" ? "↑" : "↓"
-                  }}</span>
+                  <span
+                    class="text-[calc(13px*var(--text-scale,1))] font-semibold"
+                    >{{ albumDir === "asc" ? "↑" : "↓" }}</span
+                  >
                 </button>
               </div>
             </div>
@@ -280,14 +358,21 @@
                   style="width: 168px"
                   @click="router.push(`/album/${album.id}`)"
                 >
-                  <div class="cover relative w-full aspect-square overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block rounded-[10px]">
+                  <div
+                    class="cover relative w-full aspect-square overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block rounded-[10px]"
+                  >
                     <img
                       v-if="album.cover_url"
                       loading="lazy"
                       decoding="async"
                       :src="album.cover_url"
                     />
-                    <Icon v-else name="mingcute:album-line" :size="26" class="text-[color:var(--fg-faint)]" />
+                    <Icon
+                      v-else
+                      name="mingcute:album-line"
+                      :size="26"
+                      class="text-[color:var(--fg-faint)]"
+                    />
 
                     <div
                       v-if="album.id === latestAlbumId"
@@ -306,13 +391,26 @@
                     </button>
                   </div>
 
-                  <div class="q-mt-sm text-[calc(13px*var(--text-scale,1))] font-medium truncate">
+                  <div
+                    class="q-mt-sm text-[calc(13px*var(--text-scale,1))] font-medium truncate"
+                  >
                     {{ album.title }}
                   </div>
-                  <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))]">{{ album.year || "" }}</div>
+                  <div
+                    class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))]"
+                  >
+                    {{ album.year || "" }}
+                  </div>
 
-                  <q-menu context-menu touch-position class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]">
-                    <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 200px">
+                  <q-menu
+                    context-menu
+                    touch-position
+                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                  >
+                    <div
+                      class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
+                      style="min-width: 200px"
+                    >
                       <div
                         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
@@ -349,7 +447,12 @@
           />
         </template>
 
-        <div v-else class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">Не удалось загрузить артиста</div>
+        <div
+          v-else
+          class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]"
+        >
+          Не удалось загрузить артиста
+        </div>
       </div>
     </q-scroll-area>
   </q-page>
@@ -646,14 +749,18 @@ onMounted(load);
 
 .chip-menu {
   font: inherit;
-  @apply inline-flex items-center gap-[6px] border border-[color:var(--line)] bg-transparent text-[color:var(--fg)] text-[12px] normal-case cursor-pointer;
-  transition:
-    background 0.14s ease,
-    border-color 0.14s ease;
+  @apply inline-flex items-center gap-[6px] border-0 outline-none bg-transparent text-[color:var(--fg)] text-[12px] normal-case cursor-pointer;
+  transition: background 0.14s ease;
 }
 .chip-menu:hover {
-  @apply bg-[var(--hover)] border-[color:var(--fg-dim)];
+  @apply bg-[var(--hover)];
 }
+.chip-menu:focus,
+.chip-menu:focus-visible,
+.chip-menu:active {
+  @apply outline-none;
+}
+
 .chip-count {
   @apply px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold;
 }
