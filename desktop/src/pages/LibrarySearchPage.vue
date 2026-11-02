@@ -28,31 +28,11 @@
           />
 
           <div class="flex flex-wrap items-center gap-[8px]">
-            <select
-              v-model="source"
-              class="!h-[32px] min-w-[150px] max-w-[220px] flex items-center gap-[8px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
-            >
-              <option value="">Все источники</option>
-              <option v-for="s in sources" :key="s" :value="s">{{ s }}</option>
-            </select>
+            <FilterSelect v-model="source" :options="sourceOptions" />
 
-            <select
-              v-model="artist"
-              class="!h-[32px] min-w-[150px] max-w-[220px] flex items-center gap-[8px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
-            >
-              <option value="">Все исполнители</option>
-              <option v-for="a in artists" :key="a" :value="a">{{ a }}</option>
-            </select>
+            <FilterSelect v-model="artist" :options="artistOptions" />
 
-            <select
-              v-model="sort"
-              class="!h-[32px] min-w-[150px] max-w-[220px] flex items-center gap-[8px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
-            >
-              <option value="title">По названию</option>
-              <option value="artist">По исполнителю</option>
-              <option value="shortest">Сначала короткие</option>
-              <option value="longest">Сначала длинные</option>
-            </select>
+            <FilterSelect v-model="sort" :options="sortOptions" />
 
             <label class="flex flex-col gap-[2px] min-w-[190px]">
               <span class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
@@ -171,6 +151,7 @@ import { computed, onMounted, ref } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import FilterSelect from "@/components/common/FilterSelect.vue";
 import LazyTracks from "@/components/common/LazyTracks.vue";
 import TrackMenu from "@/components/common/TrackMenu.vue";
 import { api } from "@/api/client";
@@ -242,6 +223,23 @@ const artists = computed(() =>
     .sort((a, b) => a.localeCompare(b, "ru"))
     .slice(0, 400),
 );
+
+const sourceOptions = computed(() => [
+  { value: "", label: "Все источники" },
+  ...sources.value.map((value) => ({ value, label: value })),
+]);
+
+const artistOptions = computed(() => [
+  { value: "", label: "Все исполнители" },
+  ...artists.value.map((value) => ({ value, label: value })),
+]);
+
+const sortOptions = [
+  { value: "title", label: "По названию" },
+  { value: "artist", label: "По исполнителю" },
+  { value: "shortest", label: "Сначала короткие" },
+  { value: "longest", label: "Сначала длинные" },
+];
 
 const results = computed(() => {
   const text = query.value.trim().toLowerCase();
