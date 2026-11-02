@@ -478,6 +478,7 @@
 
     <q-footer
       v-if="!panels.hidden && !panels.mini"
+      :class="ui.settings.playerEditMode ? '!z-[2600]' : ''"
       style="background: var(--bg); border-top: 1px solid var(--line)"
     >
       <PlayerBar />

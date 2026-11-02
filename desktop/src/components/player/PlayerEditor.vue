@@ -1,35 +1,33 @@
 <template>
   <div
-    class="pe-panel absolute bottom-[calc(100%_+_10px)] left-1/2 z-30 w-[min(940px,calc(100vw_-_32px))] px-[14px] pt-[12px] pb-[14px] border border-[color:var(--line)] rounded-[14px] bg-[var(--surface-2)] shadow-[var(--shadow-strong,0_22px_60px_rgba(0,0,0,0.5))] -translate-x-1/2"
+    class="pe-panel absolute bottom-[calc(100%_+_8px)] left-1/2 z-30 w-[min(880px,calc(100vw_-_32px))] -translate-x-1/2 rounded-[16px] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface-2)_94%,transparent)] px-[13px] pt-[10px] pb-[11px] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
     @contextmenu.stop.prevent
     @pointerdown.stop
   >
-    <div
-      class="flex items-center justify-between gap-[14px] pb-[10px] border-b border-[color:var(--line)]"
-    >
-      <h2
-        class="m-0 text-[color:var(--fg)] text-[13px] font-[620] leading-[1.2]"
+    <div class="flex items-center justify-between gap-[12px] pb-[9px]">
+      <span
+        class="text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.14em] uppercase"
       >
-        Редактор плеера
-      </h2>
-      <div class="flex flex-[0_0_auto] gap-[6px]">
+        Плеер
+      </span>
+      <div class="flex items-center gap-[2px]">
         <button
           type="button"
-          class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          class="h-[24px] px-[8px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-faint)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           @click="ui.resetPlayerLayout()"
         >
           Сбросить
         </button>
         <button
           type="button"
-          class="px-[11px] py-[5px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg)] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          class="h-[24px] px-[8px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           @click="ui.cancelEdit()"
         >
           Отмена
         </button>
         <button
           type="button"
-          class="!border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] px-[11px] py-[5px] border rounded-[8px] text-[11.5px] cursor-pointer transition-[background] duration-[140ms] ease-[ease] hover:bg-[var(--hover)]"
+          class="h-[24px] px-[11px] border-0 rounded-[7px] bg-[var(--accent)] text-[color:#fff] text-[11px] font-[620] cursor-pointer transition-[filter] duration-[120ms] hover:brightness-110"
           @click="ui.finishEdit()"
         >
           Готово
@@ -38,16 +36,11 @@
     </div>
 
     <div
-      class="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-x-[20px] gap-y-[10px] pt-[12px] max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))]"
+      class="grid grid-cols-[1fr_1fr_minmax(150px,auto)] gap-x-[20px] gap-y-[8px] max-[900px]:grid-cols-[1fr_1fr]"
     >
-      <div class="[&>label]:mb-[9px]">
-        <div
-          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
-        >
-          Размеры
-        </div>
+      <div class="[&>label]:mb-[6px]">
         <EditRange
-          label="Высота плеера"
+          label="Высота"
           suffix=" px"
           :min="60"
           :max="140"
@@ -80,14 +73,9 @@
         />
       </div>
 
-      <div class="[&>label]:mb-[9px]">
-        <div
-          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
-        >
-          Геометрия
-        </div>
+      <div class="[&>label]:mb-[6px]">
         <EditRange
-          label="Поля по краям"
+          label="Поля"
           suffix=" px"
           :min="0"
           :max="48"
@@ -120,19 +108,16 @@
         />
       </div>
 
-      <div>
-        <div
-          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
-        >
-          На плеере
-        </div>
+      <div
+        class="flex flex-col justify-center gap-[1px] max-[900px]:col-span-2 max-[900px]:flex-row max-[900px]:flex-wrap"
+      >
         <EditSwitch
-          label="Время трека"
+          label="Время"
           :model-value="s.playerShowTimes"
           @update:model-value="ui.set('playerShowTimes', $event)"
         />
         <EditSwitch
-          label="Обложка трека"
+          label="Обложка"
           :model-value="s.showPlayerArtwork"
           @update:model-value="ui.set('showPlayerArtwork', $event)"
         />
@@ -142,40 +127,34 @@
           @update:model-value="ui.set('playerVisualizer', $event)"
         />
       </div>
+    </div>
 
-      <div>
-        <div
-          class="mb-[8px] text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.08em] uppercase"
-        >
-          Скрытые кнопки
-        </div>
-        <div
-          class="flex items-start flex-wrap gap-[5px] min-h-[74px] p-[8px] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_40%,transparent)] rounded-[10px] transition-[background] duration-[140ms] ease-[ease]"
-          :class="{
-            'bg-[color-mix(in_srgb,var(--accent)_12%,transparent)]': trayOver,
-          }"
-          @dragover.prevent="trayOver = true"
-          @dragleave="trayOver = false"
-          @drop.prevent="onDropHide"
-        >
-          <span
-            v-for="id in hidden"
-            :key="id"
-            class="inline-flex items-center gap-[5px] px-[9px] py-[4px] border border-[color:var(--line)] rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[11px] cursor-grab hover:text-[color:var(--fg)]"
-            draggable="true"
-            @dragstart="onDragStart(id, $event)"
-          >
-            <Icon :name="iconOf(id)" :size="13" />
-            {{ labelOf(id) }}
-          </span>
-          <span
-            v-if="!hidden.length"
-            class="text-[color:var(--fg-faint)] text-[11px] leading-[1.4]"
-          >
-            Перетащи сюда кнопку с плеера, чтобы убрать её
-          </span>
-        </div>
-      </div>
+    <div
+      class="mt-[9px] flex min-h-[32px] items-center gap-[5px] rounded-[9px] border border-dashed border-[color:var(--line)] px-[6px] py-[4px] transition-[background,border-color] duration-[140ms]"
+      :class="{
+        'border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]':
+          trayOver,
+      }"
+      @dragover.prevent="trayOver = true"
+      @dragleave="trayOver = false"
+      @drop.prevent="onDropHide"
+    >
+      <Icon
+        v-if="!hidden.length"
+        name="mingcute:eye-close-line"
+        :size="14"
+        class="ml-[2px] text-[color:var(--fg-faint)] opacity-[0.7]"
+      />
+      <span
+        v-for="id in hidden"
+        :key="id"
+        class="inline-flex items-center gap-[4px] px-[7px] py-[3px] rounded-[6px] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[10.5px] cursor-grab hover:text-[color:var(--fg)]"
+        draggable="true"
+        @dragstart="onDragStart(id, $event)"
+      >
+        <Icon :name="iconOf(id)" :size="12" />
+        {{ labelOf(id) }}
+      </span>
     </div>
   </div>
 </template>
