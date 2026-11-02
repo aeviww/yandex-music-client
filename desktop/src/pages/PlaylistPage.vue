@@ -105,6 +105,16 @@
               <span>Перемешать</span>
             </button>
 
+            <TrailerButton
+              kind="playlist"
+              :id="String(kindNumber)"
+              :uid="ownerUid"
+              heading="Трейлер плейлиста"
+              :subtitle="title"
+              :cover="cover"
+              :play-full="() => playFrom(0)"
+            />
+
             <button
               v-if="downloading"
               class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--accent)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--accent)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
@@ -860,6 +870,7 @@ import {
 import { Notify } from "quasar";
 import { useRoute, useRouter } from "vue-router";
 import TrackRow from "@/components/common/TrackRow.vue";
+import TrailerButton from "@/components/common/TrailerButton.vue";
 import { api } from "@/api/client";
 import type { Playlist, Track } from "@/api/types";
 import { artistNames, formatDuration, plural } from "@/lib/format";
@@ -938,6 +949,13 @@ const otherPlaylists = computed(() =>
   library.sortedPlaylists.filter(
     (playlist) => String(playlist.kind) !== String(props.kind),
   ),
+);
+
+const ownerUid = computed(
+  () =>
+    library.playlists.find(
+      (playlist) => String(playlist.kind) === String(props.kind),
+    )?.owner_uid ?? null,
 );
 
 const downloadLabel = computed(() => {

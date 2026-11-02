@@ -186,6 +186,31 @@ impl Yandex {
         track_id: &str,
         quality: &str,
     ) -> Result<StreamDto, String> {
+        if quality == "smart_preview" {
+            // Smart preview подписывается десктопным ключом, поэтому клиент
+            // обязательно должен быть десктопным (Android-клиент получает 403).
+            let codecs = "flac,aac,he-aac,mp3";
+            for client in MUSIC_CLIENTS {
+                match self
+                    .stream_file_info(track_id, "smart_preview", codecs, client)
+                    .await
+                {
+                    Ok(dto) => {
+                        Self::report(track_id, &dto);
+                        return Ok(dto);
+                    }
+                    Err(err) => println!(
+                        "[quality] track {track_id}: smart preview get-file-info ({client}) failed: {err}"
+                    ),
+                }
+            }
+            println!(
+                "[quality] track {track_id}: smart preview недоступен, играет обычный поток"
+            );
+            let dto = self.stream_legacy(track_id, "high", false).await?;
+            Self::report(track_id, &dto);
+            return Ok(dto);
+        }
         if quality == "lossless" {
             self.report_entitlements().await;
             let mut fallback: Option<StreamDto> = None;
@@ -542,3 +567,4 @@ impl Yandex {
         Err(error)
     }
 }
+

@@ -678,6 +678,63 @@ impl Yandex {
             .map(map_track)
             .ok_or_else(|| "Трек не найден".to_string())
     }
+
+    async fn trailer(&self, path: &str) -> Result<TrailerDto, String> {
+        let result = match self.get_result(path).await {
+            Ok(value) => value,
+            Err(err) if err.contains("404") => return Err("Трейлер не найден".to_string()),
+            Err(err) => return Err(err),
+        };
+
+        let title = result
+            .get("trailer")
+            .and_then(|trailer| trailer.get("title"))
+            .and_then(|value| value.as_str())
+            .or_else(|| result.get("title").and_then(|value| value.as_str()))
+            .unwrap_or("Трейлер")
+            .to_string();
+
+        let mut tracks = Vec::new();
+        if let Some(single) = result.get("track") {
+            if let Ok(track) = serde_json::from_value::<YTrack>(single.clone()) {
+                tracks.push(map_track(&track));
+            }
+        }
+        if let Some(list) = result
+            .get("trailer")
+            .and_then(|trailer| trailer.get("tracks"))
+            .and_then(|tracks| tracks.as_array())
+        {
+            for raw in list {
+                if let Ok(track) = serde_json::from_value::<YTrack>(raw.clone()) {
+                    tracks.push(map_track(&track));
+                }
+            }
+        }
+
+        if tracks.is_empty() {
+            return Err("Трейлер не найден".to_string());
+        }
+
+        Ok(TrailerDto { title, tracks })
+    }
+
+    pub async fn track_trailer(&self, track_id: &str) -> Result<TrailerDto, String> {
+        self.trailer(&format!("/tracks/{track_id}/trailer")).await
+    }
+
+    pub async fn album_trailer(&self, album_id: &str) -> Result<TrailerDto, String> {
+        self.trailer(&format!("/albums/{album_id}/trailer")).await
+    }
+
+    pub async fn artist_trailer(&self, artist_id: &str) -> Result<TrailerDto, String> {
+        self.trailer(&format!("/artists/{artist_id}/trailer")).await
+    }
+
+    pub async fn playlist_trailer(&self, uid: i64, kind: &str) -> Result<TrailerDto, String> {
+        self.trailer(&format!("/users/{uid}/playlists/{kind}/trailer"))
+            .await
+    }
 }
 
 fn major_name(value: Option<&serde_json::Value>) -> Option<String> {

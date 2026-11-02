@@ -491,6 +491,7 @@
     <TogetherDock />
     <FullscreenPlayer />
     <TrackLyricsDialog />
+    <TrailerDialog />
     <AppDialog />
   </q-layout>
 </template>
@@ -514,9 +515,10 @@ import NeuroPlayer from "@/components/player/NeuroPlayer.vue";
 import PlayerBar from "@/components/player/PlayerBar.vue";
 import TogetherDock from "@/components/together/TogetherDock.vue";
 import TrackLyricsDialog from "@/components/player/TrackLyricsDialog.vue";
+import TrailerDialog from "@/components/dialog/TrailerDialog.vue";
 import AppDialog from "@/components/common/AppDialog.vue";
 import WindowControls from "@/components/window/WindowControls.vue";
-import { trackLyricsDialog } from "@/lib/dialogs";
+import { trackLyricsDialog, trailerDialog } from "@/lib/dialogs";
 import {
   bindGlobalHotkeyEvents,
   bindLocalHotkeys,
@@ -825,6 +827,8 @@ watch(
   () => {
     player.closeLyrics();
     trackLyricsDialog.open = false;
+    if (trailerDialog.open) player.stopPreview();
+    trailerDialog.open = false;
     document.documentElement.dataset.route = route.path.startsWith("/settings")
       ? "settings"
       : route.path.replace(/^\//, "").split("/")[0] || "home";

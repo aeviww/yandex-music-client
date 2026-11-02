@@ -21,6 +21,12 @@ pub struct YAlbum {
 
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase", default)]
+pub struct YSmartPreviewParams {
+    pub duration_ms: Option<i64>,
+}
+
+#[derive(Deserialize, Default)]
+#[serde(rename_all = "camelCase", default)]
 pub struct YTrack {
     pub id: serde_json::Value,
     pub title: Option<String>,
@@ -28,7 +34,10 @@ pub struct YTrack {
     pub albums: Vec<YAlbum>,
     pub cover_uri: Option<String>,
     pub duration_ms: Option<i64>,
+    pub preview_duration_ms: Option<i64>,
     pub available: Option<bool>,
+    pub special_audio_resources: Vec<String>,
+    pub smart_preview_params: Option<YSmartPreviewParams>,
 }
 
 #[derive(Deserialize, Default)]

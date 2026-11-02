@@ -25,6 +25,7 @@ import type {
   Stream,
   Track,
   TrackInfo,
+  Trailer,
   WaveResponse,
   WheelItem,
 } from "./types";
@@ -95,6 +96,9 @@ export const api = {
     call<AiTrackResult[]>("ai_check_tracks", { ids }),
 
   album: (id: string) => call<AlbumPage>("get_album", { id }),
+
+  trailer: (kind: string, id: string, uid: number | null = null) =>
+    call<Trailer>("get_trailer", { kind, id, uid }),
 
     newReleases: () => call<AlbumBrief[]>("get_new_releases"),
 
@@ -225,7 +229,7 @@ export const api = {
 
   trackInfo: (id: string) => call<TrackInfo>("get_track_info", { id }),
 
-  stream: (id: string, quality: Quality = "lossless") =>
+  stream: (id: string, quality: Quality | "smart_preview" = "lossless") =>
     call<Stream>("get_stream", { id, quality }),
 
   prefetchStream: (url: string) => call<void>("prefetch_stream", { url }),

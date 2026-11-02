@@ -157,6 +157,15 @@
       <div
         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
         v-close-popup
+        @click="showTrailer"
+      >
+        <Icon name="mingcute:video-line" :size="18" />
+        <span>Трейлер</span>
+      </div>
+
+      <div
+        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+        v-close-popup
         @click="share"
       >
         <Icon name="mingcute:share-2-line" :size="18" />
@@ -395,6 +404,7 @@ import { artistNames, formatDuration } from "@/lib/format";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
 import { clearOverride, getOverride, setOverride } from "@/lib/censorOverrides";
+import { openTrailerDialog } from "@/lib/dialogs";
 import { ensureCensorList, isCensored, prefersOriginal } from "@/lib/censor";
 import { useUiStore } from "@/stores/ui/index";
 
@@ -601,6 +611,17 @@ async function share() {
 
 function showLyrics() {
   openTrackLyrics(props.track);
+}
+
+function showTrailer() {
+  openTrailerDialog({
+    kind: "track",
+    id: props.track.id,
+    heading: "Трейлер трека",
+    subtitle: props.track.title,
+    cover: props.track.cover_url_large || props.track.cover_url,
+    playFull: () => player.playQueue([props.track], 0),
+  });
 }
 
 function goAlbum() {

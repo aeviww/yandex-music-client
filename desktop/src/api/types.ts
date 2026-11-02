@@ -26,7 +26,14 @@ export interface Track {
   cover_url: string | null;
   cover_url_large?: string | null;
   duration_ms: number | null;
+  preview_duration_ms?: number | null;
+  smart_preview?: boolean;
   available: boolean;
+}
+
+export interface Trailer {
+  title: string;
+  tracks: Track[];
 }
 
 export interface Profile {

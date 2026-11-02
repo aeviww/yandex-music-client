@@ -70,6 +70,14 @@ pub fn map_track(t: &YTrack) -> TrackDto {
         .cover_uri
         .clone()
         .or_else(|| album.and_then(|a| a.cover_uri.clone()));
+    let smart_duration = t
+        .smart_preview_params
+        .as_ref()
+        .and_then(|params| params.duration_ms);
+    let smart_preview = smart_duration.is_some()
+        || t.special_audio_resources
+            .iter()
+            .any(|resource| resource == "smart_preview");
     TrackDto {
         id: val_to_id(&t.id),
         title: t.title.clone().unwrap_or_default(),
@@ -79,6 +87,8 @@ pub fn map_track(t: &YTrack) -> TrackDto {
         cover_url: cover_url(&cover_uri),
         cover_url_large: img(cover_uri.as_deref(), "1000x1000"),
         duration_ms: t.duration_ms,
+        preview_duration_ms: smart_duration.or(t.preview_duration_ms),
+        smart_preview,
         available: t.available.unwrap_or(true),
     }
 }

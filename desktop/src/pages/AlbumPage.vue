@@ -85,6 +85,15 @@
                   <span>Волна по альбому</span>
                 </button>
 
+                <TrailerButton
+                  kind="album"
+                  :id="album.id"
+                  heading="Трейлер альбома"
+                  :subtitle="album.title"
+                  :cover="album.cover_url"
+                  :play-full="() => playFrom(0)"
+                />
+
                 <button
                   class="flex w-[30px] h-[30px] items-center justify-center p-0 border-0 rounded-[8px] appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default"
                   :class="{ '!text-[color:var(--accent)]': albumLiked }"
@@ -348,6 +357,7 @@
 
 <script setup lang="ts">
 import ArtistsLine from "@/components/common/ArtistsLine.vue";
+import TrailerButton from "@/components/common/TrailerButton.vue";
 import { computed, onMounted, ref, watch } from "vue";
 import { Notify } from "quasar";
 import { useRouter } from "vue-router";

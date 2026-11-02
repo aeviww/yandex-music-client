@@ -94,6 +94,15 @@
                   <span>Волна по артисту</span>
                 </button>
 
+                <TrailerButton
+                  kind="artist"
+                  :id="artist.id"
+                  heading="Трейлер артиста"
+                  :subtitle="artist.name"
+                  :cover="artist.cover_url"
+                  :play-full="() => playPopular(0)"
+                />
+
                 <button class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[8px]" type="button" title="Ещё">
                   <Icon name="mingcute:more-2-fill" :size="18" />
                   <q-menu class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]" anchor="bottom left" self="top left">
@@ -358,6 +367,7 @@ import TrackRow from "@/components/common/TrackRow.vue";
 import ImageViewer from "@/components/common/ImageViewer.vue";
 import ArtistInfoDialog from "@/components/dialog/ArtistInfoDialog.vue";
 import AiTag from "@/components/common/AiTag.vue";
+import TrailerButton from "@/components/common/TrailerButton.vue";
 import { plural, pluralWord } from "@/lib/format";
 import { readCache, swr } from "@/lib/cache";
 import { recordArtistStats } from "@/lib/artistStats";

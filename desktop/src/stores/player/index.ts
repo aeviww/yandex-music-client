@@ -2,7 +2,7 @@ import { watch } from "vue";
 import { defineStore } from "pinia";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
-import type { Lyrics, Quality, RepeatMode, Track } from "@/api/types";
+import type { Lyrics, Quality, RepeatMode, Stream, Track } from "@/api/types";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import {
   audio,
@@ -156,6 +156,7 @@ interface PlayerState {
   presenceReconnecting: boolean;
   presenceUser: string | null;
   pendingResume: boolean;
+  previewMode: boolean;
 }
 
 let presenceTimer: number | null = null;
@@ -177,6 +178,7 @@ let stallSince = 0;
 let recoverStep = 0;
 let lastRecover = 0;
 let radioStarted = false;
+let previewAdvancing = false;
 
 export const usePlayerStore = defineStore("player", {
   state: (): PlayerState => {
@@ -233,6 +235,7 @@ export const usePlayerStore = defineStore("player", {
       presenceReconnecting: false,
       presenceUser: null,
       pendingResume: false,
+      previewMode: false,
     };
   },
 
@@ -290,6 +293,19 @@ export const usePlayerStore = defineStore("player", {
         this.duration = audio.duration || 0;
         lastProgress = this.progress;
 
+        if (this.previewMode) {
+          const previewMs = this.current?.preview_duration_ms;
+          const limit =
+            previewMs && previewMs > 0 ? previewMs / 1000 : 15;
+          this.duration = limit;
+          if (this.progress >= limit) {
+            this.progress = limit;
+            lastProgress = this.progress;
+            void this.advancePreview();
+            return;
+          }
+        }
+
         if (
           Date.now() - lastMediaSync > 1000 &&
           mediaSessionOwner() === "main"
@@ -299,7 +315,7 @@ export const usePlayerStore = defineStore("player", {
         }
 
         const delta = this.progress - previous;
-        if (delta > 0 && delta < 6 && !audio.paused) {
+        if (delta > 0 && delta < 6 && !audio.paused && !this.previewMode) {
           useStatsStore().tick(delta);
         }
 
@@ -336,6 +352,10 @@ export const usePlayerStore = defineStore("player", {
         }
       };
       audio.onended = () => {
+        if (this.previewMode) {
+          void this.advancePreview();
+          return;
+        }
         if (useSleepStore().onTrackEnded()) return;
         if (useTogetherStore().isGuest) return;
         void this.next(true);
@@ -519,6 +539,7 @@ export const usePlayerStore = defineStore("player", {
     },
 
     persistSession() {
+      if (this.previewMode) return;
       if (!this.current || !this.queue.length) return;
       saveSession({
         queue: this.queue,
@@ -820,7 +841,11 @@ export const usePlayerStore = defineStore("player", {
     async playQueue(
       tracks: Track[],
       startIndex = 0,
-      opts?: { wave?: boolean; batchId?: string | null },
+      opts?: {
+        wave?: boolean;
+        batchId?: string | null;
+        preview?: boolean;
+      },
     ) {
       this.sourceQueue = [...tracks];
       this.queue = [...tracks];
@@ -828,8 +853,57 @@ export const usePlayerStore = defineStore("player", {
       this.index = startIndex;
       this.isWave = opts?.wave ?? false;
       this.waveBatchId = opts?.batchId ?? null;
+      this.previewMode = opts?.preview ?? false;
+      previewAdvancing = false;
       radioStarted = false;
       await this.loadCurrent();
+    },
+
+    async advancePreview() {
+      if (!this.previewMode || previewAdvancing || this.loading) return;
+      previewAdvancing = true;
+      try {
+        if (this.index < this.queue.length - 1) {
+          this.index += 1;
+          await this.loadCurrent();
+          return;
+        }
+        audio.pause();
+        try {
+          audio.currentTime = 0;
+        } catch {}
+        this.isPlaying = false;
+        this.progress = 0;
+        this.duration =
+          this.current?.preview_duration_ms &&
+          this.current.preview_duration_ms > 0
+            ? this.current.preview_duration_ms / 1000
+            : 15;
+        void this.syncTray();
+      } finally {
+        previewAdvancing = false;
+      }
+    },
+
+    stopPreview() {
+      if (!this.previewMode) return;
+      audio.pause();
+      try {
+        audio.currentTime = 0;
+      } catch {}
+      this.previewMode = false;
+      previewAdvancing = false;
+      this.isPlaying = false;
+      this.loading = false;
+      this.queue = [];
+      this.sourceQueue = [];
+      this.index = -1;
+      this.current = null;
+      this.progress = 0;
+      this.duration = 0;
+      this.lyrics = null;
+      void this.syncTray();
+      void this.syncPresence(true);
     },
 
     async loadCurrent(opts?: { startAt?: number; autoplay?: boolean }) {
@@ -862,6 +936,12 @@ export const usePlayerStore = defineStore("player", {
       skipGuard = 0;
       const startAt = Math.max(0, opts?.startAt ?? 0);
       const autoplay = opts?.autoplay ?? true;
+      const preview = this.previewMode;
+      const previewDuration = preview
+        ? (track.preview_duration_ms && track.preview_duration_ms > 0
+            ? track.preview_duration_ms
+            : 15000) / 1000
+        : 0;
       this.pendingResume = false;
       this.current = track;
       this.progress = startAt;
@@ -869,12 +949,13 @@ export const usePlayerStore = defineStore("player", {
       quietSince = 0;
       updateMediaMetadata(track);
       updatePositionState(
-        (track.duration_ms ?? 0) / 1000,
+        previewDuration || (track.duration_ms ?? 0) / 1000,
         startAt,
         this.playbackRate,
       );
-      useStatsStore().begin(track);
-      this.duration = (track.duration_ms ?? 0) / 1000;
+      if (!preview) useStatsStore().begin(track);
+      this.duration =
+        previewDuration || (track.duration_ms ?? 0) / 1000;
       this.loading = true;
       this.lyrics = null;
       this.lyricsError = null;
@@ -901,7 +982,7 @@ export const usePlayerStore = defineStore("player", {
         this.censorAvailable = false;
         this.replacementLabel = null;
 
-        const custom = overrideUrl(track.id);
+        const custom = preview ? null : overrideUrl(track.id);
         if (custom) {
           source = custom;
           this.censorReplaced = true;
@@ -913,7 +994,7 @@ export const usePlayerStore = defineStore("player", {
           log.info("source from custom replacement", track.title);
         }
 
-        if (!source && ui.censorBypass) {
+        if (!source && !preview && ui.censorBypass) {
           await ensureCensorList();
           const replacement = censorUrl(track.id);
           this.censorAvailable = Boolean(replacement);
@@ -928,7 +1009,8 @@ export const usePlayerStore = defineStore("player", {
           }
         }
 
-        const ready = source ? undefined : prefetched.get(track.id);
+        const ready =
+          source || preview ? undefined : prefetched.get(track.id);
         if (ready) {
           prefetched.delete(track.id);
           source = ready.url;
@@ -948,7 +1030,7 @@ export const usePlayerStore = defineStore("player", {
           log.info("source from prefetch", track.title);
         }
 
-        if (!source && ui.preferLocalFiles) {
+        if (!source && !preview && ui.preferLocalFiles) {
           const local = await api
             .findLocalTrack(track.id, ui.downloadDir || null)
             .catch(() => null);
@@ -970,9 +1052,21 @@ export const usePlayerStore = defineStore("player", {
         }
 
         if (!source) {
-          const stream = await log.time(`stream ${track.id}`, () =>
-            api.stream(track.id, this.quality),
-          );
+          let stream: Stream;
+          try {
+            stream = await log.time(`stream ${track.id}`, () =>
+              api.stream(
+                track.id,
+                preview ? "smart_preview" : this.quality,
+              ),
+            );
+          } catch (error) {
+            if (!preview) throw error;
+            log.warn("smart preview failed, fallback to full", track.title);
+            stream = await log.time(`stream ${track.id}`, () =>
+              api.stream(track.id, this.quality),
+            );
+          }
           if (!isCurrentToken(token)) return;
           this.currentCodec = stream.codec;
           this.currentBitrate = stream.bitrate;
@@ -1014,7 +1108,7 @@ export const usePlayerStore = defineStore("player", {
         this.persistSession();
         void this.syncTray();
         void this.syncPresence(true);
-        void this.prefetchNext();
+        if (!preview) void this.prefetchNext();
         if (this.isWave) {
           void api.sendFeedback({
             type: "trackStarted",
@@ -1073,6 +1167,7 @@ export const usePlayerStore = defineStore("player", {
     },
 
     async prefetchNext() {
+      if (this.previewMode) return;
       const ui = useUiStore().settings;
       if (
         this.isWave &&
@@ -1441,6 +1536,10 @@ export const usePlayerStore = defineStore("player", {
 
     async next(auto = false) {
       if (useTogetherStore().isGuest) return;
+      if (this.previewMode) {
+        await this.advancePreview();
+        return;
+      }
       if (auto && this.repeat === "one") {
         audio.currentTime = 0;
         await safePlay();

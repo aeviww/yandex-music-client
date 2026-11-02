@@ -73,6 +73,7 @@ pub fn run() {
             commands::get_artist,
             commands::get_artist_tracks,
             commands::get_album,
+            commands::get_trailer,
             commands::get_new_releases,
             commands::get_neuro_items,
             commands::get_neuro_stream,

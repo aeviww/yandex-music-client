@@ -17,6 +17,8 @@ pub struct TrackDto {
     pub cover_url: Option<String>,
     pub cover_url_large: Option<String>,
     pub duration_ms: Option<i64>,
+    pub preview_duration_ms: Option<i64>,
+    pub smart_preview: bool,
     pub available: bool,
 }
 
@@ -123,6 +125,12 @@ pub struct AlbumPageDto {
     pub year: Option<i64>,
     pub genre: Option<String>,
     pub artists: Vec<ArtistDto>,
+    pub tracks: Vec<TrackDto>,
+}
+
+#[derive(Serialize)]
+pub struct TrailerDto {
+    pub title: String,
     pub tracks: Vec<TrackDto>,
 }
 

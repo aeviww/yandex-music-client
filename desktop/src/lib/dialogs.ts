@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import type { Track } from "@/api/types";
+import type { TrailerKind } from "@/lib/trailer";
 
 export const trackLyricsDialog = reactive<{
   open: boolean;
@@ -9,6 +10,45 @@ export const trackLyricsDialog = reactive<{
 export function openTrackLyrics(track: Track): void {
   trackLyricsDialog.track = track;
   trackLyricsDialog.open = true;
+}
+
+export const trailerDialog = reactive<{
+  open: boolean;
+  kind: TrailerKind;
+  id: string;
+  uid: number | null;
+  heading: string;
+  subtitle: string;
+  cover: string | null;
+  playFull: (() => unknown) | null;
+}>({
+  open: false,
+  kind: "track",
+  id: "",
+  uid: null,
+  heading: "Трейлер",
+  subtitle: "",
+  cover: null,
+  playFull: null,
+});
+
+export function openTrailerDialog(options: {
+  kind: TrailerKind;
+  id: string;
+  uid?: number | null;
+  heading: string;
+  subtitle?: string;
+  cover?: string | null;
+  playFull?: () => unknown;
+}): void {
+  trailerDialog.kind = options.kind;
+  trailerDialog.id = options.id;
+  trailerDialog.uid = options.uid ?? null;
+  trailerDialog.heading = options.heading;
+  trailerDialog.subtitle = options.subtitle ?? "";
+  trailerDialog.cover = options.cover ?? null;
+  trailerDialog.playFull = options.playFull ?? null;
+  trailerDialog.open = true;
 }
 
 type AppDialogKind = "confirm" | "prompt";

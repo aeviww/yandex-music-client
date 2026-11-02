@@ -3,7 +3,7 @@ use tauri::State;
 use crate::state::AppState;
 use crate::yandex::{
     AlbumBriefDto, AlbumPageDto, ArtistPageDto, NeuroItemDto, NeuroStreamDto, SearchDto, TrackDto,
-    TrackInfoDto, Yandex,
+    TrackInfoDto, TrailerDto, Yandex,
 };
 
 #[tauri::command]
@@ -25,6 +25,27 @@ pub async fn get_artist_tracks(
 pub async fn get_album(id: String, state: State<'_, AppState>) -> Result<AlbumPageDto, String> {
     let session = state.session()?;
     Yandex::new(&session.token).album(&id).await
+}
+
+#[tauri::command]
+pub async fn get_trailer(
+    kind: String,
+    id: String,
+    uid: Option<i64>,
+    state: State<'_, AppState>,
+) -> Result<TrailerDto, String> {
+    let session = state.session()?;
+    let client = Yandex::new(&session.token);
+    match kind.as_str() {
+        "track" => client.track_trailer(&id).await,
+        "album" => client.album_trailer(&id).await,
+        "artist" => client.artist_trailer(&id).await,
+        "playlist" => {
+            let owner = uid.unwrap_or(session.uid);
+            client.playlist_trailer(owner, &id).await
+        }
+        other => Err(format!("Неизвестный тип трейлера: {other}")),
+    }
 }
 
 #[tauri::command]
