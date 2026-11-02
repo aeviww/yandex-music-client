@@ -571,59 +571,34 @@
             <div class="relative mt-[16px]">
               <div
                 ref="neuroStrip"
-                class="grid grid-flow-col auto-cols-[calc((100%_-_36px)/3)] gap-x-[18px] overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                class="grid grid-flow-col auto-cols-[calc((100%_-_36px)/3)] gap-x-[18px] overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-[720px]:auto-cols-[78%]"
                 @scroll.passive="updateNeuroArrows"
               >
-              <div
-                v-for="n in neuroItems"
-                :key="n.id"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
-                @click="playNeuro(n)"
-              >
-                <div
-                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                <button
+                  v-for="n in neuroItems"
+                  :key="n.id"
+                  type="button"
+                  class="flex h-[60px] min-w-0 cursor-pointer appearance-none items-center justify-center gap-[10px] rounded-[16px] border-0 bg-[var(--surface-2)] px-[16px] text-[17px] font-bold leading-none tracking-[-0.01em] text-white transition-[filter,transform] duration-[140ms] ease-[ease] hover:brightness-110 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]"
                   :style="n.color ? { background: n.color } : {}"
+                  :title="n.title"
+                  @click="playNeuro(n)"
                 >
-                  <img
-                    v-if="n.cover_url"
-                    loading="lazy"
-                    decoding="async"
-                    :src="n.cover_url"
-                  />
                   <Icon
-                    v-else
-                    name="mingcute:wave-line"
-                    :size="20"
-                    class="text-[color:var(--fg-faint)]"
+                    :name="
+                      neuro.item?.id === n.id && neuro.playing
+                        ? 'mingcute:pause-fill'
+                        : 'mingcute:play-fill'
+                    "
+                    :size="16"
+                    class="flex-none"
                   />
-
-                  <span :class="fab" title="Слушать">
-                    <Icon
-                      :name="
-                        neuro.item?.id === n.id && neuro.playing
-                          ? 'mingcute:pause-fill'
-                          : 'mingcute:play-fill'
-                      "
-                      :size="15"
-                    />
-                  </span>
-                </div>
-                <div
-                  class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
-                >
-                  {{ n.title }}
-                </div>
-                <div
-                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
-                >
-                  нейромузыка
-                </div>
-              </div>
+                  <span class="min-w-0 truncate">{{ n.title }}</span>
+                </button>
               </div>
 
               <button
                 v-if="neuroCanLeft"
-                class="absolute left-[-14px] top-[40%] z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute left-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Назад"
                 @click="scrollNeuro(-1)"
@@ -633,7 +608,7 @@
 
               <button
                 v-if="neuroCanRight"
-                class="absolute right-[-14px] top-[40%] z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute right-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Дальше"
                 @click="scrollNeuro(1)"
