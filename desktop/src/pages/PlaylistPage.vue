@@ -156,30 +156,6 @@
             </button>
 
             <button
-              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
-              type="button"
-              :class="
-                isPinned
-                  ? 'on border-[color:var(--accent)] text-[color:var(--fg)] hover:border-[color:var(--accent)] hover:text-[color:var(--fg)]'
-                  : 'border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]'
-              "
-              :title="
-                isPinned
-                  ? 'Открепить от боковой панели'
-                  : 'Закрепить в боковой панели'
-              "
-              @click="library.togglePin(kindNumber)"
-            >
-              <Icon
-                :name="
-                  isPinned ? 'gravity-ui:pin-slash' : 'mingcute:pin-2-line'
-                "
-                :size="15"
-              />
-              <span>{{ isPinned ? "Открепить" : "Закрепить" }}</span>
-            </button>
-
-            <button
               class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               @click="playPlaylistWave"
@@ -222,6 +198,22 @@
                   >
                     <Icon name="mingcute:add-circle-line" :size="17" />
                     <span>Добавить всё в очередь</span>
+                  </div>
+
+                  <div
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    v-close-popup
+                    @click="library.togglePin(kindNumber)"
+                  >
+                    <Icon
+                      :name="
+                        isPinned
+                          ? 'gravity-ui:pin-slash'
+                          : 'mingcute:pin-2-line'
+                      "
+                      :size="17"
+                    />
+                    <span>{{ isPinned ? "Открепить" : "Закрепить" }}</span>
                   </div>
 
                   <div

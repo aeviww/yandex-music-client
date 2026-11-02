@@ -568,7 +568,12 @@
               отвлечёт от шума и сфокусирует на важном
             </p>
 
-            <div :class="[strip, colsMd]" class="mt-[16px]">
+            <div class="relative mt-[16px]">
+              <div
+                ref="neuroStrip"
+                class="grid grid-flow-col auto-cols-[calc((100%_-_36px)/3)] gap-x-[18px] overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                @scroll.passive="updateNeuroArrows"
+              >
               <div
                 v-for="n in neuroItems"
                 :key="n.id"
@@ -614,6 +619,27 @@
                   нейромузыка
                 </div>
               </div>
+              </div>
+
+              <button
+                v-if="neuroCanLeft"
+                class="absolute left-[-14px] top-[40%] z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                type="button"
+                title="Назад"
+                @click="scrollNeuro(-1)"
+              >
+                <Icon name="mingcute:arrow-left-line" :size="18" />
+              </button>
+
+              <button
+                v-if="neuroCanRight"
+                class="absolute right-[-14px] top-[40%] z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                type="button"
+                title="Дальше"
+                @click="scrollNeuro(1)"
+              >
+                <Icon name="mingcute:arrow-right-line" :size="18" />
+              </button>
             </div>
           </template>
 
@@ -654,7 +680,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
@@ -691,6 +724,34 @@ const playlists = ref<Playlist[]>([]);
 const wheel = ref<WheelItem[]>([]);
 const releases = ref<AlbumBrief[]>([]);
 const neuroItems = ref<NeuroItem[]>([]);
+const neuroStrip = ref<HTMLElement | null>(null);
+const neuroCanLeft = ref(false);
+const neuroCanRight = ref(false);
+
+function updateNeuroArrows() {
+  const el = neuroStrip.value;
+  if (!el) {
+    neuroCanLeft.value = false;
+    neuroCanRight.value = false;
+    return;
+  }
+  neuroCanLeft.value = el.scrollLeft > 4;
+  neuroCanRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 4;
+}
+
+function scrollNeuro(direction: 1 | -1) {
+  const el = neuroStrip.value;
+  if (!el) return;
+  el.scrollBy({ left: direction * el.clientWidth, behavior: "smooth" });
+}
+
+watch(
+  neuroItems,
+  () => {
+    void nextTick(updateNeuroArrows);
+  },
+  { flush: "post" },
+);
 const loading = ref(false);
 
 const userName = ref("");
@@ -887,11 +948,18 @@ onMounted(() => {
   });
 
   neuroItems.value = readCache<NeuroItem[]>("home.neuro") ?? [];
+  void nextTick(updateNeuroArrows);
   void swr<NeuroItem[]>("home.neuro", () => api.neuroItems(), {
     onData: (data) => {
       neuroItems.value = data;
     },
   });
+
+  window.addEventListener("resize", updateNeuroArrows);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateNeuroArrows);
 });
 
 function playNeuro(item: NeuroItem) {

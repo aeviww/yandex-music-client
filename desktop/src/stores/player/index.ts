@@ -61,6 +61,8 @@ const SEEN_LIMIT = 600;
 const WAVE_HISTORY_KEY = "wave.history.v1";
 const WAVE_HISTORY_LIMIT = 500;
 const PREFETCH_LIMIT = 4;
+const PREVIEW_FADE_OUT_MS = 800;
+const PREVIEW_FADE_IN_MS = 500;
 
 const log = createLogger("player");
 
@@ -179,6 +181,7 @@ let recoverStep = 0;
 let lastRecover = 0;
 let radioStarted = false;
 let previewAdvancing = false;
+let previewFading = false;
 
 export const usePlayerStore = defineStore("player", {
   state: (): PlayerState => {
@@ -298,6 +301,11 @@ export const usePlayerStore = defineStore("player", {
           const limit =
             previewMs && previewMs > 0 ? previewMs / 1000 : 15;
           this.duration = limit;
+          const fadeFrom = limit - PREVIEW_FADE_OUT_MS / 1000;
+          if (!previewFading && fadeFrom > 0 && this.progress >= fadeFrom) {
+            previewFading = true;
+            void fadeOut(PREVIEW_FADE_OUT_MS);
+          }
           if (this.progress >= limit) {
             this.progress = limit;
             lastProgress = this.progress;
@@ -855,6 +863,7 @@ export const usePlayerStore = defineStore("player", {
       this.waveBatchId = opts?.batchId ?? null;
       this.previewMode = opts?.preview ?? false;
       previewAdvancing = false;
+      previewFading = false;
       radioStarted = false;
       await this.loadCurrent();
     },
@@ -879,6 +888,8 @@ export const usePlayerStore = defineStore("player", {
           this.current.preview_duration_ms > 0
             ? this.current.preview_duration_ms / 1000
             : 15;
+        previewFading = false;
+        cancelFade(this.muted ? 0 : this.volume);
         void this.syncTray();
       } finally {
         previewAdvancing = false;
@@ -891,8 +902,10 @@ export const usePlayerStore = defineStore("player", {
       try {
         audio.currentTime = 0;
       } catch {}
+      cancelFade(this.muted ? 0 : this.volume);
       this.previewMode = false;
       previewAdvancing = false;
+      previewFading = false;
       this.isPlaying = false;
       this.loading = false;
       this.queue = [];
@@ -966,8 +979,10 @@ export const usePlayerStore = defineStore("player", {
       const rapid = Date.now() - lastLoadAt < 900;
       lastLoadAt = Date.now();
       if (ui.normalizeVolume) resetNormalization();
-      const fadeMs =
-        ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
+      if (preview) previewFading = false;
+      const fadeMs = preview
+        ? PREVIEW_FADE_IN_MS
+        : ui.crossfadeEnabled && !ui.gaplessEnabled && !rapid
           ? Math.round(Math.max(0, ui.crossfadeSeconds) * 1000)
           : 0;
       stallAt = startAt;
@@ -1810,6 +1825,10 @@ export const usePlayerStore = defineStore("player", {
     seek(seconds: number) {
       const limit = this.duration > 0 ? this.duration : seconds;
       const target = Math.max(0, Math.min(seconds, limit));
+      if (this.previewMode) {
+        previewFading = false;
+        cancelFade(this.muted ? 0 : this.volume);
+      }
       this.progress = target;
       lastProgress = target;
       try {
