@@ -1,9 +1,20 @@
 import { defineStore } from "pinia";
 import { applyInterfaceSettings } from "./apply";
-import type { InterfaceSettings } from "./defaults";
+import type {
+  HomeSectionId,
+  InterfaceSettings,
+  NavItemId,
+  TopbarLinkId,
+} from "./defaults";
 import {
+  ALL_HOME_SECTION_IDS,
+  ALL_NAV_ITEM_IDS,
+  ALL_TOPBAR_LINK_IDS,
   DEFAULT_DISCORD_CLIENT_ID,
+  defaultHomeSections,
   defaultInterfaceSettings,
+  defaultSidebarItems,
+  defaultTopbarLinks,
 } from "./defaults";
 import { retiredThemeMap, themePalettes } from "./themes";
 import type {
@@ -36,10 +47,24 @@ export {
   playerButtonOrder,
 } from "./playerButtons";
 
-export type { CoverStyle, Density, InterfaceSettings } from "./defaults";
+export type {
+  CoverStyle,
+  Density,
+  HomeSectionId,
+  InterfaceSettings,
+  NavItemConfig,
+  NavItemId,
+  TopbarLinkId,
+} from "./defaults";
 export {
+  ALL_HOME_SECTION_IDS,
+  ALL_NAV_ITEM_IDS,
+  ALL_TOPBAR_LINK_IDS,
   DEFAULT_DISCORD_CLIENT_ID,
+  defaultHomeSections,
   defaultInterfaceSettings,
+  defaultSidebarItems,
+  defaultTopbarLinks,
 } from "./defaults";
 export type { Palette, ThemeName } from "./themes";
 export { accentColors, themeNames, themePalettes } from "./themes";
@@ -70,6 +95,41 @@ function sanitizeOrder<T extends string>(
   return out;
 }
 
+function sanitizeArray<T extends string>(
+  saved: unknown,
+  allowed: readonly T[],
+  fallback: readonly T[],
+): T[] {
+  if (!Array.isArray(saved)) return [...fallback];
+  const allowedSet = new Set<string>(allowed);
+  const out: T[] = [];
+  for (const item of saved) {
+    if (
+      typeof item === "string" &&
+      allowedSet.has(item) &&
+      !out.includes(item as T)
+    ) {
+      out.push(item as T);
+    }
+  }
+  return out.length ? out : [...fallback];
+}
+
+function sanitizeRecord<K extends string>(
+  saved: unknown,
+  allowed: readonly K[],
+): Partial<Record<K, string>> {
+  if (!saved || typeof saved !== "object") return {};
+  const allowedSet = new Set<string>(allowed);
+  const out: Partial<Record<K, string>> = {};
+  for (const [k, v] of Object.entries(saved as Record<string, unknown>)) {
+    if (allowedSet.has(k) && typeof v === "string" && v.trim().length > 0) {
+      out[k as K] = v.trim();
+    }
+  }
+  return out;
+}
+
 function load(): InterfaceSettings {
   try {
     const saved = JSON.parse(
@@ -90,6 +150,35 @@ function load(): InterfaceSettings {
     } as MiniButtonSlots;
     merged.playerOrder = sanitizeOrder(saved.playerOrder, playerButtonOrder);
     merged.miniOrder = sanitizeOrder(saved.miniOrder, miniButtonOrder);
+
+    merged.topbarLinks = sanitizeArray(
+      saved.topbarLinks,
+      ALL_TOPBAR_LINK_IDS,
+      defaultTopbarLinks);
+
+    merged.sidebarItems = sanitizeArray(
+      saved.sidebarItems,
+      ALL_NAV_ITEM_IDS,
+      defaultSidebarItems);
+
+    merged.homeSections = sanitizeArray(
+      saved.homeSections,
+      ALL_HOME_SECTION_IDS,
+      defaultHomeSections);
+
+    merged.sidebarLabels = sanitizeRecord(saved.sidebarLabels, ALL_NAV_ITEM_IDS);
+    merged.sidebarIcons = sanitizeRecord(saved.sidebarIcons, ALL_NAV_ITEM_IDS);
+    merged.topbarLabels = sanitizeRecord(saved.topbarLabels, ALL_TOPBAR_LINK_IDS);
+    merged.topbarIcons = sanitizeRecord(saved.topbarIcons, ALL_TOPBAR_LINK_IDS);
+    merged.homeLabels = sanitizeRecord(saved.homeLabels, ALL_HOME_SECTION_IDS);
+
+    if (!merged.sidebarItems.includes("home")) {
+      merged.sidebarItems.unshift("home");
+    }
+    if (!merged.topbarLinks.includes("settings")) {
+      merged.topbarLinks.push("settings");
+    }
+
     merged.playerEditMode = false;
     merged.playerButtons.play = "center";
     merged.miniButtons.play = true;
@@ -314,6 +403,113 @@ export const useUiStore = defineStore("ui", {
       this.settings.lyricsTranslate = d.lyricsTranslate;
       this.settings.lyricsTranslateTarget = d.lyricsTranslateTarget;
       this.settings.lyricsTranslateMode = d.lyricsTranslateMode;
+      this.apply();
+    },
+
+    setSidebarItemLabel(id: NavItemId, label?: string) {
+      const next = { ...this.settings.sidebarLabels };
+      if (!label || !label.trim()) {
+        delete next[id];
+      } else {
+        next[id] = label.trim();
+      }
+      this.settings.sidebarLabels = next;
+      this.apply();
+    },
+
+    setSidebarItemIcon(id: NavItemId, icon?: string) {
+      const next = { ...this.settings.sidebarIcons };
+      if (!icon || !icon.trim()) {
+        delete next[id];
+      } else {
+        next[id] = icon.trim();
+      }
+      this.settings.sidebarIcons = next;
+      this.apply();
+    },
+
+    setTopbarLinkLabel(id: TopbarLinkId, label?: string) {
+      const next = { ...this.settings.topbarLabels };
+      if (!label || !label.trim()) {
+        delete next[id];
+      } else {
+        next[id] = label.trim();
+      }
+      this.settings.topbarLabels = next;
+      this.apply();
+    },
+
+    setTopbarLinkIcon(id: TopbarLinkId, icon?: string) {
+      const next = { ...this.settings.topbarIcons };
+      if (!icon || !icon.trim()) {
+        delete next[id];
+      } else {
+        next[id] = icon.trim();
+      }
+      this.settings.topbarIcons = next;
+      this.apply();
+    },
+
+    setHomeSectionLabel(id: HomeSectionId, label?: string) {
+      const next = { ...this.settings.homeLabels };
+      if (!label || !label.trim()) {
+        delete next[id];
+      } else {
+        next[id] = label.trim();
+      }
+      this.settings.homeLabels = next;
+      this.apply();
+    },
+
+    resetSidebarOrder() {
+      this.settings.sidebarItems = [...defaultSidebarItems];
+      this.apply();
+    },
+
+    resetSidebarAppearance() {
+      this.settings.sidebarLabels = {};
+      this.settings.sidebarIcons = {};
+      this.apply();
+    },
+
+    resetSidebarCustomizations() {
+      this.settings.sidebarItems = [...defaultSidebarItems];
+      this.settings.sidebarLabels = {};
+      this.settings.sidebarIcons = {};
+      this.apply();
+    },
+
+    resetTopbarOrder() {
+      this.settings.topbarLinks = [...defaultTopbarLinks];
+      this.apply();
+    },
+
+    resetTopbarAppearance() {
+      this.settings.topbarLabels = {};
+      this.settings.topbarIcons = {};
+      this.apply();
+    },
+
+    resetTopbarCustomizations() {
+      this.settings.topbarLinks = [...defaultTopbarLinks];
+      this.settings.topbarLabels = {};
+      this.settings.topbarIcons = {};
+      this.apply();
+    },
+
+    resetHomeSectionsOrder() {
+      this.settings.homeSections = [...defaultHomeSections];
+      this.apply();
+    },
+
+    resetHomeAppearance() {
+      this.settings.homeLabels = {};
+      this.apply();
+    },
+
+    resetHomeSectionCustomizations() {
+      this.settings.homeSections = [...defaultHomeSections];
+      this.settings.homeLabels = {};
       this.apply();
     },
   },

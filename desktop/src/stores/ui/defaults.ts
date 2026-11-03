@@ -26,6 +26,59 @@ export type LyricsAnnotationMark = "off" | "underline" | "dot" | "tint";
 export type LyricsTranslateMode = "under" | "replace";
 export type AiTrackAction = "none" | "skip" | "dislike";
 
+export type TopbarLinkId = "liked" | "playlists" | "stats"
+  | "settings" | "wave" | "library" | "search";
+
+export type NavItemId = "home" | "search" | "wave"
+  | "liked" | "playlists" | "library" | "stats";
+
+export type HomeSectionId = | "playlists" | "waves" | "picks"
+  | "releases" | "neuro" | "recent";
+
+export interface NavItemConfig {
+  id: NavItemId;
+  label?: string;
+  icon?: string;
+}
+
+export const defaultTopbarLinks: TopbarLinkId[] = [
+  "liked",
+  "playlists",
+  "stats",
+  "settings",
+];
+
+export const defaultSidebarItems: NavItemId[] = [
+  "home",
+  "search",
+  "wave",
+  "liked",
+  "playlists",
+  "library",
+  "stats",
+];
+
+export const defaultHomeSections: HomeSectionId[] = [
+  "playlists",
+  "waves",
+  "picks",
+  "releases",
+  "neuro",
+  "recent",
+];
+
+export const ALL_NAV_ITEM_IDS: readonly NavItemId[] = [
+  "home", "search", "wave", "liked", "playlists", "library", "stats",
+] as const;
+
+export const ALL_TOPBAR_LINK_IDS: readonly TopbarLinkId[] = [
+  "liked", "playlists", "stats", "settings", "wave", "library", "search",
+] as const;
+
+export const ALL_HOME_SECTION_IDS: readonly HomeSectionId[] = [
+  "playlists", "waves", "picks", "releases", "neuro", "recent",
+] as const;
+
 export const DEFAULT_DISCORD_CLIENT_ID = "1532382113821753354";
 
 export interface InterfaceSettings {
@@ -126,6 +179,14 @@ export interface InterfaceSettings {
   aiTrackAction: AiTrackAction;
   resumeLastSession: boolean;
   resumeAutoplay: boolean;
+  topbarLinks: TopbarLinkId[];
+  sidebarItems: NavItemId[];
+  homeSections: HomeSectionId[];
+  sidebarLabels: Partial<Record<NavItemId, string>>;
+  sidebarIcons: Partial<Record<NavItemId, string>>;
+  topbarLabels: Partial<Record<TopbarLinkId, string>>;
+  topbarIcons: Partial<Record<TopbarLinkId, string>>;
+  homeLabels: Partial<Record<HomeSectionId, string>>;
 }
 
 export const defaultInterfaceSettings: InterfaceSettings = {
@@ -226,4 +287,12 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   aiTrackAction: "none",
   resumeLastSession: true,
   resumeAutoplay: true,
+  topbarLinks: [...defaultTopbarLinks],
+  sidebarItems: [...defaultSidebarItems],
+  homeSections: [...defaultHomeSections],
+  sidebarLabels: {},
+  sidebarIcons: {},
+  topbarLabels: {},
+  topbarIcons: {},
+  homeLabels: {},
 };

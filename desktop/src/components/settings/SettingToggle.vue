@@ -1,10 +1,11 @@
 <template>
   <button
     type="button"
-    class="flex w-full items-center justify-between gap-6 border-0 px-5 py-4 text-left transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)]"
+    class="flex w-full items-center justify-between gap-6 border-0 px-5 py-4 text-left transition-colors duration-150 hover:bg-[color-mix(in_srgb,var(--fg)_3%,transparent)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
     role="switch"
     :aria-checked="modelValue"
-    @click="emit('update:modelValue', !modelValue)"
+    :disabled="disabled"
+    @click="!disabled && emit('update:modelValue', !modelValue)"
   >
     <span class="min-w-0">
       <span
@@ -13,6 +14,7 @@
         {{ label }}
       </span>
       <span
+        v-if="description"
         class="mt-1 block text-[calc(11.5px*var(--text-scale,1))] leading-[1.45] text-[color:var(--fg-dim)]"
       >
         {{ description }}
@@ -35,6 +37,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ label: string; description: string; modelValue: boolean }>();
+defineProps<{
+  label: string;
+  description?: string;
+  modelValue: boolean;
+  disabled?: boolean;
+}>();
 const emit = defineEmits<{ "update:modelValue": [boolean] }>();
 </script>
