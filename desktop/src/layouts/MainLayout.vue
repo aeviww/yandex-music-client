@@ -33,21 +33,57 @@
           data-no-drag
         >
           <div
-            class="pointer-events-auto mb-0 flex h-[30px] w-[min(460px,100%)] items-center gap-2.5 py-0 !max-w-none !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] !px-[14px] shadow-none transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_11%,transparent)] focus-within:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] focus-within:!border-[color-mix(in_srgb,var(--fg)_20%,transparent)] focus-within:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_42%,transparent)]"
+            class="relative pointer-events-auto flex items-center justify-center w-[min(var(--search-width,460px),100%)]"
           >
-            <Icon
-              name="mingcute:search-2-line"
-              :size="15"
-              class="text-[color:var(--fg-faint)]"
-            />
-            <input
-              v-model="query"
-              placeholder="Найти трек, артиста или альбом"
-              class="flex-1 min-w-0 border-0 bg-transparent text-[color:var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)] !text-[calc(13.5px*var(--text-scale,1))]"
-              @keyup.enter="submitSearch"
-            />
-            <div v-if="query" class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none" @click="query = ''">
-              <Icon name="mingcute:close-line" :size="13" />
+            <div
+              class="flex h-[30px] w-full items-center gap-2.5 py-0 !rounded-[10px] border !border-[color-mix(in_srgb,var(--fg)_7%,transparent)] !bg-[color-mix(in_srgb,var(--fg)_6%,transparent)] !px-[14px] shadow-none transition-[background,border-color] duration-150 hover:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] hover:!border-[color-mix(in_srgb,var(--fg)_11%,transparent)] focus-within:!bg-[color-mix(in_srgb,var(--fg)_9%,transparent)] focus-within:!border-[color-mix(in_srgb,var(--fg)_20%,transparent)] focus-within:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--accent)_42%,transparent)]"
+            >
+              <Icon
+                name="mingcute:search-2-line"
+                :size="15"
+                class="text-[color:var(--fg-faint)]"
+              />
+              <input
+                v-model="query"
+                placeholder="Найти трек, артиста или альбом"
+                class="flex-1 min-w-0 border-0 bg-transparent text-[color:var(--fg)] outline-none placeholder:text-[color:var(--fg-faint)] !text-[calc(13.5px*var(--text-scale,1))]"
+                @keydown="onSearchKeydown"
+                @focus="onSearchFocus"
+                @blur="closeSuggestSoon"
+              />
+              <div
+                v-if="query"
+                class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+                @click="clearSearchQuery"
+              >
+                <Icon name="mingcute:close-line" :size="13" />
+              </div>
+            </div>
+
+            <div
+              v-if="suggestOpen && suggestions.length"
+              class="absolute z-[50] top-[calc(100%_+_6px)] right-0 left-0 overflow-hidden p-[6px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[color-mix(in_srgb,var(--surface-2)_95%,transparent)] shadow-[0_18px_40px_rgba(0,0,0,0.45)] backdrop-blur-[var(--glass-blur,24px)]"
+            >
+              <button
+                v-for="(hint, index) in suggestions"
+                :key="hint"
+                class="flex w-full items-center px-[10px] py-[8px] border-0 rounded-[8px] cursor-pointer text-[13px] gap-[9px] text-left font-[inherit] transition-[background,color] duration-[120ms] ease-[ease] bg-transparent"
+                :class="[
+                  selectedSuggestIndex === index
+                    ? 'bg-[var(--hover)] text-[color:var(--fg)]'
+                    : 'text-[color:var(--fg-dim)] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]',
+                ]"
+                type="button"
+                @mouseenter="selectedSuggestIndex = index"
+                @mousedown.prevent="pickSuggestion(hint)"
+              >
+                <Icon
+                  name="mingcute:search-2-line"
+                  :size="14"
+                  class="text-[color:var(--fg-faint)]"
+                />
+                <span class="truncate">{{ hint }}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -538,6 +574,9 @@ import { useHotkeysStore } from "@/stores/hotkeys";
 import { usePanelsStore } from "@/stores/panels";
 import { usePlayerStore } from "@/stores/player/index";
 import { useUiStore } from "@/stores/ui/index";
+import type { NavItemId, TopbarLinkId } from "@/stores/ui/index";
+import { ALL_NAV_ITEMS, ALL_PROFILE_LINKS } from "@/constants/navigation";
+import { api } from "@/api/client";
 
 const route = useRoute();
 const router = useRouter();
@@ -577,17 +616,122 @@ const accountSub = computed(() =>
     : accountLogin.value || "Яндекс Музыка",
 );
 
-const profileLinks = [
-  { to: "/liked", label: "Любимое", icon: "mingcute:heart-line" },
-  { to: "/playlists", label: "Коллекция", icon: "mingcute:book-2-line" },
-  { to: "/stats", label: "Статистика", icon: "mingcute:chart-bar-line" },
-  { to: "/settings", label: "Настройки", icon: "mingcute:settings-5-line" },
-];
+const profileLinks = computed(() =>
+  (ui.settings.topbarLinks || [])
+    .map((id) => {
+      const base = ALL_PROFILE_LINKS[id];
+      if (!base) return null;
+      return {
+        ...base,
+        label: ui.settings.topbarLabels?.[id] || base.label,
+        icon: ui.settings.topbarIcons?.[id] || base.icon,
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => Boolean(x)),
+);
 
 const showHidden = ref(false);
 const sidebarPlaylists = computed(() => library.visiblePlaylists);
 
 const query = ref("");
+const suggestions = ref<string[]>([]);
+const suggestOpen = ref(false);
+const selectedSuggestIndex = ref(-1);
+let suggestTimer: ReturnType<typeof setTimeout> | undefined;
+let blurTimer: ReturnType<typeof setTimeout> | undefined;
+
+function closeSuggest() {
+  suggestOpen.value = false;
+  selectedSuggestIndex.value = -1;
+}
+
+function closeSuggestSoon() {
+  blurTimer = setTimeout(closeSuggest, 150);
+}
+
+function onSearchFocus() {
+  if (suggestions.value.length) {
+    suggestOpen.value = true;
+  }
+}
+
+function clearSearchQuery() {
+  query.value = "";
+  suggestions.value = [];
+  closeSuggest();
+}
+
+function pickSuggestion(hint: string) {
+  clearTimeout(blurTimer);
+  query.value = hint;
+  suggestions.value = [];
+  closeSuggest();
+  submitSearch();
+}
+
+function onSearchKeydown(e: KeyboardEvent) {
+  if (e.key === "ArrowDown") {
+    if (!suggestOpen.value && suggestions.value.length) {
+      suggestOpen.value = true;
+      selectedSuggestIndex.value = 0;
+      e.preventDefault();
+      return;
+    }
+    if (suggestOpen.value && suggestions.value.length) {
+      selectedSuggestIndex.value =
+        (selectedSuggestIndex.value + 1) % suggestions.value.length;
+      e.preventDefault();
+    }
+  } else if (e.key === "ArrowUp") {
+    if (suggestOpen.value && suggestions.value.length) {
+      selectedSuggestIndex.value =
+        selectedSuggestIndex.value <= 0
+          ? suggestions.value.length - 1
+          : selectedSuggestIndex.value - 1;
+      e.preventDefault();
+    }
+  } else if (e.key === "Enter") {
+    if (
+      suggestOpen.value &&
+      selectedSuggestIndex.value >= 0 &&
+      selectedSuggestIndex.value < suggestions.value.length
+    ) {
+      e.preventDefault();
+      pickSuggestion(suggestions.value[selectedSuggestIndex.value]);
+    } else {
+      submitSearch();
+    }
+  } else if (e.key === "Escape") {
+    closeSuggest();
+  }
+}
+
+watch(query, (value) => {
+  clearTimeout(suggestTimer);
+  const q = value.trim();
+  if (q.length < 2) {
+    suggestions.value = [];
+    selectedSuggestIndex.value = -1;
+    return;
+  }
+  suggestTimer = setTimeout(() => {
+    void api
+      .searchSuggest(q)
+      .then((list) => {
+        suggestions.value = list.filter(
+          (hint) => hint.toLowerCase() !== q.toLowerCase(),
+        );
+        selectedSuggestIndex.value = -1;
+        if (suggestions.value.length) {
+          suggestOpen.value = true;
+        }
+      })
+      .catch(() => {
+        suggestions.value = [];
+        selectedSuggestIndex.value = -1;
+      });
+  }, 220);
+});
 const rightPanel = computed({
   get: () => panels.queueOpen,
   set: (value: boolean) => {
@@ -647,15 +791,19 @@ const lyricsBox = computed(() => ({
   right: rightPanel.value ? "300px" : "0px",
 }));
 
-const nav = [
-  { to: "/", label: "Главное", icon: "mingcute:home-3-line" },
-  { to: "/search", label: "Поиск", icon: "mingcute:search-2-line" },
-  { to: "/wave", label: "Моя волна", icon: "mingcute:wave-line" },
-  { to: "/liked", label: "Мне нравится", icon: "mingcute:heart-line" },
-  { to: "/playlists", label: "Коллекция", icon: "mingcute:book-2-line" },
-  { to: "/library", label: "Поиск в библиотеке", icon: "mingcute:filter-line" },
-  { to: "/stats", label: "Статистика", icon: "mingcute:chart-bar-line" },
-];
+const nav = computed(() =>
+  (ui.settings.sidebarItems || [])
+    .map((id) => {
+      const base = ALL_NAV_ITEMS[id];
+      if (!base) return null;
+      return {
+        ...base,
+        label: ui.settings.sidebarLabels?.[id] || base.label,
+        icon: ui.settings.sidebarIcons?.[id] || base.icon,
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => Boolean(x)),
+);
 
 type ScrollAreaRef = {
   getScrollTarget: () => HTMLElement;
@@ -740,6 +888,7 @@ function jumpTo(index: number) {
 }
 
 function submitSearch() {
+  closeSuggest();
   if (!query.value.trim()) return;
   void router.push({ name: "search", query: { q: query.value.trim() } });
 }
@@ -840,6 +989,8 @@ watch(
 window.addEventListener("focus", onWindowFocus);
 
 onBeforeUnmount(() => {
+  clearTimeout(suggestTimer);
+  clearTimeout(blurTimer);
   window.removeEventListener("focus", onWindowFocus);
   unbindLocalHotkeys();
   unbindGlobalHotkeyEvents();

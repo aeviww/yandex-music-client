@@ -56,14 +56,17 @@
             </div>
           </header>
 
-          <template v-if="visiblePlaylists.length">
+          <template v-for="sectionId in orderedHomeSections" :key="sectionId">
+          <template
+            v-if="sectionId === 'playlists' && visiblePlaylists.length"
+          >
             <div
               class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
             >
               <h2
                 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
               >
-                для тебя
+                {{ sectionTitle('playlists', 'для тебя') }}
               </h2>
               <button
                 class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
@@ -213,150 +216,154 @@
             </div>
           </template>
 
-          <div
-            class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
-          >
-            <h2
-              class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
-            >
-              недавно прослушанные
-            </h2>
-          </div>
-
-          <div :class="[strip, colsMd]">
-            <template v-if="recent.length">
-              <div
-                v-for="r in recent"
-                :key="r.id"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
-                @click="openRecent(r)"
-              >
-                <div
-                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
-                >
-                  <img
-                    v-if="r.cover_url"
-                    loading="lazy"
-                    decoding="async"
-                    :src="r.cover_url"
-                  />
-                  <Icon
-                    v-else
-                    name="mingcute:album-line"
-                    :size="22"
-                    class="text-[color:var(--fg-faint)]"
-                  />
-
-                  <button
-                    :class="fab"
-                    type="button"
-                    title="Слушать"
-                    @click.stop="playRecent(r)"
-                  >
-                    <Icon name="mingcute:play-fill" :size="15" />
-                  </button>
-                </div>
-                <div
-                  class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
-                >
-                  {{ r.title }}
-                </div>
-                <div
-                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
-                >
-                  {{ r.subtitle }}
-                </div>
-              </div>
-            </template>
-
-            <template v-else>
-              <div
-                class="col-span-full py-[28px] text-[13.5px] text-[color:var(--fg-faint)]"
-              >
-                тут появится то, что послушаешь
-              </div>
-            </template>
-          </div>
-
-          <div
-            class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
-          >
-            <h2
-              class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
-            >
-              новые релизы
-            </h2>
-          </div>
-
-          <div :class="[strip, colsSm]">
-            <template v-if="releases.length">
-              <div
-                v-for="a in releases"
-                :key="a.id"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
-                @click="router.push(`/album/${a.id}`)"
-              >
-                <div
-                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
-                >
-                  <img
-                    v-if="a.cover_url"
-                    loading="lazy"
-                    decoding="async"
-                    :src="a.cover_url"
-                  />
-                  <Icon
-                    v-else
-                    name="mingcute:album-line"
-                    :size="22"
-                    class="text-[color:var(--fg-faint)]"
-                  />
-
-                  <button
-                    :class="fab"
-                    type="button"
-                    title="Слушать"
-                    @click.stop="playAlbum(a.id)"
-                  >
-                    <Icon name="mingcute:play-fill" :size="15" />
-                  </button>
-                </div>
-                <div
-                  class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
-                >
-                  {{ a.title }}
-                </div>
-                <div
-                  class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
-                >
-                  {{ a.artist || a.year || "" }}
-                </div>
-              </div>
-            </template>
-
-            <template v-else>
-              <div v-for="n in 12" :key="n" class="min-w-0">
-                <div
-                  class="relative aspect-square w-full overflow-hidden rounded-[10px] bg-[var(--surface)]"
-                />
-                <div
-                  class="mt-[10px] h-[11px] w-[70%] rounded bg-[var(--surface)]"
-                />
-                <div
-                  class="mt-[6px] h-[9px] w-[45%] rounded bg-[var(--surface)]"
-                />
-              </div>
-            </template>
-          </div>
-
-          <template v-if="picks.length">
+          <template v-else-if="sectionId === 'recent'">
             <div
               class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
             >
               <h2
                 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
               >
-                новое для тебя
+                {{ sectionTitle('recent', 'недавно прослушанные') }}
+              </h2>
+            </div>
+
+            <div :class="[strip, colsMd]">
+              <template v-if="recent.length">
+                <div
+                  v-for="r in recent"
+                  :key="r.id"
+                  class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  @click="openRecent(r)"
+                >
+                  <div
+                    class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                  >
+                    <img
+                      v-if="r.cover_url"
+                      loading="lazy"
+                      decoding="async"
+                      :src="r.cover_url"
+                    />
+                    <Icon
+                      v-else
+                      name="mingcute:album-line"
+                      :size="22"
+                      class="text-[color:var(--fg-faint)]"
+                    />
+
+                    <button
+                      :class="fab"
+                      type="button"
+                      title="Слушать"
+                      @click.stop="playRecent(r)"
+                    >
+                      <Icon name="mingcute:play-fill" :size="15" />
+                    </button>
+                  </div>
+                  <div
+                    class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
+                  >
+                    {{ r.title }}
+                  </div>
+                  <div
+                    class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                  >
+                    {{ r.subtitle }}
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div
+                  class="col-span-full py-[28px] text-[13.5px] text-[color:var(--fg-faint)]"
+                >
+                  тут появится то, что послушаешь
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <template v-else-if="sectionId === 'releases'">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
+                {{ sectionTitle('releases', 'новые релизы') }}
+              </h2>
+            </div>
+
+            <div :class="[strip, colsSm]">
+              <template v-if="releases.length">
+                <div
+                  v-for="a in releases"
+                  :key="a.id"
+                  class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  @click="router.push(`/album/${a.id}`)"
+                >
+                  <div
+                    class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                  >
+                    <img
+                      v-if="a.cover_url"
+                      loading="lazy"
+                      decoding="async"
+                      :src="a.cover_url"
+                    />
+                    <Icon
+                      v-else
+                      name="mingcute:album-line"
+                      :size="22"
+                      class="text-[color:var(--fg-faint)]"
+                    />
+
+                    <button
+                      :class="fab"
+                      type="button"
+                      title="Слушать"
+                      @click.stop="playAlbum(a.id)"
+                    >
+                      <Icon name="mingcute:play-fill" :size="15" />
+                    </button>
+                  </div>
+                  <div
+                    class="mt-[9px] text-[14.5px] font-semibold leading-[1.35] tracking-[-0.015em] truncate"
+                  >
+                    {{ a.title }}
+                  </div>
+                  <div
+                    class="mt-[3px] text-[12px] leading-[1.45] text-[color:var(--fg-faint)] truncate"
+                  >
+                    {{ a.artist || a.year || "" }}
+                  </div>
+                </div>
+              </template>
+
+              <template v-else>
+                <div v-for="n in 12" :key="n" class="min-w-0">
+                  <div
+                    class="relative aspect-square w-full overflow-hidden rounded-[10px] bg-[var(--surface)]"
+                  />
+                  <div
+                    class="mt-[10px] h-[11px] w-[70%] rounded bg-[var(--surface)]"
+                  />
+                  <div
+                    class="mt-[6px] h-[9px] w-[45%] rounded bg-[var(--surface)]"
+                  />
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <template v-else-if="sectionId === 'picks' && picks.length">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <h2
+                class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+              >
+                {{ sectionTitle('picks', 'новое для тебя') }}
               </h2>
             </div>
 
@@ -464,14 +471,14 @@
             </div>
           </template>
 
-          <template v-if="waves.length">
+          <template v-else-if="sectionId === 'waves' && waves.length">
             <div
               class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
             >
               <h2
                 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
               >
-                миксы для тебя
+                {{ sectionTitle('waves', 'миксы для тебя') }}
               </h2>
               <button
                 class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
@@ -554,14 +561,14 @@
             </div>
           </template>
 
-          <template v-if="neuroItems.length">
+          <template v-else-if="sectionId === 'neuro' && neuroItems.length">
             <div
               class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
             >
               <h2
                 class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
               >
-                нейромузыка
+                {{ sectionTitle('neuro', 'нейромузыка') }}
               </h2>
             </div>
             <p class="mb-0 mt-[-6px] text-[12px] text-[color:var(--fg-faint)]">
@@ -616,6 +623,7 @@
                 <Icon name="mingcute:arrow-right-line" :size="18" />
               </button>
             </div>
+          </template>
           </template>
 
           <div v-if="loading" class="mt-8">
@@ -681,6 +689,9 @@ import { neuro, startNeuro } from "@/lib/neuro";
 import { useLibraryStore } from "@/stores/library";
 import { usePlayerStore } from "@/stores/player/index";
 import { useStatsStore } from "@/stores/stats";
+import { useUiStore } from "@/stores/ui/index";
+import type { HomeSectionId } from "@/stores/ui/index";
+import { ALL_HOME_SECTIONS } from "@/constants/navigation";
 
 interface RecentItem {
   id: string;
@@ -695,6 +706,13 @@ const router = useRouter();
 const player = usePlayerStore();
 const library = useLibraryStore();
 const stats = useStatsStore();
+const ui = useUiStore();
+const orderedHomeSections = computed(
+  () => ui.settings.homeSections || [],
+);
+function sectionTitle(id: HomeSectionId, fallback: string): string {
+  return ui.settings.homeLabels?.[id] || ALL_HOME_SECTIONS[id]?.label || fallback;
+}
 const playlists = ref<Playlist[]>([]);
 const wheel = ref<WheelItem[]>([]);
 const releases = ref<AlbumBrief[]>([]);
