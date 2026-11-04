@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[10px] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]">
+  <div class="flex w-full items-center justify-between min-h-[50px] box-border gap-[20px] px-[10px] py-[9px] rounded-[calc(var(--radius)*0.8333)] m-0 text-inherit text-left transition-[background] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,_var(--fg)_3.5%,_transparent)]">
     <div class="flex min-w-0 flex-col gap-[3px] [&_b]:text-[color:var(--fg)] [&_b]:text-[calc(13px*var(--text-scale,1))] [&_b]:font-semibold [&_span]:text-[color:var(--fg-dim)] [&_span]:text-[calc(11.5px*var(--text-scale,1))] [&_span]:leading-[1.4]">
       <b>Своя комната</b>
       <span>
@@ -11,7 +11,7 @@
     <div class="flex items-center gap-[8px]">
       <input
         v-model.number="port"
-        class="w-[92px] px-[10px] py-[7px] rounded-[8px] border border-[color:var(--border,rgba(255,255,255,0.12))] bg-transparent text-inherit"
+        class="w-[92px] px-[10px] py-[7px] rounded-[calc(var(--radius)*0.6667)] border border-[color:var(--border,rgba(255,255,255,0.12))] bg-transparent text-inherit"
         type="number"
         min="1024"
         max="65535"
@@ -20,7 +20,7 @@
 
       <button
         v-if="!together.isHost"
-        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
         type="button"
         :disabled="together.busy || together.active"
         @click="together.host(port)"
@@ -30,7 +30,7 @@
 
       <button
         v-else
-        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[8px] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[calc(var(--radius)*0.6667)] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
         type="button"
         :disabled="together.busy"
         @click="together.leave()"
@@ -42,7 +42,7 @@
 
   <div
     v-if="together.isHost"
-    class="flex flex-col gap-[6px] px-[14px] py-[12px] rounded-[10px] bg-[var(--surface-2,rgba(255,255,255,0.06))] [&_span]:opacity-[0.65] [&_span]:text-[12px]"
+    class="flex flex-col gap-[6px] px-[14px] py-[12px] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2,rgba(255,255,255,0.06))] [&_span]:opacity-[0.65] [&_span]:text-[12px]"
   >
     <b>Адрес для друзей</b>
 
@@ -60,7 +60,7 @@
       >
 
       <button
-        class="inline-flex flex-none p-[5px] border-0 rounded-[7px] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
+        class="inline-flex flex-none p-[5px] border-0 rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
         type="button"
         :title="shown ? 'Скрыть адрес' : 'Показать адрес'"
         @click="shown = !shown"
@@ -69,7 +69,7 @@
       </button>
 
       <button
-        class="inline-flex flex-none p-[5px] border-0 rounded-[7px] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
+        class="inline-flex flex-none p-[5px] border-0 rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-dim,inherit)] cursor-pointer hover:bg-[var(--hover,rgba(255,255,255,0.08))] hover:text-[color:var(--fg,inherit)]"
         type="button"
         title="Скопировать адрес"
         @click="copyInvite"

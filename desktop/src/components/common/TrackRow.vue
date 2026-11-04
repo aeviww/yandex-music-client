@@ -29,7 +29,7 @@
 
     <button
       v-if="selectable"
-      class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid rounded-[5px] text-[color:#fff] group-hover:opacity-[1] active:scale-[0.82] [transition:opacity_0.14s_ease,background_0.12s_ease,border-color_0.12s_ease,transform_0.24s_cubic-bezier(0.34,1.56,0.64,1)]"
+      class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid rounded-[calc(var(--radius)*0.4167)] text-[color:#fff] group-hover:opacity-[1] active:scale-[0.82] [transition:opacity_0.14s_ease,background_0.12s_ease,border-color_0.12s_ease,transform_0.24s_cubic-bezier(0.34,1.56,0.64,1)]"
       :class="
         selected
           ? 'on border-[color:var(--accent)] bg-[var(--accent)] opacity-[1]'
@@ -64,7 +64,7 @@
 
     <div
       v-if="showCover"
-      class="cover w-[38px] h-[38px] rounded-[10px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+      class="cover w-[38px] h-[38px] rounded-[calc(var(--radius)*0.8333)] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
       style="width: 38px; height: 38px"
     >
       <img
@@ -105,7 +105,7 @@
         </div>
 
         <div
-          class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] text-[color:var(--fg-faint)] cursor-pointer select-none opacity-0 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] group-hover:opacity-[1] group-[.on]:opacity-[1] [transition:opacity_0.14s_ease,transform_0.24s_cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.85] p-0 border-0 appearance-none duration-[120ms]"
+          class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-faint)] cursor-pointer select-none opacity-0 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] group-hover:opacity-[1] group-[.on]:opacity-[1] [transition:opacity_0.14s_ease,transform_0.24s_cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.85] p-0 border-0 appearance-none duration-[120ms]"
           @click.stop
         >
           <Icon name="mingcute:more-1-fill" :size="15" />
@@ -142,7 +142,7 @@
     <div class="flex w-[84px] items-center justify-end gap-[2px] flex-none invisible group-hover:visible">
       <div
         v-if="reorderable"
-        class="flex w-[27px] h-[27px] items-center justify-center rounded-[7px] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+        class="flex w-[27px] h-[27px] items-center justify-center rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
         @click.stop="emit('remove')"
       >
         <Icon name="mingcute:delete-2-line" :size="17" />
@@ -150,7 +150,7 @@
       </div>
 
       <div
-        class="flex w-[27px] h-[27px] items-center justify-center rounded-[7px] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] text-[color:var(--fg-faint)] p-0 border-0 appearance-none hover:text-[color:var(--fg)]"
+        class="flex w-[27px] h-[27px] items-center justify-center rounded-[calc(var(--radius)*0.5833)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] text-[color:var(--fg-faint)] p-0 border-0 appearance-none hover:text-[color:var(--fg)]"
         :class="
           isLiked
             ? 'on text-[color:var(--accent)]'
@@ -165,7 +165,7 @@
       </div>
 
       <div
-        class="flex w-[27px] h-[27px] items-center justify-center rounded-[7px] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+        class="flex w-[27px] h-[27px] items-center justify-center rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
         @click.stop
       >
         <Icon name="mingcute:more-1-fill" :size="17" />

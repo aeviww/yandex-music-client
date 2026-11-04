@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="neuro.item && barHidden"
-    class="fixed z-[60] left-[max(14px,var(--neuro-left,14px))] bottom-[84px] flex max-w-[560px] min-w-0 items-center gap-3 rounded-[14px] border border-[color:var(--line)] bg-[var(--surface)] p-[8px] pr-[10px] shadow-[0_18px_44px_-20px_rgba(0,0,0,0.65)]"
+    class="fixed z-[60] left-[max(14px,var(--neuro-left,14px))] bottom-[84px] flex max-w-[560px] min-w-0 items-center gap-3 rounded-[calc(var(--radius)*1.1667)] border border-[color:var(--line)] bg-[var(--surface)] p-[8px] pr-[10px] shadow-[0_18px_44px_-20px_rgba(0,0,0,0.65)]"
     :style="{
       '--neuro-left':
         typeof ui.settings.sidebarWidth === 'number'
@@ -10,7 +10,7 @@
     }"
   >
     <div
-      class="relative h-[48px] w-[48px] flex-none overflow-hidden rounded-[10px] bg-[var(--surface-2)]"
+      class="relative h-[48px] w-[48px] flex-none overflow-hidden rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2)]"
     >
       <img
         v-if="neuro.stream?.cover_url"
@@ -45,7 +45,7 @@
     <button
       v-else
       type="button"
-      class="grid h-[36px] w-[36px] flex-none place-items-center rounded-full bg-white text-black transition-[background] duration-150 hover:bg-white/85"
+      class="grid h-[36px] w-[36px] flex-none place-items-center rounded-[calc(var(--radius)*1.5)] bg-white text-black transition-[background] duration-150 hover:bg-white/85"
       @click="togglePlay"
     >
       <Icon
@@ -56,7 +56,7 @@
 
     <button
       type="button"
-      class="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-[6px] border-0 p-0 appearance-none text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] hover:text-[color:var(--fg)]"
+      class="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-[calc(var(--radius)*0.5)] border-0 p-0 appearance-none text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] hover:text-[color:var(--fg)]"
       title="Выключить нейромузыку"
       @click="stopNeuro"
     >

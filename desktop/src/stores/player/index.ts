@@ -151,6 +151,7 @@ interface PlayerState {
   lyricsTranslateLoading: boolean;
   showLyrics: boolean;
   lyricsFullscreen: boolean;
+  lyricsResumeNext: boolean;
   fullscreen: boolean;
   waveError: string | null;
   presenceError: string | null;
@@ -265,6 +266,7 @@ export const usePlayerStore = defineStore("player", {
       lyricsTranslateLoading: false,
       showLyrics: false,
       lyricsFullscreen: false,
+      lyricsResumeNext: false,
       fullscreen: false,
       waveError: null,
       presenceError: null,
@@ -652,6 +654,7 @@ export const usePlayerStore = defineStore("player", {
       this.lyricsOrigin = null;
       this.showLyrics = false;
       this.lyricsFullscreen = false;
+      this.lyricsResumeNext = false;
       this.fullscreen = false;
       if (this.queue.length > 120) {
         const from = Math.max(0, this.index - 20);
@@ -1241,7 +1244,7 @@ export const usePlayerStore = defineStore("player", {
             station_id: this.stationId ?? undefined,
           });
         }
-        if (this.showLyrics) void this.loadLyrics();
+        if (this.showLyrics || this.lyricsResumeNext) void this.loadLyrics();
       } catch (e) {
         const name = (e as DOMException | undefined)?.name;
         log.error("loadCurrent failed", e);
@@ -1428,7 +1431,12 @@ export const usePlayerStore = defineStore("player", {
       }
 
       if (this.lyricsFullscreen && !this.lyrics?.lines?.length) {
-        this.openFullscreen();
+        this.lyricsFallbackToCover();
+      } else if (this.lyricsResumeNext && this.lyrics?.lines?.length) {
+        this.lyricsResumeNext = false;
+        this.fullscreen = false;
+        this.showLyrics = true;
+        this.lyricsFullscreen = true;
       }
 
       void this.loadTranslation();
@@ -1484,23 +1492,37 @@ export const usePlayerStore = defineStore("player", {
         return;
       }
       this.showLyrics = !this.showLyrics;
-      if (this.showLyrics) void this.loadLyrics();
+      this.lyricsResumeNext = false;
+      if (this.showLyrics) {
+        this.fullscreen = false;
+        void this.loadLyrics();
+      }
     },
 
     closeLyrics() {
       this.showLyrics = false;
       this.lyricsFullscreen = false;
+      this.lyricsResumeNext = false;
+    },
+
+    lyricsFallbackToCover() {
+      this.lyricsFullscreen = false;
+      this.showLyrics = false;
+      this.fullscreen = true;
+      this.lyricsResumeNext = true;
     },
 
     openFullscreen() {
       if (!this.current) return;
       this.lyricsFullscreen = false;
       this.showLyrics = false;
+      this.lyricsResumeNext = false;
       this.fullscreen = true;
     },
 
     closeFullscreen() {
       this.fullscreen = false;
+      this.lyricsResumeNext = false;
     },
 
     toggleFullscreen() {
@@ -1520,19 +1542,21 @@ export const usePlayerStore = defineStore("player", {
       if (ready?.lines?.length) {
         this.lyrics = ready;
         this.lyricsError = null;
+        this.lyricsResumeNext = false;
         this.fullscreen = false;
         this.showLyrics = true;
         this.lyricsFullscreen = true;
         return;
       }
 
-      this.openFullscreen();
+      this.lyricsFallbackToCover();
       await this.loadLyrics();
       if (
         this.fullscreen &&
         this.current?.id === track.id &&
         this.lyrics?.lines?.length
       ) {
+        this.lyricsResumeNext = false;
         this.fullscreen = false;
         this.showLyrics = true;
         this.lyricsFullscreen = true;

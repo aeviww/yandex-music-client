@@ -9,21 +9,21 @@
     >
       <button
         type="button"
-        class="px-[8px] py-[3px] rounded-[7px] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+        class="px-[8px] py-[3px] rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
         @click="reset"
       >
         Сброс
       </button>
       <button
         type="button"
-        class="px-[8px] py-[3px] rounded-[7px] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+        class="px-[8px] py-[3px] rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-dim)] text-[10.5px] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
         @click="cancel"
       >
         Отмена
       </button>
       <button
         type="button"
-        class="ml-[4px] px-[10px] py-[3px] rounded-[7px] bg-[var(--accent)] text-[color:#fff] text-[10.5px] cursor-pointer hover:opacity-90"
+        class="ml-[4px] px-[10px] py-[3px] rounded-[calc(var(--radius)*0.5833)] bg-[var(--accent)] text-[color:#fff] text-[10.5px] cursor-pointer hover:opacity-90"
         @click="ui.finishEdit()"
       >
         Готово
@@ -123,7 +123,7 @@
         <div
           v-for="(id, index) in order"
           :key="id"
-          class="flex items-center gap-[6px] px-[6px] py-[4px] rounded-[8px] text-[11px] cursor-grab hover:bg-[var(--surface-2)]"
+          class="flex items-center gap-[6px] px-[6px] py-[4px] rounded-[calc(var(--radius)*0.6667)] text-[11px] cursor-grab hover:bg-[var(--surface-2)]"
           :class="{
             'opacity-45': !visible(id) && dragId !== id,
             'opacity-35': dragId === id,
@@ -143,7 +143,7 @@
           <span class="flex-1 min-w-0 truncate">{{ labelOf(id) }}</span>
           <button
             type="button"
-            class="inline-flex items-center justify-center w-[20px] h-[20px] flex-none border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer enabled:hover:bg-[var(--hover)] enabled:hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-35"
+            class="inline-flex items-center justify-center w-[20px] h-[20px] flex-none border-0 rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-dim)] cursor-pointer enabled:hover:bg-[var(--hover)] enabled:hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-35"
             :disabled="locked.has(id)"
             @click.stop="toggle(id)"
           >

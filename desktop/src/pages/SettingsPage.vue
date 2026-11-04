@@ -7,7 +7,7 @@
       >
         <div class="flex flex-none items-center gap-3">
           <span
-            class="grid h-9 w-9 place-items-center rounded-lg border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)]"
+            class="grid h-9 w-9 place-items-center rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)]"
           >
             <Icon name="mingcute:settings-5-line" :size="18" />
           </span>
@@ -20,7 +20,7 @@
 
         <div class="mx-auto w-full max-w-[440px]">
           <label
-            class="flex h-9 items-center gap-2 rounded-lg border border-[var(--line)] bg-transparent px-3 transition duration-150 focus-within:border-[color-mix(in_srgb,var(--accent)_45%,var(--line))]"
+            class="flex h-9 items-center gap-2 rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-transparent px-3 transition duration-150 focus-within:border-[color-mix(in_srgb,var(--accent)_45%,var(--line))]"
           >
             <Icon
               name="mingcute:search-2-line"
@@ -36,7 +36,7 @@
             />
             <button
               v-if="query"
-              class="grid h-5 w-5 flex-none place-items-center rounded-md border-0 text-[color:var(--fg-faint)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+              class="grid h-5 w-5 flex-none place-items-center rounded-[calc(var(--radius)*0.5)] border-0 text-[color:var(--fg-faint)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
               type="button"
               title="Очистить"
               @click="query = ''"
@@ -48,7 +48,7 @@
 
         <button
           type="button"
-          class="grid h-9 w-9 flex-none place-items-center rounded-lg border border-[var(--line)] text-[color:var(--fg-dim)] transition duration-150 hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+          class="grid h-9 w-9 flex-none place-items-center rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] text-[color:var(--fg-dim)] transition duration-150 hover:bg-[var(--hover)] hover:text-[var(--fg)]"
           title="Закрыть настройки (Esc)"
           aria-label="Закрыть настройки"
           @click="close"
@@ -73,7 +73,7 @@
                 v-for="section in group.items"
                 :key="section.id"
                 type="button"
-                class="group flex h-10 w-full items-center gap-3 rounded-lg border-0 px-3 text-left text-[calc(13px*var(--text-scale,1))] transition duration-150"
+                class="group flex h-10 w-full items-center gap-3 rounded-[calc(var(--radius)*0.6667)] border-0 px-3 text-left text-[calc(13px*var(--text-scale,1))] transition duration-150"
                 :class="
                   active === section.id
                     ? 'bg-[color-mix(in_srgb,var(--fg)_7%,transparent)] font-semibold text-[var(--fg)]'
@@ -96,7 +96,7 @@
                 }}</span>
                 <span
                   v-if="section.hits.length"
-                  class="flex-none rounded-full bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] px-1.5 text-[calc(10px*var(--text-scale,1))] font-semibold tabular-nums text-[color:var(--fg-faint)]"
+                  class="flex-none rounded-[calc(var(--radius)*0.75)] bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] px-1.5 text-[calc(10px*var(--text-scale,1))] font-semibold tabular-nums text-[color:var(--fg-faint)]"
                   :title="section.hits.join(' · ')"
                 >
                   {{ section.hits.length }}
@@ -115,7 +115,7 @@
           <div class="mt-3 flex-none border-t border-[var(--line)] pt-3">
             <button
               type="button"
-              class="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-[color-mix(in_srgb,#ff5d5d_35%,var(--line))] text-[calc(12px*var(--text-scale,1))] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_10%,transparent)] hover:text-[#ff5d5d]"
+              class="flex h-9 w-full items-center justify-center gap-2 rounded-[calc(var(--radius)*0.6667)] border border-[color-mix(in_srgb,#ff5d5d_35%,var(--line))] text-[calc(12px*var(--text-scale,1))] font-medium text-[#ff8080] transition duration-150 hover:bg-[color-mix(in_srgb,#ff5d5d_10%,transparent)] hover:text-[#ff5d5d]"
               @click="reset"
             >
               <Icon name="mingcute:delete-2-line" :size="15" />

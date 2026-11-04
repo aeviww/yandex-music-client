@@ -1,13 +1,13 @@
 <template>
   <div
-    class="absolute z-[8] top-[58px] right-[16px] w-[306px] max-h-[min(74vh,_620px)] overflow-x-hidden overflow-y-auto pt-[4px] px-[4px] pb-[10px] border border-[color:rgba(255,255,255,0.1)] rounded-[14px] bg-[rgba(18,18,22,0.86)] shadow-[0_26px_70px_rgba(0,0,0,0.55)] [backdrop-filter:blur(28px)_saturate(1.3)] text-[color:#fff] lset-anim"
+    class="absolute z-[8] top-[58px] right-[16px] w-[306px] max-h-[min(74vh,_620px)] overflow-x-hidden overflow-y-auto pt-[4px] px-[4px] pb-[10px] border border-[color:rgba(255,255,255,0.1)] rounded-[calc(var(--radius)*1.1667)] bg-[rgba(18,18,22,0.86)] shadow-[0_26px_70px_rgba(0,0,0,0.55)] [backdrop-filter:blur(28px)_saturate(1.3)] text-[color:#fff] lset-anim"
     @click.stop
   >
     <div class="flex items-center justify-between gap-[8px] pt-[10px] pr-[10px] pb-[8px] pl-[12px]">
       <div class="text-[12.5px] font-[620] tracking-[-0.01em]">Вид текста</div>
       <button
         type="button"
-        class="px-[8px] py-[4px] border-0 rounded-[7px] text-[color:rgba(255,255,255,0.5)] text-[11px] cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-[color:#fff]"
+        class="px-[8px] py-[4px] border-0 rounded-[calc(var(--radius)*0.5833)] text-[color:rgba(255,255,255,0.5)] text-[11px] cursor-pointer hover:bg-[rgba(255,255,255,0.08)] hover:text-[color:#fff]"
         @click="ui.resetLyrics()"
       >
         Сбросить
@@ -63,7 +63,7 @@
       </label>
 
       <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Шрифт</div>
-      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
         <button
           v-for="font in fonts"
           :key="font.id"
@@ -77,7 +77,7 @@
 
       <div v-if="s.lyricsFont === 'custom'" class="flex flex-col gap-[7px]">
         <input
-          class="w-full h-[30px] px-[9px] py-0 border border-[color:var(--line)] rounded-[8px] bg-[rgba(255,255,255,0.04)] text-[color:var(--fg)] text-[12px] [outline:none] focus:border-[color:color-mix(in_srgb,var(--accent)_60%,transparent)]"
+          class="w-full h-[30px] px-[9px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] bg-[rgba(255,255,255,0.04)] text-[color:var(--fg)] text-[12px] [outline:none] focus:border-[color:color-mix(in_srgb,var(--accent)_60%,transparent)]"
           type="text"
           :placeholder="
             fontsLoading
@@ -129,7 +129,7 @@
         <button
           v-if="!fontsLoading && needsPermission"
           type="button"
-          class="px-[9px] py-[6px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[11.5px] hover:border-transparent hover:bg-[rgba(255,255,255,0.07)] hover:text-[color:var(--fg)]"
+          class="px-[9px] py-[6px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[11.5px] hover:border-transparent hover:bg-[rgba(255,255,255,0.07)] hover:text-[color:var(--fg)]"
           @click="loadFonts(true)"
         >
           Показать шрифты системы
@@ -137,7 +137,7 @@
       </div>
 
       <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Выравнивание</div>
-      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
         <button
           v-for="align in aligns"
           :key="align.id"
@@ -150,7 +150,7 @@
       </div>
 
       <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Активная строка</div>
-      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
         <button
           v-for="item in highlights"
           :key="item.id"
@@ -207,7 +207,7 @@
     <div class="pt-[6px] px-[12px] pb-[10px] border-t border-[color:rgba(255,255,255,0.07)]">
       <div class="mb-[9px] text-[color:rgba(255,255,255,0.42)] text-[10px] font-[620] tracking-[0.08em] uppercase">Фон</div>
 
-      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
         <button
           v-for="item in backdrops"
           :key="item.id"
@@ -300,7 +300,7 @@
 
       <template v-if="s.lyricsTranslate">
         <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Как показывать</div>
-        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
           <button
             v-for="item in translateModes"
             :key="item.id"
@@ -313,7 +313,7 @@
         </div>
 
         <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Язык</div>
-        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
           <button
             v-for="item in translateTargets"
             :key="item.id"
@@ -341,7 +341,7 @@
 
       <template v-if="s.lyricsAnnotations">
         <div class="mb-[5px] text-[color:rgba(255,255,255,0.56)] text-[11.5px]">Как отмечать</div>
-        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+        <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
           <button
             v-for="item in marks"
             :key="item.id"
@@ -388,7 +388,7 @@
 
     <div class="pt-[6px] px-[12px] pb-[10px] border-t border-[color:rgba(255,255,255,0.07)]">
       <div class="mb-[9px] text-[color:rgba(255,255,255,0.42)] text-[10px] font-[620] tracking-[0.08em] uppercase">Источник по умолчанию</div>
-      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[9px] bg-[rgba(255,255,255,0.06)]">
+      <div class="grid grid-flow-col [grid-auto-columns:1fr] gap-[3px] mb-[11px] p-[3px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.06)]">
         <button
           v-for="item in lyricsSources"
           :key="item.id"
@@ -425,10 +425,10 @@ const ui = useUiStore();
 const s = computed(() => ui.settings);
 
 const RANGE_CLASS =
-  "block w-full h-[16px] m-0 bg-transparent cursor-pointer appearance-none [-webkit-appearance:none] [&::-webkit-slider-runnable-track]:h-[3px] [&::-webkit-slider-runnable-track]:rounded-[3px] [&::-webkit-slider-runnable-track]:bg-[rgba(255,255,255,0.16)] [&::-moz-range-track]:h-[3px] [&::-moz-range-track]:rounded-[3px] [&::-moz-range-track]:bg-[rgba(255,255,255,0.16)] [&::-webkit-slider-thumb]:w-[12px] [&::-webkit-slider-thumb]:h-[12px] [&::-webkit-slider-thumb]:mt-[-4.5px] [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#fff] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:[-webkit-appearance:none] [&::-moz-range-thumb]:w-[12px] [&::-moz-range-thumb]:h-[12px] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#fff]";
+  "block w-full h-[16px] m-0 bg-transparent cursor-pointer appearance-none [-webkit-appearance:none] [&::-webkit-slider-runnable-track]:h-[3px] [&::-webkit-slider-runnable-track]:rounded-[calc(var(--radius)*0.25)] [&::-webkit-slider-runnable-track]:bg-[rgba(255,255,255,0.16)] [&::-moz-range-track]:h-[3px] [&::-moz-range-track]:rounded-[calc(var(--radius)*0.25)] [&::-moz-range-track]:bg-[rgba(255,255,255,0.16)] [&::-webkit-slider-thumb]:w-[12px] [&::-webkit-slider-thumb]:h-[12px] [&::-webkit-slider-thumb]:mt-[-4.5px] [&::-webkit-slider-thumb]:border-0 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#fff] [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:[-webkit-appearance:none] [&::-moz-range-thumb]:w-[12px] [&::-moz-range-thumb]:h-[12px] [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[#fff]";
 
 const SEG_BTN_BASE =
-  "px-[4px] py-[6px] border-0 rounded-[7px] text-[11px] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease]";
+  "px-[4px] py-[6px] border-0 rounded-[calc(var(--radius)*0.5833)] text-[11px] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease]";
 
 function segBtnClass(active: boolean) {
   return active
@@ -446,7 +446,7 @@ function switchClass(active: boolean) {
 }
 
 const FONT_BTN_BASE =
-  "flex w-full items-center justify-between gap-[10px] overflow-hidden px-[9px] py-[6px] border-0 rounded-[7px] cursor-pointer text-[13px] text-left text-ellipsis whitespace-nowrap";
+  "flex w-full items-center justify-between gap-[10px] overflow-hidden px-[9px] py-[6px] border-0 rounded-[calc(var(--radius)*0.5833)] cursor-pointer text-[13px] text-left text-ellipsis whitespace-nowrap";
 
 function fontBtnClass(active: boolean) {
   return active

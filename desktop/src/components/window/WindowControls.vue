@@ -6,7 +6,7 @@
       type="button"
       :aria-label="b.label"
       :title="b.label"
-      class="grid w-[44px] cursor-pointer place-items-center border-0 bg-transparent p-0 text-[color:var(--fg-faint)] transition-[background,color] duration-[120ms] ease-[ease] focus-visible:outline focus-visible:outline-[1.5px] focus-visible:-outline-offset-[3px] focus-visible:outline-[color:var(--accent)]"
+      class="grid w-[var(--window-button-width,44px)] cursor-pointer place-items-center border-0 bg-transparent p-0 text-[color:var(--fg-faint)] transition-[background,color] duration-[120ms] ease-[ease] focus-visible:outline focus-visible:outline-[1.5px] focus-visible:-outline-offset-[3px] focus-visible:outline-[color:var(--accent)]"
       :class="
         b.key === 'close'
           ? 'hover:bg-[#e5484d] hover:text-white active:bg-[#c93c40]'
@@ -21,6 +21,20 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
+
+const props = withDefaults(
+  defineProps<{
+    showMinimize?: boolean;
+    showMaximize?: boolean;
+    showClose?: boolean;
+  }>(),
+  {
+    showMinimize: true,
+    showMaximize: true,
+    showClose: true,
+  },
+);
+
 const maximized = ref(false);
 
 type AppWindow = {
@@ -56,29 +70,36 @@ async function close() {
   await win?.close();
 }
 
-const buttons = computed(() => [
-  {
-    key: "minimize",
-    label: "Свернуть",
-    icon: "mingcute:minimize-line",
-    size: 14,
-    action: minimize,
-  },
-  {
-    key: "maximize",
-    label: maximized.value ? "Восстановить" : "Развернуть",
-    icon: maximized.value ? "mingcute:restore-line" : "mingcute:square-line",
-    size: 12,
-    action: toggleMaximize,
-  },
-  {
-    key: "close",
-    label: "Закрыть",
-    icon: "mingcute:close-line",
-    size: 14,
-    action: close,
-  },
-]);
+const buttons = computed(() =>
+  [
+    {
+      key: "minimize",
+      label: "Свернуть",
+      icon: "mingcute:minimize-line",
+      size: 14,
+      action: minimize,
+      visible: props.showMinimize,
+    },
+    {
+      key: "maximize",
+      label: maximized.value ? "Восстановить" : "Развернуть",
+      icon: maximized.value
+        ? "mingcute:restore-line"
+        : "mingcute:square-line",
+      size: 12,
+      action: toggleMaximize,
+      visible: props.showMaximize,
+    },
+    {
+      key: "close",
+      label: "Закрыть",
+      icon: "mingcute:close-line",
+      size: 14,
+      action: close,
+      visible: props.showClose,
+    },
+  ].filter((button) => button.visible),
+);
 
 onMounted(async () => {
   const win = await appWindow();

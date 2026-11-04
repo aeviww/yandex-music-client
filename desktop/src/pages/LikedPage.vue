@@ -3,7 +3,7 @@
     <div class="flex-none pb-[14px]">
       <div class="row items-end no-wrap" style="gap: 26px">
         <div
-          class="cover rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          class="cover rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
           style="
             width: 132px;
             height: 132px;
@@ -26,11 +26,11 @@
           </div>
 
           <div class="row items-center q-mt-md" style="gap: 10px">
-            <div class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="playFrom(0)">
+            <div class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="playFrom(0)">
               <Icon name="mingcute:play-fill" :size="15" />
               <span>Слушать</span>
             </div>
-            <div class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="shufflePlay">
+            <div class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="shufflePlay">
               <Icon name="mingcute:shuffle-line" :size="15" />
               <span>Перемешать</span>
             </div>

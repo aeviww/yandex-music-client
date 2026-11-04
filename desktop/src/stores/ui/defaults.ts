@@ -19,6 +19,16 @@ export type AutoWaveSource = "playlist" | "personal";
 export type LyricsSource = "auto" | "lrclib" | "genius" | "yandex";
 
 export type LyricsFont = "sans" | "serif" | "mono" | "custom";
+export type AppFont =
+  | "onest"
+  | "golos"
+  | "manrope"
+  | "system"
+  | "serif"
+  | "mono"
+  | "minecraft"
+  | "jetbrains"
+  | "custom";
 export type LyricsAlign = "left" | "center" | "right";
 export type LyricsBackdrop = "cover" | "gradient" | "solid";
 export type LyricsHighlight = "white" | "accent" | "karaoke";
@@ -98,6 +108,22 @@ export interface InterfaceSettings {
   pagePadding: number;
   cardSize: number;
   textScale: number;
+  topbarVisible: boolean;
+  topbarHeight: number;
+  topbarShowLogo: boolean;
+  topbarLogoText: boolean;
+  topbarLogoSize: number;
+  topbarShowSearch: boolean;
+  topbarShowAccount: boolean;
+  topbarAccountName: boolean;
+  topbarAccountAvatarSize: number;
+  topbarShowWindowControls: boolean;
+  windowShowMinimize: boolean;
+  windowShowMaximize: boolean;
+  windowShowClose: boolean;
+  windowButtonWidth: number;
+  appFont: AppFont;
+  appFontCustom: string;
   coverStyle: CoverStyle;
   glass: boolean;
   glassBlur: number;
@@ -118,6 +144,9 @@ export interface InterfaceSettings {
   playerProgressThickness: number;
   playerShowTimes: boolean;
   playerEditMode: boolean;
+  sidebarEditMode: boolean;
+  topbarEditMode: boolean;
+  homeEditMode: boolean;
   playerMetaWidth: number;
   miniShowTime: boolean;
   miniVisualizer: boolean;
@@ -202,10 +231,26 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   radius: 12,
   density: "comfortable",
   sidebarWidth: 236,
-  searchWidth: 360,
+  searchWidth: 480,
   pagePadding: 40,
   cardSize: 150,
   textScale: 100,
+  topbarVisible: true,
+  topbarHeight: 46,
+  topbarShowLogo: true,
+  topbarLogoText: true,
+  topbarLogoSize: 24,
+  topbarShowSearch: true,
+  topbarShowAccount: true,
+  topbarAccountName: true,
+  topbarAccountAvatarSize: 28,
+  topbarShowWindowControls: true,
+  windowShowMinimize: true,
+  windowShowMaximize: true,
+  windowShowClose: true,
+  windowButtonWidth: 44,
+  appFont: "onest",
+  appFontCustom: "",
   coverStyle: "soft",
   glass: true,
   glassBlur: 24,
@@ -226,6 +271,9 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   playerProgressThickness: 4,
   playerShowTimes: true,
   playerEditMode: false,
+  sidebarEditMode: false,
+  topbarEditMode: false,
+  homeEditMode: false,
   playerMetaWidth: 260,
   miniShowTime: true,
   miniVisualizer: true,

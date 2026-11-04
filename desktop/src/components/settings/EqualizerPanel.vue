@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col gap-5 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-5"
+    class="flex flex-col gap-5 rounded-[var(--radius)] border border-[var(--line)] bg-[var(--surface)] p-5"
   >
     <div class="flex flex-wrap items-center gap-2.5">
       <button
@@ -43,7 +43,7 @@
     </div>
 
     <div
-      class="flex justify-between gap-1 rounded-xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_55%,var(--surface))] px-2.5 pb-1.5 pt-3.5 transition-opacity duration-150"
+      class="flex justify-between gap-1 rounded-[var(--radius)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_55%,var(--surface))] px-2.5 pb-1.5 pt-3.5 transition-opacity duration-150"
       :class="eq.enabled ? '' : 'opacity-40'"
     >
       <div

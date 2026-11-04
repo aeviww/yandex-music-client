@@ -1,6 +1,6 @@
 <template>
   <div
-    class="pe-panel absolute bottom-[calc(100%_+_8px)] left-1/2 z-30 w-[min(880px,calc(100vw_-_32px))] -translate-x-1/2 rounded-[16px] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface-2)_94%,transparent)] px-[13px] pt-[10px] pb-[11px] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
+    class="pe-panel absolute bottom-[calc(100%_+_8px)] left-1/2 z-30 w-[min(880px,calc(100vw_-_32px))] -translate-x-1/2 rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface-2)_94%,transparent)] px-[13px] pt-[10px] pb-[11px] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
     @contextmenu.stop.prevent
     @pointerdown.stop
   >
@@ -13,21 +13,21 @@
       <div class="flex items-center gap-[2px]">
         <button
           type="button"
-          class="h-[24px] px-[8px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-faint)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+          class="h-[24px] px-[8px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[color:var(--fg-faint)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           @click="ui.resetPlayerLayout()"
         >
           Сбросить
         </button>
         <button
           type="button"
-          class="h-[24px] px-[8px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+          class="h-[24px] px-[8px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[color:var(--fg-dim)] text-[11px] cursor-pointer transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           @click="ui.cancelEdit()"
         >
           Отмена
         </button>
         <button
           type="button"
-          class="h-[24px] px-[11px] border-0 rounded-[7px] bg-[var(--accent)] text-[color:#fff] text-[11px] font-[620] cursor-pointer transition-[filter] duration-[120ms] hover:brightness-110"
+          class="h-[24px] px-[11px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--accent)] text-[color:#fff] text-[11px] font-[620] cursor-pointer transition-[filter] duration-[120ms] hover:brightness-110"
           @click="ui.finishEdit()"
         >
           Готово
@@ -130,7 +130,7 @@
     </div>
 
     <div
-      class="mt-[9px] flex min-h-[32px] items-center gap-[5px] rounded-[9px] border border-dashed border-[color:var(--line)] px-[6px] py-[4px] transition-[background,border-color] duration-[140ms]"
+      class="mt-[9px] flex min-h-[32px] items-center gap-[5px] rounded-[calc(var(--radius)*0.75)] border border-dashed border-[color:var(--line)] px-[6px] py-[4px] transition-[background,border-color] duration-[140ms]"
       :class="{
         'border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]':
           trayOver,
@@ -148,7 +148,7 @@
       <span
         v-for="id in hidden"
         :key="id"
-        class="inline-flex items-center gap-[4px] px-[7px] py-[3px] rounded-[6px] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[10.5px] cursor-grab hover:text-[color:var(--fg)]"
+        class="inline-flex items-center gap-[4px] px-[7px] py-[3px] rounded-[calc(var(--radius)*0.5)] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[10.5px] cursor-grab hover:text-[color:var(--fg)]"
         draggable="true"
         @dragstart="onDragStart(id, $event)"
       >

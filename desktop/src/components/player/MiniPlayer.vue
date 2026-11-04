@@ -1,7 +1,7 @@
 <template>
   <div
-    class="fixed inset-0 z-[900] flex flex-col justify-between gap-[12px] px-[calc(var(--mini-pad,_10px)_+_2px)] py-[var(--mini-pad,_10px)] border border-[color:var(--line)] rounded-[16px] bg-[var(--bg)] opacity-[var(--mini-opacity,_1)] overflow-hidden select-none"
-    :class="preview ? '!absolute !z-[1] !rounded-[14px] pointer-events-none w-full max-w-[320px]' : ''"
+    class="fixed inset-0 z-[900] flex flex-col justify-between gap-[12px] px-[calc(var(--mini-pad,_10px)_+_2px)] py-[var(--mini-pad,_10px)] border border-[color:var(--line)] rounded-[calc(var(--radius)*1.3333)] bg-[var(--bg)] opacity-[var(--mini-opacity,_1)] overflow-hidden select-none"
+    :class="preview ? '!absolute !z-[1] !rounded-[calc(var(--radius)*1.1667)] pointer-events-none w-full max-w-[320px]' : ''"
     :style="rootStyle"
     @mousedown="onRootMouseDown"
     @contextmenu="onContext"
@@ -13,7 +13,7 @@
     />
 
     <div class="relative z-[1] flex items-center gap-[11px]" @dblclick="leaveMini()">
-      <div class="cover relative flex items-center justify-center flex-none w-[var(--mini-cover,_38px)] h-[var(--mini-cover,_38px)] overflow-hidden rounded-[10px] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
+      <div class="cover relative flex items-center justify-center flex-none w-[var(--mini-cover,_38px)] h-[var(--mini-cover,_38px)] overflow-hidden rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2)] [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
         <Transition name="pb-cover">
           <img
             v-if="player.current?.cover_url"
@@ -194,20 +194,20 @@
           <Transition name="mini-vol-pop">
             <div
               v-if="volumeOpen"
-              class="absolute bottom-[calc(100%_+_6px)] left-[50%] z-[30] flex max-h-[calc(var(--mini-h,_100vh)_-_96px)] flex-col items-center justify-center w-[26px] px-0 py-[7px] border border-[color:rgba(255,255,255,0.09)] rounded-full bg-[#141414] -translate-x-1/2 shadow-[0_10px_26px_rgba(0,0,0,0.55)]"
+              class="absolute bottom-[calc(100%_+_6px)] left-[50%] z-[30] flex max-h-[calc(var(--mini-h,_100vh)_-_96px)] flex-col items-center justify-center w-[26px] px-0 py-[7px] border border-[color:rgba(255,255,255,0.09)] rounded-[calc(var(--radius)*1.5)] bg-[#141414] -translate-x-1/2 shadow-[0_10px_26px_rgba(0,0,0,0.55)]"
               data-no-drag
               @wheel.prevent.stop="onVolWheel"
             >
               <div
                 ref="volTrack"
-                class="group relative w-[4px] flex-initial h-[min(var(--mini-volume-height,_40px),var(--mini-h,_100vh)_-_110px)] min-h-[24px] rounded-full bg-[color-mix(in_srgb,var(--fg)_16%,transparent)] cursor-grab touch-none transition-[width] duration-[120ms] ease-[ease] hover:w-[6px] active:cursor-grabbing before:absolute before:z-[1] before:inset-[-8px_-11px] before:content-['']"
+                class="group relative w-[4px] flex-initial h-[min(var(--mini-volume-height,_40px),var(--mini-h,_100vh)_-_110px)] min-h-[24px] rounded-[calc(var(--radius)*0.5)] bg-[color-mix(in_srgb,var(--fg)_16%,transparent)] cursor-grab touch-none transition-[width] duration-[120ms] ease-[ease] hover:w-[6px] active:cursor-grabbing before:absolute before:z-[1] before:inset-[-8px_-11px] before:content-['']"
                 @pointerdown.stop="onVolPointerDown"
               >
                 <div
-                  class="absolute bottom-0 left-0 w-full pointer-events-none rounded-full bg-[linear-gradient(to_top,color-mix(in_srgb,var(--accent)_70%,transparent),var(--accent))]"
+                  class="absolute bottom-0 left-0 w-full pointer-events-none rounded-[calc(var(--radius)*0.5)] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--accent)_70%,transparent),var(--accent))]"
                   :style="{ height: `${volumePercent}%` }"
                 >
-                  <span class="absolute top-0 left-1/2 w-[10px] h-[10px] pointer-events-none rounded-full bg-[var(--fg)] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_32%,transparent)] transition-[box-shadow] duration-[140ms] ease-[ease] group-hover:shadow-[0_0_0_5px_color-mix(in_srgb,var(--accent)_38%,transparent)]" />
+                  <span class="absolute top-0 left-1/2 w-[10px] h-[10px] pointer-events-none rounded-[calc(var(--radius)*0.4167)] bg-[var(--fg)] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_32%,transparent)] transition-[box-shadow] duration-[140ms] ease-[ease] group-hover:shadow-[0_0_0_5px_color-mix(in_srgb,var(--accent)_38%,transparent)]" />
                 </div>
               </div>
             </div>
@@ -235,9 +235,9 @@
         {{ formatDuration(player.progress * 1000) }}
       </span>
 
-      <div class="group relative h-[5px] flex-auto rounded-full bg-[var(--surface-2)] cursor-pointer" data-no-drag @click.stop="seekAt">
-        <div class="relative h-full rounded-full bg-[var(--accent)]" :style="{ width: `${percent}%` }">
-          <span class="absolute top-1/2 -right-[4px] w-[9px] h-[9px] rounded-full bg-[#fff] opacity-0 -translate-y-1/2 transition-opacity duration-[140ms] ease-[ease] group-hover:opacity-100" />
+      <div class="group relative h-[5px] flex-auto rounded-[calc(var(--radius)*0.5)] bg-[var(--surface-2)] cursor-pointer" data-no-drag @click.stop="seekAt">
+        <div class="relative h-full rounded-[calc(var(--radius)*0.5)] bg-[var(--accent)]" :style="{ width: `${percent}%` }">
+          <span class="absolute top-1/2 -right-[4px] w-[9px] h-[9px] rounded-[calc(var(--radius)*0.375)] bg-[#fff] opacity-0 -translate-y-1/2 transition-opacity duration-[140ms] ease-[ease] group-hover:opacity-100" />
         </div>
       </div>
 
@@ -281,9 +281,9 @@ const miniBtnBase =
   "inline-flex items-center justify-center p-0 border-0 text-[color:var(--fg-dim)] cursor-pointer [&_svg]:flex-none";
 const miniBtnSkin =
   "transition-[background,color,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] active:scale-[0.88]";
-const miniBtnClass = `${miniBtnBase} ${miniBtnSkin} w-[calc(var(--mini-icon,_15px)_*_2)] h-[calc(var(--mini-icon,_15px)_*_2)] flex-[0_0_calc(var(--mini-icon,15px)*2)] rounded-full bg-transparent`;
-const miniRestoreClass = `${miniBtnBase} ${miniBtnSkin} w-[28px] h-[28px] flex-[0_0_28px] rounded-[9px] bg-[color-mix(in_srgb,var(--surface-2)_75%,transparent)]`;
-const miniPlayClass = `${miniBtnBase} rounded-full w-[calc(var(--mini-icon,_15px)_*_2.5)] h-[calc(var(--mini-icon,_15px)_*_2.5)] flex-[0_0_calc(var(--mini-icon,15px)*2.5)] mx-[4px] my-0 bg-[var(--accent)] !text-[color:#fff] [transition:transform_0.18s_ease,background_0.15s_ease] hover:!bg-[color-mix(in_srgb,var(--accent)_88%,white)] hover:!text-[color:#fff] active:!scale-[0.9]`;
+const miniBtnClass = `${miniBtnBase} ${miniBtnSkin} w-[calc(var(--mini-icon,_15px)_*_2)] h-[calc(var(--mini-icon,_15px)_*_2)] flex-[0_0_calc(var(--mini-icon,15px)*2)] rounded-[calc(var(--radius)*1.5)] bg-transparent`;
+const miniRestoreClass = `${miniBtnBase} ${miniBtnSkin} w-[28px] h-[28px] flex-[0_0_28px] rounded-[calc(var(--radius)*0.75)] bg-[color-mix(in_srgb,var(--surface-2)_75%,transparent)]`;
+const miniPlayClass = `${miniBtnBase} rounded-[calc(var(--radius)*1.5)] w-[calc(var(--mini-icon,_15px)_*_2.5)] h-[calc(var(--mini-icon,_15px)_*_2.5)] flex-[0_0_calc(var(--mini-icon,15px)*2.5)] mx-[4px] my-0 bg-[var(--accent)] !text-[color:#fff] [transition:transform_0.18s_ease,background_0.15s_ease] hover:!bg-[color-mix(in_srgb,var(--accent)_88%,white)] hover:!text-[color:#fff] active:!scale-[0.9]`;
 const miniOnClass = "!text-[color:var(--accent)]";
 const miniDimClass = "opacity-[0.4]";
 

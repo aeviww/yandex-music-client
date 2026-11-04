@@ -231,15 +231,15 @@ const panels = usePanelsStore();
 const sleep = useSleepStore();
 
 const playClass =
-  "flex w-[32px] h-[32px] flex-none items-center justify-center rounded-full bg-[var(--accent)] text-[color:#fff] cursor-pointer [transition:opacity_0.12s_ease,box-shadow_0.2s_ease,transform_0.32s_cubic-bezier(0.34,1.56,0.64,1)] hover:opacity-[0.9] hover:scale-[1.06] active:scale-[0.84] active:duration-[90ms] active:ease-out";
+  "flex w-[32px] h-[32px] flex-none items-center justify-center rounded-[calc(var(--radius)*1.5)] bg-[var(--accent)] text-[color:#fff] cursor-pointer [transition:opacity_0.12s_ease,box-shadow_0.2s_ease,transform_0.32s_cubic-bezier(0.34,1.56,0.64,1)] hover:opacity-[0.9] hover:scale-[1.06] active:scale-[0.84] active:duration-[90ms] active:ease-out";
 const iconBtnClass =
-  "flex w-[30px] h-[30px] items-center justify-center rounded-[8px] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]";
+  "flex w-[30px] h-[30px] items-center justify-center rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-faint)] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]";
 const onClass = "!text-[color:var(--accent)]";
 const offClass = "opacity-[0.25] pointer-events-none";
 const menuClass =
   "!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]";
 const optClass =
-  "flex items-center justify-between gap-[12px] px-[9px] py-[7px] rounded-[7px] text-[13px] cursor-pointer transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
+  "flex items-center justify-between gap-[12px] px-[9px] py-[7px] rounded-[calc(var(--radius)*0.5833)] text-[13px] cursor-pointer transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
 const optOnClass = "bg-[var(--hover)] !text-[color:var(--accent)]";
 
 const neuroWait = computed(() => Boolean(neuro.item && !neuro.stream));

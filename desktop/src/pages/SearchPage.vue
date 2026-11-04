@@ -5,7 +5,7 @@
         <div class="text-[calc(30px*var(--text-scale,1))] font-semibold tracking-[-0.03em] leading-[1.15]">Поиск</div>
 
         <div class="relative w-full max-w-[460px] q-mt-lg">
-          <div class="flex items-center gap-[8px] h-[36px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] ease-[ease] focus-within:border-[color:rgba(255,255,255,0.16)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input]:border-0 [&_input]:font-[inherit] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer">
+          <div class="flex items-center gap-[8px] h-[36px] px-[12px] py-0 rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] ease-[ease] focus-within:border-[color:rgba(255,255,255,0.16)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input]:border-0 [&_input]:font-[inherit] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer">
             <Icon name="mingcute:search-2-line" :size="16" class="text-[color:var(--fg-faint)]" />
             <input
               v-model="text"
@@ -19,7 +19,7 @@
             />
             <button
               v-if="text"
-              class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[6px] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
+              class="flex w-[22px] h-[22px] flex-none items-center justify-center rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] p-0 border-0 appearance-none"
               type="button"
               title="Очистить"
               @click="clearQuery"
@@ -35,7 +35,7 @@
             <button
               v-for="hint in suggestions"
               :key="hint"
-              class="flex w-full items-center px-[10px] py-[8px] border-0 rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[9px] text-left font-[inherit] transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+              class="flex w-full items-center px-[10px] py-[8px] border-0 rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[9px] text-left font-[inherit] transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
               type="button"
               @mousedown.prevent="pick(hint)"
             >
@@ -55,7 +55,7 @@
             <div class="row q-col-gutter-md">
               <div v-for="a in result.artists" :key="a.id" class="col-auto">
                 <div
-                  class="text-center rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  class="text-center rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                   style="width: 132px"
                   @click="router.push(`/artist/${a.id}`)"
                 >
@@ -79,7 +79,7 @@
             <div class="row q-col-gutter-md">
               <div v-for="p in genius.people" :key="p.id" class="col-auto">
                 <div
-                  class="text-center rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  class="text-center rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                   style="width: 132px"
                   @click="openPerson(p.id)"
                 >
@@ -106,11 +106,11 @@
             <div class="row q-col-gutter-md">
               <div v-for="al in result.albums" :key="al.id" class="col-auto">
                 <div
-                  class="rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  class="rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                   style="width: 150px"
                   @click="router.push(`/album/${al.id}`)"
                 >
-                  <div class="cover rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block" style="width: 100%; aspect-ratio: 1">
+                  <div class="cover rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block" style="width: 100%; aspect-ratio: 1">
                     <img
                       loading="lazy"
                       decoding="async"

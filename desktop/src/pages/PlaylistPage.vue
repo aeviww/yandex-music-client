@@ -13,7 +13,7 @@
         class="flex items-end gap-[26px] min-w-0 max-[1360px]:gap-[20px] max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-[14px]"
       >
         <div
-          class="cover group relative cursor-pointer w-[clamp(112px,15vw,190px)] h-[clamp(112px,15vw,190px)] rounded-[12px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          class="cover group relative cursor-pointer w-[clamp(112px,15vw,190px)] h-[clamp(112px,15vw,190px)] rounded-[var(--radius)] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
           :title="tracks.length ? 'Слушать плейлист' : ''"
           @click="playFrom(0)"
         >
@@ -26,7 +26,7 @@
           />
           <div
             v-if="tracks.length"
-            class="absolute right-[10px] bottom-[10px] flex w-[44px] h-[44px] items-center justify-center rounded-full bg-[var(--accent)] text-[color:#fff] opacity-[0] cursor-pointer translate-y-[6px] [transition:opacity_0.14s_ease,transform_0.3s_cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.85] group-hover:opacity-[1] group-hover:translate-y-0"
+            class="absolute right-[10px] bottom-[10px] flex w-[44px] h-[44px] items-center justify-center rounded-[calc(var(--radius)*2)] bg-[var(--accent)] text-[color:#fff] opacity-[0] cursor-pointer translate-y-[6px] [transition:opacity_0.14s_ease,transform_0.3s_cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.85] group-hover:opacity-[1] group-hover:translate-y-0"
           >
             <Icon name="mingcute:play-fill" :size="20" />
           </div>
@@ -86,7 +86,7 @@
             class="flex items-center gap-[8px] flex-wrap mt-[22px] max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px]"
           >
             <button
-              class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-white"
+              class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-white"
               type="button"
               :disabled="!tracks.length"
               @click="playFrom(0)"
@@ -96,7 +96,7 @@
             </button>
 
             <button
-              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="!tracks.length"
               @click="shufflePlay"
@@ -117,7 +117,7 @@
 
             <button
               v-if="downloading"
-              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--accent)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--accent)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--accent)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--accent)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
               type="button"
               title="Отменить загрузку плейлиста"
               @click="cancelDownload"
@@ -129,7 +129,7 @@
 
             <button
               v-else
-              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid rounded-[calc(var(--radius)*0.6667)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
               type="button"
               :class="
                 fullyDownloaded
@@ -156,7 +156,7 @@
             </button>
 
             <button
-              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+              class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               @click="playPlaylistWave"
             >
@@ -165,7 +165,7 @@
             </button>
 
             <button
-              class="flex w-[30px] h-[30px] items-center justify-center rounded-[8px] p-0 border-0 appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default"
+              class="flex w-[30px] h-[30px] items-center justify-center rounded-[calc(var(--radius)*0.6667)] p-0 border-0 appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default"
               type="button"
               title="Ещё"
             >
@@ -180,7 +180,7 @@
                   style="min-width: 232px"
                 >
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="beginEdit"
                   >
@@ -189,7 +189,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="enqueueAll"
                     :class="{
@@ -201,7 +201,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="library.togglePin(kindNumber)"
                   >
@@ -217,7 +217,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     :class="{
                       'opacity-[0.4] pointer-events-none':
@@ -233,7 +233,7 @@
 
                   <div
                     v-if="downloading"
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
                     v-close-popup
                     @click="cancelDownload"
                   >
@@ -242,7 +242,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="playRecommended"
                   >
@@ -250,14 +250,14 @@
                     <span>Моя волна по плейлисту</span>
                   </div>
 
-                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="playRecommended">                    <Icon name="mingcute:wave-line" :size="17" />
+                  <div class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis" v-close-popup @click="playRecommended">                    <Icon name="mingcute:wave-line" :size="17" />
                     <span>Похожее на плейлист</span>
                   </div>
 
                   <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="setPublic(true)"
                   >
@@ -266,7 +266,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="setPublic(false)"
                   >
@@ -277,7 +277,7 @@
                   <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="clearTracks"
                   >
@@ -286,7 +286,7 @@
                   </div>
 
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[#f87171] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[#f87171] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)]"
                     v-close-popup
                     @click="removePlaylist"
                   >
@@ -308,7 +308,7 @@
     <div v-else class="flex flex-auto flex-col min-h-0 overflow-hidden">
       <div v-if="selectedIds.length" class="select-float">
         <button
-          class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid border-[color:var(--line)] rounded-[5px] bg-[var(--surface-2)] text-[color:#fff] [transition:background_0.12s_ease,border-color_0.12s_ease]"
+          class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.4167)] bg-[var(--surface-2)] text-[color:#fff] [transition:background_0.12s_ease,border-color_0.12s_ease]"
           :class="{
             '!bg-[var(--accent)] ': allVisibleSelected,
           }"
@@ -331,7 +331,7 @@
 
         <div class="flex items-center gap-[8px] flex-nowrap ml-auto">
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length"
             @click="playRowSelection"
@@ -341,7 +341,7 @@
           </button>
 
           <button
-            class="shrink-0 whitespace-nowrap inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="shrink-0 whitespace-nowrap inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length"
             @click="enqueueRowSelection"
@@ -351,7 +351,7 @@
           </button>
 
           <button
-            class="shrink-0 whitespace-nowrap inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="shrink-0 whitespace-nowrap inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length"
           >
@@ -367,19 +367,19 @@
               >
                 <div
                   v-if="!otherPlaylists.length"
-                  class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none"
                 >
                   <span>Нет других плейлистов</span>
                 </div>
                 <div
                   v-for="playlist in otherPlaylists"
                   :key="playlist.kind"
-                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="addRowSelectionTo(playlist.kind)"
                 >
                   <div
-                    class="cover w-[26px] h-[26px] rounded-[6px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+                    class="cover w-[26px] h-[26px] rounded-[calc(var(--radius)*0.5)] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
                   >
                     <img
                       v-if="playlist.cover_url"
@@ -401,7 +401,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selectedIds.length || downloading"
             @click="downloadRowSelection"
@@ -412,7 +412,7 @@
 
           <button
             v-if="canReorder"
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
             type="button"
             :disabled="!selectedIds.length"
             @click="removeRowSelection"
@@ -422,7 +422,7 @@
           </button>
 
           <button
-            class="flex shrink-0 whitespace-nowrap items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[7px]"
+            class="flex shrink-0 whitespace-nowrap items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[calc(var(--radius)*0.5833)]"
             type="button"
             title="Снять выделение"
             @click="clearRowSelection"
@@ -442,7 +442,7 @@
           class="flex items-center pt-0 px-[2px] pb-[12px] gap-[8px] max-[760px]:flex-wrap max-[760px]:gap-[8px]"
         >
           <div
-            class="w-[240px] !h-[34px] flex-none flex items-center gap-[8px] px-[12px] rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
+            class="w-[240px] !h-[34px] flex-none flex items-center gap-[8px] px-[12px] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
           >
             <Icon
               name="mingcute:search-2-line"
@@ -457,7 +457,7 @@
             />
             <button
               v-if="filter"
-              class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[22px] h-[22px] flex-none rounded-[6px]"
+              class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[22px] h-[22px] flex-none rounded-[calc(var(--radius)*0.5)]"
               type="button"
               title="Сбросить"
               @click="filter = ''"
@@ -467,7 +467,7 @@
           </div>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             title="Сортировка"
           >
@@ -486,7 +486,7 @@
                 <div
                   v-for="option in sortOptions"
                   :key="option.id"
-                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="sortMode = option.id"
                 >
@@ -505,7 +505,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :title="
               sortDir === 'asc'
@@ -593,7 +593,7 @@
           По запросу «{{ filter }}» ничего нет
         </div>
         <button
-          class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="button"
           @click="filter = ''"
         >
@@ -617,7 +617,7 @@
           Добавляй треки через меню трека - «Добавить в плейлист»
         </div>
         <button
-          class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="button"
           @click="playRecommended"
         >
@@ -643,7 +643,7 @@
             </div>
           </div>
           <button
-            class="ml-auto flex shrink-0 items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[7px]"
+            class="ml-auto flex shrink-0 items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[27px] h-[27px] rounded-[calc(var(--radius)*0.5833)]"
             type="button"
             title="Снять выделение"
             @click="clearRowSelection"
@@ -654,7 +654,7 @@
 
         <div class="flex items-center gap-[12px]">
           <div
-            class="w-full !h-[34px] flex-auto flex items-center gap-[8px] px-[12px] rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
+            class="w-full !h-[34px] flex-auto flex items-center gap-[8px] px-[12px] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
           >
             <Icon
               name="mingcute:search-2-line"
@@ -686,18 +686,18 @@
         </div>
 
         <div
-          class="flex max-h-[46vh] flex-col gap-[2px] overflow-x-hidden overflow-y-auto overscroll-contain rounded-[10px] border border-[color:var(--line)] bg-[var(--bg)] p-[4px]"
+          class="flex max-h-[46vh] flex-col gap-[2px] overflow-x-hidden overflow-y-auto overscroll-contain rounded-[calc(var(--radius)*0.8333)] border border-[color:var(--line)] bg-[var(--bg)] p-[4px]"
         >
           <button
             v-for="row in pickerRows"
             :key="`${row.track.id}-${row.index}`"
-            class="flex w-full items-center gap-[10px] rounded-[8px] border-0 px-[8px] py-[6px] text-left text-inherit font-[inherit] cursor-pointer hover:bg-[var(--hover)]"
+            class="flex w-full items-center gap-[10px] rounded-[calc(var(--radius)*0.6667)] border-0 px-[8px] py-[6px] text-left text-inherit font-[inherit] cursor-pointer hover:bg-[var(--hover)]"
             :class="selected.includes(row.index) ? 'bg-[var(--surface-2)]' : ''"
             type="button"
             @click="toggleSelect(row.index, $event)"
           >
             <span
-              class="flex h-[16px] w-[16px] flex-none items-center justify-center rounded-[5px] border bg-[var(--surface-2)] text-[color:#fff] transition-[background,border-color] duration-[0.12s] ease-[ease]"
+              class="flex h-[16px] w-[16px] flex-none items-center justify-center rounded-[calc(var(--radius)*0.4167)] border bg-[var(--surface-2)] text-[color:#fff] transition-[background,border-color] duration-[0.12s] ease-[ease]"
               :class="
                 selected.includes(row.index)
                   ? 'border-[color:var(--accent)] bg-[var(--accent)]'
@@ -712,7 +712,7 @@
             </span>
 
             <div
-              class="cover w-[34px] h-[34px] flex-none rounded-[6px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+              class="cover w-[34px] h-[34px] flex-none rounded-[calc(var(--radius)*0.5)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
             >
               <img
                 v-if="row.track.cover_url"
@@ -763,7 +763,7 @@
           <div class="flex-auto" />
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length"
             @click="playSelected"
@@ -773,7 +773,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length"
             @click="enqueueSelected"
@@ -783,7 +783,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length"
           >
@@ -806,7 +806,7 @@
                 <div
                   v-for="item in otherPlaylists"
                   :key="item.kind"
-                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:text-[color:var(--fg-faint)] [&_svg]:flex-none [&_svg]:[transition:color_0.1s_ease] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                   v-close-popup
                   @click="addSelectedTo(item.kind)"
                 >
@@ -815,7 +815,7 @@
                 </div>
                 <div
                   v-if="!otherPlaylists.length"
-                  class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none"
+                  class="flex items-center gap-[8px] h-[26px] px-[7px] rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis opacity-[0.4] pointer-events-none"
                 >
                   <span class="text-[color:var(--fg-faint)]"
                     >Нет других плейлистов</span
@@ -826,7 +826,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             type="button"
             :disabled="!selected.length || downloading"
             @click="downloadSelected"
@@ -836,7 +836,7 @@
           </button>
 
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
+            class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none text-[color:var(--accent)]"
             type="button"
             :disabled="!selected.length"
             @click="removeSelected"

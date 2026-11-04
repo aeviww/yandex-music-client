@@ -17,7 +17,7 @@
             }"
           >
             <div
-              class="cover w-[clamp(112px,_15vw,_190px)] h-[clamp(112px,_15vw,_190px)] rounded-[12px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+              class="cover w-[clamp(112px,_15vw,_190px)] h-[clamp(112px,_15vw,_190px)] rounded-[var(--radius)] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
               :class="{ clickable: coverImages.length }"
               @click="openViewer"
             >
@@ -91,7 +91,7 @@
                 class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px] max-[760px]:[&_.btn_span]:hidden max-[760px]:[&_.btn-solid_span]:hidden max-[760px]:[&_.btn]:px-[12px] max-[760px]:[&_.btn-solid]:px-[12px] [&_.btn]:whitespace-nowrap [&_.btn-solid]:whitespace-nowrap"
               >
                 <button
-                  class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[8px] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
                   :disabled="!popular.length"
                   @click="playPopular(0)"
@@ -101,7 +101,7 @@
                 </button>
 
                 <button
-                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
                   :disabled="!popular.length"
                   @click="shufflePlay"
@@ -111,7 +111,7 @@
                 </button>
 
                 <button
-                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
                   @click="playArtistWave"
                 >
@@ -129,7 +129,7 @@
                 />
 
                 <button
-                  class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[8px]"
+                  class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*0.6667)]"
                   type="button"
                   title="Ещё"
                 >
@@ -144,7 +144,7 @@
                       style="min-width: 224px"
                     >
                       <div
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         :class="{ disabled: !popular.length }"
                         v-close-popup
                         @click="enqueuePopular"
@@ -153,7 +153,7 @@
                         <span>Популярное в очередь</span>
                       </div>
                       <div
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
                         @click="openAllTracks"
                       >
@@ -162,7 +162,7 @@
                       </div>
                       <div
                         v-if="coverImages.length"
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
                         @click="openViewer"
                       >
@@ -203,7 +203,7 @@
                         <div
                           v-for="link in officialLinks"
                           :key="link.href"
-                          class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                          class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                           :title="link.href"
                           v-close-popup
                           @click="openLink(link.href)"
@@ -218,7 +218,7 @@
                         <div
                           v-for="link in socialLinks"
                           :key="link.href"
-                          class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                          class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                           :title="link.href"
                           v-close-popup
                           @click="openLink(link.href)"
@@ -355,7 +355,7 @@
               </div>
               <div class="flex items-center gap-[8px] ml-auto">
                 <button
-                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
                   title="Сортировка"
                 >
@@ -374,7 +374,7 @@
                       <div
                         v-for="opt in albumSortOptions"
                         :key="opt.id"
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
                         @click="albumSort = opt.id"
                       >
@@ -392,7 +392,7 @@
                   </q-menu>
                 </button>
                 <button
-                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+                  class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
                   type="button"
                   :title="albumDir === 'asc' ? 'По возрастанию' : 'По убыванию'"
                   @click="albumDir = albumDir === 'asc' ? 'desc' : 'asc'"
@@ -412,12 +412,12 @@
                 class="col-auto"
               >
                 <div
-                  class="group relative rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
+                  class="group relative rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
                   style="width: 168px"
                   @click="router.push(`/album/${album.id}`)"
                 >
                   <div
-                    class="cover relative w-full aspect-square overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block rounded-[10px]"
+                    class="cover relative w-full aspect-square overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block rounded-[calc(var(--radius)*0.8333)]"
                   >
                     <img
                       v-if="album.cover_url"
@@ -434,13 +434,13 @@
 
                     <div
                       v-if="album.id === latestAlbumId"
-                      class="absolute left-[6px] top-[6px] px-[8px] py-[2px] rounded-[8px] text-[10px] font-semibold leading-[1.4] tracking-[0.2px] bg-[var(--accent)] text-[color:#fff] pointer-events-none z-[2] shadow-[0_2px_8px_rgba(0,0,0,0.28)]"
+                      class="absolute left-[6px] top-[6px] px-[8px] py-[2px] rounded-[calc(var(--radius)*0.6667)] text-[10px] font-semibold leading-[1.4] tracking-[0.2px] bg-[var(--accent)] text-[color:#fff] pointer-events-none z-[2] shadow-[0_2px_8px_rgba(0,0,0,0.28)]"
                     >
                       Последний релиз
                     </div>
 
                     <button
-                      class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-full bg-[var(--accent)] text-[color:#fff] cursor-pointer opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-[1] group-hover:translate-y-0"
+                      class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-[calc(var(--radius)*1.5)] bg-[var(--accent)] text-[color:#fff] cursor-pointer opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-[1] group-hover:translate-y-0"
                       type="button"
                       title="Слушать альбом"
                       @click.stop="playAlbum(album.id)"
@@ -470,7 +470,7 @@
                       style="min-width: 200px"
                     >
                       <div
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
                         @click="playAlbum(album.id)"
                       >
@@ -478,7 +478,7 @@
                         <span>Слушать альбом</span>
                       </div>
                       <div
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         v-close-popup
                         @click="router.push(`/album/${album.id}`)"
                       >
@@ -850,7 +850,7 @@ onMounted(load);
 }
 
 .chip-count {
-  @apply px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold;
+  @apply px-[5px] py-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold;
 }
 .links-menu {
   @apply min-w-[236px] max-h-[340px] overflow-y-auto;
@@ -869,6 +869,6 @@ onMounted(load);
   @apply opacity-[1];
 }
 .cover-badge {
-  @apply absolute right-[6px] bottom-[6px] px-[8px] py-[2px] rounded-[10px] text-[11px] font-medium bg-[rgba(0,_0,_0,_0.6)] text-[color:#fff] pointer-events-none;
+  @apply absolute right-[6px] bottom-[6px] px-[8px] py-[2px] rounded-[calc(var(--radius)*0.8333)] text-[11px] font-medium bg-[rgba(0,_0,_0,_0.6)] text-[color:#fff] pointer-events-none;
 }
 </style>

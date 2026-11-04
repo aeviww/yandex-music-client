@@ -34,7 +34,7 @@
     >
       <div class="flex items-center min-w-0 gap-[10px]">
         <div
-          class="cover w-[36px] h-[36px] flex-none rounded-[7px] [box-shadow:0_6px_18px_rgba(0,0,0,0.32)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          class="cover w-[36px] h-[36px] flex-none rounded-[calc(var(--radius)*0.5833)] [box-shadow:0_6px_18px_rgba(0,0,0,0.32)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
         >
           <img
             v-if="coverUrl"
@@ -84,7 +84,7 @@
 
       <div class="flex items-center justify-end gap-[2px]">
         <div
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass()"
           data-no-drag
           @click="player.loadLyrics(true)"
@@ -94,7 +94,7 @@
         </div>
         <div
           v-if="player.current"
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass()"
           data-no-drag
         >
@@ -102,7 +102,7 @@
           <TrackMenu :track="player.current" />
         </div>
         <div
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass(showSettings)"
           data-no-drag
           @click="showSettings = !showSettings"
@@ -111,7 +111,7 @@
           <q-tooltip>Вид текста</q-tooltip>
         </div>
         <div
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass(player.lyricsFullscreen)"
           data-no-drag
           @click="player.toggleLyricsFullscreen()"
@@ -133,7 +133,7 @@
           </q-tooltip>
         </div>
         <div
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass()"
           data-no-drag
           @click="player.openFullscreen()"
@@ -142,7 +142,7 @@
           <q-tooltip>Большая обложка</q-tooltip>
         </div>
         <div
-          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+          class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
           :class="iconBtnClass()"
           data-no-drag
           @click="player.toggleLyrics()"
@@ -180,28 +180,28 @@
       <div class="flex flex-wrap justify-center gap-[6px] mt-[8px]">
         <button
           type="button"
-          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-full bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
+          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
           @click="choose('lrclib', true)"
         >
           Искать в LRCLIB
         </button>
         <button
           type="button"
-          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-full bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
+          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
           @click="choose('yandex', true)"
         >
           Искать в Яндексе
         </button>
         <button
           type="button"
-          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-full bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
+          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
           @click="choose('genius', true)"
         >
           Искать в Genius
         </button>
         <button
           type="button"
-          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-full bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
+          class="px-[13px] py-[6px] border border-[color:rgba(255,255,255,0.12)] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.06)] text-[color:rgba(255,255,255,0.82)] text-[11.5px] cursor-pointer transition-[background,color] duration-[150ms] ease-[ease] hover:bg-[rgba(255,255,255,0.13)] hover:text-[color:#fff] select-none"
           @click="choose('auto', true)"
         >
           Автоматически
@@ -224,7 +224,7 @@
           class="flex justify-center flex-col min-w-0 min-h-0 overflow-hidden max-[980px]:hidden"
         >
           <div
-            class="group/artwork relative w-[min(100%,400px)] rounded-[14px] cursor-pointer aspect-square transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] [&_img]:relative [&_img]:z-[1] [&_img]:w-full [&_img]:h-full [&_img]:rounded-[inherit] [&_img]:object-cover"
+            class="group/artwork relative w-[min(100%,400px)] rounded-[calc(var(--radius)*1.1667)] cursor-pointer aspect-square transition-transform duration-[800ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] [&_img]:relative [&_img]:z-[1] [&_img]:w-full [&_img]:h-full [&_img]:rounded-[inherit] [&_img]:object-cover"
             :class="
               player.isPlaying && s.motion
                 ? '[transform:scale(1)]'
@@ -486,13 +486,13 @@
               v-for="person in credits"
               :key="`${person.id}-${person.role}-${person.name}`"
               type="button"
-              class="inline-flex items-center gap-[6px] pt-[4px] pr-[10px] pb-[4px] pl-[4px] rounded-full bg-[rgba(255,255,255,0.07)] text-[color:rgba(255,255,255,0.72)] text-[11.5px] cursor-pointer border-0 transition-[background,color] duration-[160ms] ease-[ease] hover:bg-[rgba(255,255,255,0.14)] hover:text-[color:#fff] [&_img]:w-[18px] [&_img]:h-[18px] [&_img]:rounded-full [&_img]:object-cover [&_i]:text-[color:rgba(255,255,255,0.42)] [&_i]:text-[10.5px] [&_i]:not-italic select-none"
+              class="inline-flex items-center gap-[6px] pt-[4px] pr-[10px] pb-[4px] pl-[4px] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.07)] text-[color:rgba(255,255,255,0.72)] text-[11.5px] cursor-pointer border-0 transition-[background,color] duration-[160ms] ease-[ease] hover:bg-[rgba(255,255,255,0.14)] hover:text-[color:#fff] [&_img]:w-[18px] [&_img]:h-[18px] [&_img]:rounded-full [&_img]:object-cover [&_i]:text-[color:rgba(255,255,255,0.42)] [&_i]:text-[10.5px] [&_i]:not-italic select-none"
               @click="openPerson(person)"
             >
               <img v-if="person.image" :src="person.image" alt="" />
               <span
                 v-else
-                class="grid w-[18px] h-[18px] rounded-full bg-[rgba(255,255,255,0.12)] text-[9.5px] font-bold place-items-center"
+                class="grid w-[18px] h-[18px] rounded-[calc(var(--radius)*0.75)] bg-[rgba(255,255,255,0.12)] text-[9.5px] font-bold place-items-center"
                 >{{ person.name.slice(0, 1) }}</span
               >
               <span>{{ person.name }}</span>
@@ -510,7 +510,7 @@
       v-if="hint"
       ref="hintEl"
       type="button"
-      class="fixed z-[3200] inline-flex items-center gap-[7px] px-[11px] py-[7px] border border-[color:var(--line)] rounded-[10px] bg-[var(--surface)] text-[color:var(--fg)] text-[12.5px] cursor-pointer [box-shadow:0_14px_34px_var(--shadow-soft)] hover:bg-[var(--hover)] select-none"
+      class="fixed z-[3200] inline-flex items-center gap-[7px] px-[11px] py-[7px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] text-[color:var(--fg)] text-[12.5px] cursor-pointer [box-shadow:0_14px_34px_var(--shadow-soft)] hover:bg-[var(--hover)] select-none"
       :style="{ left: `${hint.x}px`, top: `${hint.y}px` }"
       @click.stop="openHint"
     >
@@ -529,7 +529,7 @@
             {{ player.current?.title }}
           </div>
           <div
-            class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-full"
+            class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*1.5)]"
             :class="iconBtnClass()"
             @click="annotationOpen = false"
           >
@@ -1049,7 +1049,7 @@ function seekTo(ms: number) {
 }
 
 const ICON_BTN_BASE =
-  "flex w-[30px] h-[30px] items-center justify-center rounded-full cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
+  "flex w-[30px] h-[30px] items-center justify-center rounded-[calc(var(--radius)*1.5)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
 
 function iconBtnClass(active = false) {
   return active
@@ -1058,7 +1058,7 @@ function iconBtnClass(active = false) {
 }
 
 const SRC_BTN_BASE =
-  "relative px-[13px] py-[5px] border-0 rounded-full text-[11.5px] font-[560] tracking-[0.01em] whitespace-nowrap cursor-pointer transition-[background,color] duration-[160ms] ease-[ease] disabled:cursor-default disabled:opacity-[0.34] select-none";
+  "relative px-[13px] py-[5px] border-0 rounded-[calc(var(--radius)*1.5)] text-[11.5px] font-[560] tracking-[0.01em] whitespace-nowrap cursor-pointer transition-[background,color] duration-[160ms] ease-[ease] disabled:cursor-default disabled:opacity-[0.34] select-none";
 
 function sourceBtnClass(active: boolean) {
   return active
@@ -1067,7 +1067,7 @@ function sourceBtnClass(active: boolean) {
 }
 
 const LA_BTN_BASE =
-  "grid w-[38px] h-[38px] rounded-full bg-[rgba(255,255,255,0.16)] cursor-pointer place-items-center border-0 backdrop-blur-[8px] transition-[background,transform] duration-[160ms] ease-[ease] enabled:hover:bg-[rgba(255,255,255,0.28)] enabled:hover:[transform:scale(1.06)] disabled:opacity-[0.35] disabled:cursor-default select-none";
+  "grid w-[38px] h-[38px] rounded-[calc(var(--radius)*1.5)] bg-[rgba(255,255,255,0.16)] cursor-pointer place-items-center border-0 backdrop-blur-[8px] transition-[background,transform] duration-[160ms] ease-[ease] enabled:hover:bg-[rgba(255,255,255,0.28)] enabled:hover:[transform:scale(1.06)] disabled:opacity-[0.35] disabled:cursor-default select-none";
 
 function laBtnClass(active = false) {
   return active
@@ -1076,7 +1076,7 @@ function laBtnClass(active = false) {
 }
 
 const LA_BTN_MAIN_CLASS =
-  "grid w-[52px] h-[52px] rounded-full bg-[#fff] text-[color:#111] cursor-pointer place-items-center border-0 backdrop-blur-[8px] transition-[background,transform] duration-[160ms] ease-[ease] enabled:hover:bg-[#fff] enabled:hover:[transform:scale(1.06)] disabled:opacity-[0.35] disabled:cursor-default select-none";
+  "grid w-[52px] h-[52px] rounded-[calc(var(--radius)*2.5)] bg-[#fff] text-[color:#111] cursor-pointer place-items-center border-0 backdrop-blur-[8px] transition-[background,transform] duration-[160ms] ease-[ease] enabled:hover:bg-[#fff] enabled:hover:[transform:scale(1.06)] disabled:opacity-[0.35] disabled:cursor-default select-none";
 
 const LINE_BASE =
   "group/line block w-full m-0 px-0 py-[7px] border-0 [outline:0] [overflow-wrap:anywhere] bg-transparent cursor-pointer text-[length:var(--lyrics-size)] font-[number:var(--lyrics-weight,700)] tracking-[-0.03em] leading-[var(--lyrics-line-height,1.15)] [font-family:var(--lyrics-font,inherit)] [transition:color_0.42s_ease,filter_0.42s_ease,opacity_0.42s_ease,transform_0.52s_cubic-bezier(0.2,0.8,0.2,1)]";

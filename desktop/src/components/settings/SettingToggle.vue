@@ -21,7 +21,7 @@
       </span>
     </span>
     <span
-      class="relative h-[22px] w-[38px] flex-none rounded-full transition-colors duration-150 border-0 cursor-pointer pointer-events-none"
+      class="relative h-[22px] w-[38px] flex-none rounded-[calc(var(--radius)*1.5)] transition-colors duration-150 border-0 cursor-pointer pointer-events-none"
       :class="
         modelValue
           ? '!bg-[var(--accent)]'
@@ -29,7 +29,7 @@
       "
     >
       <span
-        class="absolute left-[3px] top-[3px] h-4 w-4 rounded-full bg-white transition-transform duration-150"
+        class="absolute left-[3px] top-[3px] h-4 w-4 rounded-[calc(var(--radius)*0.6667)] bg-white transition-transform duration-150"
         :class="modelValue ? 'translate-x-4' : ''"
       />
     </span>

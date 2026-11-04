@@ -13,7 +13,7 @@
 
       <div ref="stageWrap" class="flex justify-center w-full p-[14px] rounded-[calc(var(--radius)*0.8)] bg-[repeating-conic-gradient(color-mix(in_srgb,var(--fg)_5%,transparent)_0%_25%,transparent_0%_50%)] bg-[length:18px_18px] bg-center">
         <div class="relative overflow-hidden transition-[width,height] duration-[120ms] ease-[ease]" :style="stageStyle">
-          <div class="absolute top-0 left-0 rounded-[14px]" :style="frameStyle">
+          <div class="absolute top-0 left-0 rounded-[calc(var(--radius)*1.1667)]" :style="frameStyle">
             <MiniPlayer preview />
           </div>
         </div>
@@ -25,11 +25,11 @@
       </p>
 
       <div class="flex flex-wrap gap-[8px]">
-        <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border rounded-[8px] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] transition-[background,border-color,color] duration-[120ms] ease-[ease] select-none !border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="openMini">
+        <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border rounded-[calc(var(--radius)*0.6667)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] transition-[background,border-color,color] duration-[120ms] ease-[ease] select-none !border-[color:var(--accent)] !bg-[var(--accent)] !text-[color:#fff] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="openMini">
           <Icon name="mingcute:miniplayer-fill" :size="15" />
           {{ panels.mini ? "Мини-плеер открыт" : "Открыть мини-плеер" }}
         </button>
-        <button class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,var(--fg)_14%,transparent)] hover:text-[color:var(--fg)]" type="button" @click="reset">
+        <button class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,var(--fg)_14%,transparent)] hover:text-[color:var(--fg)]" type="button" @click="reset">
           Сбросить вид
         </button>
       </div>
@@ -148,9 +148,9 @@
           @drop.prevent="onListDrop"
         >
           <template v-for="(id, index) in order" :key="id">
-            <i v-if="caretAt(index)" class="h-[2px] flex-[0_0_2px] rounded-[2px] bg-[var(--accent)] pointer-events-none" />
+            <i v-if="caretAt(index)" class="h-[2px] flex-[0_0_2px] rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none" />
             <div
-              class="mpe-item flex items-center gap-[9px] px-[10px] py-[8px] border border-transparent rounded-[10px] bg-[var(--surface-2)] text-[12.5px] cursor-grab transition-[border-color,opacity] duration-[140ms] ease-[ease] hover:border-[color:var(--line)]"
+              class="mpe-item flex items-center gap-[9px] px-[10px] py-[8px] border border-transparent rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2)] text-[12.5px] cursor-grab transition-[border-color,opacity] duration-[140ms] ease-[ease] hover:border-[color:var(--line)]"
               :class="{ 'opacity-45': !visible(id) && dragId !== id, 'opacity-30': dragId === id }"
               draggable="true"
               @dragstart="onDragStart(id, $event)"
@@ -163,7 +163,7 @@
               <button
                 v-else
                 type="button"
-                class="inline-flex w-[24px] h-[24px] flex-none items-center justify-center border-0 rounded-[7px] text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                class="inline-flex w-[24px] h-[24px] flex-none items-center justify-center border-0 rounded-[calc(var(--radius)*0.5833)] text-[color:var(--fg-dim)] cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
                 :class="{ 'text-[color:var(--accent)] hover:!text-[color:var(--accent)]': visible(id) }"
                 :title="visible(id) ? 'Скрыть кнопку' : 'Показать кнопку'"
                 @click.stop="toggle(id)"
@@ -172,7 +172,7 @@
               </button>
             </div>
           </template>
-          <i v-if="caretAt(order.length)" class="h-[2px] flex-[0_0_2px] rounded-[2px] bg-[var(--accent)] pointer-events-none" />
+          <i v-if="caretAt(order.length)" class="h-[2px] flex-[0_0_2px] rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none" />
         </div>
       </div>
     </div>

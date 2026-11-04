@@ -5,20 +5,20 @@
       <span v-if="together.logPath">{{ together.logPath }}</span>
     </div>
 
-    <pre ref="box" class="m-0 max-h-[220px] overflow-auto px-[12px] py-[10px] rounded-[10px] bg-[var(--surface-2,rgba(255,255,255,0.06))] text-[12px] leading-[1.5] whitespace-pre-wrap break-words">{{
+    <pre ref="box" class="m-0 max-h-[220px] overflow-auto px-[12px] py-[10px] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2,rgba(255,255,255,0.06))] text-[12px] leading-[1.5] whitespace-pre-wrap break-words">{{
       together.log.join("\n") || "Пока пусто"
     }}</pre>
 
     <div class="flex gap-[8px]">
       <button
-        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:color-mix(in_srgb,_var(--fg)_14%,_transparent)] hover:text-[color:var(--fg)]"
         type="button"
         @click="copy"
       >
         Скопировать
       </button>
       <button
-        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[8px] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
+        class="inline-flex items-center justify-center gap-[6px] h-[30px] px-[12px] py-0 border border-[color:color-mix(in_srgb,_#ff5d5d_45%,_var(--line))] rounded-[calc(var(--radius)*0.6667)] text-[color:#ff8b8b] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:bg-[color-mix(in_srgb,_#ff5d5d_14%,_transparent)] hover:border-[color:#ff5d5d] hover:text-[color:#ff5d5d]"
         type="button"
         @click="together.clearLog()"
       >

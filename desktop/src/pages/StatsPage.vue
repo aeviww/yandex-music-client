@@ -12,18 +12,18 @@
           </div>
 
           <div class="flex items-center gap-[10px] flex-wrap">
-            <div class="flex flex-none gap-[2px] p-[3px] border border-[color:var(--line)] rounded-[9px] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)]">
+            <div class="flex flex-none gap-[2px] p-[3px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.75)] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)]">
               <button
                 v-for="p in periods"
                 :key="p.days"
-                class="min-h-[26px] px-[11px] py-[4px] border-0 rounded-[6px] bg-transparent text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
+                class="min-h-[26px] px-[11px] py-[4px] border-0 rounded-[calc(var(--radius)*0.5)] bg-transparent text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
                 :class="{ 'bg-[var(--hover)] text-[color:var(--fg)] font-semibold': days === p.days }"
                 @click="days = p.days"
               >
                 {{ p.label }}
               </button>
             </div>
-            <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[6px] transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="clear">
+            <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[6px] transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" type="button" @click="clear">
               <Icon name="mingcute:delete-2-line" :size="14" />
               <span>Очистить</span>
             </button>
@@ -53,7 +53,7 @@
             </span>
           </div>
 
-          <div class="rounded-[14px] px-[18px] py-[16px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] p-[10px]">
+          <div class="rounded-[calc(var(--radius)*1.1667)] px-[18px] py-[16px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] p-[10px]">
             <div v-if="hasChartData" class="flex flex-col gap-[10px]">
               <div class="flex h-[168px] gap-[12px]">
                 <div class="flex w-[32px] flex-none flex-col justify-between text-[color:var(--fg-faint)] text-[11px] text-right">
@@ -152,11 +152,11 @@
           <section class="flex flex-col gap-[12px]">
             <div class="flex items-baseline justify-between gap-[12px] [&_h2]:m-0 [&_h2]:text-[calc(15px*var(--text-scale,1))] [&_h2]:font-semibold [&_h2]:tracking-[-0.015em] [&_h2]:leading-[1.2] [&_h2]:font-[inherit]">
               <h2>Топ треков</h2>
-              <div class="flex p-[2px] border border-[color:var(--line)] rounded-[9px] bg-[var(--surface)] gap-[2px]">
+              <div class="flex p-[2px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.75)] bg-[var(--surface)] gap-[2px]">
                 <button
                   v-for="option in rankSorts"
                   :key="option.id"
-                  class="px-[9px] py-[4px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[11px] transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
+                  class="px-[9px] py-[4px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[11px] transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
                   :class="{ 'bg-[var(--hover)] text-[color:var(--fg)]': rankSort === option.id }"
                   type="button"
                   @click="rankSort = option.id"
@@ -166,7 +166,7 @@
               </div>
             </div>
 
-            <div class="flex flex-col gap-[2px] p-[10px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] rounded-[14px]">
+            <div class="flex flex-col gap-[2px] p-[10px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] rounded-[calc(var(--radius)*1.1667)]">
               <div v-if="!topTracks.length" class="flex min-h-[96px] flex-col items-center justify-center gap-[8px] text-center">
                 <Icon name="mingcute:music-line" :size="20" class="text-[color:var(--fg-faint)]" />
                 <span class="text-[color:var(--fg-faint)] text-[calc(13px*var(--text-scale,1))]"
@@ -182,7 +182,7 @@
                 <span class="w-[20px] flex-none text-[color:var(--fg-faint)] text-[12px] tabular-nums text-right" :class="{ 'text-[color:var(--accent)] font-bold': i < 3 }">
                   {{ i + 1 }}
                 </span>
-                <div class="cover w-[36px] h-[36px] flex-none rounded-[8px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
+                <div class="cover w-[36px] h-[36px] flex-none rounded-[calc(var(--radius)*0.6667)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
                   <img v-if="row.cover" :src="row.cover" decoding="async" />
                   <Icon v-else name="mingcute:music-line" :size="14" class="text-[color:var(--fg-faint)]" />
                 </div>
@@ -198,11 +198,11 @@
           <section class="flex flex-col gap-[12px]">
             <div class="flex items-baseline justify-between gap-[12px] [&_h2]:m-0 [&_h2]:text-[calc(15px*var(--text-scale,1))] [&_h2]:font-semibold [&_h2]:tracking-[-0.015em] [&_h2]:leading-[1.2] [&_h2]:font-[inherit]">
               <h2>Топ исполнителей</h2>
-              <div class="flex p-[2px] border border-[color:var(--line)] rounded-[9px] bg-[var(--surface)] gap-[2px]">
+              <div class="flex p-[2px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.75)] bg-[var(--surface)] gap-[2px]">
                 <button
                   v-for="option in rankSorts"
                   :key="option.id"
-                  class="px-[9px] py-[4px] border-0 rounded-[7px] bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[11px] transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
+                  class="px-[9px] py-[4px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[11px] transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)]"
                   :class="{ 'bg-[var(--hover)] text-[color:var(--fg)]': rankSort === option.id }"
                   type="button"
                   @click="rankSort = option.id"
@@ -212,7 +212,7 @@
               </div>
             </div>
 
-            <div class="flex flex-col gap-[2px] p-[10px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] rounded-[14px]">
+            <div class="flex flex-col gap-[2px] p-[10px] cursor-default transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] rounded-[calc(var(--radius)*1.1667)]">
               <div v-if="!topArtists.length" class="flex min-h-[96px] flex-col items-center justify-center gap-[8px] text-center">
                 <Icon name="mingcute:mic-line" :size="20" class="text-[color:var(--fg-faint)]" />
                 <span class="text-[color:var(--fg-faint)] text-[calc(13px*var(--text-scale,1))]">Пока пусто.</span>
@@ -232,7 +232,7 @@
                 </div>
                 <div class="flex min-w-0 flex-auto flex-col gap-[4px]">
                   <div class="truncate text-[calc(13px*var(--text-scale,1))]">{{ row.label }}</div>
-                  <div class="h-[4px] w-full rounded-[3px] bg-[var(--hover)] overflow-hidden [&>span]:block [&>span]:h-full [&>span]:rounded-[3px] [&>span]:bg-[var(--accent)] [&>span]:opacity-[0.85]">
+                  <div class="h-[4px] w-full rounded-[calc(var(--radius)*0.25)] bg-[var(--hover)] overflow-hidden [&>span]:block [&>span]:h-full [&>span]:rounded-[calc(var(--radius)*0.25)] [&>span]:bg-[var(--accent)] [&>span]:opacity-[0.85]">
                     <span :style="{ width: `${artistShare(row.seconds)}%` }" />
                   </div>
                 </div>

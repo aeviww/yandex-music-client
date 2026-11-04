@@ -32,7 +32,7 @@
           <img
             :src="images[cur]"
             :alt="title"
-            class="max-w-[82vw] max-h-[72vh] rounded-[12px] object-contain shadow-[0_24px_60px_rgba(0,0,0,0.55)] select-none"
+            class="max-w-[82vw] max-h-[72vh] rounded-[var(--radius)] object-contain shadow-[0_24px_60px_rgba(0,0,0,0.55)] select-none"
           />
           <div class="flex items-center gap-[14px]">
             <span
@@ -42,7 +42,7 @@
               {{ cur + 1 }} / {{ images.length }}
             </span>
             <button
-              class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:#fff] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:#fff] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+              class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:#fff] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:#fff] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               type="button"
               :disabled="saving"
               @click.stop="download"
@@ -71,7 +71,7 @@
           <button
             v-for="(img, i) in images"
             :key="i"
-            class="w-[52px] h-[52px] rounded-[8px] overflow-hidden border-2 border-solid border-transparent p-0 cursor-pointer bg-transparent flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover"
+            class="w-[52px] h-[52px] rounded-[calc(var(--radius)*0.6667)] overflow-hidden border-2 border-solid border-transparent p-0 cursor-pointer bg-transparent flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover"
             :class="{ 'border-[#fff]': i === cur }"
             type="button"
             @click="cur = i"

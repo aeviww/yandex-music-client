@@ -17,7 +17,7 @@
 
       <div
         v-if="appDialog.kind === 'prompt'"
-        class="flex items-center gap-[8px] h-[38px] mt-[2px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-solid border-transparent transition-[border-color,background] duration-[140ms] ease-[ease] focus-within:border-[color:rgba(255,255,255,0.16)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input]:border-0 [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
+        class="flex items-center gap-[8px] h-[38px] mt-[2px] px-[12px] py-0 rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] border border-solid border-transparent transition-[border-color,background] duration-[140ms] ease-[ease] focus-within:border-[color:rgba(255,255,255,0.16)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input]:border-0 [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
       >
         <input
           ref="input"
@@ -31,14 +31,14 @@
 
       <div class="flex justify-end mt-[6px] gap-[8px]">
         <button
-          class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="button"
           @click="cancel"
         >
           {{ appDialog.cancelLabel }}
         </button>
         <button
-          class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           :class="{ '!bg-[#e5484d] !text-[color:#fff]': appDialog.danger }"
           type="button"
           :disabled="!ready"

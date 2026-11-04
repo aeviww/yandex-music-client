@@ -2,7 +2,7 @@
   <div class="min-w-[152px] max-w-[220px] flex-none">
     <button
       type="button"
-      class="flex h-[32px] w-full items-center gap-[8px] rounded-[10px] border border-transparent bg-[var(--surface)] pr-[9px] pl-[12px] text-left text-[color:var(--fg)] text-[calc(12px*var(--text-scale,1))] outline-none cursor-pointer transition-[border-color,background] duration-[140ms] hover:bg-[var(--surface-2)]"
+      class="flex h-[32px] w-full items-center gap-[8px] rounded-[calc(var(--radius)*0.8333)] border border-transparent bg-[var(--surface)] pr-[9px] pl-[12px] text-left text-[color:var(--fg)] text-[calc(12px*var(--text-scale,1))] outline-none cursor-pointer transition-[border-color,background] duration-[140ms] hover:bg-[var(--surface-2)]"
       :class="
         open
           ? 'border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] bg-[var(--surface-2)]'
@@ -23,7 +23,7 @@
         anchor="bottom start"
         self="top start"
         :offset="[0, 4]"
-        class="overflow-hidden rounded-[10px] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[0_18px_44px_rgba(0,0,0,0.45)]"
+        class="overflow-hidden rounded-[calc(var(--radius)*0.8333)] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[0_18px_44px_rgba(0,0,0,0.45)]"
         @show="open = true"
         @hide="open = false"
       >
@@ -35,7 +35,7 @@
             v-for="option in options"
             :key="option.value"
             type="button"
-            class="flex h-[28px] w-full items-center gap-[8px] rounded-[7px] border-0 bg-transparent px-[8px] text-left text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] cursor-pointer transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+            class="flex h-[28px] w-full items-center gap-[8px] rounded-[calc(var(--radius)*0.5833)] border-0 bg-transparent px-[8px] text-left text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] cursor-pointer transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
             :class="
               option.value === modelValue
                 ? 'bg-[var(--hover)] text-[color:var(--fg)]'

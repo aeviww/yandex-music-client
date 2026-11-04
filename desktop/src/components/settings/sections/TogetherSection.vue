@@ -26,12 +26,12 @@
         description="По сети/VPN или через сервер без проброса портов."
       >
         <div
-          class="inline-flex rounded-xl border border-[var(--line)] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)] p-1 transition-opacity"
+          class="inline-flex rounded-[var(--radius)] border border-[var(--line)] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)] p-1 transition-opacity"
           :class="together.active ? 'opacity-55' : ''"
         >
           <button
             type="button"
-            class="inline-flex h-8 min-w-[130px] items-center justify-center gap-1.5 rounded-lg border-0 px-3 text-[12.5px] transition duration-150"
+            class="inline-flex h-8 min-w-[130px] items-center justify-center gap-1.5 rounded-[calc(var(--radius)*0.6667)] border-0 px-3 text-[12.5px] transition duration-150"
             :class="
               transport === 'local'
                 ? 'bg-[var(--surface)] font-semibold text-[var(--fg)]'
@@ -46,7 +46,7 @@
 
           <button
             type="button"
-            class="inline-flex h-8 min-w-[130px] items-center justify-center gap-1.5 rounded-lg border-0 px-3 text-[12.5px] transition duration-150"
+            class="inline-flex h-8 min-w-[130px] items-center justify-center gap-1.5 rounded-[calc(var(--radius)*0.6667)] border-0 px-3 text-[12.5px] transition duration-150"
             :class="
               transport === 'server'
                 ? 'bg-[var(--surface)] font-semibold text-[var(--fg)]'

@@ -2,7 +2,7 @@
   <section :id="id" class="scroll-mt-8">
     <div class="mb-5 flex items-start gap-3.5">
       <span
-        class="grid h-9 w-9 flex-none place-items-center rounded-lg border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)]"
+        class="grid h-9 w-9 flex-none place-items-center rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-transparent text-[color:var(--fg-dim)]"
       >
         <Icon :name="icon" :size="17" />
       </span>

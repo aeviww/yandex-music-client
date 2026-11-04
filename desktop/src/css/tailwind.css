@@ -1,6 +1,107 @@
 @tailwind base;
 @tailwind components;
 
+/* Bundled UI fonts (variable, latin + cyrillic subsets) */
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/manrope-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("/fonts/manrope-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("/fonts/golos-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Golos Text";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("/fonts/golos-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Onest";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/onest-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Onest";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/onest-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/pixelify-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "Pixelify Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/pixelify-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --q-primary: #f2f2f2;
   --q-secondary: #8a8a8a;
@@ -44,7 +145,7 @@
 .q-notification,
 .q-notification__badge,
 .q-notification__progress {
-  @apply rounded-[10px];
+  @apply rounded-[calc(var(--radius)*0.8333)];
 }
 
 html,
@@ -59,6 +160,11 @@ body,
 
 html[data-mode="light"] {
   color-scheme: light;
+}
+
+html[data-font="minecraft"] body {
+  -webkit-font-smoothing: none;
+  text-rendering: geometricPrecision;
 }
 
 input,
@@ -89,8 +195,13 @@ html {
 
 body {
   @apply text-[calc(14px_*_var(--text-scale,_1))] tracking-[-0.01em] bg-[var(--bg)] text-[color:var(--fg)] select-text;
-  font-family:
-    "Inter", "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+  font-family: var(
+    --app-font,
+    "Onest",
+    "Segoe UI",
+    system-ui,
+    sans-serif
+  );
   -webkit-font-smoothing: antialiased;
 }
 
@@ -122,7 +233,7 @@ button,
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#2e2e2e] rounded-[10px] border-[3px] border-transparent;
+  @apply bg-[#2e2e2e] rounded-[calc(var(--radius)*0.8333)] border-[3px] border-transparent;
   background-clip: content-box;
 }
 
@@ -195,16 +306,17 @@ body {
 }
 
 .q-slider__thumb {
-  border-radius: 50% !important;
+  border-radius: calc(var(--radius, 12px) * 0.5) !important;
 }
 
 .q-scrollarea__thumb {
   width: max(4px, var(--radius) * 0.4) !important;
+  border-radius: calc(var(--radius) * 0.5) !important;
 }
 
 /* Playlist / album selection bar */
 .select-float {
-  @apply fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[16px] bg-[color-mix(in_srgb,_var(--accent)_12%,_var(--surface))];
+  @apply fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[calc(var(--radius)*1.3333)] bg-[color-mix(in_srgb,_var(--accent)_12%,_var(--surface))];
   box-shadow: 0 22px 48px -20px rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(var(--glass-blur, 12px));
   transform: translateX(-50%);
@@ -263,7 +375,7 @@ html[data-mini] .q-notifications__list {
   @apply p-[6px];
 }
 html[data-mini] .q-notification {
-  @apply min-h-0 max-w-[calc(100vw_-_24px)] px-[10px] py-[4px] rounded-[9px] text-[11px] leading-[1.25] opacity-[0.94];
+  @apply min-h-0 max-w-[calc(100vw_-_24px)] px-[10px] py-[4px] rounded-[calc(var(--radius)*0.75)] text-[11px] leading-[1.25] opacity-[0.94];
 }
 html[data-mini] .q-notification__message {
   @apply px-0 py-[2px];
@@ -386,4 +498,13 @@ html[data-mode="light"] ::-webkit-scrollbar-thumb {
 
 html[data-mode="light"] ::-webkit-scrollbar-thumb:hover {
   @apply bg-[rgba(0,_0,_0,_0.28)];
+}
+
+/* Radius follows the appearance setting on every rounded UI element */
+.rounded-full:not(.cover):not(.cover-round):not(img):not(.q-icon) {
+  border-radius: calc(var(--radius) * 1.5) !important;
+}
+
+.q-menu .q-item {
+  border-radius: calc(var(--radius) * 0.5833);
 }
