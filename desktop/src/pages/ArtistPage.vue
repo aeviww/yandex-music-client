@@ -316,13 +316,13 @@
               </button>
             </div>
 
-            <div class="flex items-stretch gap-[14px] flex-wrap">
+            <div class="grid grid-cols-4 gap-[14px] max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
               <ConcertCard
                 v-for="c in displayedConcerts"
                 :key="c.id"
                 :concert="c"
                 :artist-id="artist.id"
-                width="220px"
+                width="100%"
               />
             </div>
 
@@ -405,15 +405,10 @@
               </div>
             </div>
 
-            <div class="row q-col-gutter-md">
-              <div
-                v-for="album in sortedAlbums"
-                :key="album.id"
-                class="col-auto"
-              >
+            <div class="grid grid-cols-4 gap-[16px] max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
+              <div v-for="album in sortedAlbums" :key="album.id">
                 <div
-                  class="group relative rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
-                  style="width: 168px"
+                  class="group relative w-full rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
                   @click="router.push(`/album/${album.id}`)"
                 >
                   <div
@@ -538,7 +533,7 @@ import { usePlayerStore } from "@/stores/player/index";
 
 const props = defineProps<{ id: string }>();
 const concerts = ref<ConcertBrief[]>([]);
-const INITIAL_CONCERT_LIMIT = 6;
+const INITIAL_CONCERT_LIMIT = 4;
 const showAllConcerts = ref(false);
 const displayedConcerts = computed(() => {
   if (showAllConcerts.value || concerts.value.length <= INITIAL_CONCERT_LIMIT) {

@@ -14,7 +14,7 @@
               Концерты
             </h1>
             <p class="text-[13.5px] text-[color:var(--fg-dim)] mt-[6px] mb-0 max-w-[560px]">
-              Предстоящие выступления и туры артистов по всей России из вашей библиотеки и рекомендаций
+              Ближайшие концерты артистов из вашей библиотеки и рекомендаций
             </p>
           </div>
 
@@ -368,7 +368,7 @@
             {{
               hasActiveFilters
                 ? 'Попробуйте изменить выбранные даты, выбрать другой город или сбросить поисковый запрос.'
-                : 'Когда у ваших любимых артистов появятся новые даты туров, они отобразятся здесь.'
+                : 'Здесь появятся концерты артистов из вашей библиотеки.'
             }}
           </div>
 
@@ -430,13 +430,10 @@
             </div>
           </div>
 
-          <div class="flex items-stretch gap-[16px] flex-wrap">
-            <ConcertCard
-              v-for="c in filteredConcerts"
-              :key="c.id"
-              :concert="c"
-              width="220px"
-            />
+          <div class="grid grid-cols-4 gap-[16px] max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
+            <LazyItems v-slot="{ item }" :items="filteredConcerts" :initial="24" :step="24">
+              <ConcertCard :concert="item" width="100%" />
+            </LazyItems>
           </div>
         </div>
       </div>
@@ -452,6 +449,7 @@ import { api } from "@/api/client";
 import { readCache, swr, writeCache } from "@/lib/cache";
 import { pluralWord } from "@/lib/format";
 import ConcertCard from "@/components/common/ConcertCard.vue";
+import LazyItems from "@/components/common/LazyItems.vue";
 
 const CITY_KEY = "mashiro.concerts.selectedCity";
 const CACHE_KEY_FEED = "concerts.feed";

@@ -632,21 +632,20 @@
                 </span>
               </div>
               <button
-                class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
+                class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
                 type="button"
                 @click="router.push('/concerts')"
               >
-                <span>все концерты</span>
-                <Icon name="mingcute:arrow-right-line" :size="13" />
+                все концерты
               </button>
             </div>
 
-            <div class="flex items-stretch gap-[14px] flex-wrap">
+            <div class="grid grid-cols-4 gap-[14px] max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
               <ConcertCard
-                v-for="c in concerts.slice(0, 8)"
+                v-for="c in concerts.slice(0, 4)"
                 :key="c.id"
                 :concert="c"
-                width="215px"
+                width="100%"
               />
             </div>
           </template>

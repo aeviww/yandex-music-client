@@ -15,11 +15,10 @@
           <q-spinner size="24px" color="primary" />
         </div>
 
-        <div v-else class="row q-col-gutter-md q-mt-md">
-          <div v-for="pl in ordered" :key="pl.kind" class="col-auto">
+        <div v-else class="grid grid-cols-4 gap-[16px] q-mt-md max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
+          <div v-for="pl in ordered" :key="pl.kind">
             <div
-              class="group/card rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
-              style="width: 168px"
+              class="group/card w-full rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
               @click="router.push(`/playlists/${pl.kind}`)"
             >
               <div
