@@ -1,11 +1,11 @@
 <template>
   <div
-    class="concert-card group relative rounded-[14px] p-[10px] cursor-pointer transition-[background,transform] duration-[160ms] hover:bg-[var(--surface)] select-none flex flex-col"
+    class="concert-card group relative rounded-[var(--radius-card)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)] select-none flex flex-col"
     :style="{ width: width || '220px' }"
     @click="openConcert"
   >
     <div
-      class="cover relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none rounded-[10px]"
+      class="cover relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none rounded-[var(--radius-item)]"
     >
       <img
         v-if="concert.image_url"
@@ -21,16 +21,16 @@
       <!-- Date Badge Overlay -->
       <div
         v-if="dateInfo.day"
-        class="absolute left-[8px] top-[8px] flex flex-col items-center justify-center min-w-[38px] px-[6px] py-[3px] rounded-[8px] bg-[rgba(15,15,15,0.82)] backdrop-blur-[8px] text-white border border-[rgba(255,255,255,0.1)] shadow-[0_2px_8px_rgba(0,0,0,0.35)] pointer-events-none"
+        class="absolute left-[8px] top-[8px] flex flex-col items-center justify-center min-w-[38px] px-[6px] py-[3px] rounded-[var(--radius-control)] bg-[rgba(12,12,14,0.9)] text-white border border-[rgba(255,255,255,0.1)] pointer-events-none"
       >
         <span class="text-[14px] font-extrabold leading-none tracking-[-0.02em]">{{ dateInfo.day }}</span>
-        <span class="text-[9px] font-bold uppercase leading-tight tracking-[0.04em] text-[var(--accent)]">{{ dateInfo.month }}</span>
+        <span class="text-[9px] font-bold uppercase leading-tight tracking-[0.04em] text-[color:#fff] opacity-70">{{ dateInfo.month }}</span>
       </div>
 
       <!-- Content Rating Badge -->
       <div
         v-if="concert.content_rating"
-        class="absolute right-[8px] top-[8px] px-[6px] py-[2px] rounded-[6px] text-[10px] font-bold bg-[rgba(0,0,0,0.65)] backdrop-blur-[6px] text-white pointer-events-none border border-[rgba(255,255,255,0.08)]"
+        class="absolute right-[8px] top-[8px] px-[6px] py-[2px] rounded-[var(--radius-control)] text-[10px] font-bold bg-[rgba(12,12,14,0.78)] text-white pointer-events-none border border-[rgba(255,255,255,0.08)]"
       >
         {{ concert.content_rating }}
       </div>
@@ -38,7 +38,7 @@
       <!-- Action Button on Hover -->
       <button
         v-if="concert.afisha_url"
-        class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-full bg-[var(--accent)] text-white cursor-pointer opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-out group-hover:opacity-[1] group-hover:translate-y-0 shadow-[0_4px_12px_rgba(0,0,0,0.35)] hover:scale-[1.08]"
+        class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-full bg-[var(--accent)] text-white cursor-pointer opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-out group-hover:opacity-[1] group-hover:translate-y-0 hover:scale-[1.06]"
         type="button"
         title="Купить билет на Яндекс Афише"
         @click.stop="openAfisha"

@@ -1,6 +1,6 @@
 <template>
   <q-page
-    class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 pt-[var(--page-top-gap)] px-[32px] pb-0 !overflow-hidden"
+    class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-0 !overflow-hidden"
   >
     <div
       class="flex-none pb-[18px] overflow-hidden max-h-[460px] [transition:max-height_0.34s_ease,opacity_0.24s_ease,padding_0.34s_ease,transform_0.34s_ease]"
@@ -171,7 +171,7 @@
             >
               <Icon name="mingcute:more-2-fill" :size="18" />
               <q-menu
-                class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+                class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                 anchor="bottom left"
                 self="top left"
               >
@@ -358,7 +358,7 @@
             <Icon name="mingcute:classify-add-line" :size="14" />
             <span>В плейлист</span>
             <q-menu
-              class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+              class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
               anchor="bottom start"
               self="top start"
             >
@@ -475,7 +475,7 @@
             <span>{{ sortLabel }}</span>
             <Icon name="mingcute:down-line" :size="13" />
             <q-menu
-              class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+              class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
               anchor="bottom left"
               self="top left"
             >
@@ -790,7 +790,7 @@
             <Icon name="mingcute:classify-add-line" :size="15" />
             <span>В плейлист</span>
             <q-menu
-              class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+              class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
               anchor="top right"
               self="bottom right"
             >

@@ -1,6 +1,6 @@
 <template>
   <q-menu
-    class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+    class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
     :context-menu="contextMenu"
     :touch-position="contextMenu"
     :anchor="contextMenu ? undefined : 'bottom right'"
@@ -90,7 +90,7 @@
         <q-menu
           anchor="top end"
           self="top start"
-          class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+          class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
           @show="library.loadMembership()"
         >
           <div
@@ -202,7 +202,7 @@
         <q-menu
           anchor="top end"
           self="top start"
-          class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+          class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
         >
           <div
             class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none"

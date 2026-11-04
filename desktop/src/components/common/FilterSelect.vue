@@ -23,7 +23,7 @@
         anchor="bottom start"
         self="top start"
         :offset="[0, 4]"
-        class="overflow-hidden rounded-[calc(var(--radius)*0.8333)] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[0_18px_44px_rgba(0,0,0,0.45)]"
+        class="overflow-hidden rounded-[calc(var(--radius)*0.8333)] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]"
         @show="open = true"
         @hide="open = false"
       >

@@ -5,10 +5,13 @@
   >
     <q-header
       v-if="!panels.hidden && !panels.mini && ui.settings.topbarVisible"
-      class="topbar relative z-[1] !border-b-0 !shadow-none transition-[background] duration-300"
-      :class="!homeMode ? 'backdrop-blur-[18px] backdrop-saturate-[1.2]' : ''"
+      class="topbar relative z-[1] !shadow-none transition-[background,border-color] duration-200"
+      :class="[
+        !homeMode ? '!border-b !border-[color:var(--line)]' : '!border-b-0',
+        ui.settings.glass && !homeMode ? 'backdrop-blur-[var(--glass-blur,24px)]' : '',
+      ]"
       :style="{
-        background: homeMode ? 'transparent' : 'var(--topbar-gradient)',
+        background: homeMode ? 'transparent' : 'var(--topbar-bg)',
       }"
     >
       <div
@@ -75,7 +78,7 @@
 
             <div
               v-if="suggestOpen && suggestions.length"
-              class="absolute z-[50] top-[calc(100%_+_6px)] right-0 left-0 overflow-hidden p-[6px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[color-mix(in_srgb,var(--surface-2)_95%,transparent)] shadow-[0_18px_40px_rgba(0,0,0,0.45)] backdrop-blur-[var(--glass-blur,24px)]"
+              class="absolute z-[50] top-[calc(100%_+_6px)] right-0 left-0 overflow-hidden p-[6px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[var(--surface-2)] shadow-[var(--elev-1)] "
             >
               <button
                 v-for="(hint, index) in suggestions"
@@ -129,7 +132,7 @@
           <Icon name="mingcute:down-line" :size="13" class="flex-none text-[color:var(--fg-faint)]" />
           <q-menu
             v-model="profileMenuOpen"
-            class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]"
+            class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  "
             anchor="bottom right"
             self="top right"
           >
@@ -309,7 +312,7 @@
       side="left"
       :width="ui.settings.sidebarWidth"
       :breakpoint="0"
-      class="sidebar select-none !bg-[color-mix(in_srgb,var(--bg)_88%,var(--surface))] !border-r-0"
+      class="sidebar select-none !bg-[var(--bg)] !border-r !border-[color:var(--line)]"
       content-class="overflow-x-hidden pt-[14px]"
     >
       <div
@@ -466,7 +469,7 @@
             />
             <span v-else class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))]">{{ pl.track_count }}</span>
 
-            <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]">
+            <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  ">
               <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 196px">
                 <div
                   class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"

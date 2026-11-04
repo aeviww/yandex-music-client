@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div v-if="!genius.ready" class="text-[color:var(--fg-dim)] text-[calc(13px*var(--text-scale,1))]">
           Включи Genius и добавь токен в настройках, чтобы открывать страницы
           людей.
@@ -89,7 +89,7 @@
 
                 <button class="flex w-[30px] h-[30px] items-center justify-center p-0 border-0 rounded-[calc(var(--radius)*0.6667)] appearance-none text-[color:var(--fg-faint)] cursor-pointer select-none transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default" type="button" title="Ещё">
                   <Icon name="mingcute:more-2-fill" :size="18" />
-                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
+                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  " anchor="bottom left" self="top left">
                     <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 224px">
                       <div
                         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
@@ -122,14 +122,14 @@
               <div class="flex flex-wrap mt-[10px] gap-[6px] max-[900px]:mt-[8px]">
                 <button
                   v-if="person.socials.length"
-                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-full border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
+                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-[var(--radius-control)] border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
                   type="button"
                 >
                   <span>Ссылки и соцсети</span>
                   <span class="px-[5px] py-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{ person.socials.length }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
-                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
+                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  " anchor="bottom left" self="top left">
                     <div class="p-[4px] min-w-[236px] max-w-[260px] overflow-x-hidden overflow-y-auto max-h-[340px] select-none">
                       <div class="pt-[8px] px-[12px] pb-[4px] text-[10px] font-semibold tracking-[0.05em] uppercase text-[color:var(--fg-dim)]">Соцсети</div>
                       <div
@@ -151,7 +151,7 @@
 
                 <button
                   v-if="person.alternate_names.length"
-                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-full border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
+                  class="h-[30px] px-[14px] py-0 inline-flex items-center gap-[6px] rounded-[var(--radius-control)] border border-solid border-[color:var(--line)] text-[color:var(--fg)] text-[12px] font-medium normal-case cursor-pointer select-none transition-[background,border-color] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:border-[color:var(--fg-dim)] hover:text-[color:var(--fg)]"
                   type="button"
                 >
                   <span>Также известен как</span>
@@ -160,7 +160,7 @@
                   }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
-                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
+                  <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  " anchor="bottom left" self="top left">
                     <div class="p-[4px] min-w-[236px] max-w-[260px] overflow-x-hidden overflow-y-auto max-h-[340px] select-none">
                       <div class="pt-[8px] px-[12px] pb-[4px] text-[10px] font-semibold tracking-[0.05em] uppercase text-[color:var(--fg-dim)]">Также известен как</div>
                       <div
@@ -236,7 +236,7 @@
                   </div>
                   <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">{{ song.artist }}</div>
 
-                  <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]">
+                  <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  ">
                     <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 200px">
                       <div
                         class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"

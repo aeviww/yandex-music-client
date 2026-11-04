@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div class="row items-center no-wrap" style="gap: 12px">
           <div class="text-[calc(30px*var(--text-scale,1))] font-semibold tracking-[-0.03em] leading-[1.15]">Коллекция</div>
           <div class="col" />
@@ -18,7 +18,7 @@
         <div v-else class="grid grid-cols-4 gap-[16px] q-mt-md max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
           <div v-for="pl in ordered" :key="pl.kind">
             <div
-              class="group/card w-full rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+              class="group/card mx-auto w-full max-w-[200px] rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
               @click="router.push(`/playlists/${pl.kind}`)"
             >
               <div
@@ -61,7 +61,7 @@
                 {{ plural(pl.track_count, "трек", "трека", "треков") }}
               </div>
 
-              <q-menu context-menu touch-position class="!bg-[rgba(28,28,32,0.9)] !border !border-[color:rgba(255,255,255,0.09)] !rounded-[var(--radius)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35] overflow-x-hidden max-w-[268px]">
+              <q-menu context-menu touch-position class="!bg-[var(--surface-2)] !border !border-[color:var(--line)] !rounded-[var(--radius)] shadow-[var(--elev-1)]   overflow-x-hidden max-w-[268px]">
                 <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 196px">
                   <div
                     class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
@@ -173,7 +173,7 @@
               </div>
               <div class="text-[color:var(--fg-faint)] text-[calc(11px*var(--text-scale,1))] truncate">{{ al.artists }}</div>
 
-              <q-menu context-menu touch-position class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]">
+              <q-menu context-menu touch-position class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] ">
                 <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 196px">
                   <div
                     class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
@@ -249,7 +249,7 @@
                   {{ plural(pl.track_count, "трек", "трека", "треков") }}
                 </div>
 
-                <q-menu context-menu touch-position class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]">
+                <q-menu context-menu touch-position class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] ">
                   <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 196px">
                     <div
                       class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"

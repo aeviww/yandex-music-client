@@ -237,7 +237,7 @@ const iconBtnClass =
 const onClass = "!text-[color:var(--accent)]";
 const offClass = "opacity-[0.25] pointer-events-none";
 const menuClass =
-  "!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]";
+  "!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)]  ";
 const optClass =
   "flex items-center justify-between gap-[12px] px-[9px] py-[7px] rounded-[calc(var(--radius)*0.5833)] text-[13px] cursor-pointer transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]";
 const optOnClass = "bg-[var(--hover)] !text-[color:var(--accent)]";

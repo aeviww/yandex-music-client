@@ -115,7 +115,7 @@
               @click.stop
             >
               {{ sourceOf(item.id) }}
-              <q-menu class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]" anchor="bottom middle" self="top middle">
+              <q-menu class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] " anchor="bottom middle" self="top middle">
                 <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden" style="min-width: 220px">
                   <div
                     v-for="src in sourceMap.get(item.id)"

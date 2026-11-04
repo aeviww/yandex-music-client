@@ -85,7 +85,7 @@
             >
               <Icon name="mingcute:more-2-fill" :size="14" />
               <q-menu
-                class="!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+                class="!rounded-[var(--radius)] overflow-x-hidden max-w-[268px] border border-[color:var(--line)] bg-[var(--surface-2)] shadow-[var(--elev-1)] "
               >
                 <div
                   class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"

@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div class="text-[calc(30px*var(--text-scale,1))] font-semibold tracking-[-0.03em] leading-[1.15]">Поиск</div>
 
         <div class="relative w-full max-w-[460px] q-mt-lg">
@@ -30,7 +30,7 @@
 
           <div
             v-if="suggestOpen && suggestions.length"
-            class="absolute z-[20] top-[calc(100%_+_6px)] right-0 left-0 overflow-hidden p-[6px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[var(--surface-2)] shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+            class="absolute z-[20] top-[calc(100%_+_6px)] right-0 left-0 overflow-hidden p-[6px] border border-[color:var(--line)] rounded-[var(--radius)] bg-[var(--surface-2)] shadow-[var(--elev-1)]"
           >
             <button
               v-for="hint in suggestions"

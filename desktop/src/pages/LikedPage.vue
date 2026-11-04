@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] pt-[var(--page-top-gap)] px-[32px] pb-0 !min-h-0 !overflow-hidden">
+  <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-0 !min-h-0 !overflow-hidden">
     <div class="flex-none pb-[14px]">
       <div class="row items-end no-wrap" style="gap: 26px">
         <div

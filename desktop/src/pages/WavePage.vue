@@ -20,7 +20,6 @@
           </div>
 
           <div class="flex min-w-0 flex-col">
-            <span class="text-[color:var(--fg-faint)] text-[11px] font-[620] tracking-[0.08em] uppercase">{{ stationTitle }}</span>
             <h1>{{ hasCurrent ? currentTitle : "Моя волна" }}</h1>
             <p v-if="hasCurrent" class="overflow-hidden mt-[6px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px] text-ellipsis whitespace-nowrap [&_.link]:text-inherit [&_.link:hover]:text-[color:var(--fg)]">
               <ArtistsLine
@@ -31,7 +30,7 @@
             <p v-else class="overflow-hidden mt-[6px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px] text-ellipsis whitespace-nowrap [&_.link]:text-inherit [&_.link:hover]:text-[color:var(--fg)]">{{ heroSubtitle }}</p>
 
             <div class="flex items-center mt-[16px] gap-[8px]">
-              <button type="button" class="inline-flex h-[38px] items-center pt-0 pr-[18px] pb-0 pl-[15px] border-0 rounded-full bg-[var(--fg)] text-[color:var(--bg)] cursor-pointer text-[13px] font-[640] gap-[8px] transition-[transform,opacity] duration-[140ms] ease-[ease] hover:scale-[1.02] active:scale-[0.98]" @click="onPrimary">
+              <button type="button" class="inline-flex h-[38px] items-center pt-0 pr-[18px] pb-0 pl-[15px] border-0 rounded-[var(--radius-item)] bg-[var(--accent)] text-white cursor-pointer text-[13px] font-[640] gap-[8px] transition-[opacity] duration-[140ms] ease-[ease] hover:opacity-90" @click="onPrimary">
                 <q-spinner v-if="player.loading" size="15px" />
                 <Icon v-else :name="primaryIcon" :size="16" />
                 <span>{{ primaryLabel }}</span>
@@ -106,7 +105,7 @@
               v-for="item in stations"
               :key="item.id"
               type="button"
-              class="h-[32px] flex-none px-[14px] py-0 border border-[color:var(--line)] rounded-full text-[color:var(--fg-dim)] cursor-pointer text-[12.5px] font-[560] whitespace-nowrap [scroll-snap-align:start] transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:border-transparent hover:bg-[var(--surface-2)] hover:text-[color:var(--fg)]"
+              class="h-[32px] flex-none px-[14px] py-0 border border-[color:var(--line)] rounded-[var(--radius-control)] text-[color:var(--fg-dim)] cursor-pointer text-[12.5px] font-[560] whitespace-nowrap [scroll-snap-align:start] transition-[background,color,border-color] duration-[140ms] ease-[ease] hover:border-transparent hover:bg-[var(--surface-2)] hover:text-[color:var(--fg)]"
               :class="{ '!border-transparent !bg-[var(--fg)] !text-[color:var(--bg)]': isActiveStation(item) }"
               @click="onChipClick(item)"
             >
@@ -190,7 +189,7 @@
         </section>
 
         <p v-else-if="!hasCurrent" class="m-0 text-[color:var(--fg-faint)] text-[13px]">
-          Запусти волну - подберём музыку под твоё настроение.
+          Нажми «Запустить», чтобы включить волну.
         </p>
       </div>
     </div>
@@ -399,7 +398,6 @@ const stations = computed(() => {
 });
 
 const hasCurrent = computed(() => Boolean(player.current));
-const stationTitle = computed(() => player.stationName || "Моя волна");
 const errorText = computed(() => player.waveError || loadError.value);
 
 const currentTitle = computed(() => player.current?.title ?? "");
@@ -407,7 +405,7 @@ const coverUrl = computed(() => player.current?.cover_url ?? null);
 
 const heroSubtitle = computed(() =>
   hasCurrent.value
-    ? "Бесконечный поток, который подстраивается под тебя"
+    ? "Поток треков по твоим вкусам"
     : "Выбери станцию или просто нажми «Запустить»",
 );
 

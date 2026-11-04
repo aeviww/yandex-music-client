@@ -194,7 +194,7 @@
           <Transition name="mini-vol-pop">
             <div
               v-if="volumeOpen"
-              class="absolute bottom-[calc(100%_+_6px)] left-[50%] z-[30] flex max-h-[calc(var(--mini-h,_100vh)_-_96px)] flex-col items-center justify-center w-[26px] px-0 py-[7px] border border-[color:rgba(255,255,255,0.09)] rounded-[calc(var(--radius)*1.5)] bg-[#141414] -translate-x-1/2 shadow-[0_10px_26px_rgba(0,0,0,0.55)]"
+              class="absolute bottom-[calc(100%_+_6px)] left-[50%] z-[30] flex max-h-[calc(var(--mini-h,_100vh)_-_96px)] flex-col items-center justify-center w-[26px] px-0 py-[7px] border border-[color:var(--line)] rounded-[var(--radius-item)] bg-[var(--surface-2)] -translate-x-1/2 shadow-[var(--elev-1)]"
               data-no-drag
               @wheel.prevent.stop="onVolWheel"
             >
@@ -207,7 +207,7 @@
                   class="absolute bottom-0 left-0 w-full pointer-events-none rounded-[calc(var(--radius)*0.5)] bg-[linear-gradient(to_top,color-mix(in_srgb,var(--accent)_70%,transparent),var(--accent))]"
                   :style="{ height: `${volumePercent}%` }"
                 >
-                  <span class="absolute top-0 left-1/2 w-[10px] h-[10px] pointer-events-none rounded-[calc(var(--radius)*0.4167)] bg-[var(--fg)] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_3px_color-mix(in_srgb,var(--accent)_32%,transparent)] transition-[box-shadow] duration-[140ms] ease-[ease] group-hover:shadow-[0_0_0_5px_color-mix(in_srgb,var(--accent)_38%,transparent)]" />
+                  <span class="absolute top-0 left-1/2 w-[10px] h-[10px] pointer-events-none rounded-[calc(var(--radius)*0.4167)] bg-[var(--fg)] -translate-x-1/2 -translate-y-1/2 shadow-[0_0_0_2px_color-mix(in_srgb,var(--fg)_18%,transparent)] transition-[box-shadow] duration-[140ms] ease-[ease] group-hover:shadow-[0_0_0_4px_color-mix(in_srgb,var(--fg)_22%,transparent)]" />
                 </div>
               </div>
             </div>
@@ -282,7 +282,7 @@ const miniBtnBase =
 const miniBtnSkin =
   "transition-[background,color,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] active:scale-[0.88]";
 const miniBtnClass = `${miniBtnBase} ${miniBtnSkin} w-[calc(var(--mini-icon,_15px)_*_2)] h-[calc(var(--mini-icon,_15px)_*_2)] flex-[0_0_calc(var(--mini-icon,15px)*2)] rounded-[calc(var(--radius)*1.5)] bg-transparent`;
-const miniRestoreClass = `${miniBtnBase} ${miniBtnSkin} w-[28px] h-[28px] flex-[0_0_28px] rounded-[calc(var(--radius)*0.75)] bg-[color-mix(in_srgb,var(--surface-2)_75%,transparent)]`;
+const miniRestoreClass = `${miniBtnBase} ${miniBtnSkin} w-[28px] h-[28px] flex-[0_0_28px] rounded-[calc(var(--radius)*0.75)] bg-[var(--surface-2)]`;
 const miniPlayClass = `${miniBtnBase} rounded-[calc(var(--radius)*1.5)] w-[calc(var(--mini-icon,_15px)_*_2.5)] h-[calc(var(--mini-icon,_15px)_*_2.5)] flex-[0_0_calc(var(--mini-icon,15px)*2.5)] mx-[4px] my-0 bg-[var(--accent)] !text-[color:#fff] [transition:transform_0.18s_ease,background_0.15s_ease] hover:!bg-[color-mix(in_srgb,var(--accent)_88%,white)] hover:!text-[color:#fff] active:!scale-[0.9]`;
 const miniOnClass = "!text-[color:var(--accent)]";
 const miniDimClass = "opacity-[0.4]";

@@ -16,7 +16,7 @@
         >&nbsp;ещё {{ hidden }}</span
       >
       <q-menu
-        class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+        class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
         anchor="bottom start"
         self="top start"
         @show="loadAvatars"

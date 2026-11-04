@@ -147,7 +147,7 @@
         <template v-for="(id, index) in leftButtons" :key="id">
           <i
             v-if="caretAt('left', index)"
-            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
           />
           <span
             class="pe-item inline-flex items-center"
@@ -164,7 +164,7 @@
         </template>
         <i
           v-if="caretAt('left', leftButtons.length)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
         />
       </div>
     </div>
@@ -176,7 +176,7 @@
         class="flex items-center gap-[calc(var(--player-gap,_6px)_+_4px)] [&_svg]:w-[var(--player-icon,_18px)] [&_svg]:h-[var(--player-icon,_18px)]"
         :class="{
           [editZoneClass]: editMode,
-          'px-[10px] py-[3px] !rounded-[calc(var(--radius)*1.5)] bg-[color-mix(in_srgb,var(--bg)_42%,transparent)] backdrop-blur-[5px]':
+          'px-[10px] py-[3px] rounded-[var(--radius-item)] bg-[var(--bg)]':
             ui.settings.playerVisualizer,
         }"
         :data-zone-label="editMode ? 'Центр' : null"
@@ -187,7 +187,7 @@
         <template v-for="(id, index) in centerButtons" :key="id">
           <i
             v-if="caretAt('center', index)"
-            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
           />
           <span
             class="pe-item inline-flex items-center"
@@ -204,7 +204,7 @@
         </template>
         <i
           v-if="caretAt('center', centerButtons.length)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
         />
       </div>
 
@@ -258,7 +258,7 @@
       <template v-for="(id, index) in rightButtons" :key="id">
         <i
           v-if="caretAt('right', index)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
         />
         <span
           class="pe-item inline-flex items-center"
@@ -272,7 +272,7 @@
       </template>
       <i
         v-if="caretAt('right', rightButtons.length)"
-        class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+        class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] pointer-events-none"
       />
     </div>
   </div>

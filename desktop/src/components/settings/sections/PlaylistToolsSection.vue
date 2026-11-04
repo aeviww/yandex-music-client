@@ -91,7 +91,7 @@
           <div class="flex flex-wrap items-center gap-2">
             <select v-model="targetKind" :class="SELECT" class="min-w-[220px]">
               <option value="">Куда добавить…</option>
-              <option value="__new__">➕ Новый плейлист…</option>
+              <option value="__new__">Новый плейлист…</option>
               <option
                 v-for="pl in library.playlists"
                 :key="pl.kind"

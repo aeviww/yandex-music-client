@@ -36,7 +36,7 @@
 
     <div class="flex flex-col gap-[16px] min-w-0">
       <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
-        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Размер окна</div>
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10.5px] font-semibold tracking-[0.01em]">Размер окна</div>
         <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-[18px] gap-y-[12px]">
           <EditRange
             label="Ширина"
@@ -58,7 +58,7 @@
       </div>
 
       <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
-        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Размеры и отступы</div>
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10.5px] font-semibold tracking-[0.01em]">Размеры и отступы</div>
         <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-[18px] gap-y-[12px]">
           <EditRange
             label="Обложка"
@@ -113,7 +113,7 @@
       </div>
 
       <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
-        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">Показывать</div>
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10.5px] font-semibold tracking-[0.01em]">Показывать</div>
         <div class="flex flex-col gap-[2px]">
           <EditSwitch
             label="Время трека"
@@ -134,7 +134,7 @@
       </div>
 
       <div class="flex flex-col gap-[10px] p-[14px] border border-[var(--line)] rounded-[calc(var(--radius)*0.9)] bg-[var(--surface)]">
-        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10px] font-[650] tracking-[0.08em] uppercase">
+        <div class="flex items-baseline justify-between gap-[8px] text-[color:var(--fg-faint)] text-[10.5px] font-semibold tracking-[0.01em]">
           Кнопки
           <span class="font-medium tracking-normal normal-case">перетаскивай, чтобы менять порядок</span>
         </div>

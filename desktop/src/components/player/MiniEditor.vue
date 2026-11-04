@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute z-40 inset-0 flex flex-col bg-[color-mix(in_srgb,var(--surface)_94%,transparent)] backdrop-blur-[20px]"
+    class="absolute z-40 inset-0 flex flex-col bg-[var(--surface)] "
     @contextmenu.stop.prevent
     @mousedown.stop
   >

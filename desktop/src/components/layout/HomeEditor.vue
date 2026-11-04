@@ -1,13 +1,13 @@
 <template>
   <div
-    class="fixed right-[12px] z-[2600] flex w-[336px] flex-col overflow-hidden rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[var(--editor-bg)] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
+    class="fixed right-[12px] z-[2600] flex w-[336px] flex-col overflow-hidden rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[var(--editor-bg)] shadow-[var(--elev-2)] "
     :style="panelStyle"
     @contextmenu.stop.prevent
     @pointerdown.stop
   >
     <div class="flex items-center justify-between gap-[10px] px-[13px] pt-[10px] pb-[9px]">
       <span
-        class="text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.14em] uppercase"
+        class="text-[color:var(--fg-faint)] text-[11px] font-semibold tracking-[0.02em]"
       >
         Главное
       </span>

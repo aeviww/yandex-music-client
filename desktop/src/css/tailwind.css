@@ -160,6 +160,7 @@ body,
 
 html[data-mode="light"] {
   color-scheme: light;
+  --topbar-bg: var(--bg);
 }
 
 html[data-font="minecraft"] body {
@@ -268,15 +269,19 @@ body {
   --shadow-strong: rgba(0, 0, 0, 0.75);
   --shadow-soft: rgba(0, 0, 0, 0.45);
   --radius: 12px;
+  /* Radius scale: one base value, three deliberate steps. */
+  --radius-control: calc(var(--radius) * 0.6667);
+  --radius-item: calc(var(--radius) * 0.8333);
+  --radius-card: calc(var(--radius) * 1.1667);
+  --radius-panel: calc(var(--radius) * 1.3333);
+  /* Elevation: menus and panels only. Cards stay flat. */
+  --elev-1: 0 16px 40px -12px var(--shadow-strong);
+  --elev-2: 0 24px 60px -26px var(--shadow-strong);
   --page-top-gap: 10px;
   --track-height: 52px;
   --sidebar-width: 236px;
-  --topbar-gradient: linear-gradient(
-    180deg,
-    rgba(9, 9, 11, 0.82) 0%,
-    rgba(9, 9, 11, 0.45) 60%,
-    rgba(9, 9, 11, 0) 100%
-  );
+  /* The single allowed glass surface: content scrolls under the topbar. */
+  --topbar-bg: color-mix(in srgb, var(--bg) 82%, transparent);
 }
 
 .q-page-container {
@@ -316,9 +321,8 @@ body {
 
 /* Playlist / album selection bar */
 .select-float {
-  @apply fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[calc(var(--radius)*1.3333)] bg-[color-mix(in_srgb,_var(--accent)_12%,_var(--surface))];
-  box-shadow: 0 22px 48px -20px rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(var(--glass-blur, 12px));
+  @apply fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[var(--radius-panel)] bg-[var(--surface-2)] border border-[var(--line)];
+  box-shadow: var(--elev-2);
   transform: translateX(-50%);
   animation: select-float-in 0.26s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
@@ -418,12 +422,24 @@ html.thin-scrollbar ::-webkit-scrollbar-thumb {
   backdrop-filter: none;
 }
 
+.no-glass .topbar {
+  background: var(--bg) !important;
+}
+
 .no-motion *,
 .no-motion *::before,
 .no-motion *::after {
   scroll-behavior: auto !important;
   animation: none !important;
   transition: none !important;
+}
+
+/* Menus are the one surface allowed to lift above the page. */
+.q-menu {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: var(--fg);
+  box-shadow: var(--elev-1);
 }
 
 @tailwind utilities;
@@ -455,8 +471,25 @@ html.thin-scrollbar ::-webkit-scrollbar-thumb {
 }
 
 *::selection {
-  color: #000;
-  background: #fff;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Motion is a transition cue, never wallpaper. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Light theme: only Quasar/global surfaces need explicit overrides;
@@ -500,10 +533,9 @@ html[data-mode="light"] ::-webkit-scrollbar-thumb:hover {
   @apply bg-[rgba(0,_0,_0,_0.28)];
 }
 
-/* Radius follows the appearance setting on every rounded UI element */
-.rounded-full:not(.cover):not(.cover-round):not(img):not(.q-icon) {
-  border-radius: calc(var(--radius) * 1.5) !important;
-}
+/* Radius follows the appearance setting through the shared tokens above.
+   `rounded-full` stays a real circle/pill; the global override that turned
+   every round element into the same 18px pill was removing that distinction. */
 
 .q-menu .q-item {
   border-radius: calc(var(--radius) * 0.5833);

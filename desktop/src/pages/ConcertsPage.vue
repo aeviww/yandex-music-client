@@ -3,17 +3,14 @@
     class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden"
   >
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[calc(var(--page-top-gap,_20px)_+_8px)] px-[32px] pb-[60px] max-[760px]:px-[16px]">
+      <div class="pt-[calc(var(--page-top-gap,_20px)_+_8px)] px-[var(--page-padding,40px)] pb-[60px] max-[760px]:px-[16px]">
         <!-- Page Header -->
         <div class="flex items-end justify-between gap-[16px] flex-wrap mb-[20px]">
           <div>
-            <div class="text-[12px] text-[color:var(--fg-dim)] uppercase tracking-[0.06em] font-semibold mb-[4px]">
-              Афиша
-            </div>
-            <h1 class="text-[clamp(26px,_3.2vw,_38px)] font-black tracking-[-0.03em] m-0 leading-tight text-[color:var(--fg)]">
+            <h1 class="text-[clamp(26px,_3.2vw,_38px)] font-semibold tracking-[-0.04em] m-0 leading-[1.1] text-[color:var(--fg)]">
               Концерты
             </h1>
-            <p class="text-[13.5px] text-[color:var(--fg-dim)] mt-[6px] mb-0 max-w-[560px]">
+            <p class="text-[13.5px] text-[color:var(--fg-dim)] mt-[8px] mb-0 max-w-[560px]">
               Ближайшие концерты артистов из вашей библиотеки и рекомендаций
             </p>
           </div>
@@ -26,7 +23,7 @@
                 v-model="searchQuery"
                 type="text"
                 placeholder="Поиск по артисту или площадке..."
-                class="h-[34px] w-[210px] max-[640px]:w-full px-[12px] pl-[34px] rounded-[9px] bg-[var(--surface)] border border-[color:var(--line)] text-[12.5px] text-[color:var(--fg)] outline-none transition-colors placeholder:text-[color:var(--fg-faint)] focus:border-[var(--accent)]"
+                class="h-[34px] w-[210px] max-[640px]:w-full px-[12px] pl-[34px] rounded-[var(--radius-control)] bg-[var(--surface)] border border-[color:var(--line)] text-[12.5px] text-[color:var(--fg)] outline-none transition-colors placeholder:text-[color:var(--fg-faint)] focus:border-[var(--accent)]"
               />
               <Icon
                 name="mingcute:search-2-line"
@@ -136,7 +133,7 @@
 
             <!-- Sort Dropdown -->
             <button
-              class="inline-flex items-center gap-[6px] h-[34px] px-[12px] border rounded-[9px] bg-[var(--surface)] text-[color:var(--fg-dim)] border-[color:var(--line)] text-[12.5px] font-medium cursor-pointer transition-colors hover:bg-[var(--hover)] hover:text-[color:var(--fg)] select-none"
+              class="inline-flex items-center gap-[6px] h-[34px] px-[12px] border rounded-[var(--radius-control)] bg-[var(--surface)] text-[color:var(--fg-dim)] border-[color:var(--line)] text-[12.5px] font-medium cursor-pointer transition-colors hover:bg-[var(--hover)] hover:text-[color:var(--fg)] select-none"
               type="button"
               title="Сортировка"
             >
@@ -194,7 +191,7 @@
         <div class="flex items-center gap-[6px] flex-wrap mb-[14px]">
           <!-- All Cities button -->
           <button
-            class="h-[28px] px-[12px] rounded-full text-[12px] font-medium border cursor-pointer select-none transition-colors"
+            class="h-[28px] px-[12px] rounded-[var(--radius-control)] text-[12px] font-medium border cursor-pointer select-none transition-colors"
             :class="
               selectedCity === null
                 ? 'bg-[var(--accent)] text-white border-transparent'
@@ -210,7 +207,7 @@
           <button
             v-for="city in topCities"
             :key="city.name"
-            class="h-[28px] px-[12px] rounded-full text-[12px] font-medium border cursor-pointer select-none transition-colors flex items-center gap-[6px]"
+            class="h-[28px] px-[12px] rounded-[var(--radius-control)] text-[12px] font-medium border cursor-pointer select-none transition-colors flex items-center gap-[6px]"
             :class="
               selectedCity === city.name
                 ? 'bg-[var(--accent)] text-white border-transparent'
@@ -226,7 +223,7 @@
           <!-- Selected Custom City Pill (if selected city is not in top 8) -->
           <button
             v-if="selectedCity && !topCities.some(c => c.name === selectedCity)"
-            class="h-[28px] px-[12px] rounded-full text-[12px] font-semibold border cursor-pointer select-none transition-colors flex items-center gap-[6px] bg-[var(--accent)] text-white border-transparent"
+            class="h-[28px] px-[12px] rounded-[var(--radius-control)] text-[12px] font-semibold border cursor-pointer select-none transition-colors flex items-center gap-[6px] bg-[var(--accent)] text-white border-transparent"
             type="button"
             @click="setCity(null)"
           >
@@ -237,7 +234,7 @@
 
           <!-- "Choose Any City" button with Search Dialog/Menu -->
           <button
-            class="h-[28px] px-[12px] rounded-full text-[11.5px] font-medium border border-dashed border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:border-[color:var(--fg-dim)] cursor-pointer select-none transition-colors flex items-center gap-[5px]"
+            class="h-[28px] px-[12px] rounded-[var(--radius-control)] text-[11.5px] font-medium border border-dashed border-[color:var(--line)] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:border-[color:var(--fg-dim)] cursor-pointer select-none transition-colors flex items-center gap-[5px]"
             type="button"
           >
             <Icon name="mingcute:map-pin-line" :size="13" class="text-[color:var(--fg-faint)]" />
@@ -249,14 +246,14 @@
               anchor="bottom left"
               self="top left"
               :offset="[0, 8]"
-              class="bg-[var(--surface)] border border-[color:var(--line)] rounded-[14px] p-[10px] shadow-2xl w-[260px] max-h-[360px] flex flex-col text-[color:var(--fg)]"
+              class="bg-[var(--surface)] border border-[color:var(--line)] rounded-[var(--radius-panel)] p-[10px] shadow-[var(--elev-1)] w-[260px] max-h-[360px] flex flex-col text-[color:var(--fg)]"
             >
               <div class="relative mb-[8px] flex-none">
                 <input
                   v-model="citySearchQuery"
                   type="text"
                   placeholder="Поиск города..."
-                  class="w-full h-[32px] px-[10px] pl-[30px] rounded-[8px] bg-[var(--surface-2)] border border-[color:var(--line)] text-[12px] text-[color:var(--fg)] outline-none focus:border-[var(--accent)] placeholder:text-[color:var(--fg-faint)]"
+                  class="w-full h-[32px] px-[10px] pl-[30px] rounded-[var(--radius-control)] bg-[var(--surface-2)] border border-[color:var(--line)] text-[12px] text-[color:var(--fg)] outline-none focus:border-[var(--accent)] placeholder:text-[color:var(--fg-faint)]"
                   @click.stop
                 />
                 <Icon

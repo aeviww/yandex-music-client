@@ -45,13 +45,15 @@ export function useVisualizer(
     const usable = data ? Math.floor(data.length * 0.66) : 0;
     const step = data ? Math.max(1, Math.floor(usable / barCount)) : 1;
 
-    const accent =
+    // The visualizer is texture, not an accent moment: a neutral waveform
+    // keeps the red signal for actions and the current track.
+    const color =
       getComputedStyle(document.documentElement)
-        .getPropertyValue("--accent")
-        .trim() || "#fa2d48";
+        .getPropertyValue("--fg")
+        .trim() || "#f5f5f7";
     const gap = 2;
     const bw = Math.max(1, (w - gap * (barCount - 1)) / barCount);
-    ctx.fillStyle = accent;
+    ctx.fillStyle = color;
 
     let maxLevel = 0;
     for (let i = 0; i < barCount; i++) {
@@ -71,7 +73,7 @@ export function useVisualizer(
       if (next <= 0.002) continue;
       const bh = Math.max(2, next * h);
       const x = i * (bw + gap);
-      ctx.globalAlpha = 0.2 + next * 0.6;
+      ctx.globalAlpha = 0.08 + next * 0.34;
       ctx.fillRect(x, h - bh, bw, bh);
     }
     ctx.globalAlpha = 1;

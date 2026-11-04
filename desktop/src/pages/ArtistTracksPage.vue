@@ -1,7 +1,7 @@
 <template>
   <q-page class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden">
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]">
           <div>
             <button class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]" type="button" @click="back">

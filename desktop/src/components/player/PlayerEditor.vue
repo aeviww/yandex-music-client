@@ -1,12 +1,12 @@
 <template>
   <div
-    class="pe-panel absolute bottom-[calc(100%_+_8px)] left-1/2 z-30 w-[min(880px,calc(100vw_-_32px))] -translate-x-1/2 rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface-2)_94%,transparent)] px-[13px] pt-[10px] pb-[11px] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
+    class="pe-panel absolute bottom-[calc(100%_+_8px)] left-1/2 z-30 w-[min(880px,calc(100vw_-_32px))] -translate-x-1/2 rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[var(--surface-2)] px-[13px] pt-[10px] pb-[11px] shadow-[var(--elev-2)] "
     @contextmenu.stop.prevent
     @pointerdown.stop
   >
     <div class="flex items-center justify-between gap-[12px] pb-[9px]">
       <span
-        class="text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.14em] uppercase"
+        class="text-[color:var(--fg-faint)] text-[11px] font-semibold tracking-[0.02em]"
       >
         Плеер
       </span>

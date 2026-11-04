@@ -3,7 +3,7 @@
     class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden"
   >
     <q-scroll-area class="flex-auto min-h-0" @scroll="onScroll">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div v-if="loading" class="flex flex-center" style="height: 300px">
           <q-spinner size="26px" color="primary" />
         </div>
@@ -135,7 +135,7 @@
                 >
                   <Icon name="mingcute:more-2-fill" :size="18" />
                   <q-menu
-                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                     anchor="bottom left"
                     self="top left"
                   >
@@ -183,7 +183,7 @@
               >
                 <button
                   v-if="normalizedLinks.length"
-                  class="chip-menu inline-flex items-center h-[30px] px-[14px] py-0 rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                  class="chip-menu inline-flex items-center h-[30px] px-[14px] py-0 rounded-[var(--radius-control)] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
                   type="button"
                 >
                   <span>Ссылки и соцсети</span>
@@ -191,7 +191,7 @@
                   <Icon name="mingcute:down-line" :size="12" />
 
                   <q-menu
-                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                     anchor="bottom left"
                     self="top left"
                   >
@@ -232,7 +232,7 @@
                 </button>
 
                 <button
-                  class="chip-menu inline-flex items-center h-[30px] px-[14px] py-0 rounded-full bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                  class="chip-menu inline-flex items-center h-[30px] px-[14px] py-0 rounded-[var(--radius-control)] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[13px] font-medium cursor-pointer select-none transition-[background,color] duration-[140ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
                   type="button"
                   @click="infoOpen = true"
                 >
@@ -363,7 +363,7 @@
                   <span>{{ albumSortLabel }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
                   <q-menu
-                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                     anchor="bottom right"
                     self="top right"
                   >
@@ -408,7 +408,7 @@
             <div class="grid grid-cols-4 gap-[16px] max-[1100px]:grid-cols-3 max-[860px]:grid-cols-2 max-[560px]:grid-cols-1">
               <div v-for="album in sortedAlbums" :key="album.id">
                 <div
-                  class="group relative w-full rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
+                  class="group relative mx-auto w-full max-w-[200px] rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] hover:bg-[var(--surface)]"
                   @click="router.push(`/album/${album.id}`)"
                 >
                   <div
@@ -429,7 +429,7 @@
 
                     <div
                       v-if="album.id === latestAlbumId"
-                      class="absolute left-[6px] top-[6px] px-[8px] py-[2px] rounded-[calc(var(--radius)*0.6667)] text-[10px] font-semibold leading-[1.4] tracking-[0.2px] bg-[var(--accent)] text-[color:#fff] pointer-events-none z-[2] shadow-[0_2px_8px_rgba(0,0,0,0.28)]"
+                      class="absolute left-[6px] top-[6px] px-[8px] py-[2px] rounded-[calc(var(--radius)*0.6667)] text-[10px] font-semibold leading-[1.4] tracking-[0.2px] bg-[var(--accent)] text-[color:#fff] pointer-events-none z-[2]"
                     >
                       Последний релиз
                     </div>
@@ -458,7 +458,7 @@
                   <q-menu
                     context-menu
                     touch-position
-                    class="bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-[rgba(255,255,255,0.09)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)]"
+                    class="bg-[var(--surface-2)] border border-[var(--line)] rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                   >
                     <div
                       class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"

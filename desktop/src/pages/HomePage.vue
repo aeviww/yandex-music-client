@@ -168,7 +168,7 @@
 
                   <span
                     v-if="library.isPinned(pl.kind)"
-                    class="absolute left-[10px] top-[10px] flex h-[24px] w-[24px] items-center justify-center rounded-[calc(var(--radius)*1.5)] bg-black/55 text-[color:var(--fg)]"
+                    class="absolute left-[10px] top-[10px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-black/55 text-[color:var(--fg)]"
                     title="Закреплён в боковой панели"
                   >
                     <Icon name="mingcute:pin-2-line" :size="11" />
@@ -189,7 +189,7 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:var(--line)] !bg-[var(--surface-2)] shadow-[var(--elev-1)]  overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
@@ -480,7 +480,7 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:var(--line)] !bg-[var(--surface-2)] shadow-[var(--elev-1)]  overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
@@ -589,7 +589,7 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:var(--line)] !bg-[var(--surface-2)] shadow-[var(--elev-1)]  overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
@@ -660,9 +660,6 @@
                 {{ sectionTitle('neuro', 'нейромузыка') }}
               </h2>
             </div>
-            <p class="mb-0 mt-[-6px] text-[12px] text-[color:var(--fg-faint)]">
-              отвлечёт от шума и сфокусирует на важном
-            </p>
 
             <div class="relative mt-[16px]">
               <div
@@ -694,7 +691,7 @@
 
               <button
                 v-if="neuroCanLeft"
-                class="absolute left-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-[calc(var(--radius)*1.5)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute left-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[var(--surface)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)]  cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Назад"
                 @click="scrollNeuro(-1)"
@@ -704,7 +701,7 @@
 
               <button
                 v-if="neuroCanRight"
-                class="absolute right-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-[calc(var(--radius)*1.5)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute right-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[var(--surface)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)]  cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Дальше"
                 @click="scrollNeuro(1)"
@@ -715,8 +712,12 @@
           </template>
           </div>
 
-          <div v-if="loading" class="mt-8">
-            <q-spinner size="20px" color="primary" />
+          <div
+            v-if="loading"
+            class="mt-8 flex items-center gap-[10px] text-[12px] text-[color:var(--fg-faint)]"
+          >
+            <q-spinner size="16px" color="primary" />
+            <span>Загружаем рекомендации…</span>
           </div>
 
           <footer
@@ -973,7 +974,7 @@ const quickGhost =
   "flex h-10 flex-nowrap items-center gap-[9px] rounded-[calc(var(--radius)*0.8333)] border border-[var(--line)] px-4 text-[13px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
 
 const fab =
-  "absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[calc(var(--radius)*1.5)] border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
+  "absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
 
 const visiblePlaylists = computed(() =>
   playlists.value.filter((pl) => !library.isHidden(pl.kind)),

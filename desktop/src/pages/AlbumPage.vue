@@ -3,7 +3,7 @@
     class="flex flex-col h-[calc(100vh_-_52px_-_var(--player-height,_78px))] !min-h-0 !p-0 !overflow-hidden"
   >
     <q-scroll-area class="flex-auto min-h-0">
-      <div class="pt-[var(--page-top-gap)] px-[32px] pb-[46px]">
+      <div class="pt-[var(--page-top-gap)] px-[var(--page-padding,40px)] pb-[46px]">
         <div v-if="loading" class="flex flex-center" style="height: 300px">
           <q-spinner size="26px" color="primary" />
         </div>
@@ -120,7 +120,7 @@
                 >
                   <Icon name="mingcute:more-1-fill" :size="18" />
                   <q-menu
-                    class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+                    class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                     anchor="bottom left"
                     self="top left"
                   >
@@ -155,7 +155,7 @@
                           class="text-[color:var(--fg-faint)]"
                         />
                         <q-menu
-                          class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+                          class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                           anchor="top end"
                           self="top start"
                         >
@@ -220,7 +220,7 @@
 
           <div
             v-if="selectedIds.length"
-            class="select-float fixed left-[50%] bottom-[94px] z-[850] flex items-center gap-[12px] flex-wrap max-w-[min(760px,_100vw_-_48px)] px-[16px] py-[11px] rounded-[calc(var(--radius)*1.3333)] bg-[color-mix(in_srgb,var(--accent)_12%,var(--surface))] shadow-[0_22px_48px_-20px_rgba(0,0,0,0.85)] [backdrop-filter:blur(var(--glass-blur,12px))] -translate-x-1/2 max-[900px]:max-w-[calc(100vw_-_24px)] max-[900px]:px-[12px] max-[900px]:py-[9px]"
+            class="select-float"
           >
             <button
               class="flex w-[16px] h-[16px] flex-none items-center justify-center border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.4167)] bg-[var(--surface-2)] text-[color:#fff] [transition:background_0.12s_ease,border-color_0.12s_ease]"
@@ -269,7 +269,7 @@
                 <Icon name="mingcute:classify-add-line" :size="14" />
                 <span>В плейлист</span>
                 <q-menu
-                  class="select-none bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] border border-solid border-[rgba(255,255,255,0.09)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[0_16px_40px_rgba(0,0,0,0.55)] [backdrop-filter:blur(var(--glass-blur,24px))_saturate(1.35)]"
+                  class="select-none bg-[var(--surface-2)] border border-solid border-[var(--line)] !rounded-[var(--radius)] overflow-x-hidden max-w-[268px] shadow-[var(--elev-1)] "
                   anchor="bottom start"
                   self="top start"
                 >

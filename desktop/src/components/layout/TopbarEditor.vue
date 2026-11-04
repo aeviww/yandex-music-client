@@ -1,13 +1,13 @@
 <template>
   <div
-    class="fixed right-[12px] z-[2600] flex w-[344px] flex-col overflow-hidden rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[var(--editor-bg)] shadow-[0_24px_60px_-26px_var(--shadow-strong,rgba(0,0,0,0.75))] backdrop-blur-[18px]"
+    class="fixed right-[12px] z-[2600] flex w-[344px] flex-col overflow-hidden rounded-[calc(var(--radius)*1.3333)] border border-[color:var(--line)] bg-[var(--editor-bg)] shadow-[var(--elev-2)] "
     :style="panelStyle"
     @contextmenu.stop.prevent
     @pointerdown.stop
   >
     <div class="flex items-center justify-between gap-[10px] px-[13px] pt-[10px] pb-[9px]">
       <span
-        class="text-[color:var(--fg-faint)] text-[10px] font-[620] tracking-[0.14em] uppercase"
+        class="text-[color:var(--fg-faint)] text-[11px] font-semibold tracking-[0.02em]"
       >
         Верхнее меню
       </span>
@@ -38,7 +38,7 @@
 
     <div class="min-h-0 flex-1 space-y-[10px] overflow-y-auto px-[13px] pb-[11px]">
       <div class="space-y-[2px]">
-        <p class="m-0 mb-[3px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[3px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Панель
         </p>
         <EditSwitch
@@ -58,7 +58,7 @@
       </div>
 
       <div class="space-y-[2px]">
-        <p class="m-0 mb-[3px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[3px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Логотип
         </p>
         <EditSwitch
@@ -83,7 +83,7 @@
       </div>
 
       <div class="space-y-[2px]">
-        <p class="m-0 mb-[3px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[3px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Поиск
         </p>
         <EditSwitch
@@ -103,7 +103,7 @@
       </div>
 
       <div class="space-y-[2px]">
-        <p class="m-0 mb-[3px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[3px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Аккаунт
         </p>
         <EditSwitch
@@ -128,7 +128,7 @@
       </div>
 
       <div class="space-y-[2px]">
-        <p class="m-0 mb-[3px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[3px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Кнопки окна
         </p>
         <EditSwitch
@@ -163,7 +163,7 @@
       </div>
 
       <div>
-        <p class="m-0 mb-[7px] px-[6px] text-[10px] font-[620] uppercase tracking-[0.1em] text-[color:var(--fg-faint)]">
+        <p class="m-0 mb-[7px] px-[6px] text-[10.5px] font-semibold tracking-[0.01em] text-[color:var(--fg-faint)]">
           Ссылки профиля
         </p>
         <p

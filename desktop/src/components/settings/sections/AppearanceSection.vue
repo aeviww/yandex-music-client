@@ -59,7 +59,7 @@
 
             <div
               v-if="fontMenuOpen"
-              class="absolute left-0 right-0 top-[calc(100%+6px)] z-[80] max-h-[230px] overflow-y-auto rounded-[calc(var(--radius)*0.8)] border border-[var(--line)] bg-[var(--surface-2)] p-1 shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+              class="absolute left-0 right-0 top-[calc(100%+6px)] z-[80] max-h-[230px] overflow-y-auto rounded-[calc(var(--radius)*0.8)] border border-[var(--line)] bg-[var(--surface-2)] p-1 shadow-[var(--elev-1)]"
             >
               <button
                 v-for="font in filteredSystemFonts"
