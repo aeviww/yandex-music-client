@@ -228,7 +228,7 @@ export const defaultInterfaceSettings: InterfaceSettings = {
   radius: 12,
   density: "comfortable",
   sidebarWidth: 236,
-  searchWidth: 360,
+  searchWidth: 480,
   pagePadding: 40,
   cardSize: 150,
   textScale: 100,
