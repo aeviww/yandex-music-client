@@ -153,4 +153,29 @@ impl Yandex {
             _ => Ok(val),
         }
     }
+
+    async fn get_json(&self, path: &str) -> Result<serde_json::Value, String> {
+        let resp = self
+            .http
+            .get(format!("{BASE}{path}"))
+            .header("Authorization", self.auth())
+            .header("X-Yandex-Music-Client", MUSIC_CLIENT)
+            .header("Accept-Language", "ru")
+            .send()
+            .await
+            .map_err(|e| e.to_string())?;
+        let status = resp.status();
+        if status.as_u16() == 401 {
+            return Err("Невалидный токен Яндекс Музыки".to_string());
+        }
+        let val: serde_json::Value = resp.json().await.map_err(|e| e.to_string())?;
+        if !status.is_success() {
+            return Err(format!("Ошибка API Яндекса: {status}"));
+        }
+        match val.get("result") {
+            Some(inner) if !inner.is_null() => Ok(inner.clone()),
+            _ => Ok(val),
+        }
+    }
+
 }

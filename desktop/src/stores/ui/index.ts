@@ -179,6 +179,34 @@ function load(): InterfaceSettings {
       merged.topbarLinks.push("settings");
     }
 
+    if (!localStorage.getItem("mashiro.migrated.concerts_panels")) {
+      if (!merged.sidebarItems.includes("concerts")) {
+        const statsIdx = merged.sidebarItems.indexOf("stats");
+        if (statsIdx !== -1) {
+          merged.sidebarItems.splice(statsIdx, 0, "concerts");
+        } else {
+          merged.sidebarItems.push("concerts");
+        }
+      }
+      if (!merged.topbarLinks.includes("concerts")) {
+        const settingsIdx = merged.topbarLinks.indexOf("settings");
+        if (settingsIdx !== -1) {
+          merged.topbarLinks.splice(settingsIdx, 0, "concerts");
+        } else {
+          merged.topbarLinks.push("concerts");
+        }
+      }
+      if (!merged.homeSections.includes("concerts")) {
+        const neuroIdx = merged.homeSections.indexOf("neuro");
+        if (neuroIdx !== -1) {
+          merged.homeSections.splice(neuroIdx, 0, "concerts");
+        } else {
+          merged.homeSections.push("concerts");
+        }
+      }
+      localStorage.setItem("mashiro.migrated.concerts_panels", "1");
+    }
+
     merged.playerEditMode = false;
     merged.playerButtons.play = "center";
     merged.miniButtons.play = true;

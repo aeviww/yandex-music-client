@@ -2,8 +2,8 @@ use tauri::State;
 
 use crate::state::AppState;
 use crate::yandex::{
-    AlbumBriefDto, AlbumPageDto, ArtistPageDto, NeuroItemDto, NeuroStreamDto, SearchDto, TrackDto,
-    TrackInfoDto, TrailerDto, Yandex,
+    AlbumBriefDto, AlbumPageDto, ArtistPageDto, ConcertBriefDto, ConcertLocationDto, ConcertPageDto,
+    NeuroItemDto, NeuroStreamDto, SearchDto, TrackDto, TrackInfoDto, TrailerDto, Yandex,
 };
 
 #[tauri::command]
@@ -108,4 +108,44 @@ pub async fn get_similar_tracks(
 ) -> Result<Vec<TrackDto>, String> {
     let session = state.session()?;
     Yandex::new(&session.token).similar_tracks(&id).await
+}
+
+#[tauri::command]
+pub async fn get_artist_concerts(
+    id: String,
+    state: State<'_, AppState>,
+) -> Result<Vec<ConcertBriefDto>, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token).artist_concerts(&id).await
+}
+
+#[tauri::command]
+pub async fn get_concert(
+    id: String,
+    artist_id: Option<String>,
+    state: State<'_, AppState>,
+) -> Result<ConcertPageDto, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token)
+        .concert(&id, artist_id.as_deref())
+        .await
+}
+
+#[tauri::command]
+pub async fn get_concerts_feed(
+    locations: Option<Vec<i64>>,
+    state: State<'_, AppState>,
+) -> Result<Vec<ConcertBriefDto>, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token)
+        .concerts_feed(session.uid, locations)
+        .await
+}
+
+#[tauri::command]
+pub async fn get_concert_locations(
+    state: State<'_, AppState>,
+) -> Result<Vec<ConcertLocationDto>, String> {
+    let session = state.session()?;
+    Yandex::new(&session.token).concert_locations().await
 }

@@ -213,3 +213,73 @@ pub struct NeuroStreamDto {
     pub color: Option<String>,
     pub stream_url: String,
 }
+
+#[derive(Serialize, Clone)]
+pub struct ConcertLocationDto {
+    pub id: i64,
+    pub name: String,
+}
+
+#[derive(Serialize, Clone)]
+pub struct ConcertMinPriceDto {
+    pub value: Option<i64>,
+    pub currency: Option<String>,
+    pub currency_symbol: Option<String>,
+}
+
+#[derive(Serialize, Clone)]
+pub struct MetroStationDto {
+    pub title: String,
+    pub line_color: Option<String>,
+}
+
+#[derive(Serialize, Clone)]
+pub struct ConcertBriefDto {
+    pub id: String,
+    pub title: String,
+    pub city: Option<String>,
+    pub place: Option<String>,
+    pub address: Option<String>,
+    pub datetime: Option<String>,
+    pub content_rating: Option<String>,
+    pub image_url: Option<String>,
+    pub afisha_url: Option<String>,
+    pub data_session_id: Option<String>,
+    pub min_price: Option<ConcertMinPriceDto>,
+    pub event_type: Option<String>,
+}
+
+#[derive(Serialize, Clone)]
+pub struct ConcertPlaceDto {
+    pub place: Option<String>,
+    pub city: Option<String>,
+    pub address: Option<String>,
+    pub metro_stations: Vec<MetroStationDto>,
+    pub map_image_url: Option<String>,
+    pub map_url: Option<String>,
+}
+
+#[derive(Serialize)]
+pub struct ConcertPageDto {
+    pub id: String,
+    pub title: String,
+    pub artist_id: Option<String>,
+    pub artist_name: Option<String>,
+    pub artist_cover_url: Option<String>,
+    pub city: Option<String>,
+    pub place: Option<String>,
+    pub address: Option<String>,
+    pub datetime: Option<String>,
+    pub content_rating: Option<String>,
+    pub image_url: Option<String>,
+    pub afisha_url: Option<String>,
+    pub data_session_id: Option<String>,
+    pub color: Option<String>,
+    pub covers: Vec<String>,
+    pub description: Option<String>,
+    pub description_source: Option<String>,
+    pub min_price: Option<ConcertMinPriceDto>,
+    pub venue: Option<ConcertPlaceDto>,
+    pub artist_tracks: Vec<TrackDto>,
+    pub artist_concerts: Vec<ConcertBriefDto>,
+}

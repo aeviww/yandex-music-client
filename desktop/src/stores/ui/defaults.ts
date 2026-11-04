@@ -27,13 +27,13 @@ export type LyricsTranslateMode = "under" | "replace";
 export type AiTrackAction = "none" | "skip" | "dislike";
 
 export type TopbarLinkId = "liked" | "playlists" | "stats"
-  | "settings" | "wave" | "library" | "search";
+  | "settings" | "wave" | "library" | "search" | "concerts";
 
 export type NavItemId = "home" | "search" | "wave"
-  | "liked" | "playlists" | "library" | "stats";
+  | "liked" | "playlists" | "library" | "stats" | "concerts";
 
 export type HomeSectionId = | "playlists" | "waves" | "picks"
-  | "releases" | "neuro" | "recent";
+  | "releases" | "neuro" | "recent" | "concerts";
 
 export interface NavItemConfig {
   id: NavItemId;
@@ -44,6 +44,7 @@ export interface NavItemConfig {
 export const defaultTopbarLinks: TopbarLinkId[] = [
   "liked",
   "playlists",
+  "concerts",
   "stats",
   "settings",
 ];
@@ -54,6 +55,7 @@ export const defaultSidebarItems: NavItemId[] = [
   "wave",
   "liked",
   "playlists",
+  "concerts",
   "library",
   "stats",
 ];
@@ -63,20 +65,21 @@ export const defaultHomeSections: HomeSectionId[] = [
   "waves",
   "picks",
   "releases",
+  "concerts",
   "neuro",
   "recent",
 ];
 
 export const ALL_NAV_ITEM_IDS: readonly NavItemId[] = [
-  "home", "search", "wave", "liked", "playlists", "library", "stats",
+  "home", "search", "wave", "liked", "playlists", "concerts", "library", "stats",
 ] as const;
 
 export const ALL_TOPBAR_LINK_IDS: readonly TopbarLinkId[] = [
-  "liked", "playlists", "stats", "settings", "wave", "library", "search",
+  "liked", "playlists", "concerts", "stats", "settings", "wave", "library", "search",
 ] as const;
 
 export const ALL_HOME_SECTION_IDS: readonly HomeSectionId[] = [
-  "playlists", "waves", "picks", "releases", "neuro", "recent",
+  "playlists", "waves", "picks", "releases", "concerts", "neuro", "recent",
 ] as const;
 
 export const DEFAULT_DISCORD_CLIENT_ID = "1532382113821753354";

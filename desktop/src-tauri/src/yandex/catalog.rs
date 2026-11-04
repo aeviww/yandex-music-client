@@ -735,6 +735,412 @@ impl Yandex {
         self.trailer(&format!("/users/{uid}/playlists/{kind}/trailer"))
             .await
     }
+
+
+    pub async fn concert_locations(&self) -> Result<Vec<ConcertLocationDto>, String> {
+        let res = self.get_json("/concerts/locations").await?;
+        let mut list = Vec::new();
+        let items = res
+            .as_array()
+            .or_else(|| res.get("locations").and_then(|l| l.as_array()));
+        if let Some(arr) = items {
+            for item in arr {
+                let id = item.get("id").and_then(|v| v.as_i64()).unwrap_or(0);
+                let name = item
+                    .get("name")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or_default()
+                    .to_string();
+                if id > 0 && !name.is_empty() {
+                    list.push(ConcertLocationDto { id, name });
+                }
+            }
+        }
+        Ok(list)
+    }
+
+    pub async fn concerts_feed(
+        &self,
+        uid: i64,
+        locations: Option<Vec<i64>>,
+    ) -> Result<Vec<ConcertBriefDto>, String> {
+        let mut all_concerts = Vec::new();
+
+        // 1. Fetch from official /concerts/feed (with optional locations parameter)
+        let feed_path = match &locations {
+            Some(locs) if !locs.is_empty() => {
+                let ids = locs
+                    .iter()
+                    .map(|id| id.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",");
+                format!("/concerts/feed?locations={ids}")
+            }
+            _ => "/concerts/feed".to_string(),
+        };
+
+        if let Ok(res) = self.get_json(&feed_path).await {
+            if let Some(items) = res.get("items").and_then(|i| i.as_array()) {
+                for item in items {
+                    let c = item
+                        .get("data")
+                        .and_then(|d| d.get("concert"))
+                        .unwrap_or(item);
+                    let mut mapped = map_concert_brief(c);
+                    if mapped.min_price.is_none() {
+                        if let Some(mp) = item.get("data").and_then(|d| d.get("minPrice")) {
+                            mapped.min_price = map_concert_min_price(Some(mp));
+                        }
+                    }
+                    if !mapped.id.is_empty()
+                        && !all_concerts
+                            .iter()
+                            .any(|existing: &ConcertBriefDto| existing.id == mapped.id)
+                    {
+                        all_concerts.push(mapped);
+                    }
+                }
+            }
+        }
+
+        // 2. If no specific location filter was requested, merge with tour dates
+        // of user's favorite artists + popular Russian touring artists to cover
+        // all regions across Russia (Veliky Novgorod, Perm, Ekaterinburg, etc.)
+        if locations.as_ref().map(|l| l.is_empty()).unwrap_or(true) {
+            let mut artist_ids: Vec<String> = Vec::new();
+
+            if uid > 0 {
+                // Liked artists
+                if let Ok(res) = self.get_result(&format!("/users/{uid}/likes/artists")).await {
+                    let items = res
+                        .as_array()
+                        .or_else(|| res.get("artists").and_then(|a| a.as_array()));
+                    if let Some(arr) = items {
+                        for item in arr {
+                            let id = item
+                                .get("id")
+                                .map(val_to_id)
+                                .or_else(|| item.get("artist").and_then(|a| a.get("id")).map(val_to_id));
+                            if let Some(id) = id {
+                                if !id.is_empty() && !artist_ids.contains(&id) {
+                                    artist_ids.push(id);
+                                    if artist_ids.len() >= 18 {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // If not enough liked artists, supplement from liked tracks
+                if artist_ids.len() < 12 {
+                    if let Ok(tracks) = self.liked_tracks(uid).await {
+                        for t in tracks {
+                            for a in t.artists {
+                                if !a.id.is_empty() && !artist_ids.contains(&a.id) {
+                                    artist_ids.push(a.id);
+                                    if artist_ids.len() >= 20 {
+                                        break;
+                                    }
+                                }
+                            }
+                            if artist_ids.len() >= 20 {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Popular touring artists in Russia (guarantees wide geographic coverage across Russian regions)
+            let popular_tour_artists = [
+                "41191",   // Баста
+                "8095900", // Три дня дождя
+                "5349983", // polnalyubvi
+                "5007577", // Zivert
+                "161247",  // Руки Вверх!
+                "419284",  // Леонид Агутин
+                "7578336", // MACAN
+                "5851412", // Mary Gu
+                "181977",  // Моя Мишель
+                "4621184", // The Hatters
+                "13575916",// ANNA ASTI
+                "4899532", // GAYAZOV$ BROTHER$
+                "257461",  // Хаски
+                "2636411", // Dabro
+                "3448404", // PHARAOH
+                "4851214", // Miyagi & Эндшпиль
+                "168661",  // КняZz / Король и Шут
+                "3121",    // Земфира
+                "11142",   // Би-2
+            ];
+            for pid in popular_tour_artists {
+                let s = pid.to_string();
+                if !artist_ids.contains(&s) {
+                    artist_ids.push(s);
+                }
+            }
+
+            let futures: Vec<_> = artist_ids
+                .iter()
+                .take(30)
+                .map(|aid| self.artist_concerts(aid))
+                .collect();
+
+            let results = futures_util::future::join_all(futures).await;
+            for c_list in results.into_iter().flatten() {
+                for c in c_list {
+                    if !all_concerts
+                        .iter()
+                        .any(|existing: &ConcertBriefDto| existing.id == c.id)
+                    {
+                        all_concerts.push(c);
+                    }
+                }
+            }
+        }
+
+        all_concerts.sort_by(|a, b| {
+            let da = a.datetime.as_deref().unwrap_or("");
+            let db = b.datetime.as_deref().unwrap_or("");
+            da.cmp(db)
+        });
+
+        Ok(all_concerts)
+    }
+
+    pub async fn artist_concerts(&self, artist_id: &str) -> Result<Vec<ConcertBriefDto>, String> {
+        let result = self
+            .get_json(&format!("/artists/{artist_id}/concerts"))
+            .await?;
+        let items = result
+            .get("concerts")
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+        let list = items.iter().map(map_concert_brief).collect();
+        Ok(list)
+    }
+
+    pub async fn concert(
+        &self,
+        concert_id: &str,
+        artist_id_hint: Option<&str>,
+    ) -> Result<ConcertPageDto, String> {
+        let base_res = self.get_json(&format!("/concerts/{concert_id}")).await.ok();
+        let info_res = self.get_json(&format!("/concerts/{concert_id}/info")).await.ok();
+
+        if base_res.is_none() && info_res.is_none() {
+            return Err("Не удалось загрузить данные концерта".to_string());
+        }
+
+        let base = base_res.unwrap_or_default();
+        let info = info_res.unwrap_or_default();
+        let info_concert = info.get("concert").cloned().unwrap_or_default();
+
+        let id = str_at(&base, &["id"])
+            .or_else(|| str_at(&info_concert, &["id"]))
+            .unwrap_or_else(|| concert_id.to_string());
+
+        let title = str_at(&base, &["concertTitle"])
+            .or_else(|| str_at(&info_concert, &["concertTitle"]))
+            .or_else(|| str_at(&base, &["title"]))
+            .unwrap_or_else(|| "Концерт".to_string());
+
+        let city = str_at(&base, &["city"])
+            .or_else(|| str_at(&info_concert, &["city"]));
+        let place = str_at(&base, &["place"])
+            .or_else(|| str_at(&info_concert, &["place"]));
+        let address = str_at(&base, &["address"])
+            .or_else(|| str_at(&info_concert, &["address"]));
+        let datetime = str_at(&base, &["datetime"])
+            .or_else(|| str_at(&info_concert, &["datetime"]));
+        let content_rating = str_at(&base, &["contentRating"])
+            .or_else(|| str_at(&info_concert, &["contentRating"]));
+        let afisha_url = str_at(&base, &["afishaUrl"]);
+        let data_session_id = str_at(&base, &["data-session-id"])
+            .or_else(|| str_at(&base, &["dataSessionId"]))
+            .or_else(|| str_at(&info_concert, &["dataSessionId"]));
+
+        let mut image_url = str_at(&base, &["imageUrl"]).or_else(|| {
+            base.get("images")
+                .and_then(|a| a.as_array())
+                .and_then(|arr| arr.first())
+                .and_then(|s| s.as_str())
+                .map(|s| s.to_string())
+        });
+
+        let cover_uri = str_at(&info_concert, &["cover", "uri"]);
+        if image_url.is_none() {
+            image_url = img(cover_uri.as_deref(), "1000x1000");
+        }
+
+        let color = str_at(&info_concert, &["cover", "color"])
+            .or_else(|| str_at(&info_concert, &["cover", "derivedColors", "average"]));
+
+        let mut covers = Vec::new();
+        if let Some(arr) = info.get("covers").and_then(|c| c.as_array()) {
+            for c in arr {
+                if let Some(u) = str_at(c, &["uri"]) {
+                    if let Some(formatted) = img(Some(&u), "1000x1000") {
+                        if !covers.contains(&formatted) {
+                            covers.push(formatted);
+                        }
+                    }
+                }
+            }
+        }
+        if let Some(arr) = base.get("images").and_then(|a| a.as_array()) {
+            for s in arr {
+                if let Some(u) = s.as_str() {
+                    let formatted = u.to_string();
+                    if !covers.contains(&formatted) {
+                        covers.push(formatted);
+                    }
+                }
+            }
+        }
+        if let Some(ref main) = image_url {
+            if !covers.contains(main) {
+                covers.insert(0, main.clone());
+            }
+        }
+
+        let description = str_at(&info, &["description", "text"]);
+        let description_source = str_at(&info, &["description", "source"]);
+
+        let min_price = map_concert_min_price(base.get("minPrice"))
+            .or_else(|| map_concert_min_price(info.get("minPrice")));
+
+        let metro_stations: Vec<MetroStationDto> = base
+            .get("metro-stations")
+            .and_then(|m| m.as_array())
+            .map(|arr| {
+                arr.iter()
+                    .filter_map(|raw| {
+                        let title = raw.get("title").and_then(|v| v.as_str())?.to_string();
+                        let line_color = raw
+                            .get("line-color")
+                            .and_then(|v| v.as_str())
+                            .map(|s| s.to_string());
+                        Some(MetroStationDto { title, line_color })
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+
+        let map_image_url = str_at(&base, &["map"]).map(|u| u.replace("%%", "700,320"));
+        let map_url = str_at(&base, &["mapUrl"]);
+
+        let venue = if place.is_some() || address.is_some() || map_url.is_some() {
+            Some(ConcertPlaceDto {
+                place: place.clone(),
+                city: city.clone(),
+                address: address.clone(),
+                metro_stations,
+                map_image_url,
+                map_url,
+            })
+        } else {
+            None
+        };
+
+        // Resolve artist_id
+        let mut artist_id = artist_id_hint.map(|s| s.to_string());
+        if artist_id.is_none() {
+            if let Ok(sk) = self
+                .get_json(&format!("/concerts/{concert_id}/skeletons/concert_page"))
+                .await
+            {
+                if let Some(blocks) = sk
+                    .get("blocks")
+                    .and_then(|b| b.as_array())
+                    .and_then(|arr| arr.first())
+                    .and_then(|b| b.get("data"))
+                    .and_then(|d| d.get("tabs"))
+                    .and_then(|t| t.as_array())
+                    .and_then(|tabs| tabs.first())
+                    .and_then(|tab| tab.get("blocks"))
+                    .and_then(|b| b.as_array())
+                {
+                    for blk in blocks {
+                        if let Some(uri) = str_at(blk, &["data", "source", "uri"]) {
+                            if uri.contains("/artists/") {
+                                let parts: Vec<&str> = uri.split('/').collect();
+                                for (i, part) in parts.iter().enumerate() {
+                                    if *part == "artists" && i + 1 < parts.len() {
+                                        let cand = parts[i + 1];
+                                        if cand.chars().all(|c| c.is_ascii_digit()) && !cand.is_empty() {
+                                            artist_id = Some(cand.to_string());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if artist_id.is_some() {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if artist_id.is_none() && !title.is_empty() {
+            if let Ok(sr) = self.search(&title).await {
+                if let Some(first_artist) = sr.artists.first() {
+                    let title_lower = title.to_lowercase();
+                    let name_lower = first_artist.name.to_lowercase();
+                    if title_lower.contains(&name_lower) || name_lower.contains(&title_lower) {
+                        artist_id = Some(first_artist.id.clone());
+                    }
+                }
+            }
+        }
+
+        let mut artist_name = None;
+        let mut artist_cover_url = None;
+        let mut artist_tracks = Vec::new();
+        let mut artist_concerts = Vec::new();
+
+        if let Some(ref aid) = artist_id {
+            if let Ok(artist_page) = self.artist(aid).await {
+                artist_name = Some(artist_page.name);
+                artist_cover_url = artist_page.cover_url;
+                artist_tracks = artist_page.tracks.into_iter().take(10).collect();
+            }
+
+            if let Ok(all_c) = self.artist_concerts(aid).await {
+                artist_concerts = all_c.into_iter().filter(|c| c.id != id).collect();
+            }
+        }
+
+        Ok(ConcertPageDto {
+            id,
+            title,
+            artist_id,
+            artist_name,
+            artist_cover_url,
+            city,
+            place,
+            address,
+            datetime,
+            content_rating,
+            image_url,
+            afisha_url,
+            data_session_id,
+            color,
+            covers,
+            description,
+            description_source,
+            min_price,
+            venue,
+            artist_tracks,
+            artist_concerts,
+        })
+    }
+
 }
 
 fn major_name(value: Option<&serde_json::Value>) -> Option<String> {
@@ -786,5 +1192,70 @@ fn distributor(value: Option<&serde_json::Value>) -> Option<String> {
         None
     } else {
         Some(names.join(", "))
+    }
+}
+
+fn map_concert_min_price(val: Option<&serde_json::Value>) -> Option<ConcertMinPriceDto> {
+    let obj = val?;
+    let value = obj.get("value").and_then(|v| v.as_i64());
+    let currency = obj
+        .get("currency")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string());
+    let currency_symbol = obj
+        .get("currencySymbol")
+        .and_then(|v| v.as_str())
+        .map(|s| s.to_string());
+    if value.is_none() && currency.is_none() {
+        return None;
+    }
+    Some(ConcertMinPriceDto {
+        value,
+        currency,
+        currency_symbol,
+    })
+}
+
+fn map_concert_brief(v: &serde_json::Value) -> ConcertBriefDto {
+    let id = str_at(v, &["id"]).unwrap_or_default();
+    let title = str_at(v, &["concertTitle"])
+        .or_else(|| str_at(v, &["title"]))
+        .unwrap_or_default();
+    let city = str_at(v, &["city"]);
+    let place = str_at(v, &["place"]);
+    let address = str_at(v, &["address"]);
+    let datetime = str_at(v, &["datetime"]);
+    let content_rating = str_at(v, &["contentRating"]);
+    let image_url = str_at(v, &["imageUrl"])
+        .or_else(|| {
+            v.get("images")
+                .and_then(|a| a.as_array())
+                .and_then(|arr| arr.first())
+                .and_then(|s| s.as_str())
+                .map(|s| s.to_string())
+        })
+        .or_else(|| {
+            let uri = str_at(v, &["cover", "uri"]);
+            img(uri.as_deref(), "600x600")
+        });
+    let afisha_url = str_at(v, &["afishaUrl"]);
+    let data_session_id = str_at(v, &["data-session-id"])
+        .or_else(|| str_at(v, &["dataSessionId"]));
+    let min_price = map_concert_min_price(v.get("minPrice"));
+    let event_type = str_at(v, &["eventInfo", "type"]);
+
+    ConcertBriefDto {
+        id,
+        title,
+        city,
+        place,
+        address,
+        datetime,
+        content_rating,
+        image_url,
+        afisha_url,
+        data_session_id,
+        min_price,
+        event_type,
     }
 }
