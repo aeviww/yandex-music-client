@@ -117,6 +117,7 @@ export interface SwrOptions<T> {
   onError?: (error: unknown) => void;
   onSettled?: () => void;
   maxAge?: number;
+  force?: boolean;
 }
 
 export async function swr<T>(
@@ -125,10 +126,11 @@ export async function swr<T>(
   options: SwrOptions<T>,
 ): Promise<void> {
   const cached = readCache<T>(key);
-  if (cached !== null) options.onData(cached, "cache");
+  if (!options.force && cached !== null) options.onData(cached, "cache");
 
   const age = cachedAt(key);
   if (
+    !options.force &&
     cached !== null &&
     options.maxAge &&
     age &&
@@ -140,7 +142,9 @@ export async function swr<T>(
 
   try {
     const fresh = await fetcher();
-    const changed = JSON.stringify(fresh) !== JSON.stringify(cached);
+    const changed =
+      Boolean(options.force) ||
+      JSON.stringify(fresh) !== JSON.stringify(cached);
     writeCache(key, fresh);
     if (changed) options.onData(fresh, "network");
   } catch (error) {

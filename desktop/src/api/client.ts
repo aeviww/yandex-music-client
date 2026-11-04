@@ -5,6 +5,9 @@ import type {
   AlbumBrief,
   AlbumPage,
   ArtistPage,
+  ConcertBrief,
+  ConcertLocation,
+  ConcertPage,
   NeuroItem,
   NeuroStream,
   FeedbackPayload,
@@ -88,6 +91,17 @@ export const api = {
   artist: (id: string) => call<ArtistPage>("get_artist", { id }),
 
   artistTracks: (id: string) => call<Track[]>("get_artist_tracks", { id }),
+
+  concertsFeed: (locations?: number[] | null) =>
+    call<ConcertBrief[]>("get_concerts_feed", {
+      locations: locations && locations.length ? locations : null,
+    }),
+  concertLocations: () => call<ConcertLocation[]>("get_concert_locations"),
+  artistConcerts: (id: string) =>
+    call<ConcertBrief[]>("get_artist_concerts", { id }),
+
+  concert: (id: string, artistId?: string | null) =>
+    call<ConcertPage>("get_concert", { id, artist_id: artistId ?? null }),
 
   aiCheckArtists: (ids: string[]) =>
     call<AiArtistResult[]>("ai_check_artists", { ids }),

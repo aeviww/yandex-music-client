@@ -286,6 +286,64 @@
             </LazyTracks>
           </template>
 
+          <!-- Concerts -->
+          <template v-if="concerts.length">
+            <div
+              class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]"
+            >
+              <div class="flex items-baseline gap-[8px]">
+                <div
+                  class="text-[calc(17px*var(--text-scale,1))] font-semibold tracking-[-0.02em]"
+                >
+                  Концерты
+                </div>
+                <span class="text-[12px] text-[color:var(--fg-faint)]">
+                  {{ pluralWord(concerts.length, "концерт", "концерта", "концертов") }}
+                </span>
+              </div>
+
+              <button
+                v-if="concerts.length > INITIAL_CONCERT_LIMIT"
+                class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-faint)] cursor-pointer text-[12px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)]"
+                type="button"
+                @click="showAllConcerts = !showAllConcerts"
+              >
+                <span>{{ showAllConcerts ? "Свернуть" : `Все ${concerts.length}` }}</span>
+                <Icon
+                  :name="showAllConcerts ? 'mingcute:up-line' : 'mingcute:down-line'"
+                  :size="15"
+                />
+              </button>
+            </div>
+
+            <div class="flex items-stretch gap-[14px] flex-wrap">
+              <ConcertCard
+                v-for="c in displayedConcerts"
+                :key="c.id"
+                :concert="c"
+                :artist-id="artist.id"
+                width="220px"
+              />
+            </div>
+
+            <div
+              v-if="concerts.length > INITIAL_CONCERT_LIMIT"
+              class="mt-[16px] flex justify-center"
+            >
+              <button
+                class="inline-flex items-center justify-center gap-[6px] h-[32px] px-[18px] rounded-[8px] bg-[var(--surface)] border border-[color:var(--line)] text-[color:var(--fg-dim)] text-[12.5px] font-medium cursor-pointer transition-colors hover:bg-[var(--hover)] hover:text-[color:var(--fg)] select-none"
+                type="button"
+                @click="showAllConcerts = !showAllConcerts"
+              >
+                <span>{{ showAllConcerts ? "Свернуть концерты" : `Ещё ${concerts.length - INITIAL_CONCERT_LIMIT}...` }}</span>
+                <Icon
+                  :name="showAllConcerts ? 'mingcute:up-line' : 'mingcute:down-line'"
+                  :size="14"
+                />
+              </button>
+            </div>
+          </template>
+
           <template v-if="artist.albums.length">
             <div
               class="flex items-end justify-between mt-[34px] mx-0 mb-[12px] gap-[12px]"
@@ -464,13 +522,14 @@ import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import { api } from "@/api/client";
 
-import type { ArtistLink, ArtistPage } from "@/api/types";
+import type { ArtistLink, ArtistPage, ConcertBrief } from "@/api/types";
 import LazyTracks from "@/components/common/LazyTracks.vue";
 import TrackRow from "@/components/common/TrackRow.vue";
 import ImageViewer from "@/components/common/ImageViewer.vue";
 import ArtistInfoDialog from "@/components/dialog/ArtistInfoDialog.vue";
 import AiTag from "@/components/common/AiTag.vue";
 import TrailerButton from "@/components/common/TrailerButton.vue";
+import ConcertCard from "@/components/common/ConcertCard.vue";
 import { plural, pluralWord } from "@/lib/format";
 import { readCache, swr } from "@/lib/cache";
 import { recordArtistStats } from "@/lib/artistStats";
@@ -478,6 +537,32 @@ import { ensureAiArtists, isAiArtist } from "@/lib/aiTag";
 import { usePlayerStore } from "@/stores/player/index";
 
 const props = defineProps<{ id: string }>();
+const concerts = ref<ConcertBrief[]>([]);
+const INITIAL_CONCERT_LIMIT = 6;
+const showAllConcerts = ref(false);
+const displayedConcerts = computed(() => {
+  if (showAllConcerts.value || concerts.value.length <= INITIAL_CONCERT_LIMIT) {
+    return concerts.value;
+  }
+  return concerts.value.slice(0, INITIAL_CONCERT_LIMIT);
+});
+
+async function loadConcerts() {
+  const cacheKey = `artist.concerts.${props.id}`;
+  const cached = readCache<ConcertBrief[]>(cacheKey);
+  if (cached) concerts.value = cached;
+
+  try {
+    await swr<ConcertBrief[]>(cacheKey, () => api.artistConcerts(props.id), {
+      onData: (data) => {
+        concerts.value = data;
+      },
+    });
+  } catch {
+    if (!cached) concerts.value = [];
+  }
+}
+
 const router = useRouter();
 const player = usePlayerStore();
 const artist = ref<ArtistPage | null>(null);
@@ -700,6 +785,9 @@ async function playAlbum(id: string) {
 }
 
 async function load() {
+  concerts.value = [];
+  showAllConcerts.value = false;
+  void loadConcerts();
   const key = `artist.${props.id}`;
   headerCollapsed.value = false;
   const cached = readCache<ArtistPage>(key);

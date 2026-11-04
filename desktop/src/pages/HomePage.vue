@@ -617,6 +617,40 @@
             </div>
           </template>
 
+          <template v-else-if="sectionId === 'concerts' && concerts.length">
+            <div
+              class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
+            >
+              <div class="flex items-baseline gap-[10px]">
+                <h2
+                  class="m-0 text-[clamp(18px,_1.6vw,_21px)] font-semibold leading-[1.15] tracking-[-0.03em]"
+                >
+                  {{ sectionTitle('concerts', 'концерты для вас') }}
+                </h2>
+                <span class="text-[12px] text-[color:var(--fg-faint)]">
+                  {{ pluralWord(concerts.length, "концерт", "концерта", "концертов") }}
+                </span>
+              </div>
+              <button
+                class="inline-flex items-center p-0 border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer text-[13px] gap-[4px] whitespace-nowrap appearance-none transition-colors hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.6]"
+                type="button"
+                @click="router.push('/concerts')"
+              >
+                <span>все концерты</span>
+                <Icon name="mingcute:arrow-right-line" :size="13" />
+              </button>
+            </div>
+
+            <div class="flex items-stretch gap-[14px] flex-wrap">
+              <ConcertCard
+                v-for="c in concerts.slice(0, 8)"
+                :key="c.id"
+                :concert="c"
+                width="215px"
+              />
+            </div>
+          </template>
+
           <template v-else-if="sectionId === 'neuro' && neuroItems.length">
             <div
               class="flex items-baseline justify-between mt-[38px] mx-0 mb-[14px] gap-[12px] max-[720px]:mt-[34px]"
@@ -744,12 +778,13 @@ import { Notify } from "quasar";
 import { api } from "@/api/client";
 import type {
   AlbumBrief,
+  ConcertBrief,
   NeuroItem,
   Playlist,
   Track,
   WheelItem,
 } from "@/api/types";
-import { artistNames, plural } from "@/lib/format";
+import { artistNames, plural, pluralWord } from "@/lib/format";
 import { askConfirm, askText } from "@/lib/dialogs";
 import { readCache, swr, writeCache } from "@/lib/cache";
 import { appVersion, loadVersion } from "@/lib/version";
@@ -760,6 +795,7 @@ import { useStatsStore } from "@/stores/stats";
 import { useUiStore } from "@/stores/ui/index";
 import type { HomeSectionId } from "@/stores/ui/index";
 import { ALL_HOME_SECTIONS } from "@/constants/navigation";
+import ConcertCard from "@/components/common/ConcertCard.vue";
 import HomeEditor from "@/components/layout/HomeEditor.vue";
 import NavItemEditDialog from "@/components/settings/NavItemEditDialog.vue";
 
@@ -854,6 +890,7 @@ function saveSectionDialog(payload: { label?: string; icon?: string }) {
 const playlists = ref<Playlist[]>([]);
 const wheel = ref<WheelItem[]>([]);
 const releases = ref<AlbumBrief[]>([]);
+const concerts = ref<ConcertBrief[]>([]);
 const neuroItems = ref<NeuroItem[]>([]);
 const neuroStrip = ref<HTMLElement | null>(null);
 const neuroCanLeft = ref(false);
@@ -1052,6 +1089,12 @@ onMounted(() => {
   playlists.value = readCache<Playlist[]>("home.playlists") ?? [];
   wheel.value = readCache<WheelItem[]>("home.wheel") ?? [];
   releases.value = readCache<AlbumBrief[]>("home.newReleases.v2") ?? [];
+  concerts.value = readCache<ConcertBrief[]>("home.concerts") ?? [];
+  void swr<ConcertBrief[]>("home.concerts", () => api.concertsFeed(), {
+    onData: (data) => {
+      concerts.value = data;
+    },
+  });
   loading.value = !playlists.value.length && !wheel.value.length;
 
   void swr<Playlist[]>("home.playlists", () => api.playlists(), {

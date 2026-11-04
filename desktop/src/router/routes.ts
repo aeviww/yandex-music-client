@@ -81,6 +81,17 @@ const routes: RouteRecordRaw[] = [
         props: true,
       },
       {
+        path: "concerts",
+        name: "concerts",
+        component: () => import("@/pages/ConcertsPage.vue"),
+      },
+      {
+        path: "concert/:id",
+        name: "concert",
+        component: () => import("@/pages/ConcertPage.vue"),
+        props: (route: any) => ({ id: route.params.id, artistId: route.query.artistId }),
+      },
+      {
         path: "album/:id",
         name: "album",
         component: () => import("@/pages/AlbumPage.vue"),

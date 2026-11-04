@@ -70,6 +70,13 @@ export const ALL_NAV_ITEMS: Record<NavItemId, NavItemMeta> = {
     icon: "mingcute:filter-line",
     description: "Фильтрация и быстрый поиск по всей локальной фонотеке",
   },
+  concerts: {
+    id: "concerts",
+    to: "/concerts",
+    label: "Концерты",
+    icon: "mingcute:calendar-line",
+    description: "Афиша предстоящих концертов",
+  },
   stats: {
     id: "stats",
     to: "/stats",
@@ -102,6 +109,13 @@ export const ALL_PROFILE_LINKS: Record<TopbarLinkId, TopbarLinkMeta> = {
     label: "Статистика",
     icon: "mingcute:chart-bar-line",
     description: "Просмотр статистики прослушиваний",
+  },
+  concerts: {
+    id: "concerts",
+    to: "/concerts",
+    label: "Концерты",
+    icon: "mingcute:calendar-line",
+    description: "Афиша предстоящих концертов",
   },
   settings: {
     id: "settings",
@@ -164,6 +178,13 @@ export const ALL_HOME_SECTIONS: Record<HomeSectionId, HomeSectionMeta> = {
     editorLabel: "Новые релизы",
     icon: "mingcute:album-line",
     description: "Свежие альбомы и синглы в каталоге",
+  },
+  concerts: {
+    id: "concerts",
+    label: "концерты для вас",
+    editorLabel: "Концерты для вас",
+    icon: "mingcute:calendar-line",
+    description: "Афиша предстоящих выступлений любимых исполнителей",
   },
   neuro: {
     id: "neuro",

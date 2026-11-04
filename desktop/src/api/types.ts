@@ -379,3 +379,67 @@ export interface PresencePayload {
   partySize: number | null;
   partyMax: number | null;
 }
+
+export interface ConcertLocation {
+  id: number;
+  name: string;
+}
+
+export interface ConcertMinPrice {
+  value: number | null;
+  currency: string | null;
+  currency_symbol: string | null;
+}
+
+export interface MetroStation {
+  title: string;
+  line_color: string | null;
+}
+
+export interface ConcertBrief {
+  id: string;
+  title: string;
+  city: string | null;
+  place: string | null;
+  address: string | null;
+  datetime: string | null;
+  content_rating: string | null;
+  image_url: string | null;
+  afisha_url: string | null;
+  data_session_id: string | null;
+  min_price: ConcertMinPrice | null;
+  event_type: string | null;
+}
+
+export interface ConcertPlace {
+  place: string | null;
+  city: string | null;
+  address: string | null;
+  metro_stations: MetroStation[];
+  map_image_url: string | null;
+  map_url: string | null;
+}
+
+export interface ConcertPage {
+  id: string;
+  title: string;
+  artist_id: string | null;
+  artist_name: string | null;
+  artist_cover_url: string | null;
+  city: string | null;
+  place: string | null;
+  address: string | null;
+  datetime: string | null;
+  content_rating: string | null;
+  image_url: string | null;
+  afisha_url: string | null;
+  data_session_id: string | null;
+  color: string | null;
+  covers: string[];
+  description: string | null;
+  description_source: string | null;
+  min_price: ConcertMinPrice | null;
+  venue: ConcertPlace | null;
+  artist_tracks: Track[];
+  artist_concerts: ConcertBrief[];
+}
