@@ -614,7 +614,7 @@
         <div
           class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]"
         >
-          Добавляй треки через меню трека - «Добавить в плейлист»
+          Добавляй треки через меню трека: «Добавить в плейлист»
         </div>
         <button
           class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
@@ -639,7 +639,7 @@
               Выбор треков
             </div>
             <div class="text-[color:var(--fg-dim)] text-[13px] leading-[1.5]">
-              Отметь треки и примени действие сразу ко всем.
+              Отметь треки и примени действие ко всем сразу.
             </div>
           </div>
           <button

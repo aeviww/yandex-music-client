@@ -68,7 +68,7 @@
           </button>
         </div>
         <span class="text-[10.5px] text-[color:var(--fg-faint)]">
-          Оставьте пустым, чтобы использовать дефолтное название: «{{ defaultLabel }}»
+          Оставьте пустым, чтобы вернуть название по умолчанию: «{{ defaultLabel }}»
         </span>
       </div>
 
@@ -128,7 +128,7 @@
             v-if="!filteredIcons.length"
             class="col-span-8 py-[18px] text-center text-[12px] text-[color:var(--fg-faint)]"
           >
-            Иконки не найдены. Вы можете ввести имя иконки (например: mingcute:music-line) в поиск.
+            Ничего не нашлось. Введите имя иконки в поиск, например mingcute:music-line.
           </div>
         </div>
       </div>
