@@ -51,7 +51,7 @@
               width="80"
               height="80"
               draggable="false"
-              class="mb-[20px] block h-[48px] w-[48px] sm:mb-[28px] rounded-[14px] sm:h-[80px] sm:w-[80px]"
+              class="mb-[20px] block h-[48px] w-[48px] sm:mb-[28px] rounded-[calc(var(--radius)*1.1667)] sm:h-[80px] sm:w-[80px]"
             />
             <h1
               id="welcome-title"
@@ -93,7 +93,7 @@
             <div
               v-if="autoError || auth.error"
               role="alert"
-              class="mt-[20px] rounded-[8px] border border-solid border-[#686868] bg-[#1b1b1b] p-[14px] text-[14px] leading-[1.5] text-white"
+              class="mt-[20px] rounded-[calc(var(--radius)*0.6667)] border border-solid border-[#686868] bg-[#1b1b1b] p-[14px] text-[14px] leading-[1.5] text-white"
             >
               <p class="mb-[4px] mt-0 font-semibold">Не удалось войти</p>
               {{ autoError || auth.error }}

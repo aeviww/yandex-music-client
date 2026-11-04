@@ -44,7 +44,7 @@
       </div>
 
       <div
-        class="flex flex-col gap-1.5 min-h-[44px] rounded-[10px] p-1 border border-solid border-transparent transition-colors"
+        class="flex flex-col gap-1.5 min-h-[44px] rounded-[calc(var(--radius)*0.8333)] p-1 border border-solid border-transparent transition-colors"
         :class="{
           'border-[color:var(--line)] bg-[var(--surface)]': activeItems.length === 0,
         }"
@@ -61,7 +61,7 @@
         <div
           v-for="(item, index) in activeItems"
           :key="item.id"
-          class="group relative flex items-center gap-3 px-3 py-2.5 rounded-[9px] bg-[var(--surface-2)] border border-solid transition-all select-none"
+          class="group relative flex items-center gap-3 px-3 py-2.5 rounded-[calc(var(--radius)*0.75)] bg-[var(--surface-2)] border border-solid transition-all select-none"
           :class="[
             draggingId === item.id
               ? 'opacity-30 border-dashed border-[var(--accent)]'
@@ -87,7 +87,7 @@
 
           <div
             v-if="canEditIcon || item.icon"
-            class="flex items-center justify-center w-[28px] h-[28px] rounded-[7px] bg-[var(--surface)] text-[color:var(--fg)] flex-none border border-solid border-[color:var(--line)] shadow-sm"
+            class="flex items-center justify-center w-[28px] h-[28px] rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface)] text-[color:var(--fg)] flex-none border border-solid border-[color:var(--line)] shadow-sm"
           >
             <Icon :name="getItemIcon(item)" :size="16" />
           </div>
@@ -123,7 +123,7 @@
           <div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity max-[720px]:opacity-100">
             <button
               type="button"
-              class="w-[24px] h-[24px] flex items-center justify-center rounded-[5px] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer disabled:opacity-20 disabled:pointer-events-none transition-colors"
+              class="w-[24px] h-[24px] flex items-center justify-center rounded-[calc(var(--radius)*0.4167)] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer disabled:opacity-20 disabled:pointer-events-none transition-colors"
               title="Переместить выше"
               :disabled="index === 0"
               @click="moveItem(index, index - 1)"
@@ -132,7 +132,7 @@
             </button>
             <button
               type="button"
-              class="w-[24px] h-[24px] flex items-center justify-center rounded-[5px] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer disabled:opacity-20 disabled:pointer-events-none transition-colors"
+              class="w-[24px] h-[24px] flex items-center justify-center rounded-[calc(var(--radius)*0.4167)] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer disabled:opacity-20 disabled:pointer-events-none transition-colors"
               title="Переместить ниже"
               :disabled="index === activeItems.length - 1"
               @click="moveItem(index, index + 1)"
@@ -144,7 +144,7 @@
           <button
             v-if="canEditLabel || canEditIcon"
             type="button"
-            class="w-[28px] h-[28px] flex items-center justify-center rounded-[7px] border-0 bg-transparent text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer transition-colors"
+            class="w-[28px] h-[28px] flex items-center justify-center rounded-[calc(var(--radius)*0.5833)] border-0 bg-transparent text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer transition-colors"
             title="Настроить название и иконку"
             @click="openEditDialog(item)"
           >
@@ -153,7 +153,7 @@
 
           <button
             type="button"
-            class="w-[28px] h-[28px] flex items-center justify-center rounded-[7px] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer transition-colors disabled:opacity-30 disabled:pointer-events-none"
+            class="w-[28px] h-[28px] flex items-center justify-center rounded-[calc(var(--radius)*0.5833)] border-0 bg-transparent text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] cursor-pointer transition-colors disabled:opacity-30 disabled:pointer-events-none"
             :title="item.locked ? 'Обязательный пункт нельзя скрыть' : 'Скрыть пункт'"
             :disabled="item.locked"
             @click="hideItem(item.id)"
@@ -179,7 +179,7 @@
       </div>
 
       <div
-        class="flex flex-col gap-1.5 min-h-[48px] p-2 rounded-[10px] border border-dashed transition-all"
+        class="flex flex-col gap-1.5 min-h-[48px] p-2 rounded-[calc(var(--radius)*0.8333)] border border-dashed transition-all"
         :class="[
           hiddenTrayOver
             ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]'
@@ -206,7 +206,7 @@
         <div
           v-for="item in hiddenItems"
           :key="item.id"
-          class="flex items-center gap-3 px-3 py-2 rounded-[8px] bg-[var(--surface)] border border-solid border-[color:var(--line)] opacity-85 hover:opacity-100 transition-all select-none"
+          class="flex items-center gap-3 px-3 py-2 rounded-[calc(var(--radius)*0.6667)] bg-[var(--surface)] border border-solid border-[color:var(--line)] opacity-85 hover:opacity-100 transition-all select-none"
           draggable="true"
           @dragstart="onDragStart($event, item.id, 'hidden')"
           @dragend="onDragEnd"
@@ -220,7 +220,7 @@
 
           <div
             v-if="canEditIcon || item.icon"
-            class="flex items-center justify-center w-[26px] h-[26px] rounded-[6px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] flex-none"
+            class="flex items-center justify-center w-[26px] h-[26px] rounded-[calc(var(--radius)*0.5)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] flex-none"
           >
             <Icon :name="getItemIcon(item)" :size="15" />
           </div>
@@ -233,7 +233,7 @@
 
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 h-[26px] px-2.5 rounded-[6px] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] text-[11.5px] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:border-[var(--accent)] cursor-pointer transition-colors"
+            class="inline-flex items-center gap-1.5 h-[26px] px-2.5 rounded-[calc(var(--radius)*0.5)] border border-solid border-[color:var(--line)] bg-[var(--surface-2)] text-[11.5px] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:border-[var(--accent)] cursor-pointer transition-colors"
             @click="showItem(item.id)"
           >
             <Icon name="mingcute:add-line" :size="13" />

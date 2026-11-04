@@ -52,133 +52,136 @@
       </SettingsCard>
 
       <SettingsCard>
-        <div class="px-5 pb-2 pt-4">
-          <div
-            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
-          >
-            Боковая панель (навигация)
-          </div>
-          <p class="mb-0 mt-1 text-[11.5px] text-[color:var(--fg-faint)]">
-            Перетаскивайте пункты для изменения порядка, нажимайте ✏️ для переименования и смены иконки.
-          </p>
-        </div>
+        <SettingsRow
+          column
+          label="Боковая панель"
+          description="Навигация настраивается прямо на самой панели: порядок, названия, иконки и скрытые пункты."
+        >
+          <ul class="m-0 flex list-none flex-col gap-2 p-0">
+            <li
+              v-for="step in sidebarSteps"
+              :key="step.icon"
+              class="flex items-center gap-2.5 text-[12.5px] leading-snug text-[color:var(--fg-dim)]"
+            >
+              <Icon
+                :name="step.icon"
+                :size="14"
+                class="flex-none text-[var(--accent)]"
+              />
+              <span>{{ step.text }}</span>
+            </li>
+          </ul>
 
-        <div class="px-4 pb-4 pt-1">
-          <SortableNavList
-            :items="ui.settings.sidebarItems"
-            :default-items="defaultSidebarItems"
-            :catalog="sidebarCatalog"
-            :custom-labels="ui.settings.sidebarLabels"
-            :custom-icons="ui.settings.sidebarIcons"
-            :can-edit-icon="true"
-            :can-edit-label="true"
-            active-title="Активные пункты меню"
-            hidden-title="Скрытые пункты меню"
-            @update:items="updateSidebarItems"
-            @update-label="updateSidebarLabel"
-            @update-icon="updateSidebarIcon"
-            @reset-order="resetSidebarOrder"
-            @reset-appearance="resetSidebarAppearance"
-            @reset-all="resetSidebarAll"
-          />
-        </div>
+          <div class="mt-2 flex flex-wrap items-center gap-3">
+            <button
+              :class="BUTTON_ACCENT_OUTLINE"
+              type="button"
+              @click="startEdit('sidebar')"
+            >
+              <Icon name="mingcute:layout-left-line" :size="15" />
+              Редактировать на панели
+            </button>
+            <button :class="BUTTON" type="button" @click="resetSidebar">
+              Сбросить
+            </button>
+          </div>
+        </SettingsRow>
       </SettingsCard>
 
       <SettingsCard>
-        <div class="px-5 pb-2 pt-4">
-          <div
-            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
-          >
-            Верхнее меню (профиль)
-          </div>
-          <p class="mb-0 mt-1 text-[11.5px] text-[color:var(--fg-faint)]">
-            Пункты быстрого перехода в выпадающем меню аккаунта в верхнем правом углу.
-          </p>
-        </div>
+        <SettingsRow
+          column
+          label="Верхнее меню"
+          description="Верхняя панель настраивается целиком: логотип, поиск, аккаунт, кнопки окна и ссылки профиля."
+        >
+          <ul class="m-0 flex list-none flex-col gap-2 p-0">
+            <li
+              v-for="step in topbarSteps"
+              :key="step.icon"
+              class="flex items-center gap-2.5 text-[12.5px] leading-snug text-[color:var(--fg-dim)]"
+            >
+              <Icon
+                :name="step.icon"
+                :size="14"
+                class="flex-none text-[var(--accent)]"
+              />
+              <span>{{ step.text }}</span>
+            </li>
+          </ul>
 
-        <div class="px-4 pb-4 pt-1">
-          <SortableNavList
-            :items="ui.settings.topbarLinks"
-            :default-items="defaultTopbarLinks"
-            :catalog="topbarCatalog"
-            :custom-labels="ui.settings.topbarLabels"
-            :custom-icons="ui.settings.topbarIcons"
-            :can-edit-icon="true"
-            :can-edit-label="true"
-            active-title="Активные ссылки"
-            hidden-title="Скрытые ссылки"
-            @update:items="updateTopbarLinks"
-            @update-label="updateTopbarLabel"
-            @update-icon="updateTopbarIcon"
-            @reset-order="resetTopbarOrder"
-            @reset-appearance="resetTopbarAppearance"
-            @reset-all="resetTopbarAll"
-          />
-        </div>
+          <div class="mt-2 flex flex-wrap items-center gap-3">
+            <button
+              :class="BUTTON_ACCENT_OUTLINE"
+              type="button"
+              @click="startEdit('topbar')"
+            >
+              <Icon name="mingcute:layout-top-line" :size="15" />
+              Редактировать верхнее меню
+            </button>
+            <button :class="BUTTON" type="button" @click="resetTopbar">
+              Сбросить
+            </button>
+          </div>
+        </SettingsRow>
       </SettingsCard>
 
       <SettingsCard>
-        <div class="px-5 pb-2 pt-4">
-          <div
-            class="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-[color:var(--fg-faint)]"
-          >
-            Раздел «Главное»
-          </div>
-          <p class="mb-0 mt-1 text-[11.5px] text-[color:var(--fg-faint)]">
-            Настройте порядок и отображение контентных блоков на главной странице приложения.
-          </p>
-        </div>
+        <SettingsRow
+          column
+          label="Раздел «Главное»"
+          description="Секции главной страницы настраиваются прямо на ней: порядок, названия и видимость."
+        >
+          <ul class="m-0 flex list-none flex-col gap-2 p-0">
+            <li
+              v-for="step in homeSteps"
+              :key="step.icon"
+              class="flex items-center gap-2.5 text-[12.5px] leading-snug text-[color:var(--fg-dim)]"
+            >
+              <Icon
+                :name="step.icon"
+                :size="14"
+                class="flex-none text-[var(--accent)]"
+              />
+              <span>{{ step.text }}</span>
+            </li>
+          </ul>
 
-        <div class="px-4 pb-4 pt-1">
-          <SortableNavList
-            :items="ui.settings.homeSections"
-            :default-items="defaultHomeSections"
-            :catalog="homeSectionCatalog"
-            :custom-labels="ui.settings.homeLabels"
-            :can-edit-icon="false"
-            :can-edit-label="true"
-            active-title="Активные секции"
-            hidden-title="Скрытые секции"
-            @update:items="updateHomeSections"
-            @update-label="updateHomeLabel"
-            @reset-order="resetHomeSectionsOrder"
-            @reset-appearance="resetHomeSectionsAppearance"
-            @reset-all="resetHomeSectionsAll"
-          />
-        </div>
+          <div class="mt-2 flex flex-wrap items-center gap-3">
+            <button
+              :class="BUTTON_ACCENT_OUTLINE"
+              type="button"
+              @click="startEdit('home')"
+            >
+              <Icon name="mingcute:home-3-line" :size="15" />
+              Редактировать на главной
+            </button>
+            <button :class="BUTTON" type="button" @click="resetHome">
+              Сбросить
+            </button>
+          </div>
+        </SettingsRow>
       </SettingsCard>
     </div>
   </SettingsSection>
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRouter } from "vue-router";
 import SettingSlider from "@/components/settings/SettingSlider.vue";
 import SettingsCard from "@/components/settings/SettingsCard.vue";
 import SettingsChoice from "@/components/settings/SettingsChoice.vue";
 import SettingsRow from "@/components/settings/SettingsRow.vue";
 import SettingsSection from "@/components/settings/SettingsSection.vue";
-import SortableNavList from "@/components/settings/SortableNavList.vue";
-import type { NavCatalogEntry } from "@/components/settings/SortableNavList.vue";
-import type {
-  CoverStyle,
-  Density,
-  HomeSectionId,
-  NavItemId,
-  TopbarLinkId,
-} from "@/stores/ui/index";
 import {
-  defaultHomeSections,
-  defaultSidebarItems,
-  defaultTopbarLinks,
-  useUiStore,
-} from "@/stores/ui/index";
-import {
-  navItemCatalog,
-  topbarLinkCatalog,
-  homeSectionCatalogList,
-} from "@/constants/navigation";
+  BUTTON,
+  BUTTON_ACCENT_OUTLINE,
+} from "@/components/settings/classes";
+import type { CoverStyle, Density } from "@/stores/ui/index";
+import { useUiStore } from "@/stores/ui/index";
 
 const ui = useUiStore();
+const route = useRoute();
+const router = useRouter();
 
 type SliderKey =
   | "textScale"
@@ -265,82 +268,98 @@ const coverStyles: Array<{ value: CoverStyle; label: string }> = [
   { value: "rounded", label: "Круглее" },
 ];
 
-const sidebarCatalog = navItemCatalog as NavCatalogEntry<NavItemId>[];
-const topbarCatalog = topbarLinkCatalog as NavCatalogEntry<TopbarLinkId>[];
-const homeSectionCatalog = homeSectionCatalogList.map((s) => ({
-  id: s.id,
-  label: s.editorLabel,
-  icon: s.icon,
-  description: s.description,
-})) as NavCatalogEntry<HomeSectionId>[];
+const sidebarSteps = [
+  {
+    icon: "mingcute:dots-line",
+    text: "Тяни пункты прямо в панели, чтобы поменять порядок",
+  },
+  {
+    icon: "mingcute:edit-2-line",
+    text: "Карандаш у пункта меняет название и иконку",
+  },
+  {
+    icon: "mingcute:eye-close-line",
+    text: "Глаз скрывает пункт, вернуть его можно там же",
+  },
+  {
+    icon: "mingcute:resize-line",
+    text: "Правый край панели тянет её ширину",
+  },
+];
 
-function updateSidebarItems(items: NavItemId[]) {
-  if (!items.includes("home")) items.unshift("home");
-  ui.set("sidebarItems", items);
+const topbarSteps = [
+  {
+    icon: "mingcute:user-3-line",
+    text: "Меню аккаунта откроется само — правь его на месте",
+  },
+  {
+    icon: "mingcute:dots-line",
+    text: "Тяни ссылки, чтобы поменять их порядок",
+  },
+  {
+    icon: "mingcute:edit-2-line",
+    text: "Карандаш меняет название и иконку ссылки",
+  },
+  {
+    icon: "mingcute:eye-close-line",
+    text: "Глаз скрывает ссылку, ниже её можно вернуть",
+  },
+];
+
+const homeSteps = [
+  {
+    icon: "mingcute:home-3-line",
+    text: "Редактор откроет главную страницу с блоками",
+  },
+  {
+    icon: "mingcute:dots-line",
+    text: "Тяни секции за значок, чтобы поменять порядок",
+  },
+  {
+    icon: "mingcute:edit-2-line",
+    text: "Карандаш меняет заголовок секции",
+  },
+  {
+    icon: "mingcute:eye-close-line",
+    text: "Глаз скрывает секцию, вернуть можно в панели справа",
+  },
+];
+
+function startEdit(kind: "sidebar" | "topbar" | "home") {
+  ui.chromeEditReturnPath = router.resolve({
+    path: "/settings",
+    query: { ...route.query, section: "layout" },
+  }).fullPath;
+
+  if (kind === "home") {
+    ui.toggleHomeEdit(true);
+    void router.push("/");
+    return;
+  }
+
+  if (kind === "sidebar") ui.toggleSidebarEdit(true);
+  else ui.toggleTopbarEdit(true);
+  closeSettings();
 }
 
-function updateSidebarLabel(id: NavItemId, label?: string) {
-  ui.setSidebarItemLabel(id, label);
+function closeSettings() {
+  const back = window.history.state?.back;
+  if (typeof back === "string" && back && !back.startsWith("/settings")) {
+    router.back();
+  } else {
+    void router.replace("/");
+  }
 }
 
-function updateSidebarIcon(id: NavItemId, icon?: string) {
-  ui.setSidebarItemIcon(id, icon);
-}
-
-function resetSidebarOrder() {
-  ui.resetSidebarOrder();
-}
-
-function resetSidebarAppearance() {
-  ui.resetSidebarAppearance();
-}
-
-function resetSidebarAll() {
+function resetSidebar() {
   ui.resetSidebarCustomizations();
 }
 
-function updateTopbarLinks(links: TopbarLinkId[]) {
-  if (!links.includes("settings")) links.push("settings");
-  ui.set("topbarLinks", links);
-}
-
-function updateTopbarLabel(id: TopbarLinkId, label?: string) {
-  ui.setTopbarLinkLabel(id, label);
-}
-
-function updateTopbarIcon(id: TopbarLinkId, icon?: string) {
-  ui.setTopbarLinkIcon(id, icon);
-}
-
-function resetTopbarOrder() {
-  ui.resetTopbarOrder();
-}
-
-function resetTopbarAppearance() {
-  ui.resetTopbarAppearance();
-}
-
-function resetTopbarAll() {
+function resetTopbar() {
   ui.resetTopbarCustomizations();
 }
 
-function updateHomeSections(sections: HomeSectionId[]) {
-  ui.set("homeSections", sections);
-}
-
-function updateHomeLabel(id: HomeSectionId, label?: string) {
-  ui.setHomeSectionLabel(id, label);
-}
-
-function resetHomeSectionsOrder() {
-  ui.resetHomeSectionsOrder();
-}
-
-function resetHomeSectionsAppearance() {
-  ui.resetHomeAppearance();
-}
-
-function resetHomeSectionsAll() {
+function resetHome() {
   ui.resetHomeSectionCustomizations();
 }
 </script>

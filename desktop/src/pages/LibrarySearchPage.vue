@@ -9,7 +9,7 @@
           <span v-if="loading"> - загружаю {{ done }}/{{ total }}…</span>
         </p>
       </div>
-      <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" :disabled="loading" @click="reload(true)">
+      <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" :disabled="loading" @click="reload(true)">
         Обновить
       </button>
     </div>
@@ -23,7 +23,7 @@
         <div class="flex flex-col gap-[10px] pb-[10px]">
           <input
             v-model="query"
-            class="w-full !h-[38px] flex items-center gap-[8px] px-[12px] py-0 rounded-[10px] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
+            class="w-full !h-[38px] flex items-center gap-[8px] px-[12px] py-0 rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)] border border-transparent transition-[border-color,background] duration-[140ms] focus-within:border-[color:color-mix(in_srgb,var(--fg)_22%,transparent)] focus-within:bg-[var(--surface-2)] [&_input]:flex-1 [&_input]:min-w-0 [&_input]:border-0 [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-[color:var(--fg)] [&_input]:text-[13px] [&_input::placeholder]:text-[color:var(--fg-faint)] [&_select]:w-full [&_select]:border-0 [&_select]:bg-transparent [&_select]:outline-none [&_select]:text-[color:var(--fg)] [&_select]:text-[13px] [&_select]:cursor-pointer"
             placeholder="Название, исполнитель или альбом…"
           />
 
@@ -49,7 +49,7 @@
             </label>
 
             <button
-              class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+              class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
               :class="
                 onlyLiked
                   ? 'border-[color:var(--accent)] text-[color:var(--fg)]'
@@ -59,14 +59,14 @@
             >
               Только любимые
             </button>
-            <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="resetFilters">Сбросить</button>
+            <button class="inline-flex items-center justify-center gap-[7px] h-[32px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-[background,border-color,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none" @click="resetFilters">Сбросить</button>
           </div>
         </div>
 
         <div class="flex items-center gap-[10px] pb-[8px]">
           <span class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">Найдено треков: {{ results.length }}</span>
           <button
-            class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[8px] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+            class="inline-flex items-center justify-center gap-[7px] h-[34px] px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] bg-[var(--accent)] text-white text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer transition-opacity duration-[120ms] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
             :disabled="!results.length"
             @click="playAll(0)"
           >
@@ -90,7 +90,7 @@
       <LazyTracks v-else :items="resultTracks" :initial="50" :step="50">
         <template #default="{ item, index: i }">
           <div
-            class="flex items-center gap-[10px] px-[8px] py-[5px] rounded-[9px] cursor-pointer hover:bg-[var(--hover)]"
+            class="flex items-center gap-[10px] px-[8px] py-[5px] rounded-[calc(var(--radius)*0.75)] cursor-pointer hover:bg-[var(--hover)]"
             :class="
               player.current?.id === item.id
                 ? 'text-[color:var(--accent)]'
@@ -98,7 +98,7 @@
             "
             @dblclick="playAll(i)"
           >
-            <div class="cover w-[36px] h-[36px] rounded-[8px] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block" @click="playAll(i)">
+            <div class="cover w-[36px] h-[36px] rounded-[calc(var(--radius)*0.6667)] flex-none overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block" @click="playAll(i)">
               <img v-if="item.cover_url" :src="item.cover_url" loading="lazy" />
               <Icon v-else name="mingcute:music-line" :size="15" class="text-[color:var(--fg-faint)]" />
             </div>
@@ -120,7 +120,7 @@
                   <div
                     v-for="src in sourceMap.get(item.id)"
                     :key="src"
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:w-[15px] [&_svg]:h-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="openSource(src, item.id)"
                   >
@@ -134,7 +134,7 @@
             <span class="text-[color:var(--fg-faint)] text-[calc(12px*var(--text-scale,1))]">
               {{ formatDuration(item.duration_ms || 0) }}
             </span>
-            <div class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[8px]">
+            <div class="flex items-center justify-center text-[color:var(--fg-faint)] cursor-pointer p-0 border-0 appearance-none transition-[background,color] duration-[120ms] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] w-[30px] h-[30px] rounded-[calc(var(--radius)*0.6667)]">
               <Icon name="mingcute:more-2-fill" :size="17" />
               <TrackMenu :track="item" />
             </div>

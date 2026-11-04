@@ -48,6 +48,7 @@ export {
 } from "./playerButtons";
 
 export type {
+  AppFont,
   CoverStyle,
   Density,
   HomeSectionId,
@@ -70,8 +71,21 @@ export type { Palette, ThemeName } from "./themes";
 export { accentColors, themeNames, themePalettes } from "./themes";
 
 const STORAGE_KEY = "mashiro.interface";
+const FONT_MIGRATED_KEY = "mashiro.interface.font-onest.v1";
 
 const lockedMiniButtons = new Set<MiniButtonId>(["prev", "play", "next"]);
+
+const validAppFonts = new Set<string>([
+  "onest",
+  "golos",
+  "manrope",
+  "system",
+  "serif",
+  "mono",
+  "minecraft",
+  "jetbrains",
+  "custom",
+]);
 
 function sanitizeOrder<T extends string>(
   saved: unknown,
@@ -179,7 +193,25 @@ function load(): InterfaceSettings {
       merged.topbarLinks.push("settings");
     }
 
+    if (
+      typeof merged.appFont !== "string" ||
+      !validAppFonts.has(merged.appFont)
+    ) {
+      merged.appFont = "onest";
+    }
+    try {
+      if (!localStorage.getItem(FONT_MIGRATED_KEY)) {
+        if (!saved.appFont || saved.appFont === "manrope") {
+          merged.appFont = "onest";
+        }
+        localStorage.setItem(FONT_MIGRATED_KEY, "1");
+      }
+    } catch {}
+
     merged.playerEditMode = false;
+    merged.sidebarEditMode = false;
+    merged.topbarEditMode = false;
+    merged.homeEditMode = false;
     merged.playerButtons.play = "center";
     merged.miniButtons.play = true;
     merged.miniButtons.prev = true;
@@ -198,6 +230,7 @@ export const useUiStore = defineStore("ui", {
     settings: load(),
     snapshot: null as InterfaceSettings | null,
     playerEditReturnPath: null as string | null,
+    chromeEditReturnPath: null as string | null,
   }),
 
   actions: {
@@ -225,6 +258,9 @@ export const useUiStore = defineStore("ui", {
     finishEdit() {
       this.snapshot = null;
       this.settings.playerEditMode = false;
+      this.settings.sidebarEditMode = false;
+      this.settings.topbarEditMode = false;
+      this.settings.homeEditMode = false;
       this.apply();
     },
 
@@ -232,6 +268,9 @@ export const useUiStore = defineStore("ui", {
       if (this.snapshot) this.settings = { ...this.snapshot };
       this.snapshot = null;
       this.settings.playerEditMode = false;
+      this.settings.sidebarEditMode = false;
+      this.settings.topbarEditMode = false;
+      this.settings.homeEditMode = false;
       this.apply();
     },
 
@@ -241,8 +280,147 @@ export const useUiStore = defineStore("ui", {
         this.finishEdit();
         return;
       }
-      this.beginEdit();
+      if (!this.snapshot) this.beginEdit();
       this.settings.playerEditMode = true;
+      this.settings.sidebarEditMode = false;
+      this.settings.topbarEditMode = false;
+      this.settings.homeEditMode = false;
+      this.apply();
+    },
+
+    toggleSidebarEdit(on?: boolean) {
+      const next = on ?? !this.settings.sidebarEditMode;
+      if (!next) {
+        this.finishEdit();
+        return;
+      }
+      if (!this.snapshot) this.beginEdit();
+      this.settings.sidebarEditMode = true;
+      this.settings.playerEditMode = false;
+      this.settings.topbarEditMode = false;
+      this.settings.homeEditMode = false;
+      this.apply();
+    },
+
+    toggleTopbarEdit(on?: boolean) {
+      const next = on ?? !this.settings.topbarEditMode;
+      if (!next) {
+        this.finishEdit();
+        return;
+      }
+      if (!this.snapshot) this.beginEdit();
+      this.settings.topbarEditMode = true;
+      this.settings.playerEditMode = false;
+      this.settings.sidebarEditMode = false;
+      this.settings.homeEditMode = false;
+      this.apply();
+    },
+
+    toggleHomeEdit(on?: boolean) {
+      const next = on ?? !this.settings.homeEditMode;
+      if (!next) {
+        this.finishEdit();
+        return;
+      }
+      if (!this.snapshot) this.beginEdit();
+      this.settings.homeEditMode = true;
+      this.settings.playerEditMode = false;
+      this.settings.sidebarEditMode = false;
+      this.settings.topbarEditMode = false;
+      this.apply();
+    },
+
+    moveSidebarItem(id: NavItemId, delta: number) {
+      const order = [...this.settings.sidebarItems];
+      const from = order.indexOf(id);
+      if (from < 0) return;
+      const to = Math.max(0, Math.min(order.length - 1, from + delta));
+      if (to === from) return;
+      order.splice(from, 1);
+      order.splice(to, 0, id);
+      this.settings.sidebarItems = order;
+      this.apply();
+    },
+
+    moveSidebarItemAround(id: NavItemId, targetId: NavItemId, after: boolean) {
+      if (id === targetId) return;
+      const order = [...this.settings.sidebarItems];
+      const from = order.indexOf(id);
+      if (from < 0) return;
+      order.splice(from, 1);
+      const target = order.indexOf(targetId);
+      if (target < 0) {
+        order.splice(from, 0, id);
+        return;
+      }
+      order.splice(after ? target + 1 : target, 0, id);
+      this.settings.sidebarItems = order;
+      this.apply();
+    },
+
+    moveTopbarLinkAround(
+      id: TopbarLinkId,
+      targetId: TopbarLinkId,
+      after: boolean,
+    ) {
+      if (id === targetId) return;
+      const order = [...this.settings.topbarLinks];
+      const from = order.indexOf(id);
+      if (from < 0) return;
+      order.splice(from, 1);
+      const target = order.indexOf(targetId);
+      if (target < 0) {
+        order.splice(from, 0, id);
+        return;
+      }
+      order.splice(after ? target + 1 : target, 0, id);
+      this.settings.topbarLinks = order;
+      this.apply();
+    },
+
+    moveHomeSectionAround(
+      id: HomeSectionId,
+      targetId: HomeSectionId,
+      after: boolean,
+    ) {
+      if (id === targetId) return;
+      const order = [...this.settings.homeSections];
+      const from = order.indexOf(id);
+      if (from < 0) return;
+      order.splice(from, 1);
+      const target = order.indexOf(targetId);
+      if (target < 0) {
+        order.splice(from, 0, id);
+        return;
+      }
+      order.splice(after ? target + 1 : target, 0, id);
+      this.settings.homeSections = order;
+      this.apply();
+    },
+
+    toggleSidebarItem(id: NavItemId) {
+      if (id === "home") return;
+      const list = this.settings.sidebarItems;
+      this.settings.sidebarItems = list.includes(id)
+        ? list.filter((x) => x !== id)
+        : [...list, id];
+      this.apply();
+    },
+
+    toggleTopbarLink(id: TopbarLinkId) {
+      if (id === "settings") return;
+      const list = this.settings.topbarLinks;
+      this.settings.topbarLinks = list.includes(id)
+        ? list.filter((x) => x !== id)
+        : [...list, id];
+      this.apply();
+    },
+
+    toggleHomeSection(id: HomeSectionId) {
+      const list = this.settings.homeSections;
+      this.settings.homeSections = list.includes(id)
+        ? list.filter((x) => x !== id)
+        : [...list, id];
       this.apply();
     },
 
@@ -473,9 +651,11 @@ export const useUiStore = defineStore("ui", {
     },
 
     resetSidebarCustomizations() {
+      const d = defaultInterfaceSettings;
       this.settings.sidebarItems = [...defaultSidebarItems];
       this.settings.sidebarLabels = {};
       this.settings.sidebarIcons = {};
+      this.settings.sidebarWidth = d.sidebarWidth;
       this.apply();
     },
 
@@ -491,9 +671,25 @@ export const useUiStore = defineStore("ui", {
     },
 
     resetTopbarCustomizations() {
+      const d = defaultInterfaceSettings;
       this.settings.topbarLinks = [...defaultTopbarLinks];
       this.settings.topbarLabels = {};
       this.settings.topbarIcons = {};
+      this.settings.topbarVisible = d.topbarVisible;
+      this.settings.topbarHeight = d.topbarHeight;
+      this.settings.topbarShowLogo = d.topbarShowLogo;
+      this.settings.topbarLogoText = d.topbarLogoText;
+      this.settings.topbarLogoSize = d.topbarLogoSize;
+      this.settings.topbarShowSearch = d.topbarShowSearch;
+      this.settings.searchWidth = d.searchWidth;
+      this.settings.topbarShowAccount = d.topbarShowAccount;
+      this.settings.topbarAccountName = d.topbarAccountName;
+      this.settings.topbarAccountAvatarSize = d.topbarAccountAvatarSize;
+      this.settings.topbarShowWindowControls = d.topbarShowWindowControls;
+      this.settings.windowShowMinimize = d.windowShowMinimize;
+      this.settings.windowShowMaximize = d.windowShowMaximize;
+      this.settings.windowShowClose = d.windowShowClose;
+      this.settings.windowButtonWidth = d.windowButtonWidth;
       this.apply();
     },
 

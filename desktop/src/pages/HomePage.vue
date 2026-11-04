@@ -56,7 +56,63 @@
             </div>
           </header>
 
-          <template v-for="sectionId in orderedHomeSections" :key="sectionId">
+          <div
+            v-for="sectionId in orderedHomeSections"
+            :key="sectionId"
+            class="relative"
+            :class="[
+              homeEditMode
+                ? 'rounded-[var(--radius)] outline-dashed outline-1 outline-[color:color-mix(in_srgb,var(--accent)_26%,transparent)] [outline-offset:2px]'
+                : '',
+              sectionDragId === sectionId ? 'opacity-50' : '',
+              sectionOver?.id === sectionId && !sectionOver.after
+                ? 'shadow-[inset_0_2px_0_var(--accent)]'
+                : '',
+              sectionOver?.id === sectionId && sectionOver.after
+                ? 'shadow-[inset_0_-2px_0_var(--accent)]'
+                : '',
+            ]"
+            :draggable="homeEditMode"
+            @dragstart="startSectionDrag(sectionId, $event)"
+            @dragend="endSectionDrag"
+            @dragover="onSectionDragOver(sectionId, $event)"
+            @dragleave="onSectionDragLeave(sectionId)"
+            @drop="onSectionDrop(sectionId, $event)"
+          >
+          <div
+            v-if="homeEditMode"
+            class="mt-[26px] flex items-center gap-[8px] rounded-[calc(var(--radius)*0.8333)] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] bg-[color-mix(in_srgb,var(--surface-2)_72%,transparent)] px-[10px] py-[7px]"
+          >
+            <Icon
+              name="mingcute:dots-line"
+              :size="14"
+              class="flex-none cursor-grab text-[color:var(--fg-faint)]"
+            />
+            <span
+              class="truncate text-[10.5px] font-semibold uppercase tracking-[0.07em] text-[color:var(--fg-dim)]"
+            >
+              {{ sectionEditorLabel(sectionId) }}
+            </span>
+            <span class="ml-auto flex flex-none items-center gap-[1px]">
+              <button
+                type="button"
+                class="grid h-[22px] w-[22px] place-items-center rounded-[calc(var(--radius)*0.5)] border-0 bg-transparent p-0 text-[color:var(--fg-faint)] cursor-pointer transition-colors hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                title="Переименовать секцию"
+                @click.stop="openSectionDialog(sectionId)"
+              >
+                <Icon name="mingcute:edit-2-line" :size="14" />
+              </button>
+              <button
+                type="button"
+                class="grid h-[22px] w-[22px] place-items-center rounded-[calc(var(--radius)*0.5)] border-0 bg-transparent p-0 text-[color:var(--fg-faint)] cursor-pointer transition-colors hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+                title="Скрыть секцию"
+                @click.stop="ui.toggleHomeSection(sectionId)"
+              >
+                <Icon name="mingcute:eye-close-line" :size="14" />
+              </button>
+            </span>
+          </div>
+
           <template
             v-if="sectionId === 'playlists' && visiblePlaylists.length"
           >
@@ -82,11 +138,11 @@
               <div
                 v-for="pl in visiblePlaylists"
                 :key="pl.kind"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                class="group relative min-w-0 rounded-[calc(var(--radius)*1.1667)] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="router.push(`/playlists/${pl.kind}`)"
               >
                 <div
-                  class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                  class="cover relative aspect-square w-full rounded-[var(--radius)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
                 >
                   <img
                     v-if="pl.cover_url"
@@ -112,7 +168,7 @@
 
                   <span
                     v-if="library.isPinned(pl.kind)"
-                    class="absolute left-[10px] top-[10px] flex h-[24px] w-[24px] items-center justify-center rounded-full bg-black/55 text-[color:var(--fg)]"
+                    class="absolute left-[10px] top-[10px] flex h-[24px] w-[24px] items-center justify-center rounded-[calc(var(--radius)*1.5)] bg-black/55 text-[color:var(--fg)]"
                     title="Закреплён в боковой панели"
                   >
                     <Icon name="mingcute:pin-2-line" :size="11" />
@@ -133,14 +189,14 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
                     style="min-width: 216px"
                   >
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="playPlaylist(pl)"
                     >
@@ -148,7 +204,7 @@
                       <span>Слушать</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="router.push(`/playlists/${pl.kind}`)"
                     >
@@ -156,7 +212,7 @@
                       <span>Открыть плейлист</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="library.togglePin(pl.kind)"
                     >
@@ -176,7 +232,7 @@
                     <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="rename(pl)"
                     >
@@ -184,7 +240,7 @@
                       <span>Переименовать</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="library.setPlaylistPublic(pl.kind, true)"
                     >
@@ -192,7 +248,7 @@
                       <span>Сделать публичным</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="library.setPlaylistPublic(pl.kind, false)"
                     >
@@ -203,7 +259,7 @@
                     <div class="h-[1px] mx-[6px] my-[4px] bg-[var(--line)]" />
 
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="removePlaylist(pl)"
                     >
@@ -232,11 +288,11 @@
                 <div
                   v-for="r in recent"
                   :key="r.id"
-                  class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  class="group relative min-w-0 rounded-[calc(var(--radius)*1.1667)] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                   @click="openRecent(r)"
                 >
                   <div
-                    class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                    class="cover relative aspect-square w-full rounded-[var(--radius)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
                   >
                     <img
                       v-if="r.cover_url"
@@ -299,11 +355,11 @@
                 <div
                   v-for="a in releases"
                   :key="a.id"
-                  class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                  class="group relative min-w-0 rounded-[calc(var(--radius)*1.1667)] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                   @click="router.push(`/album/${a.id}`)"
                 >
                   <div
-                    class="cover relative aspect-square w-full rounded-[12px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
+                    class="cover relative aspect-square w-full rounded-[var(--radius)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
                   >
                     <img
                       v-if="a.cover_url"
@@ -343,7 +399,7 @@
               <template v-else>
                 <div v-for="n in 12" :key="n" class="min-w-0">
                   <div
-                    class="relative aspect-square w-full overflow-hidden rounded-[10px] bg-[var(--surface)]"
+                    class="relative aspect-square w-full overflow-hidden rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface)]"
                   />
                   <div
                     class="mt-[10px] h-[11px] w-[70%] rounded bg-[var(--surface)]"
@@ -371,13 +427,13 @@
               <div
                 v-for="p in picks"
                 :key="`${p.kind}-${p.id}`"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                class="group relative min-w-0 rounded-[calc(var(--radius)*1.1667)] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="openPick(p)"
               >
                 <div
                   class="cover relative aspect-square w-full overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:block"
                   :class="
-                    p.kind === 'artist' ? 'rounded-full' : 'rounded-[12px]'
+                    p.kind === 'artist' ? 'rounded-full' : 'rounded-[var(--radius)]'
                   "
                   :style="p.color ? { background: p.color } : {}"
                 >
@@ -424,14 +480,14 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
                     style="min-width: 212px"
                   >
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="playPick(p)"
                     >
@@ -439,7 +495,7 @@
                       <span>Слушать</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="openPick(p)"
                     >
@@ -458,7 +514,7 @@
                       }}</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="waveFrom(p)"
                     >
@@ -494,7 +550,7 @@
               <div
                 v-for="w in waves"
                 :key="w.id"
-                class="group relative min-w-0 rounded-[14px] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
+                class="group relative min-w-0 rounded-[calc(var(--radius)*1.1667)] p-[8px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)]"
                 @click="playWave(w)"
               >
                 <div
@@ -533,14 +589,14 @@
                 <q-menu
                   context-menu
                   touch-position
-                  class="!rounded-[12px] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
+                  class="!rounded-[var(--radius)] !border !border-[color:rgba(255,255,255,0.09)] !bg-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[18px] overflow-x-hidden max-w-[268px]"
                 >
                   <div
                     class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden"
                     style="min-width: 200px"
                   >
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="playWave(w)"
                     >
@@ -548,7 +604,7 @@
                       <span>Запустить волну</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis"
                       v-close-popup
                       @click="router.push('/wave')"
                     >
@@ -585,7 +641,7 @@
                   v-for="n in neuroItems"
                   :key="n.id"
                   type="button"
-                  class="flex h-[60px] min-w-0 cursor-pointer appearance-none items-center justify-center gap-[10px] rounded-[16px] border-0 bg-[var(--surface-2)] px-[16px] text-[17px] font-bold leading-none tracking-[-0.01em] text-white transition-[filter,transform] duration-[140ms] ease-[ease] hover:brightness-110 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]"
+                  class="flex h-[60px] min-w-0 cursor-pointer appearance-none items-center justify-center gap-[10px] rounded-[calc(var(--radius)*1.3333)] border-0 bg-[var(--surface-2)] px-[16px] text-[17px] font-bold leading-none tracking-[-0.01em] text-white transition-[filter,transform] duration-[140ms] ease-[ease] hover:brightness-110 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]"
                   :style="n.color ? { background: n.color } : {}"
                   :title="n.title"
                   @click="playNeuro(n)"
@@ -605,7 +661,7 @@
 
               <button
                 v-if="neuroCanLeft"
-                class="absolute left-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute left-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-[calc(var(--radius)*1.5)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Назад"
                 @click="scrollNeuro(-1)"
@@ -615,7 +671,7 @@
 
               <button
                 v-if="neuroCanRight"
-                class="absolute right-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
+                class="absolute right-[-14px] top-1/2 z-[2] flex h-[36px] w-[36px] -translate-y-1/2 items-center justify-center rounded-[calc(var(--radius)*1.5)] border border-[color:var(--line)] bg-[color-mix(in_srgb,var(--surface)_88%,transparent)] text-[color:var(--fg)] shadow-[0_10px_28px_-14px_rgba(0,0,0,0.8)] backdrop-blur-[12px] cursor-pointer transition-[background,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)]"
                 type="button"
                 title="Дальше"
                 @click="scrollNeuro(1)"
@@ -624,7 +680,7 @@
               </button>
             </div>
           </template>
-          </template>
+          </div>
 
           <div v-if="loading" class="mt-8">
             <q-spinner size="20px" color="primary" />
@@ -659,6 +715,18 @@
         </div>
       </div>
     </q-scroll-area>
+    <HomeEditor v-if="homeEditMode" />
+    <NavItemEditDialog
+      v-model="sectionDialogOpen"
+      title="Секция главной"
+      :default-label="editingSection?.editorLabel || ''"
+      :current-label="
+        editingSectionId ? ui.settings.homeLabels?.[editingSectionId] || '' : ''
+      "
+      :can-edit-icon="false"
+      :can-edit-label="true"
+      @save="saveSectionDialog"
+    />
   </q-page>
 </template>
 
@@ -692,6 +760,8 @@ import { useStatsStore } from "@/stores/stats";
 import { useUiStore } from "@/stores/ui/index";
 import type { HomeSectionId } from "@/stores/ui/index";
 import { ALL_HOME_SECTIONS } from "@/constants/navigation";
+import HomeEditor from "@/components/layout/HomeEditor.vue";
+import NavItemEditDialog from "@/components/settings/NavItemEditDialog.vue";
 
 interface RecentItem {
   id: string;
@@ -712,6 +782,74 @@ const orderedHomeSections = computed(
 );
 function sectionTitle(id: HomeSectionId, fallback: string): string {
   return ui.settings.homeLabels?.[id] || ALL_HOME_SECTIONS[id]?.label || fallback;
+}
+
+const homeEditMode = computed(() => ui.settings.homeEditMode);
+
+function sectionEditorLabel(id: HomeSectionId): string {
+  return (
+    ui.settings.homeLabels?.[id] ||
+    ALL_HOME_SECTIONS[id]?.editorLabel ||
+    id
+  );
+}
+
+const sectionDragId = ref<HomeSectionId | null>(null);
+const sectionOver = ref<{ id: HomeSectionId; after: boolean } | null>(null);
+
+function startSectionDrag(id: HomeSectionId, event: DragEvent) {
+  if (!ui.settings.homeEditMode) {
+    event.preventDefault();
+    return;
+  }
+  sectionDragId.value = id;
+  if (event.dataTransfer) {
+    event.dataTransfer.setData("text/plain", id);
+    event.dataTransfer.effectAllowed = "move";
+  }
+}
+
+function endSectionDrag() {
+  sectionDragId.value = null;
+  sectionOver.value = null;
+}
+
+function onSectionDragOver(id: HomeSectionId, event: DragEvent) {
+  if (!sectionDragId.value || sectionDragId.value === id) return;
+  event.preventDefault();
+  const el = event.currentTarget as HTMLElement | null;
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  sectionOver.value = { id, after: event.clientY > rect.top + rect.height / 2 };
+}
+
+function onSectionDragLeave(id: HomeSectionId) {
+  if (sectionOver.value?.id === id) sectionOver.value = null;
+}
+
+function onSectionDrop(id: HomeSectionId, event: DragEvent) {
+  event.preventDefault();
+  const drag = sectionDragId.value;
+  if (!drag) return;
+  ui.moveHomeSectionAround(drag, id, sectionOver.value?.after ?? false);
+  endSectionDrag();
+}
+
+const sectionDialogOpen = ref(false);
+const editingSectionId = ref<HomeSectionId | null>(null);
+const editingSection = computed(() =>
+  editingSectionId.value ? ALL_HOME_SECTIONS[editingSectionId.value] : null,
+);
+
+function openSectionDialog(id: HomeSectionId) {
+  editingSectionId.value = id;
+  sectionDialogOpen.value = true;
+}
+
+function saveSectionDialog(payload: { label?: string; icon?: string }) {
+  const id = editingSectionId.value;
+  if (!id) return;
+  ui.setHomeSectionLabel(id, payload.label);
 }
 const playlists = ref<Playlist[]>([]);
 const wheel = ref<WheelItem[]>([]);
@@ -794,12 +932,12 @@ const colsLg = "grid-cols-[repeat(auto-fill,minmax(190px,1fr))]";
 const colsMd = "grid-cols-[repeat(auto-fill,minmax(160px,1fr))]";
 const colsSm = "grid-cols-[repeat(auto-fill,minmax(144px,1fr))]";
 const quickPrimary =
-  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[10px] border-0 bg-[var(--accent)] px-4 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
+  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[calc(var(--radius)*0.8333)] border-0 bg-[var(--accent)] px-4 text-[13px] font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]";
 const quickGhost =
-  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[10px] border border-[var(--line)] px-4 text-[13px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
+  "flex h-10 flex-nowrap items-center gap-[9px] rounded-[calc(var(--radius)*0.8333)] border border-[var(--line)] px-4 text-[13px] font-medium text-[color:var(--fg-dim)] transition-colors hover:bg-[var(--hover)] hover:text-[var(--fg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--fg)]";
 
 const fab =
-  "absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
+  "absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] cursor-pointer items-center justify-center rounded-[calc(var(--radius)*1.5)] border-0 bg-[var(--accent)] p-0 text-white opacity-0 translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover:opacity-100 group-hover:translate-y-0";
 
 const visiblePlaylists = computed(() =>
   playlists.value.filter((pl) => !library.isHidden(pl.kind)),

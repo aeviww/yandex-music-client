@@ -3,7 +3,7 @@
     <div class="flex-auto min-h-0 overscroll-contain overflow-x-hidden overflow-y-auto">
       <div class="flex max-w-[860px] flex-col mx-auto my-0 gap-[26px] pt-[var(--page-top-gap)] px-[var(--page-padding)] pb-[56px] max-[1024px]:pt-[18px]">
         <header class="flex items-center gap-[18px] min-w-0 max-[720px]:items-start max-[720px]:gap-[14px] [&_h1]:overflow-hidden [&_h1]:mt-[6px] [&_h1]:mx-0 [&_h1]:mb-0 [&_h1]:text-[30px] [&_h1]:font-bold [&_h1]:tracking-[-0.03em] [&_h1]:leading-[1.1] [&_h1]:text-ellipsis [&_h1]:whitespace-nowrap max-[720px]:[&_h1]:text-[23px]">
-          <div class="cover relative grid overflow-hidden w-[132px] h-[132px] flex-none rounded-[16px] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover max-[720px]:w-[96px] max-[720px]:h-[96px]">
+          <div class="cover relative grid overflow-hidden w-[132px] h-[132px] flex-none rounded-[calc(var(--radius)*1.3333)] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover max-[720px]:w-[96px] max-[720px]:h-[96px]">
             <img
               v-if="coverUrl"
               :src="coverUrl"
@@ -67,7 +67,7 @@
           </div>
         </header>
 
-        <p v-if="errorText" class="flex items-center justify-between m-0 px-[14px] py-[11px] rounded-[12px] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[12.5px] gap-[12px] [&_button]:border-0 [&_button]:text-[color:var(--fg)] [&_button]:cursor-pointer [&_button]:text-[12.5px] [&_button]:font-semibold [&_button]:underline [&_button]:underline-offset-[3px] [&_button]:bg-transparent">
+        <p v-if="errorText" class="flex items-center justify-between m-0 px-[14px] py-[11px] rounded-[var(--radius)] bg-[var(--surface)] text-[color:var(--fg-dim)] text-[12.5px] gap-[12px] [&_button]:border-0 [&_button]:text-[color:var(--fg)] [&_button]:cursor-pointer [&_button]:text-[12.5px] [&_button]:font-semibold [&_button]:underline [&_button]:underline-offset-[3px] [&_button]:bg-transparent">
           {{ errorText }}
           <button type="button" @click="refresh">Обновить</button>
         </p>
@@ -132,12 +132,12 @@
             class="flex min-h-[42px] items-center justify-between gap-[16px]"
           >
             <span class="text-[color:var(--fg-dim)] text-[12.5px]">{{ group.label }}</span>
-            <div class="flex flex-none gap-[2px] p-[3px] border border-[color:var(--line)] rounded-[9px] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)]">
+            <div class="flex flex-none gap-[2px] p-[3px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.75)] bg-[color-mix(in_srgb,var(--fg)_5%,transparent)]">
               <button
                 v-for="option in group.options"
                 :key="option.value"
                 type="button"
-                class="min-h-[26px] px-[11px] py-[4px] border-0 rounded-[6px] bg-transparent text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)] disabled:opacity-[0.45] disabled:pointer-events-none"
+                class="min-h-[26px] px-[11px] py-[4px] border-0 rounded-[calc(var(--radius)*0.5)] bg-transparent text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] whitespace-nowrap cursor-pointer transition-[background,color] duration-[140ms] ease-[ease] hover:text-[color:var(--fg)] disabled:opacity-[0.45] disabled:pointer-events-none"
                 :class="{ 'bg-[var(--hover)] text-[color:var(--fg)] font-semibold': group.current === option.value }"
                 :disabled="applying"
                 @click="applySetting(group.key, option.value)"
@@ -153,14 +153,14 @@
           <div
             v-for="item in queueWindow"
             :key="`${item.track.id}-${item.index}`"
-            class="flex items-center px-[8px] py-[6px] rounded-[10px] cursor-pointer gap-[11px] transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--surface)]"
+            class="flex items-center px-[8px] py-[6px] rounded-[calc(var(--radius)*0.8333)] cursor-pointer gap-[11px] transition-[background] duration-[120ms] ease-[ease] hover:bg-[var(--surface)]"
             :class="{
               'bg-[var(--surface)]': item.index === player.index,
               'opacity-[0.45]': item.index < player.index,
             }"
             @click="jumpTo(item.index)"
           >
-            <span class="cover grid overflow-hidden w-[38px] h-[38px] flex-none rounded-[7px] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
+            <span class="cover grid overflow-hidden w-[38px] h-[38px] flex-none rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface-2)] place-items-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover">
               <img
                 v-if="item.track.cover_url"
                 :src="item.track.cover_url"

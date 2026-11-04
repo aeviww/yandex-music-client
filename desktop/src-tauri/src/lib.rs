@@ -159,6 +159,7 @@ pub fn run() {
             together::relay::commands::together_relay_seed_forget,
             together::relay::commands::together_relay_identity,
             together::relay::commands::together_relay_invite,
+            commands::list_system_fonts,
             files::export_text_file,
             files::read_text_file,
             files::open_external,

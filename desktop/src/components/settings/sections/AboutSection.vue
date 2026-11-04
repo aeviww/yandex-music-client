@@ -8,7 +8,7 @@
     <SettingsCard>
       <div class="flex items-center gap-3.5 px-5 py-4">
         <img
-          class="h-12 w-12 flex-none rounded-[12px] object-cover ring-1 ring-[var(--line)]"
+          class="h-12 w-12 flex-none rounded-[var(--radius)] object-cover ring-1 ring-[var(--line)]"
           :src="avatar"
           alt="aeviww"
         />
@@ -29,7 +29,7 @@
         </div>
         <a
           :href="AUTHOR_URL"
-          class="group inline-flex flex-none items-center gap-1.5 rounded-lg border border-[var(--line)] px-2.5 py-1.5 text-[11.5px] text-[color:var(--fg-dim)] no-underline transition-colors duration-150 hover:border-[color:color-mix(in_srgb,var(--fg)_16%,var(--line))] hover:text-[var(--fg)]"
+          class="group inline-flex flex-none items-center gap-1.5 rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] px-2.5 py-1.5 text-[11.5px] text-[color:var(--fg-dim)] no-underline transition-colors duration-150 hover:border-[color:color-mix(in_srgb,var(--fg)_16%,var(--line))] hover:text-[var(--fg)]"
           @click.prevent="openLink(AUTHOR_URL)"
         >
           <Icon name="mingcute:github-line" :size="14" />
@@ -49,7 +49,7 @@
         <div class="flex min-w-0 flex-wrap items-center gap-2">
           <button
             type="button"
-            class="inline-flex items-center gap-1.5 rounded-md border border-[var(--line)] bg-[var(--surface-2)] px-2 py-1 font-mono text-[11px] text-[color:var(--fg-dim)] transition-colors duration-150 hover:text-[var(--fg)]"
+            class="inline-flex items-center gap-1.5 rounded-[calc(var(--radius)*0.5)] border border-[var(--line)] bg-[var(--surface-2)] px-2 py-1 font-mono text-[11px] text-[color:var(--fg-dim)] transition-colors duration-150 hover:text-[var(--fg)]"
             title="Скопировать хэш коммита"
             @click="copyCommit"
           >

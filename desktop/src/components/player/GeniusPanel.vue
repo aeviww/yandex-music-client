@@ -8,7 +8,7 @@
         Genius РІС‹РєР»СЋС‡РµРЅ. РћС‚РєСЂРѕР№ РќР°СЃС‚СЂРѕР№РєРё в†’ Genius Рё РІСЃС‚Р°РІСЊ Client Access Token.
       </span>
       <div
-        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
         @click="openUrl('https://genius.com/api-clients')"
       >
         РџРѕР»СѓС‡РёС‚СЊ С‚РѕРєРµРЅ
@@ -105,10 +105,10 @@
           v-model="query"
           type="text"
           placeholder="Р°СЂС‚РёСЃС‚ Рё РЅР°Р·РІР°РЅРёРµ"
-          class="flex-1 min-w-0 px-[10px] py-[6px] border border-[color:var(--line)] rounded-[8px] bg-transparent text-inherit text-[13px]"
+          class="flex-1 min-w-0 px-[10px] py-[6px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] bg-transparent text-inherit text-[13px]"
         />
         <button
-          class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="submit"
         >
           РќР°Р№С‚Рё
@@ -126,12 +126,12 @@
       <button
         v-for="hit in genius.hits"
         :key="hit.id"
-        class="flex items-center gap-[10px] p-[6px] border-0 rounded-[8px] text-inherit text-[13px] text-left cursor-pointer hover:bg-[var(--line)]"
+        class="flex items-center gap-[10px] p-[6px] border-0 rounded-[calc(var(--radius)*0.6667)] text-inherit text-[13px] text-left cursor-pointer hover:bg-[var(--line)]"
         type="button"
         @click="choose(hit)"
       >
         <div
-          class="cover flex-none w-[32px] h-[32px] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          class="cover flex-none w-[32px] h-[32px] rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
         >
           <img v-if="hit.art" :src="hit.art" />
         </div>
@@ -153,7 +153,7 @@
     >
       <span>{{ genius.error || "РќР° Genius РЅРёС‡РµРіРѕ РЅРµ РЅР°С€Р»РѕСЃСЊ" }}</span>
       <div
-        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+        class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
         @click="startPicking"
       >
         РќР°Р№С‚Рё РІСЂСѓС‡РЅСѓСЋ
@@ -163,7 +163,7 @@
     <template v-else>
       <div class="flex items-center gap-[10px]">
         <div
-          class="cover flex-none w-[44px] h-[44px] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+          class="cover flex-none w-[44px] h-[44px] rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
         >
           <img v-if="song.art" :src="song.art" />
           <Icon
@@ -349,7 +349,7 @@
 
         <div
           v-if="infoRows.length"
-          class="flex flex-col gap-[4px] pt-[10px] px-[12px] pb-[10px] border border-[color:var(--line)] rounded-[10px]"
+          class="flex flex-col gap-[4px] pt-[10px] px-[12px] pb-[10px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.8333)]"
         >
           <div
             v-for="row in infoRows"

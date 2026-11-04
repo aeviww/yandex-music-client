@@ -5,12 +5,12 @@
     >
       <div class="flex items-center gap-[14px] pt-[18px] pr-[18px] pb-[14px] pl-[20px]">
         <div
-          class="relative flex-none w-[62px] h-[62px] rounded-[12px] bg-[var(--surface-2)]"
+          class="relative flex-none w-[62px] h-[62px] rounded-[var(--radius)] bg-[var(--surface-2)]"
         >
           <img
             v-if="trailerDialog.cover"
             :src="trailerDialog.cover"
-            class="block w-full h-full object-cover rounded-[12px]"
+            class="block w-full h-full object-cover rounded-[var(--radius)]"
             alt=""
           />
           <Icon
@@ -64,12 +64,12 @@
           <div
             v-for="(track, index) in trailers"
             :key="track.id"
-            class="group flex items-center gap-[12px] rounded-[9px] px-[8px] py-[6px] cursor-pointer select-none transition-[background] duration-[100ms] ease-[ease] hover:bg-[var(--hover)]"
+            class="group flex items-center gap-[12px] rounded-[calc(var(--radius)*0.75)] px-[8px] py-[6px] cursor-pointer select-none transition-[background] duration-[100ms] ease-[ease] hover:bg-[var(--hover)]"
             :class="{ 'bg-[var(--hover)]': isCurrent(index) }"
             @click="playAt(index)"
           >
             <div
-              class="relative flex-none w-[44px] h-[44px] rounded-[6px] overflow-hidden bg-[var(--surface-2)]"
+              class="relative flex-none w-[44px] h-[44px] rounded-[calc(var(--radius)*0.5)] overflow-hidden bg-[var(--surface-2)]"
             >
               <img
                 v-if="track.cover_url"
@@ -141,7 +141,7 @@
 
       <div class="flex items-center px-[20px] pt-[12px] pb-[16px]">
         <button
-          class="inline-flex h-[36px] items-center justify-center gap-[8px] rounded-[10px] border-0 bg-[var(--accent)] px-[18px] text-[calc(12.5px*var(--text-scale,1))] font-medium text-white cursor-pointer select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
+          class="inline-flex h-[36px] items-center justify-center gap-[8px] rounded-[calc(var(--radius)*0.8333)] border-0 bg-[var(--accent)] px-[18px] text-[calc(12.5px*var(--text-scale,1))] font-medium text-white cursor-pointer select-none transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="button"
           :disabled="!trailerDialog.playFull || !trailers.length"
           @click="playFull"

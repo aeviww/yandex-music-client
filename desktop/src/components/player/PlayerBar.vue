@@ -14,7 +14,7 @@
         @pointerdown="startResize('height', $event)"
       />
       <div
-        class="absolute z-[14] top-[20%] left-[var(--player-meta-width,260px)] w-[5px] h-[60%] rounded-[3px] cursor-ew-resize bg-[color-mix(in_srgb,var(--accent)_55%,transparent)]"
+        class="absolute z-[14] top-[20%] left-[var(--player-meta-width,260px)] w-[5px] h-[60%] rounded-[calc(var(--radius)*0.25)] cursor-ew-resize bg-[color-mix(in_srgb,var(--accent)_55%,transparent)]"
         title="Тяни влево или вправо — ширина блока с треком"
         @pointerdown="startResize('meta', $event)"
       />
@@ -29,7 +29,7 @@
 
     <div class="relative z-[1] flex min-w-0 items-center gap-[12px]">
       <div
-        class="cover group relative flex items-center justify-center flex-none w-[var(--player-cover,_48px)] h-[var(--player-cover,_48px)] max-[900px]:w-[40px] max-[900px]:h-[40px] overflow-hidden rounded-[10px] bg-[var(--surface-2)] cursor-pointer [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
+        class="cover group relative flex items-center justify-center flex-none w-[var(--player-cover,_48px)] h-[var(--player-cover,_48px)] max-[900px]:w-[40px] max-[900px]:h-[40px] overflow-hidden rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2)] cursor-pointer [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block"
         @click="onCoverClick"
         @contextmenu.prevent="openAlbum"
       >
@@ -78,7 +78,7 @@
             >
               <span
                 v-if="neuroActive"
-                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[calc(var(--radius)*0.3333)] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
               >
                 нейромузыка
               </span>
@@ -89,7 +89,7 @@
 
               <span
                 v-if="!neuroActive && showCensorBadge"
-                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[4px] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--accent,#fa2d48)] rounded-[calc(var(--radius)*0.3333)] bg-[rgba(250,45,72,0.12)] text-[color:var(--accent,#fa2d48)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
               >
                 {{ replacementLabel }}
                 <q-tooltip>
@@ -99,7 +99,7 @@
 
               <span
                 v-else-if="!neuroActive && showOriginalBadge"
-                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--line)] rounded-[4px] bg-[rgba(255,255,255,0.06)] text-[color:var(--fg-dim)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
+                class="inline-block min-w-0 flex-[0_1_auto] truncate ml-[6px] px-[5px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.3333)] bg-[rgba(255,255,255,0.06)] text-[color:var(--fg-dim)] text-[10px] font-semibold leading-[1.5] tracking-[0.02em] whitespace-nowrap align-middle cursor-default"
               >
                 с цензурой
                 <q-tooltip>
@@ -147,7 +147,7 @@
         <template v-for="(id, index) in leftButtons" :key="id">
           <i
             v-if="caretAt('left', index)"
-            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
           />
           <span
             class="pe-item inline-flex items-center"
@@ -164,7 +164,7 @@
         </template>
         <i
           v-if="caretAt('left', leftButtons.length)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
         />
       </div>
     </div>
@@ -176,7 +176,7 @@
         class="flex items-center gap-[calc(var(--player-gap,_6px)_+_4px)] [&_svg]:w-[var(--player-icon,_18px)] [&_svg]:h-[var(--player-icon,_18px)]"
         :class="{
           [editZoneClass]: editMode,
-          'px-[10px] py-[3px] !rounded-full bg-[color-mix(in_srgb,var(--bg)_42%,transparent)] backdrop-blur-[5px]':
+          'px-[10px] py-[3px] !rounded-[calc(var(--radius)*1.5)] bg-[color-mix(in_srgb,var(--bg)_42%,transparent)] backdrop-blur-[5px]':
             ui.settings.playerVisualizer,
         }"
         :data-zone-label="editMode ? 'Центр' : null"
@@ -187,7 +187,7 @@
         <template v-for="(id, index) in centerButtons" :key="id">
           <i
             v-if="caretAt('center', index)"
-            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+            class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
           />
           <span
             class="pe-item inline-flex items-center"
@@ -204,7 +204,7 @@
         </template>
         <i
           v-if="caretAt('center', centerButtons.length)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
         />
       </div>
 
@@ -258,7 +258,7 @@
       <template v-for="(id, index) in rightButtons" :key="id">
         <i
           v-if="caretAt('right', index)"
-          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+          class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
         />
         <span
           class="pe-item inline-flex items-center"
@@ -272,7 +272,7 @@
       </template>
       <i
         v-if="caretAt('right', rightButtons.length)"
-        class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[2px] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
+        class="w-[2px] h-[22px] flex-[0_0_2px] self-center rounded-[calc(var(--radius)*0.1667)] bg-[var(--accent)] shadow-[0_0_6px_color-mix(in_srgb,var(--accent)_55%,transparent)] pointer-events-none"
       />
     </div>
   </div>
@@ -402,9 +402,9 @@ const rightButtons = computed(() => ui.playerZoneButtons("right"));
 
 const editMode = computed(() => ui.settings.playerEditMode);
 const editZoneClass =
-  "relative min-w-[42px] min-h-[34px] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] rounded-[12px] before:absolute before:top-[-9px] before:left-[8px] before:px-[4px] before:py-0 before:rounded-[4px] before:bg-[var(--surface)] before:text-[color:var(--fg-faint)] before:[content:attr(data-zone-label)] before:text-[9px] before:tracking-[0.04em] before:uppercase";
+  "relative min-w-[42px] min-h-[34px] border border-dashed border-[color:color-mix(in_srgb,var(--accent)_45%,transparent)] rounded-[var(--radius)] before:absolute before:top-[-9px] before:left-[8px] before:px-[4px] before:py-0 before:rounded-[calc(var(--radius)*0.3333)] before:bg-[var(--surface)] before:text-[color:var(--fg-faint)] before:[content:attr(data-zone-label)] before:text-[9px] before:tracking-[0.04em] before:uppercase";
 const editItemClass =
-  "rounded-[10px] cursor-grab transition-[background,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] [&>*]:pointer-events-none";
+  "rounded-[calc(var(--radius)*0.8333)] cursor-grab transition-[background,opacity] duration-[140ms] ease-[ease] hover:bg-[var(--hover)] [&>*]:pointer-events-none";
 const dragId = ref<PlayerButtonId | null>(null);
 const overZone = ref<PlayerZone | null>(null);
 const overIndex = ref(-1);

@@ -56,7 +56,7 @@
               v-for="(key, i) in row.keys"
               :key="`${key}-${i}`"
               type="button"
-              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
+              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
               @click="startCapture(row.action, i, false)"
               @contextmenu.prevent="hotkeys.clearLocal(row.action, i)"
             >
@@ -64,7 +64,7 @@
             </button>
             <button
               type="button"
-              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[color:var(--fg-faint)] transition hover:border-[var(--accent)]"
+              class="inline-flex h-[30px] min-w-[34px] items-center justify-center whitespace-nowrap rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[color:var(--fg-faint)] transition hover:border-[var(--accent)]"
               @click="startCapture(row.action, row.keys.length, false)"
             >
               {{ capturingLabel(row.action, row.keys.length, false) || "+" }}
@@ -74,14 +74,14 @@
           <div class="flex items-center gap-1.5">
             <button
               type="button"
-              class="inline-flex h-[30px] min-w-[34px] flex-1 items-center justify-center whitespace-nowrap rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
+              class="inline-flex h-[30px] min-w-[34px] flex-1 items-center justify-center whitespace-nowrap rounded-[calc(var(--radius)*0.6667)] border border-[var(--line)] bg-[var(--surface-2)] px-2.5 text-[12px] text-[var(--fg)] transition hover:border-[var(--accent)]"
               @click="startCapture(row.action, 0, true)"
               @contextmenu.prevent="clearGlobal(row.action)"
             >
               {{ globalLabel(row) }}
             </button>
             <div
-              class="grid h-6 w-6 flex-none place-items-center rounded-md text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
+              class="grid h-6 w-6 flex-none place-items-center rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-dim)] transition hover:bg-[var(--hover)] hover:text-[var(--fg)]"
             >
               <Icon name="mingcute:more-2-fill" :size="14" />
               <q-menu
@@ -93,14 +93,14 @@
                   <div
                     v-for="preset in MEDIA_PRESETS"
                     :key="preset.value"
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="hotkeys.setGlobal(row.action, preset.value)"
                   >
                     <span>{{ preset.label }}</span>
                   </div>
                   <div
-                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:!text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:!text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                    class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap transition-[background,color] duration-100 hover:bg-[var(--hover)] hover:!text-[color:#f87171] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:!text-[color:#f87171] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis select-none hover:text-[color:var(--fg)] [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                     v-close-popup
                     @click="clearGlobal(row.action)"
                   >

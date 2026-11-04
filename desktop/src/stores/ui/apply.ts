@@ -1,6 +1,35 @@
 import { Dark } from "quasar";
-import type { InterfaceSettings, LyricsFont } from "./defaults";
+import type { AppFont, InterfaceSettings, LyricsFont } from "./defaults";
 import { isLightColor, themePalettes } from "./themes";
+
+const appFonts: Record<Exclude<AppFont, "custom">, string> = {
+  onest: '"Onest", "Segoe UI", system-ui, sans-serif',
+  golos: '"Golos Text", "Segoe UI", system-ui, sans-serif',
+  manrope: '"Manrope", "Segoe UI", system-ui, sans-serif',
+  system: '"Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif',
+  serif: 'Georgia, "Times New Roman", serif',
+  mono: '"Cascadia Code", Consolas, monospace',
+  minecraft: '"Pixelify Sans", "Segoe UI", system-ui, sans-serif',
+  jetbrains: '"JetBrains Mono", "Cascadia Code", Consolas, monospace',
+};
+
+function normalizeFontStack(raw: string): string {
+  const value = (raw || "").trim();
+  if (!value) return "";
+  const stack = value
+    .split(",")
+    .map((part) => part.trim().replace(/^["']|["']$/g, ""))
+    .filter(Boolean)
+    .map((part) => (/^[a-zA-Z0-9-]+$/.test(part) ? part : `"${part}"`));
+  return stack.join(", ");
+}
+
+function appFontStack(settings: InterfaceSettings): string {
+  if (settings.appFont === "custom") {
+    return normalizeFontStack(settings.appFontCustom) || appFonts.onest;
+  }
+  return appFonts[settings.appFont] ?? appFonts.onest;
+}
 
 const lyricsFonts: Record<LyricsFont, string> = {
   sans: "inherit",
@@ -48,6 +77,9 @@ export function applyInterfaceSettings(settings: InterfaceSettings): void {
   const line = light ? "rgba(0, 0, 0, 0.105)" : "rgba(255, 255, 255, 0.085)";
   const fgDim = `color-mix(in srgb, ${text} 64%, ${background})`;
   const fgFaint = `color-mix(in srgb, ${text} 42%, ${background})`;
+  const editorBg = light
+    ? `color-mix(in srgb, ${surface2} 90%, black)`
+    : `color-mix(in srgb, ${surface2} 58%, black)`;
   const trackHeight =
     settings.density === "compact"
       ? 44
@@ -66,14 +98,20 @@ export function applyInterfaceSettings(settings: InterfaceSettings): void {
     "--line": line,
     "--shadow-strong": light ? "rgba(15, 18, 26, 0.22)" : "rgba(0, 0, 0, 0.75)",
     "--shadow-soft": light ? "rgba(15, 18, 26, 0.12)" : "rgba(0, 0, 0, 0.45)",
+    "--editor-bg": editorBg,
     "--accent": settings.accent,
     "--radius": `${settings.radius}px`,
     "--track-height": `${trackHeight}px`,
     "--sidebar-width": `${settings.sidebarWidth}px`,
+    "--topbar-height": `${settings.topbarHeight}px`,
+    "--topbar-logo": `${settings.topbarLogoSize}px`,
+    "--topbar-avatar": `${settings.topbarAccountAvatarSize}px`,
+    "--window-button-width": `${settings.windowButtonWidth}px`,
     "--search-width": `${settings.searchWidth}px`,
     "--page-padding": `${settings.pagePadding}px`,
     "--card-size": `${settings.cardSize}px`,
     "--text-scale": `${settings.textScale / 100}`,
+    "--app-font": appFontStack(settings),
     "--glass-blur": `${settings.glassBlur}px`,
     "--lyrics-size": `${settings.lyricsFontSize}px`,
     "--lyrics-line-height": `${settings.lyricsLineHeight}`,
@@ -113,4 +151,5 @@ export function applyInterfaceSettings(settings: InterfaceSettings): void {
   root.classList.toggle("hide-player-artwork", !settings.showPlayerArtwork);
   root.classList.toggle("hide-player-times", !settings.playerShowTimes);
   root.dataset.coverStyle = settings.coverStyle;
+  root.dataset.font = settings.appFont;
 }

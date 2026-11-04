@@ -10,7 +10,7 @@
         </div>
         <button
           type="button"
-          class="flex items-center justify-center w-[28px] h-[28px] rounded-[7px] border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)] transition-colors"
+          class="flex items-center justify-center w-[28px] h-[28px] rounded-[calc(var(--radius)*0.5833)] border-0 bg-transparent text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)] transition-colors"
           @click="close"
         >
           <Icon name="mingcute:close-line" :size="16" />
@@ -18,11 +18,11 @@
       </div>
 
       <div
-        class="flex items-center gap-[12px] p-[12px] rounded-[10px] bg-[var(--surface-2)] border border-solid border-[color:var(--line)]"
+        class="flex items-center gap-[12px] p-[12px] rounded-[calc(var(--radius)*0.8333)] bg-[var(--surface-2)] border border-solid border-[color:var(--line)]"
       >
         <div
           v-if="canEditIcon"
-          class="flex items-center justify-center w-[38px] h-[38px] rounded-[8px] bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] flex-none"
+          class="flex items-center justify-center w-[38px] h-[38px] rounded-[calc(var(--radius)*0.6667)] bg-[color-mix(in_srgb,var(--accent)_15%,transparent)] text-[var(--accent)] flex-none"
         >
           <Icon :name="previewIcon" :size="20" />
         </div>
@@ -47,7 +47,7 @@
           Название
         </label>
         <div
-          class="flex items-center gap-[8px] h-[36px] px-[10px] rounded-[8px] bg-[var(--surface-2)] border border-solid border-[color:var(--line)] transition-colors focus-within:border-[var(--accent)]"
+          class="flex items-center gap-[8px] h-[36px] px-[10px] rounded-[calc(var(--radius)*0.6667)] bg-[var(--surface-2)] border border-solid border-[color:var(--line)] transition-colors focus-within:border-[var(--accent)]"
         >
           <input
             v-model="inputLabel"
@@ -83,7 +83,7 @@
         </div>
 
         <div
-          class="flex items-center gap-[8px] h-[34px] px-[10px] rounded-[8px] bg-[var(--surface-2)] border border-solid border-[color:var(--line)] transition-colors focus-within:border-[var(--accent)]"
+          class="flex items-center gap-[8px] h-[34px] px-[10px] rounded-[calc(var(--radius)*0.6667)] bg-[var(--surface-2)] border border-solid border-[color:var(--line)] transition-colors focus-within:border-[var(--accent)]"
         >
           <Icon
             name="mingcute:search-2-line"
@@ -107,14 +107,14 @@
         </div>
 
         <div
-          class="grid grid-cols-8 gap-[6px] max-h-[175px] overflow-y-auto p-[4px] rounded-[8px] border border-solid border-[color:var(--line)] bg-[var(--surface)] [scrollbar-width:thin]"
+          class="grid grid-cols-8 gap-[6px] max-h-[175px] overflow-y-auto p-[4px] rounded-[calc(var(--radius)*0.6667)] border border-solid border-[color:var(--line)] bg-[var(--surface)] [scrollbar-width:thin]"
         >
           <button
             v-for="item in filteredIcons"
             :key="item.id"
             type="button"
             :title="`${item.name} (${item.id})`"
-            class="flex items-center justify-center h-[36px] rounded-[6px] border border-solid transition-all cursor-pointer relative"
+            class="flex items-center justify-center h-[36px] rounded-[calc(var(--radius)*0.5)] border border-solid transition-all cursor-pointer relative"
             :class="[
               selectedIcon === item.id
                 ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_20%,transparent)] text-[var(--accent)] ring-1 ring-[var(--accent)]'
@@ -136,7 +136,7 @@
       <div class="flex items-center justify-between pt-[4px] border-t border-solid border-[color:var(--line)]">
         <button
           type="button"
-          class="inline-flex h-[32px] items-center px-[10px] border border-solid border-[color:var(--line)] rounded-[7px] bg-transparent text-[11.5px] text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
+          class="inline-flex h-[32px] items-center px-[10px] border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[11.5px] text-[color:var(--fg-faint)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] transition-colors cursor-pointer disabled:opacity-40 disabled:pointer-events-none"
           :disabled="!isCustomized"
           @click="resetToDefault"
         >
@@ -146,14 +146,14 @@
         <div class="flex items-center gap-[8px]">
           <button
             type="button"
-            class="inline-flex h-[32px] items-center px-[13px] border border-solid border-[color:var(--line)] rounded-[7px] bg-transparent text-[12px] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] transition-colors cursor-pointer"
+            class="inline-flex h-[32px] items-center px-[13px] border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.5833)] bg-transparent text-[12px] text-[color:var(--fg-dim)] hover:text-[color:var(--fg)] hover:bg-[var(--hover)] transition-colors cursor-pointer"
             @click="close"
           >
             Отмена
           </button>
           <button
             type="button"
-            class="inline-flex h-[32px] items-center px-[16px] border-0 rounded-[7px] bg-[var(--accent)] text-[#fff] text-[12px] font-semibold hover:opacity-90 transition-opacity cursor-pointer"
+            class="inline-flex h-[32px] items-center px-[16px] border-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--accent)] text-[#fff] text-[12px] font-semibold hover:opacity-90 transition-opacity cursor-pointer"
             @click="save"
           >
             Сохранить

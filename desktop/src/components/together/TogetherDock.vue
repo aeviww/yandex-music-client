@@ -4,7 +4,7 @@
     ref="root"
     class="fixed z-[2800] overflow-hidden border border-[color:var(--line)] bg-[var(--surface)] select-none"
     :class="{
-      'bottom-[8px] left-[8px] w-auto rounded-[10px]': panels.mini,
+      'bottom-[8px] left-[8px] w-auto rounded-[calc(var(--radius)*0.8333)]': panels.mini,
       'bottom-[96px] left-[16px] rounded-[var(--radius)]': !panels.mini,
       'w-[320px]': open && !panels.mini,
       'w-[268px]': !open && !panels.mini,
@@ -77,7 +77,7 @@
         >
 
         <button
-          class="inline-flex p-[3px] border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+          class="inline-flex p-[3px] border-0 rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           type="button"
           :title="shown ? 'Скрыть' : 'Показать'"
           @click="shown = !shown"
@@ -86,7 +86,7 @@
         </button>
 
         <button
-          class="inline-flex p-[3px] border-0 rounded-[6px] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
+          class="inline-flex p-[3px] border-0 rounded-[calc(var(--radius)*0.5)] text-[color:var(--fg-dim)] cursor-pointer hover:bg-[var(--hover)] hover:text-[color:var(--fg)]"
           type="button"
           title="Скопировать"
           @click="copyInvite"

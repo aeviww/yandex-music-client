@@ -13,7 +13,7 @@
 
         <template v-else-if="person">
           <div class="flex items-end gap-[26px] min-w-0 overflow-hidden max-h-[520px] [transition:max-height_0.34s_ease,opacity_0.24s_ease,transform_0.34s_ease,margin_0.34s_ease] max-[1360px]:gap-[20px] max-[1024px]:flex-col max-[1024px]:items-start max-[1024px]:gap-[14px]">
-            <div class="cover w-[clamp(112px,_15vw,_190px)] h-[clamp(112px,_15vw,_190px)] rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
+            <div class="cover w-[clamp(112px,_15vw,_190px)] h-[clamp(112px,_15vw,_190px)] rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
               <img
                 v-if="person.image"
                 loading="lazy"
@@ -58,7 +58,7 @@
 
               <div class="flex items-center gap-[8px] flex-wrap mt-[22px] select-none max-[1180px]:gap-[7px] max-[1180px]:mt-[16px] max-[1024px]:mt-[14px]">
                 <button
-                  class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[8px] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]"
+                  class="inline-flex h-[34px] items-center justify-center px-[18px] py-0 border-0 rounded-[calc(var(--radius)*0.6667)] !bg-[var(--accent)] text-[color:#fff] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-opacity duration-[120ms] ease-[ease] hover:opacity-[0.85] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]"
                   type="button"
                   @click="open(person.url)"
                 >
@@ -66,12 +66,12 @@
                   <span class="max-[760px]:hidden">Открыть на Genius</span>
                 </button>
 
-                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="load(true)">
+                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="load(true)">
                   <Icon name="mingcute:repeat-line" :size="15" />
                   <span class="max-[760px]:hidden">Обновить</span>
                 </button>
 
-                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[8px] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="goBack">
+                <button class="inline-flex h-[32px] items-center justify-center px-[14px] py-0 border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] cursor-pointer text-[calc(12px*var(--text-scale,1))] font-medium gap-[7px] select-none whitespace-nowrap transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none max-[760px]:px-[12px]" type="button" @click="goBack">
                   <Icon name="mingcute:left-line" :size="15" />
                   <span class="max-[760px]:hidden">Назад</span>
                 </button>
@@ -84,7 +84,7 @@
                   type="button"
                 >
                   <span>Ссылки и соцсети</span>
-                  <span class="px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{ person.socials.length }}</span>
+                  <span class="px-[5px] py-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{ person.socials.length }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
 
                   <q-menu class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]" anchor="bottom left" self="top left">
@@ -93,7 +93,7 @@
                       <div
                         v-for="social in person.socials"
                         :key="social.url"
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                         :title="social.url"
                         v-close-popup
                         @click="open(social.url)"
@@ -113,7 +113,7 @@
                   type="button"
                 >
                   <span>Также известен как</span>
-                  <span class="px-[5px] py-0 rounded-[7px] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{
+                  <span class="px-[5px] py-0 rounded-[calc(var(--radius)*0.5833)] bg-[var(--surface-2)] text-[color:var(--fg-dim)] text-[10px] font-semibold">{{
                     person.alternate_names.length
                   }}</span>
                   <Icon name="mingcute:down-line" :size="12" />
@@ -124,7 +124,7 @@
                       <div
                         v-for="name in person.alternate_names"
                         :key="name"
-                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                        class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       >
                         <span class="col truncate">{{ name }}</span>
                       </div>
@@ -144,7 +144,7 @@
             <div class="flex items-center gap-[10px]">
               <input
                 v-model="query"
-                class="w-[210px] px-[11px] py-[6px] border border-solid border-[color:var(--line)] rounded-[9px] bg-[var(--surface)] text-[color:var(--fg)] text-[12.5px] outline-none transition-[border-color] duration-[140ms] ease-[ease] focus:border-[color:var(--fg-dim)] placeholder:text-[color:var(--fg-faint)]"
+                class="w-[210px] px-[11px] py-[6px] border border-solid border-[color:var(--line)] rounded-[calc(var(--radius)*0.75)] bg-[var(--surface)] text-[color:var(--fg)] text-[12.5px] outline-none transition-[border-color] duration-[140ms] ease-[ease] focus:border-[color:var(--fg-dim)] placeholder:text-[color:var(--fg-faint)]"
                 type="text"
                 placeholder="Найти трек"
               />
@@ -170,11 +170,11 @@
           <div v-else class="row q-col-gutter-md">
             <div v-for="song in shown" :key="song.id" class="col-auto">
               <div
-                class="relative rounded-[14px] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] group/card"
+                class="relative rounded-[calc(var(--radius)*1.1667)] p-[10px] cursor-pointer transition-[background] duration-[160ms] ease-[ease] hover:bg-[var(--surface)] group/card"
                 style="width: 168px"
                 @click="open(song.url)"
               >
-                <div class="cover relative w-full aspect-square rounded-[10px] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
+                <div class="cover relative w-full aspect-square rounded-[calc(var(--radius)*0.8333)] overflow-hidden bg-[var(--surface-2)] flex items-center justify-center flex-none [&_img]:w-full [&_img]:h-full [&_img]:object-cover [&_img]:block">
                   <img
                     v-if="song.art"
                     loading="lazy"
@@ -184,7 +184,7 @@
                   <Icon v-else name="mingcute:music-line" :size="26" class="text-[color:var(--fg-faint)]" />
 
                   <button
-                    class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-full bg-[var(--accent)] text-[color:#fff] cursor-pointer select-none opacity-[0] translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover/card:opacity-[1] group-hover/card:translate-y-0"
+                    class="absolute right-[8px] bottom-[8px] flex w-[34px] h-[34px] items-center justify-center p-0 border-0 rounded-[calc(var(--radius)*1.5)] bg-[var(--accent)] text-[color:#fff] cursor-pointer select-none opacity-[0] translate-y-[6px] transition-[opacity,transform] duration-[140ms] ease-[ease] group-hover/card:opacity-[1] group-hover/card:translate-y-0"
                     type="button"
                     title="Открыть на Genius"
                     @click.stop="open(song.url)"
@@ -201,7 +201,7 @@
                 <q-menu context-menu touch-position class="select-none overflow-x-hidden max-w-[268px] !rounded-[var(--radius)] border border-solid border-[color:rgba(255,255,255,0.09)] bg-[color-mix(in_srgb,var(--surface-2)_90%,transparent)] shadow-[0_16px_40px_rgba(0,0,0,0.55)] backdrop-blur-[var(--glass-blur,24px)] backdrop-saturate-[1.35]">
                   <div class="p-[4px] min-w-[178px] max-w-[260px] overflow-x-hidden select-none" style="min-width: 200px">
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       v-close-popup
                       @click="open(song.url)"
                     >
@@ -209,7 +209,7 @@
                       <span>Открыть разбор на Genius</span>
                     </div>
                     <div
-                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[7px] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
+                      class="flex items-center gap-[8px] h-[26px] px-[7px] py-0 rounded-[calc(var(--radius)*0.5833)] text-[calc(12px*var(--text-scale,1))] leading-none text-[color:var(--fg-dim)] cursor-pointer whitespace-nowrap select-none transition-[background,color] duration-[100ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] [&_svg]:h-[15px] [&_svg]:w-[15px] [&_svg]:flex-none [&_svg]:text-[color:var(--fg-faint)] [&_svg]:transition-colors hover:[&_svg]:text-[color:var(--fg)] [&>span]:min-w-0 [&>span]:overflow-hidden [&>span]:text-ellipsis [&:hover_svg]:text-[color:var(--fg)] [&_span]:min-w-0 [&_span]:overflow-hidden [&_span]:text-ellipsis"
                       v-close-popup
                       @click="searchInApp(song)"
                     >
