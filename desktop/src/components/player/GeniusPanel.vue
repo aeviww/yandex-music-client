@@ -5,13 +5,13 @@
       class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
     >
       <span>
-        Genius РІС‹РєР»СЋС‡РµРЅ. РћС‚РєСЂРѕР№ РќР°СЃС‚СЂРѕР№РєРё в†’ Genius Рё РІСЃС‚Р°РІСЊ Client Access Token.
+        Genius выключен. Открой Настройки → Genius и вставь Client Access Token.
       </span>
       <div
         class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
         @click="openUrl('https://genius.com/api-clients')"
       >
-        РџРѕР»СѓС‡РёС‚СЊ С‚РѕРєРµРЅ
+        Получить токен
       </div>
     </div>
 
@@ -22,7 +22,7 @@
         @click="genius.closePerson()"
       >
         <Icon name="mingcute:left-line" :size="14" />
-        <span>РќР°Р·Р°Рґ Рє С‚СЂРµРєСѓ</span>
+        <span>Назад к треку</span>
       </button>
 
       <div
@@ -30,7 +30,7 @@
         class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
       >
         <q-spinner size="16px" color="grey-6" />
-        <span>РћС‚РєСЂС‹РІР°СЋ СЃС‚СЂР°РЅРёС†СѓвЂ¦</span>
+        <span>Открываю страницу…</span>
       </div>
 
       <div
@@ -76,7 +76,7 @@
           <a
             class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
             @click.prevent="openUrl(genius.person.url)"
-            >РћС‚РєСЂС‹С‚СЊ РЅР° Genius</a
+            >Открыть на Genius</a
           >
           <a
             v-for="social in genius.person.socials"
@@ -97,21 +97,21 @@
         @click="picking = false"
       >
         <Icon name="mingcute:left-line" :size="14" />
-        <span>РќР°Р·Р°Рґ</span>
+        <span>Назад</span>
       </button>
 
       <form class="flex gap-[8px]" @submit.prevent="runSearch">
         <input
           v-model="query"
           type="text"
-          placeholder="Р°СЂС‚РёСЃС‚ Рё РЅР°Р·РІР°РЅРёРµ"
+          placeholder="артист и название"
           class="flex-1 min-w-0 px-[10px] py-[6px] border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] bg-transparent text-inherit text-[13px]"
         />
         <button
           class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
           type="submit"
         >
-          РќР°Р№С‚Рё
+          Найти
         </button>
       </form>
 
@@ -120,7 +120,7 @@
         class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
       >
         <q-spinner size="16px" color="grey-6" />
-        <span>РС‰СѓвЂ¦</span>
+        <span>Ищу…</span>
       </div>
 
       <button
@@ -144,19 +144,19 @@
       class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
     >
       <q-spinner size="16px" color="grey-6" />
-      <span>РЎРјРѕС‚СЂСЋ GeniusвЂ¦</span>
+      <span>Смотрю Genius…</span>
     </div>
 
     <div
       v-else-if="!song"
       class="flex items-center gap-[10px] py-[18px] px-0 text-[color:var(--fg-dim)] text-[13px]"
     >
-      <span>{{ genius.error || "РќР° Genius РЅРёС‡РµРіРѕ РЅРµ РЅР°С€Р»РѕСЃСЊ" }}</span>
+      <span>{{ genius.error || "На Genius ничего не нашлось" }}</span>
       <div
         class="inline-flex h-[32px] items-center justify-center gap-[7px] px-[14px] py-0 border border-[color:var(--line)] rounded-[calc(var(--radius)*0.6667)] text-[color:var(--fg-dim)] text-[calc(12px*var(--text-scale,1))] font-medium cursor-pointer select-none transition-[background,border-color,color] duration-[120ms] ease-[ease] hover:bg-[var(--hover)] hover:text-[color:var(--fg)] disabled:cursor-default disabled:opacity-[0.45] disabled:pointer-events-none"
         @click="startPicking"
       >
-        РќР°Р№С‚Рё РІСЂСѓС‡РЅСѓСЋ
+        Найти вручную
       </div>
     </div>
 
@@ -187,21 +187,21 @@
             type="button"
             @click="openUrl(song.url)"
           >
-            РќР° Genius
+            На Genius
           </button>
           <button
             class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
             type="button"
             @click="refresh"
           >
-            РћР±РЅРѕРІРёС‚СЊ
+            Обновить
           </button>
           <button
             class="p-0 border-0 bg-transparent text-right text-[color:var(--fg-dim)] text-[11px] cursor-pointer hover:text-[color:var(--fg)]"
             type="button"
             @click="startPicking"
           >
-            РќРµ С‚РѕС‚ С‚СЂРµРє
+            Не тот трек
           </button>
         </div>
       </div>
@@ -228,7 +228,7 @@
           v-if="!song.lyrics.length"
           class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
         >
-          {{ song.lyrics_error || "Genius РЅРµ РѕС‚РґР°Р» С‚РµРєСЃС‚ РґР»СЏ СЌС‚РѕР№ СЃС‚СЂР°РЅРёС†С‹." }}
+          {{ song.lyrics_error || "Genius не отдал текст для этой страницы." }}
         </p>
         <div
           v-for="(section, i) in lyricSections"
@@ -255,10 +255,10 @@
           class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
         >
           <p>
-            {{ song.quotes_error || "Рљ СЌС‚РѕРјСѓ С‚СЂРµРєСѓ РµС‰С‘ РЅРµ РЅР°РїРёСЃР°Р»Рё СЂР°Р·Р±РѕСЂРѕРІ." }}
+            {{ song.quotes_error || "К этому треку ещё не написали разборов." }}
           </p>
           <p v-if="song.annotation_count" class="text-[color:var(--fg-dim)] text-[11px]">
-            Genius РЅР°СЃС‡РёС‚Р°Р» СЂР°Р·Р±РѕСЂРѕРІ РЅР° СЌС‚РѕРј С‚СЂРµРєРµ:
+            Genius насчитал разборов на этом треке:
             {{ song.annotation_count }}
           </p>
           <button
@@ -266,14 +266,14 @@
             type="button"
             @click="refresh"
           >
-            Р—Р°РіСЂСѓР·РёС‚СЊ Р·Р°РЅРѕРІРѕ
+            Загрузить заново
           </button>
         </div>
         <p
           v-else-if="song.quotes_source !== 'api'"
           class="text-[color:var(--fg-dim)] text-[11px]"
         >
-          Р Р°Р·Р±РѕСЂС‹ СЃРѕР±СЂР°РЅС‹ РІ РѕР±С…РѕРґ API-С‚РѕРєРµРЅР° вЂ” РёСЃС‚РѕС‡РЅРёРє:
+          Разборы собраны в обход API-токена — источник:
           {{ song.quotes_source }}.
         </p>
         <div
@@ -298,14 +298,14 @@
             >
               <img v-if="author.image" :src="author.image" />
               <span class="truncate">{{ author.name }}</span>
-              <b v-if="author.verified" title="РџРѕРґС‚РІРµСЂР¶РґС‘РЅРЅС‹Р№ Р°РєРєР°СѓРЅС‚">вњ“</b>
+              <b v-if="author.verified" title="Подтверждённый аккаунт">✓</b>
               <i v-if="author.iq">{{ shortNumber(author.iq) }} IQ</i>
             </button>
             <span
               v-if="!quote.authors.length"
               class="text-[color:var(--fg-dim)] text-[11px]"
             >
-              РЎРѕРѕР±С‰РµСЃС‚РІРѕ Genius
+              Сообщество Genius
             </span>
           </div>
 
@@ -316,7 +316,7 @@
               class="text-[color:var(--fg-dim)] cursor-pointer no-underline border-b border-b-[color:var(--line)] hover:text-[color:var(--fg)]"
               @click.prevent="openUrl(quote.url)"
             >
-              РЅР° Genius
+              на Genius
             </a>
           </div>
         </div>
@@ -327,7 +327,7 @@
           v-if="!groups.length"
           class="mt-[4px] mx-0 mb-0 text-[color:var(--fg-dim)] text-[13px]"
         >
-          РЈС‡Р°СЃС‚РЅРёРєРё Р·Р°РїРёСЃРё РЅРµ СѓРєР°Р·Р°РЅС‹.
+          Участники записи не указаны.
         </p>
         <div v-for="group in groups" :key="group.role">
           <div class="mb-[6px] text-[11px] text-[color:var(--fg-dim)]">
@@ -449,15 +449,15 @@ const personOpen = computed(
 
 const tabs = computed(() => {
   const list: Array<{ value: Tab; label: string }> = [
-    { value: "lyrics", label: "РўРµРєСЃС‚" },
+    { value: "lyrics", label: "Текст" },
   ];
   if (genius.showQuotes) {
     list.push({
       value: "quotes",
-      label: `Р¦РёС‚Р°С‚С‹ Рё СЂР°Р·Р±РѕСЂС‹ (${quotes.value.length})`,
+      label: `Цитаты и разборы (${quotes.value.length})`,
     });
   }
-  list.push({ value: "credits", label: "РќР°Рґ С‚СЂРµРєРѕРј СЂР°Р±РѕС‚Р°Р»Рё" });
+  list.push({ value: "credits", label: "Над треком работали" });
   return list;
 });
 
@@ -526,47 +526,47 @@ const infoRows = computed(() => {
   const album = value.album_info;
   if (album?.name) {
     rows.push({
-      label: "РђР»СЊР±РѕРј",
-      value: album.artist ? `${album.name} вЂ” ${album.artist}` : album.name,
+      label: "Альбом",
+      value: album.artist ? `${album.name} — ${album.artist}` : album.name,
     });
     if (album.release_date) {
-      rows.push({ label: "Р РµР»РёР· Р°Р»СЊР±РѕРјР°", value: album.release_date });
+      rows.push({ label: "Релиз альбома", value: album.release_date });
     }
   } else if (value.album) {
-    rows.push({ label: "РђР»СЊР±РѕРј", value: value.album });
+    rows.push({ label: "Альбом", value: value.album });
   }
 
   if (value.release_date)
-    rows.push({ label: "Р РµР»РёР·", value: value.release_date });
+    rows.push({ label: "Релиз", value: value.release_date });
   if (value.recording_location) {
-    rows.push({ label: "Р—Р°РїРёСЃР°РЅРѕ", value: value.recording_location });
+    rows.push({ label: "Записано", value: value.recording_location });
   }
   if (value.language) {
-    rows.push({ label: "РЇР·С‹Рє", value: value.language.toUpperCase() });
+    rows.push({ label: "Язык", value: value.language.toUpperCase() });
   }
   if (value.pageviews) {
-    rows.push({ label: "РџСЂРѕСЃРјРѕС‚СЂС‹", value: ruNumber(value.pageviews) });
+    rows.push({ label: "Просмотры", value: ruNumber(value.pageviews) });
   }
   if (value.contributors) {
-    rows.push({ label: "РЈС‡Р°СЃС‚РЅРёРєРѕРІ", value: ruNumber(value.contributors) });
+    rows.push({ label: "Участников", value: ruNumber(value.contributors) });
   }
   if (value.annotation_count) {
-    rows.push({ label: "РђРЅРЅРѕС‚Р°С†РёР№", value: ruNumber(value.annotation_count) });
+    rows.push({ label: "Аннотаций", value: ruNumber(value.annotation_count) });
   }
   if (value.concurrents) {
-    rows.push({ label: "Р§РёС‚Р°СЋС‚ СЃРµР№С‡Р°СЃ", value: ruNumber(value.concurrents) });
+    rows.push({ label: "Читают сейчас", value: ruNumber(value.concurrents) });
   }
   if (value.apple_music_id) {
     rows.push({ label: "Apple Music ID", value: value.apple_music_id });
   }
-  if (value.hot) rows.push({ label: "РЎС‚Р°С‚СѓСЃ", value: "Р’ С‚СЂРµРЅРґРµ РЅР° Genius" });
+  if (value.hot) rows.push({ label: "Статус", value: "В тренде на Genius" });
 
   return rows;
 });
 
 const producerNames = computed(() =>
   (song.value?.credits || [])
-    .filter((person) => person.role === "РџСЂРѕРґСЋСЃРµСЂ")
+    .filter((person) => person.role === "Продюсер")
     .map((person) => person.name)
     .slice(0, 3)
     .join(", "),
@@ -578,9 +578,9 @@ const songMeta = computed(() => {
   const parts: string[] = [];
   if (value.album) parts.push(value.album);
   if (value.release_date) parts.push(value.release_date);
-  if (value.pageviews) parts.push(`${ruNumber(value.pageviews)} РїСЂРѕСЃРјРѕС‚СЂРѕРІ`);
-  if (producerNames.value) parts.push(`РїСЂРѕРґ: ${producerNames.value}`);
-  return parts.join(" В· ");
+  if (value.pageviews) parts.push(`${ruNumber(value.pageviews)} просмотров`);
+  if (producerNames.value) parts.push(`прод: ${producerNames.value}`);
+  return parts.join(" · ");
 });
 
 const personMeta = computed(() => {
@@ -589,13 +589,13 @@ const personMeta = computed(() => {
   const parts: string[] = [];
   if (person.followers) {
     parts.push(
-      `${person.followers.toLocaleString("ru-RU")} РїРѕРґРїРёСЃС‡РёРєРѕРІ РЅР° Genius`,
+      `${person.followers.toLocaleString("ru-RU")} подписчиков на Genius`,
     );
   }
   if (person.alternate_names.length) {
     parts.push(person.alternate_names.slice(0, 3).join(", "));
   }
-  return parts.join(" В· ");
+  return parts.join(" · ");
 });
 
 function ruNumber(value: number): string {
@@ -610,19 +610,19 @@ function shortNumber(value: number): string {
 
 function quoteMeta(quote: GeniusQuote): string {
   const parts: string[] = [];
-  if (quote.votes) parts.push(`${quote.votes} РіРѕР»РѕСЃРѕРІ`);
-  if (quote.comments) parts.push(`${quote.comments} РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ`);
-  if (quote.verified) parts.push("РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ");
-  if (quote.pinned) parts.push("Р·Р°РєСЂРµРїР»РµРЅРѕ");
-  return parts.join(" В· ");
+  if (quote.votes) parts.push(`${quote.votes} голосов`);
+  if (quote.comments) parts.push(`${quote.comments} комментариев`);
+  if (quote.verified) parts.push("подтверждено");
+  if (quote.pinned) parts.push("закреплено");
+  return parts.join(" · ");
 }
 
 function mediaLabel(item: GeniusMedia): string {
   const provider = item.provider
     ? item.provider.charAt(0).toUpperCase() + item.provider.slice(1)
-    : "РЎСЃС‹Р»РєР°";
-  if (item.kind === "video") return `${provider} В· РІРёРґРµРѕ`;
-  if (item.kind === "audio") return `${provider} В· Р°СѓРґРёРѕ`;
+    : "Ссылка";
+  if (item.kind === "video") return `${provider} · видео`;
+  if (item.kind === "audio") return `${provider} · аудио`;
   return provider;
 }
 
